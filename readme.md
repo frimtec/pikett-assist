@@ -1,4 +1,5 @@
 # Pikett-Assist
+[![Build Status](https://travis-ci.org/frimtec/pikett-assist.svg?branch=master)](https://travis-ci.org/frimtec/pikett-assist) 
 [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Android application to assist while doing on call service ("Pikett-Dienst").

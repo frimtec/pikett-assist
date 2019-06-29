@@ -25,13 +25,14 @@ import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 public final class SharedState {
 
     private static final String TAG = "SharedState";
-    private static final String PREF_KEY_ALARM_STATE = "ALARM_STATE";
-    private static final String PREF_KEY_ALARM_START_TIME = "ALARM_START_TIME";
-    private static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "CALENDAR_EVENT_PIKETT_TITLE_PATTERN";
-    private static final String PREF_KEY_SMS_SENDER_NUMBER = "SMS_SENDER_NUMBER";
-    private static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "SMS_TEST_MESSAGE_PATTERN";
-    private static final String PREF_KEY_SMS_LAST_TEST_MESSAGE_RECEIVED_TIME = "LAST_TEST_MESSAGE_RECEIVED_TIME";
-    private static final String START_OF_TIME = "0";
+    public static final String PREF_KEY_ALARM_STATE = "alarm_state";
+    public static final String PREF_KEY_ALARM_START_TIME = "alarm_start_time";
+    public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
+    public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
+    public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
+    public static final String PREF_KEY_SMS_LAST_TEST_MESSAGE_RECEIVED_TIME = "last_test_message_received_time";
+    public static final String PREF_KEY_USE_VIBRATE = "use_vibrate";
+    public static final String START_OF_TIME = "0";
 
     private SharedState() {
     }
@@ -59,24 +60,16 @@ public final class SharedState {
         return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, ".*Pikett.*");
     }
 
-    public static void setCalendarEventPikettTitlePattern(Context context, String pattern) {
-        setSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, pattern);
-    }
-
     public static String getSmsSenderNumber(Context context) {
-        return getSharedPreferences(context, PREF_KEY_SMS_SENDER_NUMBER, "6505551212");
-    }
-
-    public static void setSmsSenderNumber(Context context, String smsNumber) {
-        setSharedPreferences(context, PREF_KEY_SMS_SENDER_NUMBER, smsNumber);
+        return getSharedPreferences(context, PREF_KEY_SMS_SENDER_NUMBER, "");
     }
 
     public static String getSmsTestMessagePattern(Context context) {
         return getSharedPreferences(context, PREF_KEY_SMS_TEST_MESSAGE_PATTERN, ".*Test.*");
     }
 
-    public static void setSmsTestMessagePattern(Context context, String testMessagePattern) {
-        setSharedPreferences(context, PREF_KEY_SMS_TEST_MESSAGE_PATTERN, testMessagePattern);
+    public static boolean getUseVibrate(Context context) {
+        return Boolean.valueOf(getSharedPreferences(context, PREF_KEY_USE_VIBRATE, "true"));
     }
 
     public static Instant getSmsLastTestMessageReceivedTime(Context context) {

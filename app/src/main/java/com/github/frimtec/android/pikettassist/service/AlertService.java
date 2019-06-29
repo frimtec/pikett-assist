@@ -32,15 +32,17 @@ public class AlertService extends Service {
     Log.d(TAG, "Alert Service onStartCommand");
 
     Log.d(TAG, "Start ringtone.");
-    Context applicationContext = getApplicationContext();
-    Ringtone ringtone = RingtoneManager.getRingtone(applicationContext, getAlarmTone());
-    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    Context context = getApplicationContext();
+    Ringtone ringtone = RingtoneManager.getRingtone(context, getAlarmTone());
     ringtone.play();
-    vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+    if (SharedState.getUseVibrate(context)) {
+      Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+      vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+    }
 
-    NotificationHelper.confirm(applicationContext, (dialogInterface, integer) -> {
+    NotificationHelper.confirm(context, (dialogInterface, integer) -> {
       Log.d(TAG, "Confirm received.");
-      confirmAlarm(applicationContext);
+      confirmAlarm(context);
       ringtone.stop();
       Log.d(TAG, "Alarm finished.");
     });

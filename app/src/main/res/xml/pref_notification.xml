@@ -1,0 +1,8 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <SwitchPreference
+      android:key="use_vibrate"
+      android:title="@string/pref_title_vibrate"
+      android:defaultValue="true"/>
+
+</PreferenceScreen>

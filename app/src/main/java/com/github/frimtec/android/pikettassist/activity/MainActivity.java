@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -33,12 +34,30 @@ public class MainActivity extends AppCompatActivity {
   private static final int REQUEST_CODE = 1;
   private static final String TAG = "MainActivity";
 
+  private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+    switch (item.getItemId()) {
+      case R.id.navigation_home:
+        Log.v("MainActivity", "Tab selected: home");
+        return true;
+      case R.id.navigation_shifts:
+        Log.v("MainActivity", "Tab selected: shifts");
+        return true;
+      case R.id.navigation_alert_log:
+        Log.v("MainActivity", "Tab selected: alert log");
+        return true;
+    }
+    return false;
+  };
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     NotificationHelper.registerChannel(this);
 
     setContentView(R.layout.activity_main);
+
+    BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+    navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     if (!Settings.canDrawOverlays(this)) {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -78,12 +97,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.shift:
-        Log.v(TAG, "Menu option SHIFT selected.");
-        return true;
-      case R.id.calllog:
-        Log.v("MainActivity", "Menu option CALLLOG selected.");
-        return true;
       case R.id.settings:
         Log.v("MainActivity", "Menu option SETTINGS selected.");
         return true;

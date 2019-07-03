@@ -1,12 +1,13 @@
 package com.github.frimtec.android.pikettassist.receiver;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.util.Pair;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.state.DbHelper;
+import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
@@ -16,6 +17,12 @@ import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CONFIRM;
 import static com.github.frimtec.android.pikettassist.helper.SmsHelper.confimSms;
@@ -42,9 +49,32 @@ public class SmsListener extends BroadcastReceiver {
             confimSms(pikettNumber);
           } else {
             Log.d(TAG, "Alarm");
-            if(SharedState.getAlarmState(context) != AlarmState.ON) {
-              SharedState.setAlarmState(context, AlarmState.ON);
-              context.startService(new Intent(context, AlertService.class));
+            Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(context);
+            try(SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
+              Long caseId;
+              if(alarmState.first == AlarmState.OFF) {
+                Log.d(TAG, "Alarm state OFF -> ON");
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("start_time", Instant.now().toEpochMilli());
+                caseId = writableDatabase.insert("t_case", null, contentValues);
+                context.startService(new Intent(context, AlertService.class));
+              } else if(alarmState.first == AlarmState.ON_CONFIRMED){
+                Log.d(TAG, "Alarm state ON_CONFIRMED -> ON");
+                ContentValues contentValues = new ContentValues();
+                contentValues.putNull("confirm_time");
+                caseId = alarmState.second;
+                writableDatabase.update("t_case", contentValues, "_id=?", new String[]{String.valueOf(caseId)});
+                context.startService(new Intent(context, AlertService.class));
+              } else {
+                Log.d(TAG, "Alarm state ON -> ON");
+                caseId = alarmState.second;
+              }
+              ContentValues contentValues = new ContentValues();
+              contentValues.put("case_id", caseId);
+              contentValues.put("time", Instant.now().toEpochMilli());
+              contentValues.put("time", Instant.now().toEpochMilli());
+              contentValues.put("message", sms.getText());
+              writableDatabase.insert("t_call", null, contentValues);
             }
           }
         }

@@ -3,8 +3,10 @@ package com.github.frimtec.android.pikettassist.service;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -17,7 +19,10 @@ import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
 import com.github.frimtec.android.pikettassist.receiver.AlarmActionListener;
+import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+
+import java.time.Instant;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE;
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CONFIRM;
@@ -51,7 +56,14 @@ public class AlertService extends Service {
   }
 
   private void confirmAlarm(Context context) {
-    SharedState.setAlarmState(context, AlarmState.ON_CONFIRMED);
+    try(SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
+      ContentValues values = new ContentValues();
+      values.put("confirm_time", Instant.now().toEpochMilli());
+      int update = writableDatabase.update("t_case", values, "end_time is null", null);
+      if(update != 1) {
+        Log.e(TAG, "One open case expected, but got " + update);
+      }
+    }
     SmsHelper.confimSms(SharedState.getSmsSenderNumber(context));
     NotificationHelper.notify(
         context,

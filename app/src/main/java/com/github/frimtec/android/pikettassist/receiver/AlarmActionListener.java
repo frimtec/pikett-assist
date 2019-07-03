@@ -1,14 +1,19 @@
 package com.github.frimtec.android.pikettassist.receiver;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
+import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+
+import java.time.Instant;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE;
 
@@ -30,7 +35,14 @@ public class AlarmActionListener extends BroadcastReceiver {
   }
 
   private void closeAlarm(Context context) {
-    SharedState.setAlarmState(context, AlarmState.OFF);
+    try(SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
+      ContentValues values = new ContentValues();
+      values.put("end_time", Instant.now().toEpochMilli());
+      int update = writableDatabase.update("t_case", values, "end_time is null", null);
+      if(update != 1) {
+        Log.e(TAG, "One open case expected, but got " + update);
+      }
+    }
     NotificationHelper.cancel(context);
   }
 }

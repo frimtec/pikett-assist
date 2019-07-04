@@ -32,7 +32,7 @@ public class AboutActivity extends Activity {
     }
 
     textView.setText(Html.fromHtml(
-        "<h2><a href='https://github.com/frimtec/pikett-assist'>Pikett-Assist</a></h2>" +
+        "<h2><a href='https://github.com/frimtec/pikett-assist'>PAssist</a></h2>" +
             "<br>" +
             "<p>Version: " + version + " (build  " + build + ")</p>" +
             "<br>" +

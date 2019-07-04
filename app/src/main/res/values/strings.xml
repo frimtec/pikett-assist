@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">Pikett-Assist</string>
+  <string name="app_name">PAssist</string>
   <string name="channel_name">pikett-assist-channel</string>
   <string name="channel_description">pikett assist channel description</string>
   <string name="confirm">CONFIRM</string>

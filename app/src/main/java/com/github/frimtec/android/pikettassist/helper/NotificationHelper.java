@@ -69,7 +69,7 @@ public class NotificationHelper {
   public static void confirm(Context context, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
         // set dialog message
-        .setTitle("Piket Alarm received")
+        .setTitle("Pikett alarm received")
         .setMessage("Please confirm!")
         .setCancelable(false)
         .setPositiveButton("CONFIRM", (dialog, id) -> {

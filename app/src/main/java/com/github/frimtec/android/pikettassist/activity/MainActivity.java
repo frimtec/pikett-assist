@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.*;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -70,22 +71,24 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
-      ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
-    } else {
-      startService(new Intent(this, PikettService.class));
-    }
-
     if (!Settings.canDrawOverlays(this)) {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
       startActivityForResult(intent, 0);
     }
     if (!Settings.canDrawOverlays(this)) {
-      Log.e("MainActivity", "Missing permissions.");
-      // TODO display in main activity
+      finish();
       return;
     }
 
+    if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
+      ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
+      return;
+    }
+    startService(new Intent(this, PikettService.class));
+    showState();
+  }
+
+  private void showState() {
     TextView textView = (TextView) findViewById(R.id.main_state);
     textView.setText(Html.fromHtml("Pikett state: " + SharedState.getPikettState(this) + "<br/>" +
         "Alarm state: " + SharedState.getAlarmState(this).first, Html.FROM_HTML_MODE_COMPACT));
@@ -123,10 +126,11 @@ public class MainActivity extends AppCompatActivity {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (Arrays.stream(grantResults).anyMatch(result -> result == PERMISSION_DENIED)) {
       Log.e("MainActivity", "Missing permissions.");
-      // TODO display in main activity
+      finish();
       return;
     }
     startService(new Intent(this, PikettService.class));
+    showState();
   }
 
   @Override

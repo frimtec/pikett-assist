@@ -44,5 +44,6 @@ public class AlarmActionListener extends BroadcastReceiver {
       }
     }
     NotificationHelper.cancel(context);
+    context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
   }
 }

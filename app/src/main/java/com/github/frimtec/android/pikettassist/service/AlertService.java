@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -49,6 +50,7 @@ public class AlertService extends Service {
       Log.d(TAG, "Confirm received.");
       confirmAlarm(context);
       ringtone.stop();
+      context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       Log.d(TAG, "Alarm finished.");
     });
     stopSelf();

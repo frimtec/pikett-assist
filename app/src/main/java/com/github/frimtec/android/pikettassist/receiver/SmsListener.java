@@ -101,6 +101,7 @@ public class SmsListener extends BroadcastReceiver {
           }
         }
       }
+      context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
     }
   }
 }

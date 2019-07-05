@@ -38,7 +38,7 @@ public class AlarmActionListener extends BroadcastReceiver {
     try(SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
       ContentValues values = new ContentValues();
       values.put("end_time", Instant.now().toEpochMilli());
-      int update = writableDatabase.update("t_case", values, "end_time is null", null);
+      int update = writableDatabase.update("t_alert", values, "end_time is null", null);
       if(update != 1) {
         Log.e(TAG, "One open case expected, but got " + update);
       }

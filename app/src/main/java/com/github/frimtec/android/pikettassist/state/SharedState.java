@@ -21,7 +21,6 @@ public final class SharedState {
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
-  public static final String PREF_KEY_SMS_LAST_TEST_MESSAGE_RECEIVED_TIME = "last_test_message_received_time";
   public static final String PREF_KEY_USE_VIBRATE = "use_vibrate";
   public static final String START_OF_TIME = "0";
 
@@ -34,7 +33,7 @@ public final class SharedState {
 
   public static Pair<AlarmState, Long> getAlarmState(Context context) {
     try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor cursor = db.query("t_case", new String[]{"_id", "confirm_time"}, "end_time is null", null, null, null, null)) {
+         Cursor cursor = db.query("t_alert", new String[]{"_id", "confirm_time"}, "end_time is null", null, null, null, null)) {
       if (cursor.getCount() == 0) {
         return Pair.create(AlarmState.OFF, null);
       } else if (cursor.getCount() > 0)
@@ -62,14 +61,6 @@ public final class SharedState {
 
   public static boolean getUseVibrate(Context context) {
     return Boolean.valueOf(getSharedPreferences(context, PREF_KEY_USE_VIBRATE, "true"));
-  }
-
-  public static Instant getSmsLastTestMessageReceivedTime(Context context) {
-    return Instant.ofEpochMilli(Long.getLong(getSharedPreferences(context, PREF_KEY_SMS_LAST_TEST_MESSAGE_RECEIVED_TIME, START_OF_TIME)));
-  }
-
-  public static void setSmsLastTestMessageReceivedTime(Context context, Instant time) {
-    setSharedPreferences(context, PREF_KEY_SMS_LAST_TEST_MESSAGE_RECEIVED_TIME, String.valueOf(time.toEpochMilli()));
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

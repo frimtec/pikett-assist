@@ -18,16 +18,21 @@ public class DbHelper extends SQLiteOpenHelper {
   @Override
   public void onCreate(SQLiteDatabase db) {
     Log.v(TAG, "Create DB");
-    db.execSQL("CREATE TABLE t_case (" +
+    db.execSQL("CREATE TABLE t_alert (" +
         "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
         "  start_time INTEGER NOT NULL," +
         "  confirm_time INTEGER," +
         "  end_time INTEGER" +
         ");");
-    db.execSQL("CREATE TABLE t_call (" +
+    db.execSQL("CREATE TABLE t_alert_call (" +
         "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-        "  case_id INTEGER REFERENCES t_case (_id) ON DELETE CASCADE," +
+        "  case_id INTEGER REFERENCES t_alert (id) ON DELETE CASCADE," +
         "  time INTEGER NOT NULL," +
+        "  message TEXT NOT NULL" +
+        ");");
+    db.execSQL("CREATE TABLE t_test_alarm_state (" +
+        "  _id TEXT PRIMARY KEY," +
+        "  last_received_time INTEGER NOT NULL," +
         "  message TEXT NOT NULL" +
         ");");
   }

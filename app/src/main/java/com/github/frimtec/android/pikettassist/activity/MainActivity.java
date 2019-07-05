@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
       case R.id.navigation_alert_log:
         Log.v("MainActivity", "Tab selected: alert log");
+        startActivity(new Intent(this, AlertLogActivity.class));
         return true;
     }
     return false;

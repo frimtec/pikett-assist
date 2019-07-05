@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.receiver;
 
 import android.content.*;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.util.Pair;
@@ -23,6 +24,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CONFIRM;
 import static com.github.frimtec.android.pikettassist.helper.SmsHelper.confimSms;
@@ -43,27 +46,46 @@ public class SmsListener extends BroadcastReceiver {
       for (Sms sms : SmsHelper.getSmsFromIntent(intent)) {
         if (sms.getNumber().equals(pikettNumber)) {
           Log.d(TAG, "SMS from pikett number");
-          if (sms.getText().matches(SharedState.getSmsTestMessagePattern(context))) {
-            Log.d(TAG, "TEST alarm");
-            SharedState.setSmsLastTestMessageReceivedTime(context, Instant.now());
+          Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
+          Matcher matcher = testSmsPattern.matcher(sms.getText());
+          if (matcher.matches()) {
+            String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
+            id = id != null ? id : "general";
+            Log.d(TAG, "TEST alarm with ID: " + id);
             confimSms(pikettNumber);
+            try(SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
+              try(Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id"}, "_id=?", new String[]{id}, null, null, null)) {
+                if(cursor.getCount() == 0) {
+                  ContentValues contentValues = new ContentValues();
+                  contentValues.put("_id", id);
+                  contentValues.put("last_received_time", Instant.now().toEpochMilli());
+                  contentValues.put("message", sms.getText());
+                  db.insert("t_test_alarm_state", null, contentValues);
+                } else {
+                  ContentValues contentValues = new ContentValues();
+                  contentValues.put("last_received_time", Instant.now().toEpochMilli());
+                  contentValues.put("message", sms.getText());
+                  db.update("t_test_alarm_state", contentValues, "_id=?", new String[]{id});
+                }
+              }
+            }
           } else {
             Log.d(TAG, "Alarm");
             Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(context);
-            try(SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
+            try(SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
               Long caseId;
               if(alarmState.first == AlarmState.OFF) {
                 Log.d(TAG, "Alarm state OFF -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("start_time", Instant.now().toEpochMilli());
-                caseId = writableDatabase.insert("t_case", null, contentValues);
+                caseId = db.insert("t_alert", null, contentValues);
                 context.startService(new Intent(context, AlertService.class));
               } else if(alarmState.first == AlarmState.ON_CONFIRMED){
                 Log.d(TAG, "Alarm state ON_CONFIRMED -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.putNull("confirm_time");
                 caseId = alarmState.second;
-                writableDatabase.update("t_case", contentValues, "_id=?", new String[]{String.valueOf(caseId)});
+                db.update("t_alert", contentValues, "_id=?", new String[]{String.valueOf(caseId)});
                 context.startService(new Intent(context, AlertService.class));
               } else {
                 Log.d(TAG, "Alarm state ON -> ON");
@@ -74,7 +96,7 @@ public class SmsListener extends BroadcastReceiver {
               contentValues.put("time", Instant.now().toEpochMilli());
               contentValues.put("time", Instant.now().toEpochMilli());
               contentValues.put("message", sms.getText());
-              writableDatabase.insert("t_call", null, contentValues);
+              db.insert("t_alert_call", null, contentValues);
             }
           }
         }

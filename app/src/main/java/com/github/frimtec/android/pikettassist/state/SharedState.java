@@ -10,10 +10,7 @@ import android.util.Pair;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.PikettState;
 
-import java.time.Instant;
-import java.util.Optional;
-
-import static com.github.frimtec.android.pikettassist.helper.CelendarEventHelper.hasPikettEventForNow;
+import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
 
 public final class SharedState {
 

@@ -10,20 +10,18 @@ import android.util.Log;
 import android.view.WindowManager;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
-import com.github.frimtec.android.pikettassist.domain.Sms;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
-import static android.app.Notification.CATEGORY_ALARM;
-import static android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR;
+import static android.app.Notification.*;
 
 
 public class NotificationHelper {
   private static final String TAG = "NotificationHelper";
 
   private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
-  private static final int NOTIFICATION_ID = 1;
+  public  static final int ALERT_NOTIFICATION_ID = 1;
+  public static final int SHIFT_NOTIFICATION_ID = 2;
 
   public static final String ACTION_CONFIRM = "com.github.frimtec.android.pikettassist.CONFIRM_ALARM";
   public static final String ACTION_CLOSE = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
@@ -58,12 +56,29 @@ public class NotificationHelper {
         .setOnlyAlertOnce(true)
         .build();
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(NOTIFICATION_ID, notification);
+    notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
   }
 
-  public static void cancel(Context context) {
+  public static void notifyShiftOn(Context context) {
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+    );
+    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+        .setContentTitle("Pikett ON")
+        .setContentText("You are on Pikett!")
+        // TODO choose icon for confirm and close
+        .setSmallIcon(R.drawable.pikett_alarm)
+        .setCategory(CATEGORY_EVENT)
+        .setOnlyAlertOnce(true)
+        .setContentIntent(notifyPendingIntent)
+        .build();
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.cancel(NOTIFICATION_ID);
+    notificationManagerCompat.notify(SHIFT_NOTIFICATION_ID, notification);
+  }
+
+  public static void cancel(Context context, int id) {
+    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+    notificationManagerCompat.cancel(ALERT_NOTIFICATION_ID);
   }
 
   public static void confirm(Context context, BiConsumer<DialogInterface, Integer> action) {

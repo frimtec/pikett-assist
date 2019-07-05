@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
           Log.e(TAG, "One open case expected, but got " + update);
         }
       }
-      NotificationHelper.cancel(this);
+      NotificationHelper.cancel(this, NotificationHelper.ALERT_NOTIFICATION_ID);
       refresh();
     });
     refresh();

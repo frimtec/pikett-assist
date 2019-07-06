@@ -52,9 +52,12 @@ public class MainActivity extends AppCompatActivity {
         return true;
       case R.id.navigation_shifts:
         Log.v("MainActivity", "Tab selected: shifts");
+        // TODO: 06.07.2019 Keine neue Activity
+        startActivity(new Intent(this, ShiftListActivity.class));
         return true;
       case R.id.navigation_alert_log:
         Log.v("MainActivity", "Tab selected: alert log");
+        // TODO: 06.07.2019 Keine neue Activity
         startActivity(new Intent(this, AlertLogActivity.class));
         return true;
     }

@@ -39,7 +39,7 @@ public class PikettService extends Service {
     Instant now = PikettShift.now();
     Optional<PikettShift> first = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this))
         .stream().filter(shift -> !shift.isOver(now)).findFirst();
-    Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime() : shift.getStartTime()).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
+    Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime(true) : shift.getStartTime(true)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
     long waitMs = Math.min(Duration.between(now, nextRun).toMillis(), MAX_SLEEP.toMillis());
     Log.d(TAG, "Next run in " + waitMs);
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 public final class CalendarEventHelper {
@@ -42,7 +43,7 @@ public final class CalendarEventHelper {
 
     endTime.add(Calendar.DATE, 180);
     String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTEND + " <= " + endTime.getTimeInMillis() + " ) AND ( deleted != 1 ))";
-    List<PikettShift> events = new ArrayList<>();
+    List<PikettShift> events = new LinkedList<>();
     try (@SuppressLint("MissingPermission") Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
@@ -56,7 +57,7 @@ public final class CalendarEventHelper {
         } while (cursor.moveToNext());
       }
     }
-    events.sort(Comparator.comparing(PikettShift::getStartTime));
+    events.sort(Comparator.comparing(shift -> shift.getStartTime(false)));
     return events;
   }
 }

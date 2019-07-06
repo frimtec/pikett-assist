@@ -1,9 +1,8 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class PikettShift {
 
@@ -23,12 +22,12 @@ public class PikettShift {
     return title;
   }
 
-  public Instant getStartTime() {
-    return startTime;
+  public Instant getStartTime(boolean withTollerance) {
+    return withTollerance ? startTime.minus(TIME_TOLLERANCE) : startTime;
   }
 
-  public Instant getEndTime() {
-    return endTime;
+  public Instant getEndTime(boolean withTollerance) {
+    return withTollerance ? endTime.plus(TIME_TOLLERANCE) : endTime;
   }
 
   public static Instant now() {
@@ -44,10 +43,10 @@ public class PikettShift {
   }
 
   public boolean isOver(Instant now) {
-    return now.isAfter(getEndTime().plus(TIME_TOLLERANCE));
+    return now.isAfter(getEndTime(true));
   }
 
   public boolean isInFuture(Instant now) {
-    return now.isBefore(getStartTime().minus(TIME_TOLLERANCE)) ;
+    return now.isBefore(getStartTime(true));
   }
 }

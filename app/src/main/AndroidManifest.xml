@@ -35,6 +35,7 @@
           android:name="android.support.PARENT_ACTIVITY"
           android:value="com.github.frimtec.android.pikettassist.activity.MainActivity"/>
     </activity>
+    <activity android:name=".activity.ShiftListActivity"/>
 
     <receiver android:name=".receiver.AutoStart">
       <intent-filter>

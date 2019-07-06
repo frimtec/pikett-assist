@@ -71,7 +71,7 @@ public class SignalStrengthService extends Service {
     super.onDestroy();
     if (CalendarEventHelper.hasPikettEventForNow(this, SharedState.getCalendarEventPikettTitlePattern(this))) {
       AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-      alarm.set(alarm.RTC_WAKEUP, System.currentTimeMillis() + (lowSignal ? 1000 : 60 * 1000),
+      alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + (lowSignal ? 1000 : 60 * 1000),
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );
     }

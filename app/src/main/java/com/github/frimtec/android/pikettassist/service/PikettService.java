@@ -50,7 +50,7 @@ public class PikettService extends Service {
     } else {
       NotificationHelper.cancel(this, NotificationHelper.SHIFT_NOTIFICATION_ID);
     }
-    alarm.set(alarm.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
+    alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
         PendingIntent.getService(this, 0, new Intent(this, PikettService.class), 0)
     );
   }

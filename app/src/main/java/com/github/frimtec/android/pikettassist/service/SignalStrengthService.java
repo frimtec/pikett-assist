@@ -2,78 +2,74 @@ package com.github.frimtec.android.pikettassist.service;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.telephony.*;
+import android.telephony.CellInfo;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
+import com.github.frimtec.android.pikettassist.domain.PikettState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
+import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
 
-import static android.telephony.CellSignalStrength.SIGNAL_STRENGTH_POOR;
+public class SignalStrengthService extends IntentService {
 
-public class SignalStrengthService extends Service {
+  public SignalStrengthService() {
+    super(TAG);
+  }
 
   private static final String TAG = "SignalStrengthService";
-
-  private boolean lowSignal = false;
+  private static final int CHECK_INTERVAL_MS = 60 * 1000;
 
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    super.onStartCommand(intent, flags, startId);
+  public void onHandleIntent(Intent intent) {
+    Log.d(TAG, "Service cycle");
 
     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
-    CellSignalStrength signalStrength = null;
-    if (cellInfos.size() == 0) {
-      Log.w(TAG, "No signal");
-    } else {
-      CellInfo cellInfo = cellInfos.get(0);
-      if (cellInfo instanceof CellInfoGsm) {
-        signalStrength = ((CellInfoGsm) cellInfo).getCellSignalStrength();
-      } else if (cellInfo instanceof CellInfoLte) {
-        signalStrength = ((CellInfoLte) cellInfo).getCellSignalStrength();
-      } else {
-        Log.e(TAG, "Unknown cell info type: " + cellInfos.getClass().getName());
-      }
-      if (signalStrength != null) {
-        Log.v(TAG, String.format("Signal strength dbm: %d; level: %d; asu: %d", signalStrength.getDbm(), signalStrength.getLevel(), signalStrength.getAsuLevel()));
-      }
-    }
-
-    if(signalStrength == null || signalStrength.getLevel() <= SIGNAL_STRENGTH_POOR) {
-      lowSignal = true;
+    SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
+    if (isLowSignal(level)) {
+      this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      vibrator.vibrate(VibrationEffect.createOneShot(900, VibrationEffect.DEFAULT_AMPLITUDE));
-      NotificationHelper.notifySignalLow(this, signalStrength);
-    } else {
-      lowSignal = false;
+      long[] pattern = {0, 100, 500};
+      vibrator.vibrate(pattern, 0);
+      NotificationHelper.notifySignalLow(this, level);
+      do {
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          Log.e(TAG, "Unexpected interrupt", e);
+        }
+        level = SignalStremgthHelper.getSignalStrength(this);
+      } while (isLowSignal(level));
+      vibrator.cancel();
+      this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
     }
-    stopSelf();
-    return START_NOT_STICKY;
   }
 
-  @Override
-  public IBinder onBind(Intent intent) {
-    return null;
+  private boolean isLowSignal(SignalLevel level) {
+    return level.ordinal() <= SignalLevel.POOR.ordinal();
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (CalendarEventHelper.hasPikettEventForNow(this, SharedState.getCalendarEventPikettTitlePattern(this))) {
+    if (SharedState.getPikettState(this) == PikettState.ON) {
       AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-      alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + (lowSignal ? 1000 : 60 * 1000),
+      alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );
+    } else {
+      Log.d(TAG, "SignalStrengthService stopped as pikett state is OFF");
     }
   }
 }

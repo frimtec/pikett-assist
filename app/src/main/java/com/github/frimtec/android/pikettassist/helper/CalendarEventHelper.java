@@ -32,7 +32,7 @@ public final class CalendarEventHelper {
 
   public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern) {
     String[] projection = new String[]{
-        CalendarContract.Events.CALENDAR_ID,
+        CalendarContract.Events._ID,
         CalendarContract.Events.TITLE,
         CalendarContract.Events.DTSTART,
         CalendarContract.Events.DTEND
@@ -47,12 +47,13 @@ public final class CalendarEventHelper {
     try (@SuppressLint("MissingPermission") Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
+          long id = cursor.getLong(0);
           String eventTitle = cursor.getString(1);
           Instant eventStartTime = Instant.ofEpochMilli(cursor.getLong(2));
           Instant eventEndTime = Instant.ofEpochMilli(cursor.getLong(3));
           Instant now = LocalDateTime.now().toInstant(ZoneOffset.UTC);
           if (eventTitle.matches(eventTitleFilterPattern)) {
-            events.add(new PikettShift(eventTitle, eventStartTime, eventEndTime));
+            events.add(new PikettShift(id, eventTitle, eventStartTime, eventEndTime));
           }
         } while (cursor.moveToNext());
       }

@@ -11,7 +11,7 @@
   <!-- Strings related to Settings -->
 
   <string name="pref_header_alarming">Alarming</string>
-  <string name="pref_title_calendar_event_pikett_title_pattern">Pikett shift calender event title pattern</string>
+  <string name="pref_title_calendar_event_pikett_title_pattern">Calender event filter</string>
   <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
 
   <string name="pref_title_sms_sender_number">SMS sender number</string>

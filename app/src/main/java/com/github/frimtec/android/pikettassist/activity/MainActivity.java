@@ -1,30 +1,30 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.Manifest;
-import android.app.PendingIntent;
-import android.content.*;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.AlarmState;
+import com.github.frimtec.android.pikettassist.domain.PikettState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Instant;
 import java.util.Arrays;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
@@ -38,32 +38,67 @@ public class MainActivity extends AppCompatActivity {
       Manifest.permission.RECEIVE_SMS,
       Manifest.permission.RECEIVE_BOOT_COMPLETED,
       Manifest.permission.VIBRATE,
-      Manifest.permission.ACCESS_COARSE_LOCATION
+      Manifest.permission.ACCESS_COARSE_LOCATION,
   };
 
   private static final int REQUEST_CODE = 1;
   private static final String TAG = "MainActivity";
 
   private BroadcastReceiver broadcastReceiver;
+  private StateFragement stateFragement;
+  private ShiftListFragement shiftListFragement;
+  private CallLogFragement calLogFragement;
 
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
-      case R.id.navigation_home:
+      case R.id.navigation_home: {
         Log.v("MainActivity", "Tab selected: home");
+        loadStateFragment();
         return true;
-      case R.id.navigation_shifts:
+      }
+      case R.id.navigation_shifts: {
         Log.v("MainActivity", "Tab selected: shifts");
-        // TODO: 06.07.2019 Keine neue Activity
-        startActivity(new Intent(this, ShiftListActivity.class));
+        loadShiftListFragment();
         return true;
-      case R.id.navigation_alert_log:
+      }
+      case R.id.navigation_alert_log: {
         Log.v("MainActivity", "Tab selected: alert log");
-        // TODO: 06.07.2019 Keine neue Activity
-        startActivity(new Intent(this, AlertLogActivity.class));
+        loadCallLogFragment();
         return true;
+      }
     }
     return false;
   };
+
+  private void loadStateFragment() {
+    if (stateFragement == null) {
+      stateFragement = new StateFragement();
+    }
+    FragmentManager fm = getFragmentManager();
+    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+    fragmentTransaction.replace(R.id.frame_layout, stateFragement);
+    fragmentTransaction.commit(); // save the changes
+  }
+
+  private void loadShiftListFragment() {
+    if (shiftListFragement == null) {
+      shiftListFragement = new ShiftListFragement();
+    }
+    FragmentManager fm = getFragmentManager();
+    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+    fragmentTransaction.replace(R.id.frame_layout, shiftListFragement);
+    fragmentTransaction.commit(); // save the changes
+  }
+
+  private void loadCallLogFragment() {
+    if (calLogFragement == null) {
+      calLogFragement = new CallLogFragement();
+    }
+    FragmentManager fm = getFragmentManager();
+    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+    fragmentTransaction.replace(R.id.frame_layout, calLogFragement);
+    fragmentTransaction.commit(); // save the changes
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -85,45 +120,25 @@ public class MainActivity extends AppCompatActivity {
       return;
     }
 
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+    Log.i(TAG, "Battery opt ignored: " +isIgnoringBatteryOptimizations);
     if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
       ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
       return;
     }
-    startService(new Intent(this, PikettService.class));
-    showState();
+    onCreateAllPermissionsGranted();
   }
 
-  private void showState() {
-    TextView textView = (TextView) findViewById(R.id.main_state);
-    textView.setText(Html.fromHtml("Pikett state: " + SharedState.getPikettState(this) + "<br/>" +
-        "Alarm state: " + SharedState.getAlarmState(this).first, Html.FROM_HTML_MODE_COMPACT));
-
-    Button button = (Button) findViewById(R.id.close_alert_button);
-    button.setOnClickListener(v -> {
-      try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
-        Log.v(TAG, "Close alert button pressed.");
-        ContentValues values = new ContentValues();
-        values.put("end_time", Instant.now().toEpochMilli());
-        int update = writableDatabase.update("t_alert", values, "end_time is null", null);
-        if (update != 1) {
-          Log.e(TAG, "One open case expected, but got " + update);
-        }
-      }
-      NotificationHelper.cancel(this, NotificationHelper.ALERT_NOTIFICATION_ID);
-      refresh();
-    });
-    refresh();
+  private void onCreateAllPermissionsGranted() {
+    loadStateFragment();
+    startService(new Intent(this, PikettService.class));
   }
 
   private void refresh() {
-    TextView textView = (TextView) findViewById(R.id.main_state);
-    textView.setText(Html.fromHtml("Pikett state: " + SharedState.getPikettState(this) + "<br/>" +
-        "Alarm state: " + SharedState.getAlarmState(this).first, Html.FROM_HTML_MODE_COMPACT));
-
-    textView.invalidate();
-    Button button = (Button) findViewById(R.id.close_alert_button);
-    button.setEnabled(SharedState.getAlarmState(this).first != AlarmState.OFF);
-    button.invalidate();
+    if (stateFragement != null) {
+      stateFragement.refresh();
+    }
   }
 
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -133,8 +148,7 @@ public class MainActivity extends AppCompatActivity {
       finish();
       return;
     }
-    startService(new Intent(this, PikettService.class));
-    showState();
+    onCreateAllPermissionsGranted();
   }
 
   @Override
@@ -161,19 +175,33 @@ public class MainActivity extends AppCompatActivity {
     broadcastReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-        Log.v(TAG, "Refresh event received.");
+        Log.v(TAG, "Event received: " + intent.getAction());
+        if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED) &&
+                SharedState.getPikettState(context) == PikettState.ON) {
+          try {
+            // wait for change
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+            throw new RuntimeException("Unexpected interrupt");
+          }
+            Log.v(TAG, "Start signal strength service as pikett state is ON");
+            context.startService(new Intent(context, SignalStrengthService.class));
+        }
         refresh();
       }
     };
-    registerReceiver(broadcastReceiver, new IntentFilter("com.github.frimtec.android.pikettassist.refresh"));
+    IntentFilter filter = new IntentFilter("com.github.frimtec.android.pikettassist.refresh");
+    filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+    registerReceiver(broadcastReceiver, filter);
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    if(broadcastReceiver != null) {
+    if (broadcastReceiver != null) {
       unregisterReceiver(broadcastReceiver);
       broadcastReceiver = null;
     }
   }
+
 }

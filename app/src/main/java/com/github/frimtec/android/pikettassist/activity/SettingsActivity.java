@@ -78,6 +78,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     setupActionBar();
   }
 
+  @Override
+  protected void onStop() {
+    super.onStop();
+    this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+  }
+
   /**
    * Set up the {@link android.app.ActionBar}, if the API is available.
    */

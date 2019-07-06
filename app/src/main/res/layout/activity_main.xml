@@ -33,6 +33,14 @@
       android:id="@+id/close_alert_button" app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="16dp" android:layout_marginStart="280dp"/>
 
+  <ListView
+      android:id="@+id/activity_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentTop="true" >
+  </ListView>
+
   <android.support.design.widget.BottomNavigationView
       android:id="@+id/navigation"
       android:layout_width="0dp"

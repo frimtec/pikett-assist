@@ -18,8 +18,6 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-    <activity android:name=".activity.AlertLogActivity">
-    </activity>
     <activity android:name=".activity.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -36,8 +34,6 @@
           android:name="android.support.PARENT_ACTIVITY"
           android:value="com.github.frimtec.android.pikettassist.activity.MainActivity"/>
     </activity>
-    <activity android:name=".activity.ShiftListActivity"/>
-
     <receiver android:name=".receiver.AutoStart">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>

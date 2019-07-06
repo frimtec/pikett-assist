@@ -1,31 +1,41 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.Manifest;
+import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.*;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
+import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -47,20 +57,46 @@ public class MainActivity extends AppCompatActivity {
   private BroadcastReceiver broadcastReceiver;
 
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+    ListView listView = findViewById(R.id.activity_list);
     switch (item.getItemId()) {
       case R.id.navigation_home:
+      {
         Log.v("MainActivity", "Tab selected: home");
+        ArrayAdapter<PikettShift> adapter = new PikettShiftArrayAdapter(this, Collections.emptyList());
+        listView.setAdapter(adapter);
         return true;
-      case R.id.navigation_shifts:
+      }
+      case R.id.navigation_shifts: {
         Log.v("MainActivity", "Tab selected: shifts");
-        // TODO: 06.07.2019 Keine neue Activity
-        startActivity(new Intent(this, ShiftListActivity.class));
+        Instant now = PikettShift.now();
+        List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this))
+            .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
+        ArrayAdapter<PikettShift> adapter = new PikettShiftArrayAdapter(this, shifts);
+        listView.setAdapter(adapter);
         return true;
-      case R.id.navigation_alert_log:
+      }
+      case R.id.navigation_alert_log: {
         Log.v("MainActivity", "Tab selected: alert log");
-        // TODO: 06.07.2019 Keine neue Activity
-        startActivity(new Intent(this, AlertLogActivity.class));
+        try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
+          Cursor cursor = db.rawQuery("SELECT _id, start_time, end_time FROM t_alert ORDER BY start_time DESC", null);
+          String[] from = new String[]{"start_time", "end_time"};
+          int[] to = new int[]{R.id.textView};
+          SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_item, cursor, from, to, 0);
+          adapter.setViewBinder((view, cursor1, columnIndex) -> {
+            LocalDateTime startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(cursor1.getLong(1)), ZoneId.systemDefault());
+            long endTimeAsLong = cursor1.getLong(2);
+            LocalDateTime endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endTimeAsLong), ZoneId.systemDefault());
+            TextView textView = (TextView) view;
+            textView.setText(Html.fromHtml("<table><tr><td>" +
+                startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())) + " - " +
+                (endTimeAsLong > 0 ? endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())) : "") + "</td>" +
+                "</tr></table>", Html.FROM_HTML_MODE_COMPACT));
+            return true;
+          });
+          listView.setAdapter(adapter);
+        }
         return true;
+      }
     }
     return false;
   };
@@ -176,4 +212,32 @@ public class MainActivity extends AppCompatActivity {
       broadcastReceiver = null;
     }
   }
+
+  private static class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
+    public PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
+      super(context, 0, shifts);
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+      // Get the data item for this position
+      PikettShift shift = getItem(position);
+      // Check if an existing view is being reused, otherwise inflate the view
+      if (convertView == null) {
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
+      }
+      // Lookup view for data population
+      TextView startTimeView = (TextView) convertView.findViewById(R.id.startTime);
+      TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
+      TextView titleView = (TextView) convertView.findViewById(R.id.title);
+      // Populate the data into the template view using the data object
+      startTimeView.setText(LocalDateTime.ofInstant(shift.getStartTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())));
+      endTimeView.setText(LocalDateTime.ofInstant(shift.getEndTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())));
+      titleView.setText(shift.getTitle());
+      // Return the completed view to render on screen
+      return convertView;
+    }
+  }
+
 }

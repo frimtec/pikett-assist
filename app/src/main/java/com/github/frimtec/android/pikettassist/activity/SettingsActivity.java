@@ -14,6 +14,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.service.PikettService;
 
 import java.util.List;
 
@@ -82,6 +83,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
   protected void onStop() {
     super.onStop();
     this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+    startService(new Intent(this, PikettService.class));
   }
 
   /**

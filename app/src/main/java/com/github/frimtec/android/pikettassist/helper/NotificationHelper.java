@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.telephony.CellSignalStrength;
+import android.telephony.SignalStrength;
 import android.util.Log;
 import android.view.WindowManager;
 import com.github.frimtec.android.pikettassist.R;
@@ -22,6 +24,7 @@ public class NotificationHelper {
   private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
   public  static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
+  public static final int SIGNAL_NOTIFICATION_ID = 3;
 
   public static final String ACTION_CONFIRM = "com.github.frimtec.android.pikettassist.CONFIRM_ALARM";
   public static final String ACTION_CLOSE = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
@@ -76,9 +79,27 @@ public class NotificationHelper {
     notificationManagerCompat.notify(SHIFT_NOTIFICATION_ID, notification);
   }
 
+  public static void notifySignalLow(Context context, CellSignalStrength signalStrength) {
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+    );
+    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+        .setContentTitle("Low signal")
+        .setContentText("Signal level: " + (signalStrength != null ? signalStrength.getLevel() : "OFF"))
+        // TODO choose icon for confirm and close
+        .setSmallIcon(R.drawable.pikett_alarm)
+        .setCategory(CATEGORY_EVENT)
+        .setOnlyAlertOnce(true)
+        .setContentIntent(notifyPendingIntent)
+        .build();
+
+    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+    notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
+  }
+
   public static void cancel(Context context, int id) {
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.cancel(ALERT_NOTIFICATION_ID);
+    notificationManagerCompat.cancel(id);
   }
 
   public static void confirm(Context context, BiConsumer<DialogInterface, Integer> action) {

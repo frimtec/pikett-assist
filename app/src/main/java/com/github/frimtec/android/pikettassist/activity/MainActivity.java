@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
       Manifest.permission.RECEIVE_SMS,
       Manifest.permission.RECEIVE_BOOT_COMPLETED,
       Manifest.permission.VIBRATE,
+      Manifest.permission.ACCESS_COARSE_LOCATION
   };
 
   private static final int REQUEST_CODE = 1;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    registerReceiver();
     NotificationHelper.registerChannel(this);
 
     setContentView(R.layout.activity_main);
@@ -111,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
       refresh();
     });
     refresh();
-    registerReceiver();
   }
 
   private void refresh() {
@@ -168,14 +169,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
-    /*
-     * Step 4: Ensure to unregister the receiver when the activity is destroyed so that
-     * you don't face any memory leak issues in the app
-     */
+  protected void onDestroy() {
+    super.onDestroy();
     if(broadcastReceiver != null) {
       unregisterReceiver(broadcastReceiver);
+      broadcastReceiver = null;
     }
   }
 }

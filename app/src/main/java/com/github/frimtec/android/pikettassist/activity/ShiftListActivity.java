@@ -16,11 +16,13 @@ import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class ShiftListActivity extends ListActivity {
 
@@ -32,7 +34,9 @@ public class ShiftListActivity extends ListActivity {
   }
 
   public void displayList() {
-    List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this));
+    Instant now = PikettShift.now();
+    List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this))
+        .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
     ArrayAdapter<PikettShift> adapter = new PikettShiftArrayAdapter(this, shifts);
     ListView listView = getListView();
     listView.setAdapter(adapter);

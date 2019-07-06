@@ -46,6 +46,7 @@ public class PikettService extends Service {
 
     if(first.map(PikettShift::isNow).orElse(false)) {
       NotificationHelper.notifyShiftOn(this);
+      this.startService(new Intent(this, SignalStrengthService.class));
     } else {
       NotificationHelper.cancel(this, NotificationHelper.SHIFT_NOTIFICATION_ID);
     }

@@ -42,8 +42,8 @@ public class CallLogFragement extends Fragment {
         LocalDateTime endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endTimeAsLong), ZoneId.systemDefault());
         TextView textView = (TextView) view;
         textView.setText(Html.fromHtml("<table><tr><td>" +
-            startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())) + " - " +
-            (endTimeAsLong > 0 ? endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())) : "") + "</td>" +
+            startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())) + " - " +
+            (endTimeAsLong > 0 ? endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())) : "") + "</td>" +
             "</tr></table>", Html.FROM_HTML_MODE_COMPACT));
         return true;
       });

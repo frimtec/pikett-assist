@@ -36,8 +36,8 @@ class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
     TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
     TextView titleView = (TextView) convertView.findViewById(R.id.title);
     // Populate the data into the template view using the data object
-    startTimeView.setText(LocalDateTime.ofInstant(shift.getStartTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())));
-    endTimeView.setText(LocalDateTime.ofInstant(shift.getEndTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())));
+    startTimeView.setText(LocalDateTime.ofInstant(shift.getStartTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())));
+    endTimeView.setText(LocalDateTime.ofInstant(shift.getEndTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())));
     titleView.setText(shift.getTitle());
     // Return the completed view to render on screen
     return convertView;

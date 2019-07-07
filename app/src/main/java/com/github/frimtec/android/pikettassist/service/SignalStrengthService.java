@@ -37,9 +37,6 @@ public class SignalStrengthService extends Service {
     SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
     if (isLowSignal(level)) {
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      // Start without a delay
-      // Vibrate for 100 milliseconds
-      // Sleep for 1000 milliseconds
       long[] pattern = {0, 100, 500};
       vibrator.vibrate(pattern, 0);
       NotificationHelper.notifySignalLow(this, level);

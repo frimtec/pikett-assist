@@ -57,7 +57,8 @@ public final class SharedState {
   }
 
   public static boolean getUseVibrate(Context context) {
-    return Boolean.valueOf(getSharedPreferences(context, PREF_KEY_USE_VIBRATE, "true"));
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_USE_VIBRATE, true);
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

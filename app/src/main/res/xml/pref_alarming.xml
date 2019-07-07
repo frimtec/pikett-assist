@@ -14,7 +14,7 @@
       android:title="@string/pref_title_sms_sender_number"
       android:defaultValue="@string/pref_default_sms_sender_number"
       android:selectAllOnFocus="true"
-      android:inputType="number"
+      android:inputType="text"
       android:singleLine="true"
       android:maxLines="1"/>
 

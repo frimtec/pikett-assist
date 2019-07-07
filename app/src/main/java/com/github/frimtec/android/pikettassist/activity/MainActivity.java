@@ -1,16 +1,12 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.Manifest;
-import android.app.ListActivity;
-import android.app.PendingIntent;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -81,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
           Cursor cursor = db.rawQuery("SELECT _id, start_time, end_time FROM t_alert ORDER BY start_time DESC", null);
           String[] from = new String[]{"start_time", "end_time"};
           int[] to = new int[]{R.id.textView};
-          SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.row_item, cursor, from, to, 0);
+          SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.alert_log_item, cursor, from, to, 0);
           adapter.setViewBinder((view, cursor1, columnIndex) -> {
             LocalDateTime startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(cursor1.getLong(1)), ZoneId.systemDefault());
             long endTimeAsLong = cursor1.getLong(2);
@@ -210,33 +206,6 @@ public class MainActivity extends AppCompatActivity {
     if(broadcastReceiver != null) {
       unregisterReceiver(broadcastReceiver);
       broadcastReceiver = null;
-    }
-  }
-
-  private static class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
-    public PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
-      super(context, 0, shifts);
-    }
-
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-      // Get the data item for this position
-      PikettShift shift = getItem(position);
-      // Check if an existing view is being reused, otherwise inflate the view
-      if (convertView == null) {
-        convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
-      }
-      // Lookup view for data population
-      TextView startTimeView = (TextView) convertView.findViewById(R.id.startTime);
-      TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
-      TextView titleView = (TextView) convertView.findViewById(R.id.title);
-      // Populate the data into the template view using the data object
-      startTimeView.setText(LocalDateTime.ofInstant(shift.getStartTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())));
-      endTimeView.setText(LocalDateTime.ofInstant(shift.getEndTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", Locale.getDefault())));
-      titleView.setText(shift.getTitle());
-      // Return the completed view to render on screen
-      return convertView;
     }
   }
 

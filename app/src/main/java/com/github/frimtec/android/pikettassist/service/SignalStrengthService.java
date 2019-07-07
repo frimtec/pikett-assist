@@ -14,6 +14,7 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
+import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
@@ -33,23 +34,23 @@ public class SignalStrengthService extends Service {
     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
-    Optional<Integer> signalStrength = SignalStremgthHelper.getSignalStrength(this);
-    if (isLowSignal(signalStrength)) {
+    SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
+    if (isLowSignal(level)) {
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
       // Start without a delay
       // Vibrate for 100 milliseconds
       // Sleep for 1000 milliseconds
       long[] pattern = {0, 100, 500};
       vibrator.vibrate(pattern, 0);
-      NotificationHelper.notifySignalLow(this, signalStrength);
+      NotificationHelper.notifySignalLow(this, level);
       do {
         try {
           Thread.sleep(1000);
         } catch (InterruptedException e) {
           Log.e(TAG, "Unexpected interrupt", e);
         }
-        signalStrength = SignalStremgthHelper.getSignalStrength(this);
-      } while (isLowSignal(signalStrength));
+        level = SignalStremgthHelper.getSignalStrength(this);
+      } while (isLowSignal(level));
       vibrator.cancel();
     }
     stopSelf();
@@ -57,8 +58,8 @@ public class SignalStrengthService extends Service {
   }
 
 
-  private boolean isLowSignal(Optional<Integer> signalStrength) {
-    return !signalStrength.isPresent() || signalStrength.get() <= SIGNAL_STRENGTH_POOR;
+  private boolean isLowSignal(SignalLevel level) {
+    return level.ordinal() <= SignalLevel.POOR.ordinal();
     }
 
   @Override

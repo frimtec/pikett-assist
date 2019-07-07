@@ -11,8 +11,41 @@ import java.util.Optional;
 public class SignalStremgthHelper {
   private static final String TAG = "SignalStremgthHelper";
 
+  public enum SignalLevel {
+    OFF(-1),
+    NONE(0),
+    POOR(1),
+    MODERATE(2),
+    GOOD(3),
+    GREAT(4);
+    private final int level;
 
-  public static Optional<Integer> getSignalStrength(Context context) {
+    SignalLevel(int level) {
+      this.level = level;
+    }
+
+    private static SignalLevel from(Integer level) {
+      if (level == null) {
+        return OFF;
+      }
+      switch (level) {
+        case 0:
+          return NONE;
+        case 1:
+          return POOR;
+        case 2:
+          return MODERATE;
+        case 3:
+          return GOOD;
+        case 4:
+          return GREAT;
+        default:
+          throw new IllegalArgumentException("Unknown level: " + level);
+      }
+    }
+  }
+
+  public static SignalLevel getSignalStrength(Context context) {
     TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
@@ -32,6 +65,7 @@ public class SignalStremgthHelper {
         Log.v(TAG, String.format("Signal strength dbm: %d; level: %d; asu: %d", signalStrength.getDbm(), signalStrength.getLevel(), signalStrength.getAsuLevel()));
       }
     }
-    return signalStrength != null ? Optional.of(signalStrength.getLevel()) : Optional.empty();
+    Integer level = signalStrength != null ? signalStrength.getLevel() : null;
+    return SignalLevel.from(level);
   }
 }

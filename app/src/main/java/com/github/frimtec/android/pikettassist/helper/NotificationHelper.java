@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static android.app.Notification.*;
@@ -79,13 +80,13 @@ public class NotificationHelper {
     notificationManagerCompat.notify(SHIFT_NOTIFICATION_ID, notification);
   }
 
-  public static void notifySignalLow(Context context, CellSignalStrength signalStrength) {
+  public static void notifySignalLow(Context context, Optional<Integer> signalStrength) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle("Low signal")
-        .setContentText("Signal level: " + (signalStrength != null ? signalStrength.getLevel() : "OFF"))
+        .setContentText("Signal level: " + signalStrength.map(String::valueOf).orElse("OFF"))
         // TODO choose icon for confirm and close
         .setSmallIcon(R.drawable.pikett_alarm)
         .setCategory(CATEGORY_EVENT)

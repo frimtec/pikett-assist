@@ -8,14 +8,20 @@ public class PikettShift {
 
   private static final Duration TIME_TOLLERANCE = Duration.ofMinutes(5);
 
+  private final long id;
   private final String title;
   private final Instant startTime;
   private final Instant endTime;
 
-  public PikettShift(String title, Instant startTime, Instant endTime) {
+  public PikettShift(long id, String title, Instant startTime, Instant endTime) {
+    this.id = id;
     this.title = title;
     this.startTime = startTime;
     this.endTime = endTime;
+  }
+
+  public long getId() {
+    return id;
   }
 
   public String getTitle() {

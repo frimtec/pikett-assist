@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     startService(new Intent(this, PikettService.class));
     tManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
     tManager.listen(new SignalStrengthListener(this),
-            PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
+        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
   }
 
   private void refresh() {

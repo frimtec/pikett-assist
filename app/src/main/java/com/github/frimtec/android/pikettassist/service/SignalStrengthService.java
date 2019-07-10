@@ -7,20 +7,17 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.telephony.*;
+import android.telephony.CellInfo;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
+import com.github.frimtec.android.pikettassist.domain.PikettState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
-import java.util.Optional;
-
-import static android.telephony.CellSignalStrength.SIGNAL_STRENGTH_POOR;
 
 public class SignalStrengthService extends Service {
 
@@ -57,7 +54,7 @@ public class SignalStrengthService extends Service {
 
   private boolean isLowSignal(SignalLevel level) {
     return level.ordinal() <= SignalLevel.POOR.ordinal();
-    }
+  }
 
   @Override
   public IBinder onBind(Intent intent) {
@@ -67,11 +64,13 @@ public class SignalStrengthService extends Service {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (CalendarEventHelper.hasPikettEventForNow(this, SharedState.getCalendarEventPikettTitlePattern(this))) {
+    if (SharedState.getPikettState(this) == PikettState.ON) {
       AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
       alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );
+    } else {
+      Log.v(TAG, "SignalStrengthService stopped as pikett state is OFF");
     }
   }
 }

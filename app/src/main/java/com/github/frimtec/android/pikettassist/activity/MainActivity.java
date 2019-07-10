@@ -3,17 +3,25 @@ package com.github.frimtec.android.pikettassist.activity;
 import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.receiver.SignalStrengthListener;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 
 import java.util.Arrays;
@@ -29,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
       Manifest.permission.RECEIVE_SMS,
       Manifest.permission.RECEIVE_BOOT_COMPLETED,
       Manifest.permission.VIBRATE,
-      Manifest.permission.ACCESS_COARSE_LOCATION
+      Manifest.permission.ACCESS_COARSE_LOCATION,
+      Manifest.permission.READ_PHONE_STATE
   };
 
   private static final int REQUEST_CODE = 1;
@@ -40,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
   private ShiftListFragement shiftListFragement;
   private CallLogFragement calLogFragement;
 
+  private TelephonyManager tManager;
+
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
-      case R.id.navigation_home:
-      {
+      case R.id.navigation_home: {
         Log.v("MainActivity", "Tab selected: home");
         loadStateFragment();
         return true;
@@ -116,8 +126,15 @@ public class MainActivity extends AppCompatActivity {
       ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
       return;
     }
+    onCreateAllPermissionsGranted();
+  }
+
+  private void onCreateAllPermissionsGranted() {
     loadStateFragment();
     startService(new Intent(this, PikettService.class));
+    tManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+    tManager.listen(new SignalStrengthListener(this),
+        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
   }
 
   private void refresh() {
@@ -133,8 +150,7 @@ public class MainActivity extends AppCompatActivity {
       finish();
       return;
     }
-    loadStateFragment();
-    startService(new Intent(this, PikettService.class));
+    onCreateAllPermissionsGranted();
   }
 
   @Override
@@ -171,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    if(broadcastReceiver != null) {
+    if (broadcastReceiver != null) {
       unregisterReceiver(broadcastReceiver);
       broadcastReceiver = null;
     }

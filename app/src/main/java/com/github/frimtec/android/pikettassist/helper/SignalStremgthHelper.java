@@ -61,9 +61,6 @@ public class SignalStremgthHelper {
       } else {
         Log.e(TAG, "Unknown cell info type: " + cellInfos.getClass().getName());
       }
-      if (signalStrength != null) {
-        Log.v(TAG, String.format("Signal strength dbm: %d; level: %d; asu: %d", signalStrength.getDbm(), signalStrength.getLevel(), signalStrength.getAsuLevel()));
-      }
     }
     Integer level = signalStrength != null ? signalStrength.getLevel() : null;
     return SignalLevel.from(level);

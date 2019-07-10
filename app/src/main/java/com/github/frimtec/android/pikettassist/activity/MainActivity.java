@@ -9,20 +9,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.PikettState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.receiver.SignalStrengthListener;
 import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.Arrays;
 
@@ -48,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
   private StateFragement stateFragement;
   private ShiftListFragement shiftListFragement;
   private CallLogFragement calLogFragement;
-
-  private TelephonyManager tManager;
 
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
@@ -122,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
       return;
     }
 
+    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+    boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
+    Log.i(TAG, "Battery opt ignored: " +isIgnoringBatteryOptimizations);
     if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
       ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
       return;
@@ -132,9 +134,6 @@ public class MainActivity extends AppCompatActivity {
   private void onCreateAllPermissionsGranted() {
     loadStateFragment();
     startService(new Intent(this, PikettService.class));
-    tManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-    tManager.listen(new SignalStrengthListener(this),
-        PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | PhoneStateListener.LISTEN_SERVICE_STATE);
   }
 
   private void refresh() {
@@ -177,11 +176,25 @@ public class MainActivity extends AppCompatActivity {
     broadcastReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-        Log.v(TAG, "Refresh event received.");
+        Log.v(TAG, "Event received: " + intent.getAction());
+        if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
+          try {
+            // wait for change
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+            throw new RuntimeException("Unexpected interrupt");
+          }
+          if (SharedState.getPikettState(context) == PikettState.ON) {
+            Log.v(TAG, "Start signal strength service as pikett state is ON");
+            context.startService(new Intent(context, SignalStrengthService.class));
+          }
+        }
         refresh();
       }
     };
-    registerReceiver(broadcastReceiver, new IntentFilter("com.github.frimtec.android.pikettassist.refresh"));
+    IntentFilter filter = new IntentFilter("com.github.frimtec.android.pikettassist.refresh");
+    filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+    registerReceiver(broadcastReceiver, filter);
   }
 
   @Override

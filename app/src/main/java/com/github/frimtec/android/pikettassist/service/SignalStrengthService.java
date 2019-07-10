@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.service;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -19,20 +20,25 @@ import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
 
-public class SignalStrengthService extends Service {
+public class SignalStrengthService extends IntentService {
+
+  public SignalStrengthService() {
+    super("SignalStrengthService");
+  }
 
   private static final String TAG = "SignalStrengthService";
   private static final int CHECK_INTERVAL_MS = 60 * 1000;
 
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    super.onStartCommand(intent, flags, startId);
+  public void onHandleIntent(Intent intent) {
+    Log.v(TAG, "SignalStrengthService start cycle");
 
     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
     SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
     if (isLowSignal(level)) {
+      this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
       long[] pattern = {0, 100, 500};
       vibrator.vibrate(pattern, 0);
@@ -46,11 +52,9 @@ public class SignalStrengthService extends Service {
         level = SignalStremgthHelper.getSignalStrength(this);
       } while (isLowSignal(level));
       vibrator.cancel();
+      this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
     }
-    stopSelf();
-    return START_NOT_STICKY;
   }
-
 
   private boolean isLowSignal(SignalLevel level) {
     return level.ordinal() <= SignalLevel.POOR.ordinal();

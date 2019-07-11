@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.service;
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -15,22 +16,19 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
-public class PikettService extends Service {
+public class PikettService extends IntentService {
 
   private static final String TAG = "PikettService";
   private static final Duration MAX_SLEEP = Duration.ofHours(24);
 
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    super.onStartCommand(intent, flags, startId);
-    sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
-    stopSelf();
-    return START_NOT_STICKY;
+  public PikettService() {
+    super(TAG);
   }
 
   @Override
-  public IBinder onBind(Intent intent) {
-    return null;
+  public void onHandleIntent(Intent intent) {
+    Log.d(TAG, "Service cycle");
+    sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
   }
 
   @Override

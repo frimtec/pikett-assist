@@ -23,7 +23,7 @@ import java.util.List;
 public class SignalStrengthService extends IntentService {
 
   public SignalStrengthService() {
-    super("SignalStrengthService");
+    super(TAG);
   }
 
   private static final String TAG = "SignalStrengthService";
@@ -31,7 +31,7 @@ public class SignalStrengthService extends IntentService {
 
   @Override
   public void onHandleIntent(Intent intent) {
-    Log.v(TAG, "SignalStrengthService start cycle");
+    Log.d(TAG, "Service cycle");
 
     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
@@ -61,11 +61,6 @@ public class SignalStrengthService extends IntentService {
   }
 
   @Override
-  public IBinder onBind(Intent intent) {
-    return null;
-  }
-
-  @Override
   public void onDestroy() {
     super.onDestroy();
     if (SharedState.getPikettState(this) == PikettState.ON) {
@@ -74,7 +69,7 @@ public class SignalStrengthService extends IntentService {
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );
     } else {
-      Log.v(TAG, "SignalStrengthService stopped as pikett state is OFF");
+      Log.d(TAG, "SignalStrengthService stopped as pikett state is OFF");
     }
   }
 }

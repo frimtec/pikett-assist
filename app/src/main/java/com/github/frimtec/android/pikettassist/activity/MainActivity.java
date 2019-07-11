@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
       Manifest.permission.RECEIVE_BOOT_COMPLETED,
       Manifest.permission.VIBRATE,
       Manifest.permission.ACCESS_COARSE_LOCATION,
-      Manifest.permission.READ_PHONE_STATE
   };
 
   private static final int REQUEST_CODE = 1;
@@ -177,17 +176,16 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Event received: " + intent.getAction());
-        if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
+        if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED) &&
+                SharedState.getPikettState(context) == PikettState.ON) {
           try {
             // wait for change
             Thread.sleep(2000);
           } catch (InterruptedException e) {
             throw new RuntimeException("Unexpected interrupt");
           }
-          if (SharedState.getPikettState(context) == PikettState.ON) {
             Log.v(TAG, "Start signal strength service as pikett state is ON");
             context.startService(new Intent(context, SignalStrengthService.class));
-          }
         }
         refresh();
       }

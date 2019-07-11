@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
+import com.github.frimtec.android.pikettassist.domain.PikettState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
@@ -50,10 +51,11 @@ public class StateFragement extends Fragment {
 
     void refresh() {
         TextView textView = (TextView) view.findViewById(R.id.main_state);
+        PikettState pikettState = SharedState.getPikettState(getContext());
         textView.setText(Html.fromHtml(
-                "Pikett state: " + SharedState.getPikettState(getContext()) + "<br/>" +
+                "Pikett state: " + pikettState + "<br/>" +
                         "Alarm state: " + SharedState.getAlarmState(getContext()).first + "<br/>" +
-                        "Signal strength: " + SignalStremgthHelper.getSignalStrength(getContext()),
+                        (pikettState == PikettState.ON ? "Signal strength: " + SignalStremgthHelper.getSignalStrength(getContext()) : ""),
                 Html.FROM_HTML_MODE_COMPACT)
         );
         textView.invalidate();

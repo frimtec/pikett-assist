@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,9 @@ import java.util.List;
 import java.util.Locale;
 
 class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
+
+  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM HH:mm";
+
   public PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
     super(context, 0, shifts);
   }
@@ -36,10 +40,14 @@ class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
     TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
     TextView titleView = (TextView) convertView.findViewById(R.id.title);
     // Populate the data into the template view using the data object
-    startTimeView.setText(LocalDateTime.ofInstant(shift.getStartTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())));
-    endTimeView.setText(LocalDateTime.ofInstant(shift.getEndTime(false), ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())));
+    startTimeView.setText(String.format("%s -", formatDateTime(shift.getStartTime(false))));
+    endTimeView.setText(formatDateTime(shift.getEndTime(false)));
     titleView.setText(shift.getTitle());
     // Return the completed view to render on screen
     return convertView;
+  }
+
+  private String formatDateTime(Instant startTime) {
+    return LocalDateTime.ofInstant(startTime, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, Locale.getDefault()));
   }
 }

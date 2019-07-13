@@ -121,8 +121,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(getPackageName());
-    Log.i(TAG, "Battery opt ignored: " +isIgnoringBatteryOptimizations);
+    if(!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+      NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> Log.i("MainActivity", "Battery optimazation dialog confirmed."));
+    }
+
     if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
       ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
       return;
@@ -177,15 +179,15 @@ public class MainActivity extends AppCompatActivity {
       public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Event received: " + intent.getAction());
         if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED) &&
-                SharedState.getPikettState(context) == PikettState.ON) {
+            SharedState.getPikettState(context) == PikettState.ON) {
           try {
             // wait for change
             Thread.sleep(2000);
           } catch (InterruptedException e) {
             throw new RuntimeException("Unexpected interrupt");
           }
-            Log.v(TAG, "Start signal strength service as pikett state is ON");
-            context.startService(new Intent(context, SignalStrengthService.class));
+          Log.v(TAG, "Start signal strength service as pikett state is ON");
+          context.startService(new Intent(context, SignalStrengthService.class));
         }
         refresh();
       }

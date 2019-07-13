@@ -120,4 +120,16 @@ public class NotificationHelper {
     alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
     alertDialog.show();
   }
+
+  public static void batteryOptimization(Context context, BiConsumer<DialogInterface, Integer> action) {
+    AlertDialog alertDialog = new AlertDialog.Builder(context)
+        // set dialog message
+        .setTitle("Battery optimization is on!")
+        .setMessage("To work reliabel, PAssist must run with battery optimizstion turned off.")
+        .setCancelable(true)
+        .setPositiveButton("OK", action::accept
+        ).create();
+    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+    alertDialog.show();
+  }
 }

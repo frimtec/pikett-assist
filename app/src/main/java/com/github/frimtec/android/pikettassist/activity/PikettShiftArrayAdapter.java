@@ -40,7 +40,7 @@ class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
     TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
     TextView titleView = (TextView) convertView.findViewById(R.id.title);
     // Populate the data into the template view using the data object
-    startTimeView.setText(String.format("%s -", formatDateTime(shift.getStartTime(false))));
+    startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
     endTimeView.setText(formatDateTime(shift.getEndTime(false)));
     titleView.setText(shift.getTitle());
     // Return the completed view to render on screen

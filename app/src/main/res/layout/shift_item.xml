@@ -7,9 +7,9 @@
       android:layout_height="70dp" app:srcCompat="@android:drawable/ic_menu_my_calendar"
       android:id="@+id/imageView" android:layout_weight="1" android:layout_width="75dp"/>
   <TableLayout
-      android:layout_height="match_parent" android:layout_width="match_parent" android:layout_weight="1">
+      android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1">
 
-    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
       <TextView
           android:id="@+id/title"
           android:layout_width="287dp"
@@ -17,14 +17,14 @@
           android:textStyle="bold"
           android:text="Title"/>
     </TableRow>
-    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
       <TextView
           android:id="@+id/startTime"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="Start time"/>
     </TableRow>
-    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
       <TextView
           android:id="@+id/endTime"
           android:layout_width="wrap_content"

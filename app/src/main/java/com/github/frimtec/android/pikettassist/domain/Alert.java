@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.domain;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,12 +26,14 @@ public class Alert {
     }
   }
 
-  private final LocalDateTime startTime;
-  private final LocalDateTime confirmTime;
-  private final LocalDateTime endTime;
+  private final long id;
+  private final Instant startTime;
+  private final Instant confirmTime;
+  private final Instant endTime;
   private final List<AlertCall> calls;
 
-  public Alert(LocalDateTime startTime, LocalDateTime confirmTime, LocalDateTime endTime, List<AlertCall> calls) {
+  public Alert(long id, Instant startTime, Instant confirmTime, Instant endTime, List<AlertCall> calls) {
+    this.id = id;
     Objects.requireNonNull(startTime);
     Objects.requireNonNull(calls);
     this.startTime = startTime;
@@ -40,15 +43,19 @@ public class Alert {
     this.calls.sort(Comparator.comparing(AlertCall::getTime));
   }
 
-  public LocalDateTime getStartTime() {
+  public long getId() {
+    return id;
+  }
+
+  public Instant getStartTime() {
     return startTime;
   }
 
-  public LocalDateTime getConfirmTime() {
+  public Instant getConfirmTime() {
     return confirmTime;
   }
 
-  public LocalDateTime getEndTime() {
+  public Instant getEndTime() {
     return endTime;
   }
 

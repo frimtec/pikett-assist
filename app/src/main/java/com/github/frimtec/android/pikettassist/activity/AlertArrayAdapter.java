@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.domain.Alert;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -18,11 +18,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
+class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM HH:mm";
 
-  public PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
+  public AlertArrayAdapter(Context context, List<Alert> shifts) {
     super(context, 0, shifts);
   }
 
@@ -30,24 +30,26 @@ class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     // Get the data item for this position
-    PikettShift shift = getItem(position);
+    Alert alert = getItem(position);
     // Check if an existing view is being reused, otherwise inflate the view
     if (convertView == null) {
-      convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
+      convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_log_item, parent, false);
     }
     // Lookup view for data population
-    TextView startTimeView = (TextView) convertView.findViewById(R.id.startTime);
-    TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
-    TextView titleView = (TextView) convertView.findViewById(R.id.title);
+    TextView startTime = (TextView) convertView.findViewById(R.id.start_time);
+    TextView confirmTime = (TextView) convertView.findViewById(R.id.confirm_time);
+    TextView endTime = (TextView) convertView.findViewById(R.id.end_time);
     // Populate the data into the template view using the data object
-    startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
-    endTimeView.setText(formatDateTime(shift.getEndTime(false)));
-    titleView.setText(shift.getTitle());
+    startTime.setText(formatDateTime(alert.getStartTime()));
+    confirmTime.setText(formatDateTime(alert.getConfirmTime()));
+    endTime.setText(formatDateTime(alert.getEndTime()));
     // Return the completed view to render on screen
     return convertView;
   }
 
   private String formatDateTime(Instant time) {
-    return LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, Locale.getDefault()));
+    return time != null ?
+        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, Locale.getDefault())) : "";
   }
+
 }

@@ -49,20 +49,32 @@ public class MainActivity extends AppCompatActivity {
   private ShiftListFragement shiftListFragement;
   private CallLogFragement calLogFragement;
 
+
+  private enum Fragment {
+    STATE,
+    SHIFTS,
+    CALL_LOG
+  }
+
+  private Fragment activeFragment = Fragment.STATE;
+
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
       case R.id.navigation_home: {
         Log.v("MainActivity", "Tab selected: home");
         loadStateFragment();
+        activeFragment = Fragment.STATE;
         return true;
       }
       case R.id.navigation_shifts: {
         Log.v("MainActivity", "Tab selected: shifts");
+        activeFragment = Fragment.SHIFTS;
         loadShiftListFragment();
         return true;
       }
       case R.id.navigation_alert_log: {
         Log.v("MainActivity", "Tab selected: alert log");
+        activeFragment = Fragment.CALL_LOG;
         loadCallLogFragment();
         return true;
       }
@@ -138,8 +150,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void refresh() {
-    if (stateFragement != null) {
+    if (stateFragement != null && activeFragment == Fragment.STATE) {
       stateFragement.refresh();
+    }
+    if (shiftListFragement != null && activeFragment == Fragment.SHIFTS) {
+      shiftListFragement.refresh();
     }
   }
 

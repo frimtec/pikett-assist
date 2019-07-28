@@ -1,36 +1,23 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.app.Fragment;
-import android.content.ContentUris;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class CallLogFragement extends Fragment {
 
@@ -44,8 +31,8 @@ public class CallLogFragement extends Fragment {
     ListView listView = view.findViewById(R.id.activity_list);
 
     List<Alert> alertList = new ArrayList<>();
-    try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
-      Cursor cursor = db.rawQuery("SELECT _id, start_time, confirm_time, end_time FROM t_alert ORDER BY start_time DESC", null);
+    try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
+         Cursor cursor = db.rawQuery("SELECT _id, start_time, confirm_time, end_time FROM t_alert ORDER BY start_time DESC", null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);
@@ -53,7 +40,7 @@ public class CallLogFragement extends Fragment {
               id,
               Instant.ofEpochMilli(cursor.getLong(1)),
               cursor.getLong(2) > 0 ? Instant.ofEpochMilli(cursor.getLong(2)) : null,
-              cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)): null,
+              cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)) : null,
               Collections.emptyList()));
         } while (cursor.moveToNext());
       }

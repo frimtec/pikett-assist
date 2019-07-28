@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.os.Vibrator;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
@@ -19,6 +17,8 @@ import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.Signa
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
+
+import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 
 public class SignalStrengthService extends IntentService {
 
@@ -37,7 +37,7 @@ public class SignalStrengthService extends IntentService {
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
     SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
-    if (isLowSignal(level)) {
+    if (isCallStateIdle() && isLowSignal(level)) {
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
       long[] pattern = {0, 100, 500};
@@ -54,6 +54,11 @@ public class SignalStrengthService extends IntentService {
       vibrator.cancel();
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
     }
+  }
+
+  private boolean isCallStateIdle() {
+    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+    return telephonyManager.getCallState() == CALL_STATE_IDLE;
   }
 
   private boolean isLowSignal(SignalLevel level) {

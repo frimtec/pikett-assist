@@ -156,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
     if (shiftListFragement != null && activeFragment == Fragment.SHIFTS) {
       shiftListFragement.refresh();
     }
+    if (calLogFragement != null && activeFragment == Fragment.CALL_LOG) {
+      calLogFragement.refresh();
+    }
   }
 
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

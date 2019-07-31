@@ -12,12 +12,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
+import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CallLogFragement extends Fragment {
 
@@ -29,7 +33,24 @@ public class CallLogFragement extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_list, container, false);
     ListView listView = view.findViewById(R.id.activity_list);
+    ArrayAdapter<Alert> adapter = new AlertArrayAdapter(getContext(), loadAlertList());
+    listView.setAdapter(adapter);
+    listView.setClickable(true);
+    listView.setOnItemClickListener((parent, view1, position, id) -> {
+      Alert selectedAlert = (Alert) listView.getItemAtPosition(position);
+      long eventId = selectedAlert.getId();
+      Log.v(TAG, "Selected alert: " + selectedAlert.getId());
+    });
+    return view;
+  }
 
+  public void refresh() {
+    ListView listView = view.findViewById(R.id.activity_list);
+    ArrayAdapter<Alert> adapter = new AlertArrayAdapter(getContext(), loadAlertList());
+    listView.setAdapter(adapter);
+  }
+
+  private List<Alert> loadAlertList() {
     List<Alert> alertList = new ArrayList<>();
     try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
          Cursor cursor = db.rawQuery("SELECT _id, start_time, confirm_time, end_time FROM t_alert ORDER BY start_time DESC", null)) {
@@ -45,15 +66,6 @@ public class CallLogFragement extends Fragment {
         } while (cursor.moveToNext());
       }
     }
-    ArrayAdapter<Alert> adapter = new AlertArrayAdapter(getContext(), alertList);
-    listView.setAdapter(adapter);
-    listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      Alert selectedAlert = (Alert) listView.getItemAtPosition(position);
-      long eventId = selectedAlert.getId();
-      Log.v(TAG, "Selected alert: " + selectedAlert.getId());
-    });
-    return view;
+    return alertList;
   }
-
 }

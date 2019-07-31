@@ -7,22 +7,30 @@ import java.util.*;
 public class Alert {
 
   public static class AlertCall {
-    private final LocalDateTime time;
+    private final Instant time;
     private final String message;
 
-    public AlertCall(LocalDateTime time, String message) {
+    public AlertCall(Instant time, String message) {
       Objects.requireNonNull(time);
       Objects.requireNonNull(message);
       this.time = time;
       this.message = message;
     }
 
-    public LocalDateTime getTime() {
+    public Instant getTime() {
       return time;
     }
 
     public String getMessage() {
       return message;
+    }
+
+    @Override
+    public String toString() {
+      return "AlertCall{" +
+          "time=" + time +
+          ", message='" + message + '\'' +
+          '}';
     }
   }
 
@@ -69,5 +77,16 @@ public class Alert {
 
   public boolean isClosed() {
     return endTime != null;
+  }
+
+  @Override
+  public String toString() {
+    return "Alert{" +
+        "id=" + id +
+        ", startTime=" + startTime +
+        ", confirmTime=" + confirmTime +
+        ", endTime=" + endTime +
+        ", calls=" + calls +
+        '}';
   }
 }

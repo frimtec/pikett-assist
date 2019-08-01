@@ -11,6 +11,7 @@
     <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
       <TextView
           android:id="@+id/time_window"
+          android:textStyle="bold"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="Time window"/>

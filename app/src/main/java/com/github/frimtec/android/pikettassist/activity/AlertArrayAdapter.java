@@ -11,16 +11,21 @@ import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM HH:mm";
+  private static final String TIME_FORMAT = "HH:mm";
 
   public AlertArrayAdapter(Context context, List<Alert> shifts) {
     super(context, 0, shifts);
@@ -36,20 +41,31 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_log_item, parent, false);
     }
     // Lookup view for data population
-    TextView startTime = (TextView) convertView.findViewById(R.id.start_time);
+    TextView timeWindow = (TextView) convertView.findViewById(R.id.time_window);
     TextView confirmTime = (TextView) convertView.findViewById(R.id.confirm_time);
-    TextView endTime = (TextView) convertView.findViewById(R.id.end_time);
     // Populate the data into the template view using the data object
-    startTime.setText(formatDateTime(alert.getStartTime()));
-    confirmTime.setText(formatDateTime(alert.getConfirmTime()));
-    endTime.setText(formatDateTime(alert.getEndTime()));
-    // Return the completed view to render on screen
+    String timeWindowText = formatDateTime(alert.getStartTime(), DATE_TIME_FORMAT);
+    if(alert.isClosed()) {
+      timeWindowText = String.format("%s - %s", timeWindowText, formatDateTime(alert.getEndTime(), TIME_FORMAT));
+    }
+    timeWindow.setText(timeWindowText);
+    String confirmText = "";
+    if(alert.isConfirmed()) {
+      Duration confirmDuration = Duration.between(alert.getStartTime(), alert.getConfirmTime());
+      confirmText = String.format("Time to confirm: %ds", confirmDuration.getSeconds());
+    }
+    String durationText = "";
+    if(alert.isClosed()) {
+      Duration duration = Duration.between(alert.getStartTime(), alert.getEndTime());
+      durationText = String.format("Duration: %.1f min", duration.getSeconds() / 60d);
+    }
+    confirmTime.setText(Stream.of(confirmText, durationText).filter(((Predicate<String>) String::isEmpty).negate()).collect(Collectors.joining("\n")));
     return convertView;
   }
 
-  private String formatDateTime(Instant time) {
+  private String formatDateTime(Instant time, String format) {
     return time != null ?
-        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, Locale.getDefault())) : "";
+        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format, Locale.getDefault())) : "";
   }
 
 }

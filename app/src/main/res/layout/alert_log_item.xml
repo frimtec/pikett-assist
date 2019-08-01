@@ -4,31 +4,23 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
   <ImageView
-      android:layout_height="70dp" app:srcCompat="@android:drawable/ic_menu_my_calendar"
-      android:id="@+id/imageView" android:layout_weight="1" android:layout_width="75dp"/>
+      android:layout_height="wrap_content" app:srcCompat="@android:drawable/ic_menu_my_calendar"
+      android:id="@+id/imageView"  android:layout_width="80dp"/>
   <TableLayout
-      android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1">
-
-    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+      android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="1">
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
       <TextView
-          android:id="@+id/start_time"
+          android:id="@+id/time_window"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Start time"/>
+          android:text="Time window"/>
     </TableRow>
-    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
       <TextView
           android:id="@+id/confirm_time"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="Confirm time"/>
-    </TableRow>
-    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/end_time"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="End time"/>
     </TableRow>
   </TableLayout>
 </LinearLayout>

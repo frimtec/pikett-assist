@@ -28,6 +28,9 @@
       </intent-filter>
     </activity>
     <activity android:name=".activity.AlertDetailActivity">
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value="com.github.frimtec.android.pikettassist.activity.MainActivity"/>
     </activity>
     <activity android:name=".activity.AboutActivity"/>
     <activity

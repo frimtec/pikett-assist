@@ -52,7 +52,7 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
     String confirmText = "";
     if(alert.isConfirmed()) {
       Duration confirmDuration = Duration.between(alert.getStartTime(), alert.getConfirmTime());
-      confirmText = String.format("Time to confirm: %ds", confirmDuration.getSeconds());
+      confirmText = String.format("Time to confirm: %d sec", confirmDuration.getSeconds());
     }
     String durationText = "";
     if(alert.isClosed()) {

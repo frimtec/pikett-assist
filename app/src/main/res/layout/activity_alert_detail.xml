@@ -7,4 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".activity.AlertDetailActivity">
 
+  <ListView
+      android:id="@+id/alert_call_list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginBottom="55dp" >
+  </ListView>
+
 </android.support.constraint.ConstraintLayout>

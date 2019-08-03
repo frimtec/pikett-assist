@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
-  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM HH:mm";
+  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM yyyy HH:mm";
   private static final String TIME_FORMAT = "HH:mm";
 
   public AlertArrayAdapter(Context context, List<Alert> shifts) {

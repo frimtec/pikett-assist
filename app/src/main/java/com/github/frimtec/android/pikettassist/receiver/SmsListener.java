@@ -52,7 +52,7 @@ public class SmsListener extends BroadcastReceiver {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
             id = id != null ? id : "general";
             Log.d(TAG, "TEST alarm with ID: " + id);
-            confimSms(pikettNumber);
+            confimSms(SharedState.getSmsConfirmText(context), pikettNumber);
             try(SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
               try(Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id"}, "_id=?", new String[]{id}, null, null, null)) {
                 if(cursor.getCount() == 0) {

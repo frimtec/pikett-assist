@@ -18,6 +18,7 @@ public final class SharedState {
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
+  public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_USE_VIBRATE = "use_vibrate";
   public static final String START_OF_TIME = "0";
 
@@ -54,6 +55,10 @@ public final class SharedState {
 
   public static String getSmsTestMessagePattern(Context context) {
     return getSharedPreferences(context, PREF_KEY_SMS_TEST_MESSAGE_PATTERN, ".*Test.*");
+  }
+
+  public static String getSmsConfirmText(Context context) {
+    return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, "OK");
   }
 
   public static boolean getUseVibrate(Context context) {

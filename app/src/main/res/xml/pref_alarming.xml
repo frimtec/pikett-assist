@@ -19,6 +19,15 @@
       android:maxLines="1"/>
 
   <EditTextPreference
+      android:key="sms_confirm_text"
+      android:title="@string/pref_title_sms_confirm_text"
+      android:defaultValue="@string/pref_default_sms_confirm_text"
+      android:selectAllOnFocus="true"
+      android:inputType="text"
+      android:singleLine="true"
+      android:maxLines="1"/>
+
+  <EditTextPreference
       android:key="sms_test_message_pattern"
       android:title="@string/pref_title_sms_test_message_pattern"
       android:defaultValue="@string/pref_default_sms_test_message_pattern"

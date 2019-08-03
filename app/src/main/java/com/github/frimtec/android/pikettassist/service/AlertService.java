@@ -60,7 +60,7 @@ public class AlertService extends Service {
         Log.e(TAG, "One open case expected, but got " + update);
       }
     }
-    SmsHelper.confimSms(SharedState.getSmsSenderNumber(context));
+    SmsHelper.confimSms(SharedState.getSmsConfirmText(context), SharedState.getSmsSenderNumber(context));
     NotificationHelper.notify(
         context,
         "Confirmed alarm, close when all activities are finsished.",

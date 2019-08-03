@@ -155,6 +155,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_SENDER_NUMBER));
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN));
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_TEST_MESSAGE_PATTERN));
+      bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_CONFIRM_TEXT));
     }
 
     @Override

@@ -38,8 +38,6 @@ public class AlertDetailActivity extends AppCompatActivity {
     if (b != null) {
       long alertId = b.getLong("alertId");
       Alert alert = loadAlert(alertId);
-      Log.v(TAG, "View details of alert: " + alert);
-
       ListView listView = (ListView) findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 

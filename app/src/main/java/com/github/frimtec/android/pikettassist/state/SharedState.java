@@ -19,7 +19,7 @@ public final class SharedState {
   public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
-  public static final String PREF_KEY_USE_VIBRATE = "use_vibrate";
+  public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String START_OF_TIME = "0";
 
   private SharedState() {
@@ -61,9 +61,9 @@ public final class SharedState {
     return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, "OK");
   }
 
-  public static boolean getUseVibrate(Context context) {
+  public static boolean getSuperviseSignalStrength(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getBoolean(PREF_KEY_USE_VIBRATE, true);
+    return preferences.getBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, true);
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

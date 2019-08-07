@@ -37,7 +37,7 @@ public class SignalStrengthService extends IntentService {
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
     SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
-    if (isCallStateIdle() && isLowSignal(level)) {
+    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && isLowSignal(level)) {
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
       long[] pattern = {0, 100, 500};

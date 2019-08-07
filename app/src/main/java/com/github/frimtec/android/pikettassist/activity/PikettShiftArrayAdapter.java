@@ -36,9 +36,9 @@ class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
     }
     // Lookup view for data population
-    TextView startTimeView = (TextView) convertView.findViewById(R.id.startTime);
-    TextView endTimeView = (TextView) convertView.findViewById(R.id.endTime);
-    TextView titleView = (TextView) convertView.findViewById(R.id.title);
+    TextView startTimeView = (TextView) convertView.findViewById(R.id.shift_item_start_time);
+    TextView endTimeView = (TextView) convertView.findViewById(R.id.shift_item_end_time);
+    TextView titleView = (TextView) convertView.findViewById(R.id.shift_item_title);
     // Populate the data into the template view using the data object
     startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
     endTimeView.setText(formatDateTime(shift.getEndTime(false)));

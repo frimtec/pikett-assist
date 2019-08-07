@@ -19,14 +19,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AlertDetailActivity extends AppCompatActivity {
 
@@ -50,9 +44,9 @@ public class AlertDetailActivity extends AppCompatActivity {
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 
       View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, null);
-      TextView timeWindow = (TextView) headerView.findViewById(R.id.start_end_time);
-      TextView currentState = (TextView) headerView.findViewById(R.id.current_state);
-      TextView durations = (TextView) headerView.findViewById(R.id.durations);
+      TextView timeWindow = (TextView) headerView.findViewById(R.id.alert_detail_header_time_window);
+      TextView currentState = (TextView) headerView.findViewById(R.id.alert_detail_header_current_state);
+      TextView durations = (TextView) headerView.findViewById(R.id.alert_detail_header_durations);
 
       timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
       currentState.setText(AlertViewHelper.getState(alert));

@@ -36,9 +36,9 @@ class AlertCallArrayAdapter extends ArrayAdapter<AlertCall> {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_call_item, parent, false);
     }
     // Lookup view for data population
-    TextView receivedTime = (TextView) convertView.findViewById(R.id.received_time);
+    TextView receivedTime = (TextView) convertView.findViewById(R.id.alert_cal_item_received_time);
     receivedTime.setText(formatDateTime(alertCall.getTime(), DATE_TIME_FORMAT));
-    TextView message = (TextView) convertView.findViewById(R.id.message);
+    TextView message = (TextView) convertView.findViewById(R.id.alert_cal_item_message);
     message.setText(alertCall.getMessage());
     // Populate the data into the template view using the data object
     return convertView;

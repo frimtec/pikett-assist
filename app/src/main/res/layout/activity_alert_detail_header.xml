@@ -9,25 +9,22 @@
   <TableLayout android:layout_height="wrap_content" android:layout_width="match_parent">
     <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
       <TextView
-          android:id="@+id/start_end_time"
+          android:id="@+id/alert_detail_header_time_window"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textStyle="bold"
-          android:text="Start - End"/>
+          android:textStyle="bold"/>
     </TableRow>
     <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
       <TextView
-          android:id="@+id/current_state"
+          android:id="@+id/alert_detail_header_current_state"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Current state"/>
+          android:layout_height="wrap_content"/>
     </TableRow>
     <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
       <TextView
-          android:id="@+id/durations"
+          android:id="@+id/alert_detail_header_durations"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Durations"/>
+          android:layout_height="wrap_content"/>
     </TableRow>
   </TableLayout>
 </LinearLayout>

@@ -9,10 +9,7 @@
       android:singleLine="true"
       android:maxLines="1"/>
 
-  <MultiSelectListPreference
+  <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference
       android:key="supervise_test_contexts"
-      android:title="@string/pref_title_supervise_test_contexts"
-      android:entries="@array/stores"
-      android:entryValues="@array/stores"
-      android:defaultValue="@array/stores"/>
+      android:title="@string/pref_title_supervise_test_contexts"/>
 </PreferenceScreen>

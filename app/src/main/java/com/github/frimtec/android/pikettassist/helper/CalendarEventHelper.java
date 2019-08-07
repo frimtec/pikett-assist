@@ -12,10 +12,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
+import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDER_FILTER_ALL;
 
 public final class CalendarEventHelper {
 
@@ -25,26 +24,34 @@ public final class CalendarEventHelper {
   private CalendarEventHelper() {
   }
 
-  public static boolean hasPikettEventForNow(Context context, String eventTitleFilterPattern) {
-    return getPikettShifts(context, eventTitleFilterPattern).stream()
+  public static boolean hasPikettEventForNow(Context context, String eventTitleFilterPattern, String calendarSelection) {
+    return getPikettShifts(context, eventTitleFilterPattern, calendarSelection).stream()
         .anyMatch(PikettShift::isNow);
   }
 
-  public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern) {
+  public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern, String calendarSelection) {
     String[] projection = new String[]{
         CalendarContract.Events._ID,
         CalendarContract.Events.TITLE,
         CalendarContract.Events.DTSTART,
-        CalendarContract.Events.DTEND
+        CalendarContract.Events.DTEND,
+        CalendarContract.Events.CALENDAR_ID
     };
     Calendar startTime = Calendar.getInstance();
     startTime.add(Calendar.DATE, -30);
     Calendar endTime = Calendar.getInstance();
 
     endTime.add(Calendar.DATE, 180);
-    String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTEND + " <= " + endTime.getTimeInMillis() + " ) AND ( deleted != 1 ))";
+    Log.d(TAG, "calendarSelection: " + calendarSelection);
+    String selection = "( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTEND + " <= " + endTime.getTimeInMillis() + " ) AND ( deleted != 1 )";
+    String[] args = new String[0];
+    if (!CALENDER_FILTER_ALL.equals(calendarSelection)) {
+      selection = selection + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?)";
+      args = new String[]{calendarSelection};
+    }
+    Log.d(TAG, "selection: " + selection);
     List<PikettShift> events = new LinkedList<>();
-    try (@SuppressLint("MissingPermission") Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null)) {
+    try (@SuppressLint("MissingPermission") Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);

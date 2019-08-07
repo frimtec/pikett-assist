@@ -10,24 +10,30 @@ import android.util.Pair;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.PikettState;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
 import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
 
 public final class SharedState {
 
   private static final String TAG = "SharedState";
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
+  public static final String PREF_KEY_CALENDAR_SELECTION = "calender_selection";
   public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String START_OF_TIME = "0";
+  public static final String CALENDER_FILTER_ALL = "-1";
 
   private SharedState() {
   }
 
   public static PikettState getPikettState(Context context) {
-    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context)) ? PikettState.ON : PikettState.OFF;
+    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? PikettState.ON : PikettState.OFF;
   }
 
   public static Pair<AlarmState, Long> getAlarmState(Context context) {
@@ -48,6 +54,10 @@ public final class SharedState {
 
   public static String getCalendarEventPikettTitlePattern(Context context) {
     return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, ".*Pikett.*");
+  }
+
+  public static String getCalendarSelection(Context context) {
+    return getSharedPreferences(context, PREF_KEY_CALENDAR_SELECTION, CALENDER_FILTER_ALL);
   }
 
   public static String getSmsSenderNumber(Context context) {

@@ -31,7 +31,7 @@ public class ShiftListFragement extends Fragment {
     view = inflater.inflate(R.layout.fragment_list, container, false);
     ListView listView = view.findViewById(R.id.activity_list);
     Instant now = PikettShift.now();
-    List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(getContext(), SharedState.getCalendarEventPikettTitlePattern(getContext()))
+    List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(getContext(), SharedState.getCalendarEventPikettTitlePattern(getContext()), SharedState.getCalendarSelection(getContext()))
         .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
     ArrayAdapter<PikettShift> adapter = new PikettShiftArrayAdapter(getContext(), shifts);
     listView.setAdapter(adapter);
@@ -49,7 +49,7 @@ public class ShiftListFragement extends Fragment {
   public void refresh() {
     ListView listView = view.findViewById(R.id.activity_list);
     Instant now = PikettShift.now();
-    List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(getContext(), SharedState.getCalendarEventPikettTitlePattern(getContext()))
+    List<PikettShift> shifts = CalendarEventHelper.getPikettShifts(getContext(), SharedState.getCalendarEventPikettTitlePattern(getContext()), SharedState.getCalendarSelection(getContext()))
         .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
     ArrayAdapter<PikettShift> adapter = new PikettShiftArrayAdapter(getContext(), shifts);
     listView.setAdapter(adapter);

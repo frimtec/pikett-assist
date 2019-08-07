@@ -24,9 +24,6 @@ import java.util.stream.Stream;
 
 class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
-  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM yyyy HH:mm";
-  private static final String TIME_FORMAT = "HH:mm";
-
   public AlertArrayAdapter(Context context, List<Alert> shifts) {
     super(context, 0, shifts);
   }
@@ -44,28 +41,9 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
     TextView timeWindow = (TextView) convertView.findViewById(R.id.time_window);
     TextView confirmTime = (TextView) convertView.findViewById(R.id.confirm_time);
     // Populate the data into the template view using the data object
-    String timeWindowText = formatDateTime(alert.getStartTime(), DATE_TIME_FORMAT);
-    if(alert.isClosed()) {
-      timeWindowText = String.format("%s - %s", timeWindowText, formatDateTime(alert.getEndTime(), TIME_FORMAT));
-    }
-    timeWindow.setText(timeWindowText);
-    String confirmText = "";
-    if(alert.isConfirmed()) {
-      Duration confirmDuration = Duration.between(alert.getStartTime(), alert.getConfirmTime());
-      confirmText = String.format("Time to confirm: %d sec", confirmDuration.getSeconds());
-    }
-    String durationText = "";
-    if(alert.isClosed()) {
-      Duration duration = Duration.between(alert.getStartTime(), alert.getEndTime());
-      durationText = String.format("Duration: %.1f min", duration.getSeconds() / 60d);
-    }
-    confirmTime.setText(Stream.of(confirmText, durationText).filter(((Predicate<String>) String::isEmpty).negate()).collect(Collectors.joining("\n")));
+    timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
+    confirmTime.setText(AlertViewHelper.getDurations(alert));
     return convertView;
-  }
-
-  private String formatDateTime(Instant time, String format) {
-    return time != null ?
-        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format, Locale.getDefault())) : "";
   }
 
 }

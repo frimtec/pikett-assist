@@ -5,8 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
@@ -14,14 +16,24 @@ import com.github.frimtec.android.pikettassist.state.PikettAssist;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AlertDetailActivity extends AppCompatActivity {
 
   private static final String TAG = "AlertDetailActivity";
+
+  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM yyyy HH:mm";
+  private static final String TIME_FORMAT = "HH:mm";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +48,24 @@ public class AlertDetailActivity extends AppCompatActivity {
 
       ListView listView = (ListView) findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
+
+      View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, null);
+      TextView timeWindow = (TextView) headerView.findViewById(R.id.start_end_time);
+      TextView currentState = (TextView) headerView.findViewById(R.id.current_state);
+      TextView durations = (TextView) headerView.findViewById(R.id.durations);
+
+      timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
+      currentState.setText(AlertViewHelper.getState(alert));
+      durations.setText(AlertViewHelper.getDurations(alert));
+
+      listView.addHeaderView(headerView);
       listView.setAdapter(adapter);
     }
+  }
+
+  private String formatDateTime(Instant time, String format) {
+    return time != null ?
+        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format, Locale.getDefault())) : "";
   }
 
   private Alert loadAlert(long id) {

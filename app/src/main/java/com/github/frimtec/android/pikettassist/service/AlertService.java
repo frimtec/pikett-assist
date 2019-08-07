@@ -33,7 +33,7 @@ public class AlertService extends Service {
     Log.d(TAG, "Service cycle");
 
     Context context = getApplicationContext();
-    Ringtone ringtone = RingtoneManager.getRingtone(context, getAlarmTone());
+    Ringtone ringtone = RingtoneManager.getRingtone(context, getAlarmTone(context));
     ringtone.play();
     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     long[] pattern = {0, 400, 200};
@@ -71,7 +71,13 @@ public class AlertService extends Service {
     );
   }
 
-  private Uri getAlarmTone() {
+  private Uri getAlarmTone(Context context) {
+    String alarmRingTone = SharedState.getAlarmRingTone(context);
+    if(!alarmRingTone.isEmpty()) {
+      Log.d(TAG, "Use configured ringtone: " + alarmRingTone);
+      return Uri.parse(alarmRingTone);
+    }
+    Log.d(TAG, "Use default ringtone");
     return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
   }
 

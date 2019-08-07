@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <EditTextPreference
+      android:key="sms_test_message_pattern"
+      android:title="@string/pref_title_sms_test_message_pattern"
+      android:defaultValue="@string/pref_default_sms_test_message_pattern"
+      android:selectAllOnFocus="true"
+      android:inputType="text"
+      android:singleLine="true"
+      android:maxLines="1"/>
+
+  <MultiSelectListPreference
+      android:key="supervise_test_contexts"
+      android:title="@string/pref_title_supervise_test_contexts"
+      android:entries="@array/stores"
+      android:entryValues="@array/stores"
+      android:defaultValue="@array/stores"/>
+</PreferenceScreen>

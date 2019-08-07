@@ -20,6 +20,7 @@ public final class SharedState {
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
+  public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String START_OF_TIME = "0";
 
   private SharedState() {
@@ -64,6 +65,11 @@ public final class SharedState {
   public static boolean getSuperviseSignalStrength(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, true);
+  }
+
+  public static String getAlarmRingTone(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getString(PREF_KEY_ALARM_RING_TONE, "");
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

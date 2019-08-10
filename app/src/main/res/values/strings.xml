@@ -33,4 +33,6 @@
   <string name="pref_title_alarm_ring_tone">Alarming ringtone</string>
   <string name="pref_default_alarm_ring_tone"></string>
   <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
+  <string name="menu_settings">Settings</string>
+  <string name="menu_about">About</string>
 </resources>

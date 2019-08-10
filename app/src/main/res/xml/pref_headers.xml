@@ -10,12 +10,12 @@
   <header
       android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment"
       android:title="@string/pref_header_alarming"
-      android:icon="@drawable/ic_info_black_24dp"/>
+      android:icon="@drawable/ic_phone_in_talk_black_24dp"/>
 
   <header
       android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$TestAlarmFragment"
       android:title="@string/pref_header_test_alarm"
-      android:icon="@drawable/ic_info_black_24dp"/>
+      android:icon="@drawable/ic_perm_phone_msg_black_24dp"/>
 
   <header
       android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$NotificationPreferenceFragment"

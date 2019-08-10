@@ -14,7 +14,7 @@
 
   <string name="pref_header_calendar">Calendar</string>
   <string name="pref_title_calendar_selection">Calendar filter</string>
-  <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (regular expression)</string>
+  <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (RegExp)</string>
   <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
 
   <string name="pref_header_alarming">Alarming</string>
@@ -24,9 +24,9 @@
   <string name="pref_default_sms_confirm_text">OK</string>
 
   <string name="pref_header_test_alarm">Test alarm</string>
-  <string name="pref_title_sms_test_message_pattern">SMS test message pattern</string>
+  <string name="pref_title_sms_test_message_pattern">SMS test message pattern (RegExp)</string>
   <string name="pref_default_sms_test_message_pattern">.*Test.*</string>
-  <string name="pref_title_supervise_test_contexts">Test contexs to supervise (regular expression)</string>
+  <string name="pref_title_supervise_test_contexts">Test contexs to supervise</string>
   <string name="pref_default_supervise_test_contexts"></string>
 
   <string name="pref_header_notifications">Notifications</string>

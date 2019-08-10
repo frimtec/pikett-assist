@@ -3,6 +3,7 @@
   <EditTextPreference
       android:key="sms_sender_number"
       android:title="@string/pref_title_sms_sender_number"
+      android:icon="@drawable/ic_phone_black_24dp"
       android:defaultValue="@string/pref_default_sms_sender_number"
       android:selectAllOnFocus="true"
       android:inputType="text"
@@ -12,6 +13,7 @@
   <EditTextPreference
       android:key="sms_confirm_text"
       android:title="@string/pref_title_sms_confirm_text"
+      android:icon="@drawable/ic_message_black_24dp"
       android:defaultValue="@string/pref_default_sms_confirm_text"
       android:selectAllOnFocus="true"
       android:inputType="text"

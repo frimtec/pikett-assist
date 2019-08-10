@@ -3,11 +3,13 @@
   <com.github.frimtec.android.pikettassist.settings.AlarmRingtonePreference
       android:key="alarm_ring_tone"
       android:title="@string/pref_title_alarm_ring_tone"
+      android:icon="@drawable/ic_ring_volume_black_24dp"
       android:summary="%s"
   />
 
   <SwitchPreference
       android:key="supervise_signal_strength"
       android:title="@string/pref_title_supervise_signal_strength"
+      android:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
       android:defaultValue="true"/>
 </PreferenceScreen>

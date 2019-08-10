@@ -10,6 +10,9 @@ import android.util.Pair;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.PikettState;
 
+import java.util.Collections;
+import java.util.Set;
+
 import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
 
 public final class SharedState {
@@ -22,6 +25,7 @@ public final class SharedState {
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
+  public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String START_OF_TIME = "0";
   public static final String CALENDAR_FILTER_ALL = "-1";
 
@@ -76,6 +80,18 @@ public final class SharedState {
   public static String getAlarmRingTone(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getString(PREF_KEY_ALARM_RING_TONE, "");
+  }
+
+  public static Set<String> getSuperviseTestContexts(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, Collections.emptySet());
+  }
+
+  public static void setSuperviseTestContexts(Context context, Set<String> values) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, values);
+    editor.apply();
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

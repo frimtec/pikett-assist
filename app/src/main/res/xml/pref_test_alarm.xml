@@ -11,5 +11,6 @@
 
   <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference
       android:key="supervise_test_contexts"
-      android:title="@string/pref_title_supervise_test_contexts"/>
+      android:title="@string/pref_title_supervise_test_contexts"
+      android:summary="%s"/>
 </PreferenceScreen>

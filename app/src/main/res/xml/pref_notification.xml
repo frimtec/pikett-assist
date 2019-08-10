@@ -1,9 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <RingtonePreference
+  <com.github.frimtec.android.pikettassist.settings.AlarmRingtonePreference
       android:key="alarm_ring_tone"
       android:title="@string/pref_title_alarm_ring_tone"
-      android:defaultValue="@string/pref_default_alarm_ring_tone"
+      android:summary="%s"
   />
 
   <SwitchPreference

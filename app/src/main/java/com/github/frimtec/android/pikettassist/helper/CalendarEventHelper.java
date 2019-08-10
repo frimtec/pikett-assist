@@ -8,13 +8,12 @@ import android.provider.CalendarContract;
 import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
-import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDER_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public final class CalendarEventHelper {
 
@@ -45,7 +44,7 @@ public final class CalendarEventHelper {
     Log.d(TAG, "calendarSelection: " + calendarSelection);
     String selection = "( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTEND + " <= " + endTime.getTimeInMillis() + " ) AND ( deleted != 1 )";
     String[] args = new String[0];
-    if (!CALENDER_FILTER_ALL.equals(calendarSelection)) {
+    if (!CALENDAR_FILTER_ALL.equals(calendarSelection)) {
       selection = selection + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?)";
       args = new String[]{calendarSelection};
     }

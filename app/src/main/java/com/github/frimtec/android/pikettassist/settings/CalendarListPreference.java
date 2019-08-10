@@ -5,14 +5,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
 import android.provider.CalendarContract;
 import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDER_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public class CalendarListPreference extends ListPreference {
 
@@ -28,7 +27,7 @@ public class CalendarListPreference extends ListPreference {
     List<CharSequence> entriesValues = new ArrayList<>();
 
     entries.add("All");
-    entriesValues.add(CALENDER_FILTER_ALL);
+    entriesValues.add(CALENDAR_FILTER_ALL);
 
     ContentResolver cr = context.getContentResolver();
     try(Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI, PROJECTION, SELECTION, SELECTION_ARGS, null)) {
@@ -39,6 +38,6 @@ public class CalendarListPreference extends ListPreference {
     }
     setEntries(entries.toArray(new CharSequence[]{}));
     setEntryValues(entriesValues.toArray(new CharSequence[]{}));
-    setDefaultValue(CALENDER_FILTER_ALL);
+    setDefaultValue(CALENDAR_FILTER_ALL);
   }
 }

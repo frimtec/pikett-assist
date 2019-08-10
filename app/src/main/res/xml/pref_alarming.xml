@@ -10,8 +10,9 @@
       android:maxLines="1"/>
 
   <com.github.frimtec.android.pikettassist.settings.CalendarListPreference
-      android:key="calender_selection"
-      android:title="@string/pref_title_calender_selection"
+      android:key="calendar_selection"
+      android:title="@string/pref_title_calendar_selection"
+      android:summary="%s"
   />
 
   <EditTextPreference

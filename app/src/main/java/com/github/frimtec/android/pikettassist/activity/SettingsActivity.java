@@ -132,6 +132,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
    */
   protected boolean isValidFragment(String fragmentName) {
     return PreferenceFragment.class.getName().equals(fragmentName)
+        || AlarmingFragment.CalendarFragment.class.getName().equals(fragmentName)
         || AlarmingFragment.class.getName().equals(fragmentName)
         || TestAlarmFragment.class.getName().equals(fragmentName)
         || NotificationPreferenceFragment.class.getName().equals(fragmentName);
@@ -149,8 +150,22 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       addPreferencesFromResource(R.xml.pref_alarming);
       setHasOptionsMenu(true);
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_SENDER_NUMBER));
-      bindPreferenceSummaryToValue(findPreference(PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN));
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_CONFIRM_TEXT));
+    }
+
+    /**
+     * This fragment shows general preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class CalendarFragment extends PreferenceFragment {
+      @Override
+      public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.pref_calendar);
+        setHasOptionsMenu(true);
+        bindPreferenceSummaryToValue(findPreference(PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN));
+      }
     }
 
     @Override

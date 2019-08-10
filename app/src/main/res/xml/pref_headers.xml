@@ -3,6 +3,11 @@
   <!-- These settings headers are only used on tablets. -->
 
   <header
+      android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment$CalendarFragment"
+      android:title="@string/pref_header_calendar"
+      android:icon="@drawable/ic_date_range_black_24dp"/>
+
+  <header
       android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment"
       android:title="@string/pref_header_alarming"
       android:icon="@drawable/ic_info_black_24dp"/>

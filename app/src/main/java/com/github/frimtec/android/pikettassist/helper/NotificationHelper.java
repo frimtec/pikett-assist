@@ -4,17 +4,15 @@ import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.telephony.CellSignalStrength;
-import android.telephony.SignalStrength;
 import android.util.Log;
 import android.view.WindowManager;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static android.app.Notification.*;
@@ -53,13 +51,14 @@ public class NotificationHelper {
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle("Pikett ALARM")
         .setContentText(text)
-        // TODO choose icon for confirm and close
-        .setSmallIcon(R.drawable.pikett_alarm)
-        .addAction(R.drawable.pikett_alarm, actionLabel, confirmPendingIntent)
+        .setSmallIcon(R.drawable.ic_nuclear)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .addAction(R.drawable.ic_nuclear, actionLabel, confirmPendingIntent)
         .setCategory(CATEGORY_ALARM)
         .setContentIntent(notifyPendingIntent)
         .setOnlyAlertOnce(true)
         .build();
+
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
   }
@@ -72,7 +71,8 @@ public class NotificationHelper {
         .setContentTitle("Pikett ON")
         .setContentText("You are on Pikett!")
         // TODO choose icon for confirm and close
-        .setSmallIcon(R.drawable.pikett_alarm)
+        .setSmallIcon(R.drawable.ic_eye)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)
@@ -88,8 +88,8 @@ public class NotificationHelper {
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle("Low signal")
         .setContentText("Signal level: " + level)
-        // TODO choose icon for confirm and close
-        .setSmallIcon(R.drawable.pikett_alarm)
+        .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)

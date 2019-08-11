@@ -5,6 +5,17 @@ jacoco {
     toolVersion = "0.8.4"
 }
 
+def Properties versionProps = new Properties()
+def versionPropsFile = file('version.properties')
+if(versionPropsFile.exists()) {
+    versionProps.load(new FileInputStream(versionPropsFile))
+}
+int vcode = (versionProps['VERSION_CODE'] ?: "0").toInteger() + 1
+String vname = (versionProps['VERSION_NAME'] ?: "0.0.1")
+versionProps['VERSION_CODE'] = vcode.toString()
+versionProps['VERSION_NAME'] = vname
+versionProps.store(versionPropsFile.newWriter(), null)
+
 coveralls {
     jacocoReportPath 'app/build/reports/jacoco/jacocoTestReleaseUnitTestReport/jacocoTestReleaseUnitTestReport.xml'
     sourceDirs += ['app/src/main/java']
@@ -26,8 +37,8 @@ android {
         applicationId "com.github.frimtec.android.pikettassist"
         minSdkVersion 26
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.1"
+        versionCode vcode
+        versionName vname
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

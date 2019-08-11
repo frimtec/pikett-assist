@@ -4,8 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
   <ImageView
-      android:layout_height="70dp" app:srcCompat="@android:drawable/ic_menu_my_calendar"
-      android:id="@+id/imageView"  android:layout_width="80dp"/>
+      android:layout_height="30dp" app:srcCompat="@drawable/ic_nuclear"
+      android:id="@+id/imageView"  android:layout_width="50dp"/>
   <TableLayout
       android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1">
     <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">

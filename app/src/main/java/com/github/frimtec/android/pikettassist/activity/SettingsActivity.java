@@ -16,7 +16,10 @@ import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.github.frimtec.android.pikettassist.state.SharedState.*;
 
@@ -40,6 +43,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
   private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
     String stringValue = value.toString();
     preference.setSummary(stringValue);
+    return true;
+  };
+
+  private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToWeekdaysListener = (preference, value) -> {
+    preference.setSummary(weekDaysValues(preference, (Set)value));
     return true;
   };
 
@@ -71,6 +79,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         PreferenceManager
             .getDefaultSharedPreferences(preference.getContext())
             .getString(preference.getKey(), ""));
+  }
+
+  private static void bindPreferenceSummaryToMultiValue(Preference preference) {
+    // Set the listener to watch for value changes.
+    preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToWeekdaysListener);
+    sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+        weekDaysValues(preference, PreferenceManager
+            .getDefaultSharedPreferences(preference.getContext())
+            .getStringSet(preference.getKey(), Collections.emptySet())));
+  }
+
+  private static String weekDaysValues(Preference preference, Set<String> values) {
+    String[] weekdays = preference.getContext().getResources().getStringArray(R.array.weekdays);
+    return values.stream().map(id -> weekdays[Integer.parseInt(id)]).collect(Collectors.joining(", "));
   }
 
   @Override
@@ -191,6 +213,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       addPreferencesFromResource(R.xml.pref_test_alarm);
       setHasOptionsMenu(true);
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_TEST_MESSAGE_PATTERN));
+      bindPreferenceSummaryToValue(findPreference(PREF_KEY_TEST_ALARM_CHECK_TIME));
+      bindPreferenceSummaryToMultiValue(findPreference(PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS));
     }
 
     @Override

@@ -22,6 +22,8 @@ public final class SharedState {
   public static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
   public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
+  public static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
+  public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";

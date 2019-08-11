@@ -15,4 +15,19 @@
       android:title="@string/pref_title_supervise_test_contexts"
       android:icon="@drawable/ic_toc_black_24dp"
       android:summary="%s"/>
+
+  <com.github.frimtec.android.pikettassist.settings.TimePreference
+      android:key="test_alarm_check_time"
+      android:title="@string/pref_title_test_alarm_check_time"
+      android:defaultValue="@string/pref_default_test_alarm_check_time"
+      android:icon="@drawable/ic_watch_later_black_24dp"/>
+
+  <MultiSelectListPreference
+      android:key="test_alarm_check_weekdays"
+      android:title="@string/pref_title_test_alarm_check_weekdays"
+      android:icon="@drawable/ic_watch_later_black_24dp"
+      android:entries="@array/weekdays"
+      android:entryValues="@array/weekdays_values"
+      android:defaultValue="@array/default_weekdays"
+  />
 </PreferenceScreen>

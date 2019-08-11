@@ -32,7 +32,14 @@
           android:name="android.support.PARENT_ACTIVITY"
           android:value="com.github.frimtec.android.pikettassist.activity.MainActivity"/>
     </activity>
-    <activity android:name=".activity.AboutActivity"/>
+    <activity android:name=".activity.AboutActivity"
+              android:label="@string/title_activity_about"
+              android:parentActivityName=".activity.MainActivity">
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value="com.github.frimtec.android.pikettassist.activity.MainActivity"/>
+    </activity>
+
     <activity
         android:name=".activity.SettingsActivity"
         android:label="@string/title_activity_settings"

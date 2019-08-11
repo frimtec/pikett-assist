@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends AppCompatActivity {
 
   private static final String TAG = "AboutActivity";
 
@@ -33,10 +34,8 @@ public class AboutActivity extends Activity {
 
     textView.setText(Html.fromHtml(
         "<h2><a href='https://github.com/frimtec/pikett-assist'>PAssist</a></h2>" +
-            "<br>" +
             "<p>Version: " + version + " (build  " + build + ")</p>" +
-            "<br>" +
-            "&copy; 2019 <a href='https://github.com/frimtec'>frimTEC</a>" +
+            "<p>&copy; 2019 <a href='https://github.com/frimtec'>frimTEC</a></p>" +
             ""
         , Html.FROM_HTML_MODE_COMPACT));
     textView.setMovementMethod(LinkMovementMethod.getInstance());

@@ -4,9 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.telephony.*;
 import android.util.Log;
+import com.github.frimtec.android.pikettassist.R;
 
 import java.util.List;
-import java.util.Optional;
 
 public class SignalStremgthHelper {
   private static final String TAG = "SignalStremgthHelper";
@@ -42,6 +42,11 @@ public class SignalStremgthHelper {
         default:
           throw new IllegalArgumentException("Unknown level: " + level);
       }
+    }
+
+    public String toString(Context context) {
+      String[] signalLevels = context.getResources().getStringArray(R.array.signal_levels);
+      return signalLevels[ordinal()];
     }
   }
 

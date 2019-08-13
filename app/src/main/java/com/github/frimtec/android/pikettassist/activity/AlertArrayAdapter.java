@@ -29,7 +29,7 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
     TextView timeWindow = (TextView) convertView.findViewById(R.id.alert_log_item_time_window);
     TextView durations = (TextView) convertView.findViewById(R.id.alert_log_item_durations);
     timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
-    durations.setText(AlertViewHelper.getDurations(alert));
+    durations.setText(AlertViewHelper.getDurations(getContext(), alert));
     return convertView;
   }
 

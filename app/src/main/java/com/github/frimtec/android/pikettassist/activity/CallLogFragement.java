@@ -49,8 +49,8 @@ public class CallLogFragement extends Fragment {
     ListView view = (ListView) v;
     AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
     Alert selectedAlert = (Alert) view.getItemAtPosition(acmi.position);
-    menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, "View");
-    menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, "Delete");
+    menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.call_log_fragment_menu_view);
+    menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.call_log_fragment_menu_delete);
   }
 
   @Override

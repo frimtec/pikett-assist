@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.preference.ListPreference;
 import android.provider.CalendarContract;
 import android.util.AttributeSet;
+import com.github.frimtec.android.pikettassist.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class CalendarListPreference extends ListPreference {
     List<CharSequence> entries = new ArrayList<>();
     List<CharSequence> entriesValues = new ArrayList<>();
 
-    entries.add("All");
+    entries.add(context.getResources().getString(R.string.preferences_calendar_all));
     entriesValues.add(CALENDAR_FILTER_ALL);
 
     ContentResolver cr = context.getContentResolver();

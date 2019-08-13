@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
+import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
@@ -57,7 +58,7 @@ public class TestContextMultiSelectListPreference extends MultiSelectListPrefere
     String summary;
     summary = String.join(", ", values);
     if (summary.isEmpty()) {
-      summary = "Empty selection";
+      summary = getContext().getResources().getString(R.string.preferences_test_context_empty_selection);
     }
     return summary;
   }

@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.activity;
 
+import android.content.Context;
+import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 
 import java.time.Duration;
@@ -27,30 +29,30 @@ final class AlertViewHelper {
     return timeWindowText;
   }
 
-  public static String getDurations(Alert alert) {
+  public static String getDurations(Context context, Alert alert) {
     String confirmText = "";
     if(alert.isConfirmed()) {
       Duration confirmDuration = Duration.between(alert.getStartTime(), alert.getConfirmTime());
-      confirmText = String.format("Time to confirm: %d sec", confirmDuration.getSeconds());
+      confirmText = String.format(context.getString(R.string.alert_view_confirm_time), confirmDuration.getSeconds());
     }
     String durationText = "";
     if(alert.isClosed()) {
       Duration duration = Duration.between(alert.getStartTime(), alert.getEndTime());
-      durationText = String.format("Duration: %.1f min", duration.getSeconds() / 60d);
+      durationText = String.format(context.getString(R.string.alert_view_duration), duration.getSeconds() / 60d);
     }
     return Stream.of(confirmText, durationText).filter(((Predicate<String>) String::isEmpty).negate()).collect(Collectors.joining("\n"));
   }
 
-  public static String getState(Alert alert) {
+  public static String getState(Context context, Alert alert) {
     String currentStateText;
     if(alert.isClosed()) {
-      currentStateText = "Closed";
+      currentStateText = context.getString(R.string.alert_view_state_closed);
     } else if(alert.isConfirmed() ) {
-      currentStateText = "Work in progress";
+      currentStateText = context.getString(R.string.alert_view_state_wip);
     } else {
-      currentStateText = "Awaiting confirmation";
+      currentStateText = context.getString(R.string.alert_view_state_to_be_confirmed);
     }
-    return "State: " + currentStateText;
+    return String.format("%s: %s", context.getString(R.string.alert_view_state_title), currentStateText);
   }
 
   private static String formatDateTime(Instant time, String format) {

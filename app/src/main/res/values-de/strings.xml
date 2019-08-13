@@ -1,0 +1,87 @@
+<resources>
+  <string name="channel_description">PAssist Kanalbeschreibung</string>
+  <string name="confirm">Bestaätigen</string>
+  <string name="title_home">Übersicht</string>
+  <string name="title_shift_overview">Kalender</string>
+  <string name="title_alert_log">Aufgebote</string>
+  <string name="title_activity_settings">Einstellungen</string>
+  <string name="title_activity_about">Über</string>
+
+  <string name="main_state_button_close_alert">Alarm schliessen</string>
+
+  <!-- Strings related to Settings -->
+
+  <string name="pref_header_calendar">Kalender</string>
+  <string name="pref_title_calendar_selection">Kalenderauswahl</string>
+  <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter (RegExp)</string>
+  <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
+
+  <string name="pref_header_alarming">Alarmierung</string>
+  <string name="pref_title_sms_sender_number">SMS Sendernummer</string>
+  <string name="pref_default_sms_sender_number"></string>
+  <string name="pref_title_sms_confirm_text">Betsätigungsantwort</string>
+  <string name="pref_default_sms_confirm_text">OK</string>
+
+  <string name="pref_header_test_alarm">Testalarm</string>
+  <string name="pref_title_sms_test_message_pattern">SMS Testmeldungsmuster (RegExp)</string>
+  <string name="pref_default_sms_test_message_pattern">.*Test.*</string>
+  <string name="pref_title_supervise_test_contexts">Überwachte Testkontexte</string>
+  <string name="pref_default_supervise_test_contexts"></string>
+  <string name="pref_title_test_alarm_check_time">Überwachungszeitpunkt</string>
+  <string name="pref_default_test_alarm_check_time">12:00</string>
+  <string name="pref_title_test_alarm_check_weekdays">Überwachte Wochentage</string>
+  <string-array name="weekdays">
+    <item>Montag</item>
+    <item>Dienstag</item>
+    <item>Mittwoch</item>
+    <item>Donnerstag</item>
+    <item>Freitag</item>
+    <item>Samstag</item>
+    <item>Sonntag</item>
+  </string-array>
+
+  <string-array name="signal_levels">
+    <item>Aus</item>
+    <item>Kein</item>
+    <item>Schlecht</item>
+    <item>Moderat</item>
+    <item>Gut</item>
+    <item>Excellent</item>
+  </string-array>
+
+  <string name="pref_header_notifications">Benachrichtigungen</string>
+  <string name="pref_title_alarm_ring_tone">Alarm Klingelton</string>
+  <string name="pref_default_alarm_ring_tone"></string>
+  <string name="pref_title_supervise_signal_strength">Signalstärke überwachen</string>
+  <string name="menu_settings">Einstellungen</string>
+  <string name="menu_about">Über</string>
+
+  <string name="preferences_calendar_all">Alle</string>
+  <string name="preferences_alarm_ringtone_default">Standard Klingelton</string>
+  <string name="preferences_test_context_empty_selection">Leere Auswahl</string>
+  <string name="preferences_time_set">Ok</string>
+  <string name="preferences_time_cancel">Abbruch</string>
+  <string name="alert_view_confirm_time">Zeit zur Bestätigung: %d Sekunden</string>
+  <string name="alert_view_duration">Dauer: %.1f Minuten</string>
+
+  <string name="alert_view_state_title">Status</string>
+  <string name="alert_view_state_closed">Geschlossen</string>
+  <string name="alert_view_state_wip">In Arbeit</string>
+  <string name="alert_view_state_to_be_confirmed">Zu Bestätigen</string>
+  <string name="call_log_fragment_menu_view">Anzeigen</string>
+  <string name="call_log_fragment_menu_delete">Löschen</string>
+  <string name="test_alarm_context_general">Allgemein</string>
+  <string name="notification_low_signal_title">Unzureichender Signalempfang</string>
+  <string name="notification_low_signal_text">Empfangsstufe</string>
+  <string name="main_fragment_signal_level">Signalempfang</string>
+  <string name="notification_pikett_on_title">Pikett</string>
+  <string name="notification_pikett_on_text">Du bist auf Pikett!</string>
+  <string name="notification_alert_title">Pikettalarm</string>
+  <string name="notification_alert_text">Bestätige den Alarm sofort! Schliesse den Alarm wenn alle Aktivitäten abgeschlossen sind.</string>
+  <string name="notification_alert_confirm_title">Pikettalarm erhalten</string>
+  <string name="notification_alert_confirm_text">Bitte sofort bestätigen!</string>
+  <string name="notification_alert_confirm_button">Bestätigen</string>
+  <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
+  <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>
+
+</resources>

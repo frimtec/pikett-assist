@@ -6,6 +6,7 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
+import com.github.frimtec.android.pikettassist.R;
 
 public class TimePreference extends DialogPreference {
   private int lastHour=0;
@@ -24,11 +25,10 @@ public class TimePreference extends DialogPreference {
     return(Integer.parseInt(pieces[1]));
   }
 
-  public TimePreference(Context ctxt, AttributeSet attrs) {
-    super(ctxt, attrs);
-
-    setPositiveButtonText("Set");
-    setNegativeButtonText("Cancel");
+  public TimePreference(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    setPositiveButtonText(context.getResources().getString(R.string.preferences_time_set));
+    setNegativeButtonText(context.getResources().getString(R.string.preferences_time_cancel));
   }
 
   @Override

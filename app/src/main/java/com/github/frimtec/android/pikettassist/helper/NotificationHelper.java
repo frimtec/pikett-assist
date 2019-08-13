@@ -38,7 +38,7 @@ public class NotificationHelper {
     notificationManager.createNotificationChannel(channel);
   }
 
-  public static void notify(Context context, String text, Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
+  public static void notify(Context context, Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
     actionIntent.setAction(action);
     PendingIntent confirmPendingIntent =
         PendingIntent.getBroadcast(context, 0, actionIntent, 0);
@@ -49,11 +49,11 @@ public class NotificationHelper {
     );
 
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-        .setContentTitle("Pikett ALARM")
-        .setContentText(text)
-        .setSmallIcon(R.drawable.ic_nuclear)
+        .setContentTitle(context.getString(R.string.notification_alert_title))
+        .setContentText(context.getString(R.string.notification_alert_text))
+        .setSmallIcon(R.drawable.ic_siren)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
-        .addAction(R.drawable.ic_nuclear, actionLabel, confirmPendingIntent)
+        .addAction(R.drawable.ic_siren, actionLabel, confirmPendingIntent)
         .setCategory(CATEGORY_ALARM)
         .setContentIntent(notifyPendingIntent)
         .setOnlyAlertOnce(true)
@@ -68,8 +68,8 @@ public class NotificationHelper {
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-        .setContentTitle("Pikett ON")
-        .setContentText("You are on Pikett!")
+        .setContentTitle(context.getString(R.string.notification_pikett_on_title))
+        .setContentText(context.getString(R.string.notification_pikett_on_text))
         // TODO choose icon for confirm and close
         .setSmallIcon(R.drawable.ic_eye)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
@@ -86,8 +86,8 @@ public class NotificationHelper {
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-        .setContentTitle("Low signal")
-        .setContentText("Signal level: " + level)
+        .setContentTitle(context.getString(R.string.notification_low_signal_title))
+        .setContentText(String.format("%s: %s", context.getString(R.string.notification_low_signal_text), level.toString(context)))
         .setSmallIcon(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
@@ -107,10 +107,10 @@ public class NotificationHelper {
   public static void confirm(Context context, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
         // set dialog message
-        .setTitle("Pikett alarm received")
-        .setMessage("Please confirm!")
+        .setTitle(R.string.notification_alert_confirm_title)
+        .setMessage(R.string.notification_alert_confirm_text)
         .setCancelable(false)
-        .setPositiveButton("CONFIRM", (dialog, id) -> {
+        .setPositiveButton(R.string.notification_alert_confirm_button, (dialog, id) -> {
               // if this button is clicked, close
               // current activity
               Log.d(TAG, "Alert confirmed!");
@@ -124,8 +124,8 @@ public class NotificationHelper {
   public static void batteryOptimization(Context context, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
         // set dialog message
-        .setTitle("Battery optimization is on!")
-        .setMessage("To work reliabel, PAssist must run with battery optimizstion turned off.")
+        .setTitle(R.string.notification_battery_optimization_title)
+        .setMessage(R.string.notification_battery_optimization_text)
         .setCancelable(true)
         .setPositiveButton("OK", action::accept
         ).create();

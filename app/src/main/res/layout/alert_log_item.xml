@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
   <ImageView
-      android:layout_height="30dp" app:srcCompat="@drawable/ic_nuclear"
+      android:layout_height="30dp" app:srcCompat="@drawable/ic_siren"
       android:id="@+id/imageView"  android:layout_width="30dp"
       android:layout_marginTop="5dp" android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:layout_marginBottom="5dp"/>
   <TableLayout

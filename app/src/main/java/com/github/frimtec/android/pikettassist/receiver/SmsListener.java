@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.util.Pair;
+import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.state.DbHelper;
@@ -50,7 +51,7 @@ public class SmsListener extends BroadcastReceiver {
           Matcher matcher = testSmsPattern.matcher(sms.getText());
           if (matcher.matches()) {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
-            id = id != null ? id : "general";
+            id = id != null ? id : context.getString(R.string.test_alarm_context_general);
             Log.d(TAG, "TEST alarm with ID: " + id);
             confimSms(SharedState.getSmsConfirmText(context), pikettNumber);
             try(SQLiteDatabase db = PikettAssist.getWritableDatabase()) {

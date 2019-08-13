@@ -63,7 +63,6 @@ public class AlertService extends Service {
     SmsHelper.confimSms(SharedState.getSmsConfirmText(context), SharedState.getSmsSenderNumber(context));
     NotificationHelper.notify(
         context,
-        "Confirmed alarm, close when all activities are finsished.",
         new Intent(context, AlarmActionListener.class),
         ACTION_CLOSE,
         "CLOSE",

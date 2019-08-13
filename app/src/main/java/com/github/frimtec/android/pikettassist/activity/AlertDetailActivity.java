@@ -47,8 +47,8 @@ public class AlertDetailActivity extends AppCompatActivity {
       TextView durations = (TextView) headerView.findViewById(R.id.alert_detail_header_durations);
 
       timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
-      currentState.setText(AlertViewHelper.getState(alert));
-      durations.setText(AlertViewHelper.getDurations(alert));
+      currentState.setText(AlertViewHelper.getState(this, alert));
+      durations.setText(AlertViewHelper.getDurations(this, alert));
 
       listView.addHeaderView(headerView);
       listView.setAdapter(adapter);

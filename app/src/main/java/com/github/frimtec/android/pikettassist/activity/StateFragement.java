@@ -57,7 +57,7 @@ public class StateFragement extends Fragment {
         boolean superviseSignalStrength = SharedState.getSuperviseSignalStrength(getContext());
         pikettState.setText("Pikett state: " + pikettStateValue);
         alertState.setText("Alarm state: " + SharedState.getAlarmState(getContext()).first);
-        signalStrength.setText(superviseSignalStrength ? (pikettStateValue == PikettState.ON ? "Signal strength: " + SignalStremgthHelper.getSignalStrength(getContext()) : "Signal strength supervision: ENABLED") : "Signal strength supervision: DISABLED");
+        signalStrength.setText(superviseSignalStrength ? (pikettStateValue == PikettState.ON ? getContext().getString(R.string.main_fragment_signal_level) + ": " + SignalStremgthHelper.getSignalStrength(getContext()).toString(getContext()) : "Signal strength supervision: ENABLED") : "Signal strength supervision: DISABLED");
         pikettState.invalidate();
         Button button = (Button) view.findViewById(R.id.close_alert_button);
         button.setEnabled(SharedState.getAlarmState(getContext()).first != AlarmState.OFF);

@@ -83,5 +83,6 @@
   <string name="notification_alert_confirm_button">Bestätigen</string>
   <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
   <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>
+  <string name="alert_action_close">Schliessen</string>
 
 </resources>

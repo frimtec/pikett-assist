@@ -94,10 +94,11 @@
   <string name="notification_pikett_on_title">Standby</string>
   <string name="notification_pikett_on_text">You are on standby!</string>
   <string name="notification_alert_title">Standby alert</string>
-  <string name="notification_alert_text">Confirmed alarm now! Close alarm when all activities are finsished.</string>
+  <string name="notification_alert_text">Close alarm when all activities are finsished.</string>
   <string name="notification_alert_confirm_title">Standby alert received</string>
   <string name="notification_alert_confirm_text">Please confirm!</string>
   <string name="notification_alert_confirm_button">Confirm</string>
   <string name="notification_battery_optimization_title">Battery optimization is on!</string>
   <string name="notification_battery_optimization_text">To work reliabel, PAssist must run with battery optimizstion turned off.</string>
+  <string name="alert_action_close">Close</string>
 </resources>

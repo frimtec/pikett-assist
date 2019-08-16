@@ -77,11 +77,12 @@
   <string name="notification_pikett_on_title">Pikett</string>
   <string name="notification_pikett_on_text">Du bist auf Pikett!</string>
   <string name="notification_alert_title">Pikettalarm</string>
-  <string name="notification_alert_text">Bestätige den Alarm sofort! Schliesse den Alarm wenn alle Aktivitäten abgeschlossen sind.</string>
+  <string name="notification_alert_text">Schliesse den Alarm wenn alle Aktivitäten abgeschlossen sind.</string>
   <string name="notification_alert_confirm_title">Pikettalarm erhalten</string>
   <string name="notification_alert_confirm_text">Bitte sofort bestätigen!</string>
   <string name="notification_alert_confirm_button">Bestätigen</string>
   <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
   <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>
+  <string name="alert_action_close">Schliessen</string>
 
 </resources>

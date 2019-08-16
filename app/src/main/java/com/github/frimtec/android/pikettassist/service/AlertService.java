@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
+import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
@@ -65,7 +66,7 @@ public class AlertService extends Service {
         context,
         new Intent(context, AlarmActionListener.class),
         ACTION_CLOSE,
-        "CLOSE",
+        getString(R.string.alert_action_close),
         new Intent(context, MainActivity.class)
     );
   }

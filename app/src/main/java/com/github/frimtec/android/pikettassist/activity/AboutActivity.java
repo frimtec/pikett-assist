@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 
@@ -39,6 +40,16 @@ public class AboutActivity extends AppCompatActivity {
             ""
         , Html.FROM_HTML_MODE_COMPACT));
     textView.setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      // Override home navigation button to call onBackPressed (b/35152749).
+      onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
 }

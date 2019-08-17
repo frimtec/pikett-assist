@@ -31,7 +31,8 @@ public class AlertService extends Service {
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
-    Log.d(TAG, "Service cycle");
+    String smsNumber = intent.getStringExtra("sms_number");
+    Log.d(TAG, "Service cycle: " + smsNumber);
 
     Context context = getApplicationContext();
     Ringtone ringtone = RingtoneManager.getRingtone(context, getAlarmTone(context));
@@ -42,7 +43,7 @@ public class AlertService extends Service {
 
     NotificationHelper.confirm(context, (dialogInterface, integer) -> {
       Log.d(TAG, "Confirm received.");
-      confirmAlarm(context);
+      confirmAlarm(context, smsNumber);
       ringtone.stop();
       vibrator.cancel();
       context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
@@ -52,7 +53,7 @@ public class AlertService extends Service {
     return START_NOT_STICKY;
   }
 
-  private void confirmAlarm(Context context) {
+  private void confirmAlarm(Context context, String smsNumber) {
     try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
       ContentValues values = new ContentValues();
       values.put("confirm_time", Instant.now().toEpochMilli());
@@ -61,7 +62,7 @@ public class AlertService extends Service {
         Log.e(TAG, "One open case expected, but got " + update);
       }
     }
-    SmsHelper.confimSms(SharedState.getSmsConfirmText(context), SharedState.getSmsSenderNumber(context));
+    SmsHelper.confimSms(SharedState.getSmsConfirmText(context), smsNumber);
     NotificationHelper.notify(
         context,
         new Intent(context, AlarmActionListener.class),

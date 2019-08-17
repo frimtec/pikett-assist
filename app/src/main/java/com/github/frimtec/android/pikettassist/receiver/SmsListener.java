@@ -39,7 +39,7 @@ public class SmsListener extends BroadcastReceiver {
       for (Sms sms : SmsHelper.getSmsFromIntent(intent)) {
         Optional<String> contactId  = getConatctId(context, sms.getNumber());
         Log.d(TAG, "Contact ID: " + contactId);
-        if (sms.getNumber().equals(pikettNumber)) {
+        if (pikettNumber.equals(contactId.orElse("UNKNOWN"))) {
           Log.d(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
           Matcher matcher = testSmsPattern.matcher(sms.getText());
@@ -47,7 +47,7 @@ public class SmsListener extends BroadcastReceiver {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
             id = id != null ? id : context.getString(R.string.test_alarm_context_general);
             Log.d(TAG, "TEST alarm with ID: " + id);
-            confimSms(SharedState.getSmsConfirmText(context), pikettNumber);
+            confimSms(SharedState.getSmsConfirmText(context), sms.getNumber());
             try (SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
               try (Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id"}, "_id=?", new String[]{id}, null, null, null)) {
                 if (cursor.getCount() == 0) {
@@ -69,19 +69,21 @@ public class SmsListener extends BroadcastReceiver {
             Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(context);
             try (SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
               Long caseId;
+              Intent alertServiceIntent = new Intent(context, AlertService.class);
+              alertServiceIntent.putExtra("sms_number", sms.getNumber());
               if (alarmState.first == AlarmState.OFF) {
                 Log.d(TAG, "Alarm state OFF -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("start_time", Instant.now().toEpochMilli());
                 caseId = db.insert("t_alert", null, contentValues);
-                context.startService(new Intent(context, AlertService.class));
+                context.startService(alertServiceIntent);
               } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
                 Log.d(TAG, "Alarm state ON_CONFIRMED -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.putNull("confirm_time");
                 caseId = alarmState.second;
                 db.update("t_alert", contentValues, "_id=?", new String[]{String.valueOf(caseId)});
-                context.startService(new Intent(context, AlertService.class));
+                context.startService(alertServiceIntent);
               } else {
                 Log.d(TAG, "Alarm state ON -> ON");
                 caseId = alarmState.second;

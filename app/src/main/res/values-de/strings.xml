@@ -94,5 +94,6 @@
   <string name="alarm_state_on">Unbestätigt</string>
   <string name="alarm_state_on_confirmed">Bestätigt</string>
   <string name="alarm_state_off">Aus</string>
+  <string name="state_fragment_test_alarm_never_received">Nie erhalten</string>
 
 </resources>

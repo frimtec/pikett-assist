@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-public enum PikettState {
+public enum DualState {
   OFF,
   ON
 }

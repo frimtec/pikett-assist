@@ -19,7 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.PikettState;
+import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
       public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Event received: " + intent.getAction());
         if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED) &&
-            SharedState.getPikettState(context) == PikettState.ON) {
+            SharedState.getPikettState(context) == DualState.ON) {
           try {
             // wait for change
             Thread.sleep(2000);

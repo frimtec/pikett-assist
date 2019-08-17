@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Pair;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
-import com.github.frimtec.android.pikettassist.domain.PikettState;
+import com.github.frimtec.android.pikettassist.domain.DualState;
 
 import java.util.Collections;
 import java.util.Set;
@@ -28,14 +28,17 @@ public final class SharedState {
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
+
+  private static final String PREF_KEY_TEST_ALARM_STATE_PREFIX = "test_alarm_state_";
+
   public static final String START_OF_TIME = "0";
   public static final String CALENDAR_FILTER_ALL = "-1";
 
   private SharedState() {
   }
 
-  public static PikettState getPikettState(Context context) {
-    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? PikettState.ON : PikettState.OFF;
+  public static DualState getPikettState(Context context) {
+    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? DualState.ON : DualState.OFF;
   }
 
   public static Pair<AlarmState, Long> getAlarmState(Context context) {
@@ -52,6 +55,10 @@ public final class SharedState {
       long confirmTime = cursor.getLong(1);
       return Pair.create(confirmTime == 0 ? AlarmState.ON : AlarmState.ON_CONFIRMED, id);
     }
+  }
+
+  public static DualState getTestAlarmState(Context context, String testContext) {
+    return DualState.valueOf(getSharedPreferences(context, PREF_KEY_TEST_ALARM_STATE_PREFIX + testContext.toUpperCase(), DualState.OFF.toString()));
   }
 
   public static String getCalendarEventPikettTitlePattern(Context context) {
@@ -87,6 +94,15 @@ public final class SharedState {
   public static Set<String> getSuperviseTestContexts(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, Collections.emptySet());
+  }
+
+  public static String getTestAlarmCheckTime(Context context) {
+    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_CHECK_TIME, "12:00");
+  }
+
+  public static Set<String> getTestAlarmCheckWeekdays(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS, Collections.emptySet());
   }
 
   public static void setSuperviseTestContexts(Context context, Set<String> values) {

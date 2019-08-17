@@ -10,7 +10,7 @@ import android.os.Vibrator;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import com.github.frimtec.android.pikettassist.domain.PikettState;
+import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
@@ -68,7 +68,7 @@ public class SignalStrengthService extends IntentService {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (SharedState.getPikettState(this) == PikettState.ON) {
+    if (SharedState.getPikettState(this) == DualState.ON) {
       AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
       alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)

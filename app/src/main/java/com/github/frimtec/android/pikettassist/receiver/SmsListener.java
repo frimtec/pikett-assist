@@ -3,18 +3,21 @@ package com.github.frimtec.android.pikettassist.receiver;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.service.AlertService;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.domain.Sms;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
+import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 
+import java.lang.annotation.Retention;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +37,8 @@ public class SmsListener extends BroadcastReceiver {
       }
       String pikettNumber = SharedState.getSmsSenderNumber(context);
       for (Sms sms : SmsHelper.getSmsFromIntent(intent)) {
+        Optional<String> contactId  = getConatctId(context, sms.getNumber());
+        Log.d(TAG, "Contact ID: " + contactId);
         if (sms.getNumber().equals(pikettNumber)) {
           Log.d(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
@@ -43,9 +48,9 @@ public class SmsListener extends BroadcastReceiver {
             id = id != null ? id : context.getString(R.string.test_alarm_context_general);
             Log.d(TAG, "TEST alarm with ID: " + id);
             confimSms(SharedState.getSmsConfirmText(context), pikettNumber);
-            try(SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
-              try(Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id"}, "_id=?", new String[]{id}, null, null, null)) {
-                if(cursor.getCount() == 0) {
+            try (SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
+              try (Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id"}, "_id=?", new String[]{id}, null, null, null)) {
+                if (cursor.getCount() == 0) {
                   ContentValues contentValues = new ContentValues();
                   contentValues.put("_id", id);
                   contentValues.put("last_received_time", Instant.now().toEpochMilli());
@@ -62,15 +67,15 @@ public class SmsListener extends BroadcastReceiver {
           } else {
             Log.d(TAG, "Alarm");
             Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(context);
-            try(SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
+            try (SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
               Long caseId;
-              if(alarmState.first == AlarmState.OFF) {
+              if (alarmState.first == AlarmState.OFF) {
                 Log.d(TAG, "Alarm state OFF -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("start_time", Instant.now().toEpochMilli());
                 caseId = db.insert("t_alert", null, contentValues);
                 context.startService(new Intent(context, AlertService.class));
-              } else if(alarmState.first == AlarmState.ON_CONFIRMED){
+              } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
                 Log.d(TAG, "Alarm state ON_CONFIRMED -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.putNull("confirm_time");
@@ -92,6 +97,21 @@ public class SmsListener extends BroadcastReceiver {
         }
       }
       context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+    }
+  }
+
+
+  public Optional<String> getConatctId(Context context, String number) {
+    ContentResolver cr = context.getContentResolver();
+    try (Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+        new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
+        ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
+        new String[]{number}, null)) {
+      if (cursor.moveToFirst()) {
+        return Optional.of(cursor.getString(
+            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)));
+      }
+      return Optional.empty();
     }
   }
 }

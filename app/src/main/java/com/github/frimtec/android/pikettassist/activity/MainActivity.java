@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
       Manifest.permission.RECEIVE_BOOT_COMPLETED,
       Manifest.permission.VIBRATE,
       Manifest.permission.ACCESS_COARSE_LOCATION,
+      Manifest.permission.READ_CONTACTS
   };
 
   private static final int REQUEST_CODE = 1;

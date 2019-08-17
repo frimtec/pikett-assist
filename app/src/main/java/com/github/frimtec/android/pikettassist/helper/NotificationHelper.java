@@ -48,9 +48,11 @@ public class NotificationHelper {
         context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
     );
 
+    String message = context.getString(R.string.notification_alert_text);
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle(context.getString(R.string.notification_alert_title))
-        .setContentText(context.getString(R.string.notification_alert_text))
+        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+        .setContentText(message)
         .setSmallIcon(R.drawable.ic_siren)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .addAction(R.drawable.ic_siren, actionLabel, confirmPendingIntent)

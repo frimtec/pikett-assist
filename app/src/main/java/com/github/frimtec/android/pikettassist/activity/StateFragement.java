@@ -3,8 +3,10 @@ package com.github.frimtec.android.pikettassist.activity;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +37,6 @@ public class StateFragement extends Fragment {
     ListView listView = view.findViewById(R.id.activity_list);
     listView.setAdapter(createAdapter());
     listView.setClickable(false);
-    refresh();
     return view;
   }
 
@@ -75,6 +76,7 @@ public class StateFragement extends Fragment {
     if (alarmState != AlarmState.OFF) {
       alarmCloseButton = new Button(getContext());
       alarmCloseButton.setText(getString(R.string.main_state_button_close_alert));
+      alarmCloseButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
       alarmCloseButton.setOnClickListener(v -> {
         try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
           Log.v(TAG, "Close alert button pressed.");

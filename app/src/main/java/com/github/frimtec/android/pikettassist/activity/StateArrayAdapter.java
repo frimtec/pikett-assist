@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,16 +33,19 @@ class StateArrayAdapter extends ArrayAdapter<State> {
 
     switch (state.getState()) {
       case GREEN:
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green));
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green));
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green));
+        Bitmap ledGreen = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledGreen);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledGreen);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(ledGreen);
         break;
       case YELLOW:
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_yellow));
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_yellow));
+        Bitmap ledYellow = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_yellow);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledYellow);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledYellow);
         break;
       case RED:
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_red));
+        Bitmap ledRed = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_red);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledRed);
         break;
     }
 

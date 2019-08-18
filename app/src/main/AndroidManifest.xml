@@ -69,6 +69,7 @@
 
     <service android:name=".service.PikettService"/>
     <service android:name=".service.AlertService"/>
+    <service android:name=".service.TestAlertService"/>
     <service android:name=".service.SignalStrengthService"/>
   </application>
 

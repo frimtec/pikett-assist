@@ -25,6 +25,7 @@ import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
+import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
@@ -137,6 +138,7 @@ public class StateFragement extends Fragment {
     );
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     DualState testAlarmState = DualState.OFF;
+    Button testAlarmCloseButton = null;
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
       try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
         try (Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id", "last_received_time", "alert_state"}, "_id=?", new String[]{testContext}, null, null, null)) {
@@ -144,9 +146,23 @@ public class StateFragement extends Fragment {
             Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
             lastReceived = formatDateTime(lastReceiveTime, DATE_TIME_FORMAT);
             testAlarmState = DualState.valueOf(cursor.getString(2));
+
+            if (testAlarmState != DualState.OFF) {
+              testAlarmCloseButton = new Button(getContext());
+              testAlarmCloseButton.setText(getString(R.string.main_state_button_close_alert));
+              testAlarmCloseButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
+              testAlarmCloseButton.setOnClickListener(v -> {
+                try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
+                  Log.v(TAG, "Close test alert button pressed.");
+                  TestAlarmDao.updateAlarmState(testContext, DualState.OFF);
+                }
+                refresh();
+              });
+            }
+
           }
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, null, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {
+        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButton, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {
         }));
       }
     }

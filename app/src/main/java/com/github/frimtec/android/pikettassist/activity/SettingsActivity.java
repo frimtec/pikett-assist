@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
   };
 
   private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToWeekdaysListener = (preference, value) -> {
-    preference.setSummary(weekDaysValues(preference, (Set)value));
+    preference.setSummary(weekDaysValues(preference, (Set) value));
     return true;
   };
 
@@ -92,7 +92,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
   private static String weekDaysValues(Preference preference, Set<String> values) {
     String[] weekdays = preference.getContext().getResources().getStringArray(R.array.weekdays);
-    return values.stream().map(id -> weekdays[Integer.parseInt(id)]).collect(Collectors.joining(", "));
+    return values.stream().map(id -> weekdays[Integer.parseInt(id)-1]).collect(Collectors.joining(", "));
   }
 
   @Override

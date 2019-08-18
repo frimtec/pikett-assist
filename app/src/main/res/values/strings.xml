@@ -112,7 +112,8 @@
   <string name="alarm_state_on_confirmed">Confirmed</string>
   <string name="alarm_state_off">Off</string>
   <string name="state_fragment_test_alarm_never_received">Never received</string>
-  <string name="contact_helper_unknown_contact">Unknown contact</string>
-  <string name="contact_preference_empty_selection">Empty selection</string>
+  <string name="contact_helper_unknown_contact">Unknown</string>
+  <string name="contact_preference_empty_selection">Empty</string>
+  <string name="state_fragment_toast_open_unknown_contact">Cannot open unknown contact!</string>
 
 </resources>

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
@@ -111,13 +112,15 @@ public class StateFragement extends Fragment {
 
     Contact operationCenter = ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
     List<State> states = new ArrayList<>(Arrays.asList(
-        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : OFF, context -> {
+        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : RED, context -> {
           Intent intent = new Intent(Intent.ACTION_VIEW);
           long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
           if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
             intent.setData(uri);
             startActivityForResult(intent, 1);
+          } else {
+            Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact,Toast.LENGTH_SHORT).show();
           }
         }),
         new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == DualState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == DualState.ON ? GREEN : OFF, context -> {

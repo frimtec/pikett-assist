@@ -17,7 +17,7 @@
   <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
 
   <string name="pref_header_alarming">Alarmierung</string>
-  <string name="pref_title_sms_sender_number">SMS Sendernummer</string>
+  <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
   <string name="pref_default_sms_sender_number"></string>
   <string name="pref_title_sms_confirm_text">Betsätigungsantwort</string>
   <string name="pref_default_sms_confirm_text">OK</string>
@@ -84,6 +84,7 @@
   <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
   <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>
   <string name="alert_action_close">Schliessen</string>
+  <string name="state_fragment_operations_center">Zentrale</string>
   <string name="state_fragment_pikett_state">Pikettzustand</string>
   <string name="state_fragment_alarm_state">Alarmzustand</string>
   <string name="state_fragment_signal_level_supervise_enabled">Aktiviert</string>
@@ -95,5 +96,7 @@
   <string name="alarm_state_on_confirmed">Bestätigt</string>
   <string name="alarm_state_off">Aus</string>
   <string name="state_fragment_test_alarm_never_received">Nie erhalten</string>
+  <string name="contact_helper_unknown_contact">Unbekannter Kontakt</string>
+  <string name="contact_preference_empty_selection">Leere Auswahl</string>
 
 </resources>

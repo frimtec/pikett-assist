@@ -20,7 +20,7 @@ public final class SharedState {
   private static final String TAG = "SharedState";
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   public static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
-  public static final String PREF_KEY_SMS_SENDER_NUMBER = "sms_sender_number";
+  public static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
   public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
   public static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
   public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
@@ -33,6 +33,7 @@ public final class SharedState {
 
   public static final String START_OF_TIME = "0";
   public static final String CALENDAR_FILTER_ALL = "-1";
+  public static final long EMPTY_CONTACT = -1;
 
   private SharedState() {
   }
@@ -69,8 +70,8 @@ public final class SharedState {
     return getSharedPreferences(context, PREF_KEY_CALENDAR_SELECTION, CALENDAR_FILTER_ALL);
   }
 
-  public static String getSmsSenderNumber(Context context) {
-    return getSharedPreferences(context, PREF_KEY_SMS_SENDER_NUMBER, "");
+  public static long getAlarmOperationsCenterContact(Context context) {
+    return Long.parseLong(getSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, String.valueOf(EMPTY_CONTACT)));
   }
 
   public static String getSmsTestMessagePattern(Context context) {

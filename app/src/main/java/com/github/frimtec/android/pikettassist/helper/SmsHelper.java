@@ -20,8 +20,6 @@ public final class SmsHelper {
 
   private static final String TAG = "SmsHelper";
 
-  private static final String CONFIRMATION_MESSAGE = "OK";
-
   private SmsHelper() {
   }
 

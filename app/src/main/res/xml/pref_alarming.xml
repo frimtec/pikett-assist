@@ -1,14 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <EditTextPreference
-      android:key="sms_sender_number"
-      android:title="@string/pref_title_sms_sender_number"
+  <com.github.frimtec.android.pikettassist.settings.ContactPreference
+      android:key="alarm_operations_center_contact"
+      android:title="@string/pref_title_alarm_operations_center_contact"
       android:icon="@drawable/ic_phone_black_24dp"
-      android:defaultValue="@string/pref_default_sms_sender_number"
-      android:selectAllOnFocus="true"
-      android:inputType="text"
-      android:singleLine="true"
-      android:maxLines="1"/>
+      android:summary="%s"
+      />
 
   <EditTextPreference
       android:key="sms_confirm_text"

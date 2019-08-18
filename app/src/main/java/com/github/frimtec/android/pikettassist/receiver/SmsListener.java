@@ -3,19 +3,18 @@ package com.github.frimtec.android.pikettassist.receiver;
 import android.content.*;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.domain.Sms;
+import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.lang.annotation.Retention;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -35,11 +34,11 @@ public class SmsListener extends BroadcastReceiver {
         Log.d(TAG, "SMS recived but not on pikett");
         return;
       }
-      String pikettNumber = SharedState.getSmsSenderNumber(context);
+      long operationCenterContactId = SharedState.getAlarmOperationsCenterContact(context);
       for (Sms sms : SmsHelper.getSmsFromIntent(intent)) {
-        Optional<String> contactId  = getConatctId(context, sms.getNumber());
+        Optional<Long> contactId = ContactHelper.lookupContactIdByPhoneNumber(context, sms.getNumber());
         Log.d(TAG, "Contact ID: " + contactId);
-        if (pikettNumber.equals(contactId.orElse("UNKNOWN"))) {
+        if (operationCenterContactId != SharedState.EMPTY_CONTACT && operationCenterContactId == contactId.orElse(SharedState.EMPTY_CONTACT)) {
           Log.d(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
           Matcher matcher = testSmsPattern.matcher(sms.getText());
@@ -99,21 +98,6 @@ public class SmsListener extends BroadcastReceiver {
         }
       }
       context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
-    }
-  }
-
-
-  public Optional<String> getConatctId(Context context, String number) {
-    ContentResolver cr = context.getContentResolver();
-    try (Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-        new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
-        ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
-        new String[]{number}, null)) {
-      if (cursor.moveToFirst()) {
-        return Optional.of(cursor.getString(
-            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)));
-      }
-      return Optional.empty();
     }
   }
 }

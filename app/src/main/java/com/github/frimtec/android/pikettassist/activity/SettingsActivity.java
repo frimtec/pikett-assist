@@ -171,7 +171,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.pref_alarming);
       setHasOptionsMenu(true);
-      bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_SENDER_NUMBER));
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_CONFIRM_TEXT));
     }
 

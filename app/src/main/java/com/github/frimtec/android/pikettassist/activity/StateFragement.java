@@ -2,10 +2,12 @@ package com.github.frimtec.android.pikettassist.activity;
 
 import android.app.Fragment;
 import android.content.ContentValues;
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,9 +25,14 @@ import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
 import com.github.frimtec.android.pikettassist.state.PikettAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.*;
 
@@ -42,7 +49,11 @@ public class StateFragement extends Fragment {
     view = inflater.inflate(R.layout.fragment_list, container, false);
     ListView listView = view.findViewById(R.id.activity_list);
     listView.setAdapter(createAdapter());
-    listView.setClickable(false);
+    listView.setClickable(true);
+    listView.setOnItemClickListener((parent, view1, position, id) -> {
+      State selectedState = (State) listView.getItemAtPosition(position);
+      selectedState.onClick(getContext());
+    });
     return view;
   }
 
@@ -100,11 +111,22 @@ public class StateFragement extends Fragment {
 
     Contact operationCenter = ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
     List<State> states = new ArrayList<>(Arrays.asList(
-        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : OFF),
-        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == DualState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == DualState.ON ? GREEN : OFF),
-        new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButton, alarmTrafficLight),
+        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : OFF, context -> {
+          Intent intent = new Intent(Intent.ACTION_VIEW);
+          long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
+          if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
+            intent.setData(uri);
+            startActivityForResult(intent, 1);
+          }
+        }),
+        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == DualState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == DualState.ON ? GREEN : OFF, context -> {
+        }),
+        new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButton, alarmTrafficLight, context -> {
+        }),
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
-            superviseSignalStrength ? (pikettState == DualState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight))
+            superviseSignalStrength ? (pikettState == DualState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight, context -> {
+        }))
     );
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     DualState testAlarmState = DualState.OFF;
@@ -117,7 +139,8 @@ public class StateFragement extends Fragment {
             testAlarmState = SharedState.getTestAlarmState(getContext(), testContext);
           }
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, null, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF));
+        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, null, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {
+        }));
       }
     }
     return new StateArrayAdapter(getContext(), states);

@@ -16,7 +16,7 @@
   <string name="pref_header_calendar">Calendar</string>
   <string name="pref_title_calendar_selection">Calendar filter</string>
   <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (RegExp)</string>
-  <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
+  <string name="pref_default_calendar_event_pikett_title_pattern">.*standby.*</string>
 
   <string name="pref_header_alarming">Alarming</string>
   <string name="pref_title_alarm_operations_center_contact">Operations center</string>

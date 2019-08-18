@@ -9,7 +9,7 @@ import android.util.Log;
 public class DbHelper extends SQLiteOpenHelper {
   private static final String TAG = "DbHelper";
 
-  private static final int DB_VERSION = 1;
+  private static final int DB_VERSION = 2;
 
   public DbHelper(@Nullable Context context) {
     super(context, "pikett-assist.db", null, DB_VERSION);
@@ -40,5 +40,8 @@ public class DbHelper extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     Log.v(TAG, String.format("Upgrade DB from %d to %d", oldVersion, newVersion));
+    if (newVersion > oldVersion) {
+      db.execSQL("ALTER TABLE t_test_alarm_state ADD COLUMN alert_state TEXT DEFAULT 'OFF' NOT NULL");
+    }
   }
 }

@@ -139,11 +139,11 @@ public class StateFragement extends Fragment {
     DualState testAlarmState = DualState.OFF;
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
       try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
-        try (Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id", "last_received_time"}, "_id=?", new String[]{testContext}, null, null, null)) {
+        try (Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id", "last_received_time", "alert_state"}, "_id=?", new String[]{testContext}, null, null, null)) {
           if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
             Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
             lastReceived = formatDateTime(lastReceiveTime, DATE_TIME_FORMAT);
-            testAlarmState = SharedState.getTestAlarmState(getContext(), testContext);
+            testAlarmState = DualState.valueOf(cursor.getString(2));
           }
         }
         states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, null, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {

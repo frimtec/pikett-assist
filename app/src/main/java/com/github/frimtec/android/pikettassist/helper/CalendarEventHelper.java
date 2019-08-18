@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
@@ -58,7 +59,9 @@ public final class CalendarEventHelper {
           Instant eventStartTime = Instant.ofEpochMilli(cursor.getLong(2));
           Instant eventEndTime = Instant.ofEpochMilli(cursor.getLong(3));
           Instant now = LocalDateTime.now().toInstant(ZoneOffset.UTC);
-          if (eventTitle.matches(eventTitleFilterPattern)) {
+
+          Pattern pattern = Pattern.compile(eventTitleFilterPattern, Pattern.CASE_INSENSITIVE);
+          if (pattern.matcher(eventTitle).matches()) {
             events.add(new PikettShift(id, eventTitle, eventStartTime, eventEndTime));
           }
         } while (cursor.moveToNext());

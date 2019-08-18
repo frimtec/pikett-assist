@@ -20,7 +20,7 @@ import java.util.Locale;
 
 class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
 
-  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM HH:mm";
+  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
 
   public PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
     super(context, 0, shifts);

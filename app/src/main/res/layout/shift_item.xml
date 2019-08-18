@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+>
   <ImageView
-      android:layout_height="30dp" app:srcCompat="@drawable/ic_event"
-      android:id="@+id/imageView"  android:layout_width="50dp"/>
-  <TableLayout
-      android:layout_height="wrap_content" android:layout_width="0dp" android:layout_weight="1">
-
-    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/shift_item_title"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textStyle="bold"/>
-    </TableRow>
-    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/shift_item_start_time"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
-    </TableRow>
-    <TableRow android:layout_width="match_parent" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/shift_item_end_time"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
-    </TableRow>
-  </TableLayout>
-</LinearLayout>
+      android:id="@+id/shift_item_image"
+      app:srcCompat="@drawable/ic_event"
+      android:layout_height="50dp"
+      android:layout_width="50dp"
+      android:layout_marginTop="5dp" android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+      android:layout_marginBottom="5dp"
+      android:layout_alignParentStart="true"
+      android:layout_centerHorizontal="true"
+  />
+  <TextView
+      android:id="@+id/shift_item_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="5dp"
+      android:textStyle="bold"
+      android:textSize="15sp"
+      android:layout_toEndOf="@+id/shift_item_image"
+  />
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="5dp"
+      android:layout_below="@+id/shift_item_title"
+      android:layout_toEndOf="@+id/shift_item_image"
+  >
+    <TextView
+        android:id="@+id/shift_item_start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_alignParentStart="true"
+    />
+    <TextView
+        android:id="@+id/shift_item_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_below="@+id/shift_item_start_time"
+    />
+  </RelativeLayout>
+</RelativeLayout>

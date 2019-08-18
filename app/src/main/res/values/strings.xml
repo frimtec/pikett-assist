@@ -3,7 +3,7 @@
   <string name="channel_name">pikett-assist-channel</string>
   <string name="channel_description">pikett assist channel description</string>
   <string name="confirm">CONFIRM</string>
-  <string name="title_home">Home</string>
+  <string name="title_home">Overview</string>
   <string name="title_shift_overview">Calendar</string>
   <string name="title_alert_log">Alert log</string>
   <string name="title_activity_settings">Settings</string>

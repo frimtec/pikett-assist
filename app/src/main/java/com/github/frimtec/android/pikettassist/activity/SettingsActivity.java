@@ -211,8 +211,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.pref_test_alarm);
       setHasOptionsMenu(true);
-      bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_TEST_MESSAGE_PATTERN));
+      bindPreferenceSummaryToValue(findPreference(PREF_KEY_TEST_ALARM_MESSAGE_PATTERN));
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_TEST_ALARM_CHECK_TIME));
+      bindPreferenceSummaryToValue(findPreference(PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES));
       bindPreferenceSummaryToMultiValue(findPreference(PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS));
     }
 

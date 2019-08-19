@@ -36,6 +36,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.*;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
 
 public class StateFragement extends Fragment {
 
@@ -100,7 +101,7 @@ public class StateFragement extends Fragment {
           Log.v(TAG, "Close alert button pressed.");
           ContentValues values = new ContentValues();
           values.put("end_time", Instant.now().toEpochMilli());
-          int update = writableDatabase.update("t_alert", values, "end_time is null", null);
+          int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
           if (update != 1) {
             Log.e(TAG, "One open case expected, but got " + update);
           }
@@ -120,7 +121,7 @@ public class StateFragement extends Fragment {
             intent.setData(uri);
             startActivity(intent);
           } else {
-            Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact, Toast.LENGTH_SHORT).show();
           }
         }),
         new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == DualState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == DualState.ON ? GREEN : OFF, context -> {
@@ -137,11 +138,11 @@ public class StateFragement extends Fragment {
         }))
     );
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
-    DualState testAlarmState = DualState.OFF;
-    Button testAlarmCloseButton = null;
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
+      DualState testAlarmState = DualState.OFF;
+      Button testAlarmCloseButton = null;
       try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
-        try (Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id", "last_received_time", "alert_state"}, "_id=?", new String[]{testContext}, null, null, null)) {
+        try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
           if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
             Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
             lastReceived = formatDateTime(lastReceiveTime, DATE_TIME_FORMAT);
@@ -159,7 +160,6 @@ public class StateFragement extends Fragment {
                 refresh();
               });
             }
-
           }
         }
         states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButton, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {

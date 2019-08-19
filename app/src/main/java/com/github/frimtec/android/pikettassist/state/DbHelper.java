@@ -6,42 +6,72 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import static com.github.frimtec.android.pikettassist.domain.DualState.OFF;
+
 public class DbHelper extends SQLiteOpenHelper {
+
   private static final String TAG = "DbHelper";
 
-  private static final int DB_VERSION = 2;
+  private static final String DB_NAME = "pikett-assist.db";
+  private static final int DB_VERSION = 3;
+
+  public static final String TABLE_ALERT = "t_alert";
+  public static final String TABLE_ALERT_COLUMN_ID = "_id";
+  public static final String TABLE_ALERT_COLUMN_START_TIME = "start_time";
+  public static final String TABLE_ALERT_COLUMN_CONFIRM_TIME = "confirm_time";
+  public static final String TABLE_ALERT_COLUMN_END_TIME = "end_time";
+
+  public static final String TABLE_ALERT_CALL = "t_alert_call";
+  public static final String TABLE_ALERT_CALL_COLUMN_ID = "_id";
+  public static final String TABLE_ALERT_CALL_COLUMN_ALERT_ID = "alert_id";
+  public static final String TABLE_ALERT_CALL_COLUMN_TIME = "time";
+  public static final String TABLE_ALERT_CALL_COLUMN_MESSAGE = "message";
+
+  public static final String TABLE_TEST_ALERT_STATE = "t_test_alarm_state";
+  public static final String TABLE_TEST_ALERT_STATE_COLUMN_ID = "_id";
+  public static final String TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME = "last_received_time";
+  public static final String TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE = "message";
+  public static final String TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE = "alert_state";
 
   public DbHelper(@Nullable Context context) {
-    super(context, "pikett-assist.db", null, DB_VERSION);
+    super(context, DB_NAME, null, DB_VERSION);
   }
 
   @Override
   public void onCreate(SQLiteDatabase db) {
-    Log.v(TAG, "Create DB");
-    db.execSQL("CREATE TABLE t_alert (" +
-        "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-        "  start_time INTEGER NOT NULL," +
-        "  confirm_time INTEGER," +
-        "  end_time INTEGER" +
+    Log.i(TAG, "Create DB");
+    db.execSQL("CREATE TABLE " + TABLE_ALERT + " (" +
+        "  " + TABLE_ALERT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "  " + TABLE_ALERT_COLUMN_START_TIME + " INTEGER NOT NULL," +
+        "  " + TABLE_ALERT_COLUMN_CONFIRM_TIME + " INTEGER," +
+        "  " + TABLE_ALERT_COLUMN_END_TIME + " INTEGER" +
         ");");
-    db.execSQL("CREATE TABLE t_alert_call (" +
-        "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-        "  case_id INTEGER REFERENCES t_alert (id) ON DELETE CASCADE," +
-        "  time INTEGER NOT NULL," +
-        "  message TEXT NOT NULL" +
+    db.execSQL("CREATE TABLE " + TABLE_ALERT_CALL +" (" +
+        "  " + TABLE_ALERT_CALL_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "  " + TABLE_ALERT_CALL_COLUMN_ALERT_ID + " INTEGER REFERENCES " + TABLE_ALERT + " (" + TABLE_ALERT_COLUMN_ID + ") ON DELETE CASCADE," +
+        "  " + TABLE_ALERT_CALL_COLUMN_TIME + " INTEGER NOT NULL," +
+        "  " + TABLE_ALERT_CALL_COLUMN_MESSAGE + " TEXT NOT NULL" +
         ");");
-    db.execSQL("CREATE TABLE t_test_alarm_state (" +
-        "  _id TEXT PRIMARY KEY," +
-        "  last_received_time INTEGER NOT NULL," +
-        "  message TEXT NOT NULL" +
+    db.execSQL("CREATE TABLE " + TABLE_TEST_ALERT_STATE + " (" +
+        "  " + TABLE_TEST_ALERT_STATE_COLUMN_ID + " TEXT PRIMARY KEY," +
+        "  " + TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME + " INTEGER NOT NULL," +
+        "  " + TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE + " TEXT NOT NULL," +
+        "  " + TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL" +
         ");");
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    Log.v(TAG, String.format("Upgrade DB from %d to %d", oldVersion, newVersion));
-    if (newVersion > oldVersion) {
-      db.execSQL("ALTER TABLE t_test_alarm_state ADD COLUMN alert_state TEXT DEFAULT 'OFF' NOT NULL");
+    Log.i(TAG, String.format("Upgrade DB from %d to %d", oldVersion, newVersion));
+    if (oldVersion < 2) {
+      db.execSQL("ALTER TABLE " + TABLE_TEST_ALERT_STATE + " ADD COLUMN " + TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL");
+    }
+    if (oldVersion < 3) {
+      // Schema reworked we drop all and start from scratch
+      db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERT);
+      db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERT_CALL);
+      db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEST_ALERT_STATE);
+      onCreate(db);
     }
   }
 }

@@ -14,13 +14,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
+
 public class TestContextMultiSelectListPreference extends MultiSelectListPreference {
   public TestContextMultiSelectListPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
 
     List<CharSequence> validEntries = new ArrayList<>();
     try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor cursor = db.query("t_test_alarm_state", new String[]{"_id"}, null, null, null, null, null)) {
+         Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID}, null, null, null, null, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           String id = cursor.getString(0);

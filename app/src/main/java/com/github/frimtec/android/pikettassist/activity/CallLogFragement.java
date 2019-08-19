@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+
 public class CallLogFragement extends Fragment {
 
   private static final String TAG = "CallLogFragement";
@@ -89,14 +91,14 @@ public class CallLogFragement extends Fragment {
 
   private void deleteAlert(Alert selectedAlert) {
     try (SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
-      db.delete("t_alert", "_id=?", new String[]{String.valueOf(selectedAlert.getId())});
+      db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(selectedAlert.getId())});
     }
   }
 
   private List<Alert> loadAlertList() {
     List<Alert> alertList = new ArrayList<>();
     try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor cursor = db.rawQuery("SELECT _id, start_time, confirm_time, end_time FROM t_alert ORDER BY start_time DESC", null)) {
+         Cursor cursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_ID + ", " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + " FROM " + TABLE_ALERT + " ORDER BY " + TABLE_ALERT_COLUMN_START_TIME + " DESC", null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);

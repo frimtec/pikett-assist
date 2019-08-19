@@ -23,6 +23,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+
 public class AlertDetailActivity extends AppCompatActivity {
 
   private static final String TAG = "AlertDetailActivity";
@@ -73,8 +75,8 @@ public class AlertDetailActivity extends AppCompatActivity {
 
   private Alert loadAlert(long id) {
     try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor alertCursor = db.rawQuery("SELECT start_time, confirm_time, end_time FROM t_alert where _id=?", new String[]{String.valueOf(id)});
-         Cursor callCursor = db.rawQuery("SELECT time, message FROM t_alert_call where case_id=? order by time", new String[]{String.valueOf(id)})) {
+         Cursor alertCursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + " FROM " + TABLE_ALERT + " where " + TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+         Cursor callCursor = db.rawQuery("SELECT " + TABLE_ALERT_CALL_COLUMN_TIME + ", " + TABLE_ALERT_CALL_COLUMN_MESSAGE + " FROM " + TABLE_ALERT_CALL + " where " + TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=? order by " + TABLE_ALERT_CALL_COLUMN_TIME, new String[]{String.valueOf(id)})) {
       if (alertCursor != null && alertCursor.getCount() > 0 && alertCursor.moveToFirst()) {
         LinkedList<AlertCall> calls = new LinkedList<>();
         if (callCursor != null && callCursor.getCount() > 0 && callCursor.moveToFirst()) {

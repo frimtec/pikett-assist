@@ -23,12 +23,14 @@
   <string name="pref_default_sms_confirm_text">OK</string>
 
   <string name="pref_header_test_alarm">Testalarm</string>
-  <string name="pref_title_sms_test_message_pattern">SMS Testmeldungsmuster (RegExp)</string>
-  <string name="pref_default_sms_test_message_pattern">.*Test.*</string>
+  <string name="pref_title_test_alarm_message_pattern">Testalarm Meldungsmuster (RegExp)</string>
+  <string name="pref_default_test_alarm_message_pattern">--- UNDEFINIERT ---</string>
   <string name="pref_title_supervise_test_contexts">Überwachte Testkontexte</string>
   <string name="pref_default_supervise_test_contexts"></string>
   <string name="pref_title_test_alarm_check_time">Überwachungszeitpunkt</string>
   <string name="pref_default_test_alarm_check_time">12:00</string>
+  <string name="pref_title_test_alarm_accept_time_window_minutes">Testalarm Zeitfenster (Minuten)</string>
+  <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
   <string name="pref_title_test_alarm_check_weekdays">Überwachte Wochentage</string>
   <string-array name="weekdays">
     <item>Montag</item>
@@ -78,6 +80,8 @@
   <string name="notification_pikett_on_text">Du bist auf Pikett!</string>
   <string name="notification_alert_title">Pikettalarm</string>
   <string name="notification_alert_text">Schliesse den Alarm wenn alle Aktivitäten abgeschlossen sind.</string>
+  <string name="notification_missing_test_alert_title">Fehlender Testalarm</string>
+  <string name="notification_missing_test_alert_text">Testkontexte: </string>
   <string name="notification_alert_confirm_title">Pikettalarm erhalten</string>
   <string name="notification_alert_confirm_text">Bitte sofort bestätigen!</string>
   <string name="notification_alert_confirm_button">Bestätigen</string>

@@ -1,10 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
   <EditTextPreference
-      android:key="sms_test_message_pattern"
-      android:title="@string/pref_title_sms_test_message_pattern"
+      android:key="test_alarm_message_pattern"
+      android:title="@string/pref_title_test_alarm_message_pattern"
       android:icon="@drawable/ic_message_black_24dp"
-      android:defaultValue="@string/pref_default_sms_test_message_pattern"
+      android:defaultValue="@string/pref_default_test_alarm_message_pattern"
       android:selectAllOnFocus="true"
       android:inputType="text"
       android:singleLine="true"
@@ -21,6 +21,16 @@
       android:title="@string/pref_title_test_alarm_check_time"
       android:defaultValue="@string/pref_default_test_alarm_check_time"
       android:icon="@drawable/ic_watch_later_black_24dp"/>
+
+  <EditTextPreference
+          android:key="test_alarm_accept_time_window_minutes"
+          android:title="@string/pref_title_test_alarm_accept_time_window_minutes"
+          android:icon="@drawable/ic_message_black_24dp"
+          android:defaultValue="@string/pref_default_test_alarm_accept_time_window_minutes"
+          android:selectAllOnFocus="true"
+          android:inputType="number"
+          android:singleLine="true"
+          android:maxLines="1"/>
 
   <MultiSelectListPreference
       android:key="test_alarm_check_weekdays"

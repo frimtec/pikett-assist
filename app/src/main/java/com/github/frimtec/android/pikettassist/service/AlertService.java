@@ -1,6 +1,5 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,7 +21,9 @@ import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
 
-import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE;
+import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 
 public class AlertService extends Service {
 
@@ -57,7 +58,7 @@ public class AlertService extends Service {
     try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
       ContentValues values = new ContentValues();
       values.put("confirm_time", Instant.now().toEpochMilli());
-      int update = writableDatabase.update("t_alert", values, "end_time is null", null);
+      int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
       if (update != 1) {
         Log.e(TAG, "One open case expected, but got " + update);
       }
@@ -66,7 +67,7 @@ public class AlertService extends Service {
     NotificationHelper.notify(
         context,
         new Intent(context, AlarmActionListener.class),
-        ACTION_CLOSE,
+            ACTION_CLOSE_ALARM,
         getString(R.string.alert_action_close),
         new Intent(context, MainActivity.class)
     );

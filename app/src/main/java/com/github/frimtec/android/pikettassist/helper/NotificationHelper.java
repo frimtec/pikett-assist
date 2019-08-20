@@ -13,6 +13,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
 
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static android.app.Notification.*;
@@ -25,9 +26,10 @@ public class NotificationHelper {
   public  static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
   public static final int SIGNAL_NOTIFICATION_ID = 3;
+  public static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
 
-  public static final String ACTION_CONFIRM = "com.github.frimtec.android.pikettassist.CONFIRM_ALARM";
-  public static final String ACTION_CLOSE = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
+  public static final String ACTION_CONFIRM_ALARM = "com.github.frimtec.android.pikettassist.CONFIRM_ALARM";
+  public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
 
   public static void registerChannel(Context context) {
     CharSequence name = context.getString(R.string.channel_name);
@@ -63,6 +65,27 @@ public class NotificationHelper {
 
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
+  }
+
+  public static void notifyMissingTestAlarm(Context context, Intent notifyIntent, Set<String> testContexts) {
+    notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+    );
+    String message = context.getString(R.string.notification_missing_test_alert_text) + String.join(", ", testContexts);
+    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+        .setContentTitle(context.getString(R.string.notification_missing_test_alert_title))
+        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+        .setContentText(message)
+        .setSmallIcon(R.drawable.ic_test_alarm)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setCategory(CATEGORY_ALARM)
+        .setContentIntent(notifyPendingIntent)
+        .setOnlyAlertOnce(true)
+        .build();
+
+    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+    notificationManagerCompat.notify(MISSING_TEST_ALARM_NOTIFICATION_ID, notification);
   }
 
   public static void notifyShiftOn(Context context) {

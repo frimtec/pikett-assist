@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
 
 public final class SharedState {
 
@@ -22,9 +23,10 @@ public final class SharedState {
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   public static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
   public static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
-  public static final String PREF_KEY_SMS_TEST_MESSAGE_PATTERN = "sms_test_message_pattern";
+  public static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
   public static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
   public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
+  public static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
@@ -45,7 +47,7 @@ public final class SharedState {
 
   public static Pair<AlarmState, Long> getAlarmState(Context context) {
     try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor cursor = db.query("t_alert", new String[]{"_id", "confirm_time"}, "end_time is null", null, null, null, null)) {
+         Cursor cursor = db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_CONFIRM_TIME}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null)) {
       if (cursor.getCount() == 0) {
         return Pair.create(AlarmState.OFF, null);
       } else if (cursor.getCount() > 0)
@@ -72,11 +74,11 @@ public final class SharedState {
   }
 
   public static String getSmsTestMessagePattern(Context context) {
-    return getSharedPreferences(context, PREF_KEY_SMS_TEST_MESSAGE_PATTERN, ".*Test.*");
+    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern));
   }
 
   public static String getSmsConfirmText(Context context) {
-    return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, "OK");
+    return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, context.getString(R.string.pref_default_sms_confirm_text));
   }
 
   public static boolean getSuperviseSignalStrength(Context context) {
@@ -95,12 +97,16 @@ public final class SharedState {
   }
 
   public static String getTestAlarmCheckTime(Context context) {
-    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_CHECK_TIME, "12:00");
+    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_CHECK_TIME, context.getString(R.string.pref_default_test_alarm_check_time));
   }
 
   public static Set<String> getTestAlarmCheckWeekdays(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getStringSet(PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS, Collections.emptySet());
+  }
+
+  public static int getTestAlarmAcceptTimeWindowMinutes(Context context) {
+    return Integer.parseInt(getSharedPreferences(context, PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES, context.getString(R.string.pref_default_test_alarm_accept_time_window_minutes)));
   }
 
   public static void setSuperviseTestContexts(Context context, Set<String> values) {
@@ -121,5 +127,4 @@ public final class SharedState {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getString(key, defaultValue);
   }
-
 }

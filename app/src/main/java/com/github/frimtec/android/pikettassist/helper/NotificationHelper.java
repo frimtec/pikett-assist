@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
@@ -130,14 +132,15 @@ public class NotificationHelper {
   }
 
   public static void confirm(Context context, BiConsumer<DialogInterface, Integer> action) {
-    AlertDialog alertDialog = new AlertDialog.Builder(context)
-        // set dialog message
+    LayoutInflater factory = LayoutInflater.from(context);
+    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+    View view = factory.inflate(R.layout.alert_confirmation_dialog, null);
+    AlertDialog alertDialog = alertDialogBuilder
+        .setView(view)
         .setTitle(R.string.notification_alert_confirm_title)
         .setMessage(R.string.notification_alert_confirm_text)
         .setCancelable(false)
         .setPositiveButton(R.string.notification_alert_confirm_button, (dialog, id) -> {
-              // if this button is clicked, close
-              // current activity
               Log.d(TAG, "Alert confirmed!");
               action.accept(dialog, id);
             }

@@ -83,7 +83,7 @@
   <string name="notification_missing_test_alert_title">Fehlender Testalarm</string>
   <string name="notification_missing_test_alert_text">Testkontexte: </string>
   <string name="notification_alert_confirm_title">Pikettalarm erhalten</string>
-  <string name="notification_alert_confirm_text">Bitte sofort bestätigen!</string>
+  <string name="notification_alert_confirm_text">Bitte bestätigen!</string>
   <string name="notification_alert_confirm_button">Bestätigen</string>
   <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
   <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>

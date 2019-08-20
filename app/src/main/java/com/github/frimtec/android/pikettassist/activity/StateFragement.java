@@ -26,7 +26,7 @@ import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.*;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
@@ -91,24 +92,27 @@ public class StateFragement extends Fragment {
       signalStrengthTrafficLight = GREEN;
     }
 
-    Button alarmCloseButton = null;
+    Supplier<Button> alarmCloseButtonSupplier = null;
     if (alarmState != AlarmState.OFF) {
-      alarmCloseButton = new Button(getContext());
-      alarmCloseButton.setText(getString(R.string.main_state_button_close_alert));
-      alarmCloseButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
-      alarmCloseButton.setOnClickListener(v -> {
-        try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
-          Log.v(TAG, "Close alert button pressed.");
-          ContentValues values = new ContentValues();
-          values.put("end_time", Instant.now().toEpochMilli());
-          int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
-          if (update != 1) {
-            Log.e(TAG, "One open case expected, but got " + update);
+      alarmCloseButtonSupplier = () -> {
+        Button button = new Button(getContext());
+        button.setText(getString(R.string.main_state_button_close_alert));
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
+        button.setOnClickListener(v -> {
+          try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
+            Log.v(TAG, "Close alert button pressed.");
+            ContentValues values = new ContentValues();
+            values.put("end_time", Instant.now().toEpochMilli());
+            int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
+            if (update != 1) {
+              Log.e(TAG, "One open case expected, but got " + update);
+            }
           }
-        }
-        NotificationHelper.cancel(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
-        refresh();
-      });
+          NotificationHelper.cancel(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
+          refresh();
+        });
+        return button;
+      };
     }
 
     Contact operationCenter = ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
@@ -131,7 +135,7 @@ public class StateFragement extends Fragment {
           Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
           startActivity(intent);
         }),
-        new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButton, alarmTrafficLight, context -> {
+        new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButtonSupplier, alarmTrafficLight, context -> {
         }),
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
             superviseSignalStrength ? (pikettState == DualState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight, context -> {
@@ -140,8 +144,8 @@ public class StateFragement extends Fragment {
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
       DualState testAlarmState = DualState.OFF;
-      Button testAlarmCloseButton = null;
-      try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
+      Supplier<Button> testAlarmCloseButtonSupplier = null;
+      try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
         try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
           if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
             Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
@@ -149,20 +153,24 @@ public class StateFragement extends Fragment {
             testAlarmState = DualState.valueOf(cursor.getString(2));
 
             if (testAlarmState != DualState.OFF) {
-              testAlarmCloseButton = new Button(getContext());
-              testAlarmCloseButton.setText(getString(R.string.main_state_button_close_alert));
-              testAlarmCloseButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
-              testAlarmCloseButton.setOnClickListener(v -> {
-                try (SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
-                  Log.v(TAG, "Close test alert button pressed.");
-                  TestAlarmDao.updateAlarmState(testContext, DualState.OFF);
-                }
-                refresh();
-              });
+              testAlarmCloseButtonSupplier = () -> {
+                Button button = new Button(getContext());
+
+                button.setText(getString(R.string.main_state_button_close_alert));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
+                button.setOnClickListener(v -> {
+                  try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
+                    Log.v(TAG, "Close test alert button pressed.");
+                    TestAlarmDao.updateAlarmState(testContext, DualState.OFF);
+                  }
+                  refresh();
+                });
+                return button;
+              };
             }
           }
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButton, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {
+        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {
         }));
       }
     }

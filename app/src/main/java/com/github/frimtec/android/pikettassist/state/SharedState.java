@@ -46,8 +46,8 @@ public final class SharedState {
   }
 
   public static Pair<AlarmState, Long> getAlarmState(Context context) {
-    try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor cursor = db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_CONFIRM_TIME}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null)) {
+    try (SQLiteDatabase db = PAssist.getReadableDatabase();
+         Cursor cursor = db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_IS_CONFIRMED}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null)) {
       if (cursor.getCount() == 0) {
         return Pair.create(AlarmState.OFF, null);
       } else if (cursor.getCount() > 0)
@@ -56,8 +56,8 @@ public final class SharedState {
         }
       cursor.moveToFirst();
       long id = cursor.getLong(0);
-      long confirmTime = cursor.getLong(1);
-      return Pair.create(confirmTime == 0 ? AlarmState.ON : AlarmState.ON_CONFIRMED, id);
+      boolean confirmed = cursor.getInt(1) == BOOLEAN_TRUE;
+      return Pair.create(confirmed ? AlarmState.ON_CONFIRMED : AlarmState.ON, id);
     }
   }
 

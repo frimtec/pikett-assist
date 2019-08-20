@@ -37,15 +37,17 @@ public class Alert {
   private final long id;
   private final Instant startTime;
   private final Instant confirmTime;
+  private final boolean confirmed;
   private final Instant endTime;
   private final List<AlertCall> calls;
 
-  public Alert(long id, Instant startTime, Instant confirmTime, Instant endTime, List<AlertCall> calls) {
+  public Alert(long id, Instant startTime, Instant confirmTime, boolean confirmed, Instant endTime, List<AlertCall> calls) {
     this.id = id;
     Objects.requireNonNull(startTime);
     Objects.requireNonNull(calls);
     this.startTime = startTime;
     this.confirmTime = confirmTime;
+    this.confirmed = confirmed;
     this.endTime = endTime;
     this.calls = new LinkedList<>(calls);
     this.calls.sort(Comparator.comparing(AlertCall::getTime));
@@ -72,7 +74,7 @@ public class Alert {
   }
 
   public boolean isConfirmed() {
-    return confirmTime != null;
+    return confirmed;
   }
 
   public boolean isClosed() {
@@ -85,6 +87,7 @@ public class Alert {
         "id=" + id +
         ", startTime=" + startTime +
         ", confirmTime=" + confirmTime +
+        ", confirmed=" + confirmed +
         ", endTime=" + endTime +
         ", calls=" + calls +
         '}';

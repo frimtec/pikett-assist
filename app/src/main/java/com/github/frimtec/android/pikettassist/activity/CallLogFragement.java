@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.PAssist;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -90,15 +90,15 @@ public class CallLogFragement extends Fragment {
   }
 
   private void deleteAlert(Alert selectedAlert) {
-    try (SQLiteDatabase db = PikettAssist.getWritableDatabase()) {
+    try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
       db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(selectedAlert.getId())});
     }
   }
 
   private List<Alert> loadAlertList() {
     List<Alert> alertList = new ArrayList<>();
-    try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor cursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_ID + ", " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + " FROM " + TABLE_ALERT + " ORDER BY " + TABLE_ALERT_COLUMN_START_TIME + " DESC", null)) {
+    try (SQLiteDatabase db = PAssist.getReadableDatabase();
+         Cursor cursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_ID + ", " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + ", " + TABLE_ALERT_COLUMN_IS_CONFIRMED + " FROM " + TABLE_ALERT + " ORDER BY " + TABLE_ALERT_COLUMN_START_TIME + " DESC", null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);
@@ -106,7 +106,8 @@ public class CallLogFragement extends Fragment {
               id,
               Instant.ofEpochMilli(cursor.getLong(1)),
               cursor.getLong(2) > 0 ? Instant.ofEpochMilli(cursor.getLong(2)) : null,
-              cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)) : null,
+                  cursor.getInt(4) == BOOLEAN_TRUE,
+                  cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)) : null,
               Collections.emptyList()));
         } while (cursor.moveToNext());
       }

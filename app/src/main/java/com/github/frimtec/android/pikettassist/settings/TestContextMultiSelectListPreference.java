@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class TestContextMultiSelectListPreference extends MultiSelectListPrefere
     super(context, attrs);
 
     List<CharSequence> validEntries = new ArrayList<>();
-    try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
+    try (SQLiteDatabase db = PAssist.getReadableDatabase();
          Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID}, null, null, null, null, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {

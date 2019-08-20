@@ -12,13 +12,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
   private static final String TAG = "DbHelper";
 
-  private static final String DB_NAME = "pikett-assist.db";
-  private static final int DB_VERSION = 3;
+  private static final String DB_NAME = "PAssist.db";
+  private static final int DB_VERSION = 1;
 
   public static final String TABLE_ALERT = "t_alert";
   public static final String TABLE_ALERT_COLUMN_ID = "_id";
   public static final String TABLE_ALERT_COLUMN_START_TIME = "start_time";
   public static final String TABLE_ALERT_COLUMN_CONFIRM_TIME = "confirm_time";
+  public static final String TABLE_ALERT_COLUMN_IS_CONFIRMED = "is_confirmed";
   public static final String TABLE_ALERT_COLUMN_END_TIME = "end_time";
 
   public static final String TABLE_ALERT_CALL = "t_alert_call";
@@ -33,6 +34,9 @@ public class DbHelper extends SQLiteOpenHelper {
   public static final String TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE = "message";
   public static final String TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE = "alert_state";
 
+  public static final int BOOLEAN_TRUE = 1;
+  public static final int BOOLEAN_FALSE = 0;
+
   public DbHelper(@Nullable Context context) {
     super(context, DB_NAME, null, DB_VERSION);
   }
@@ -44,9 +48,10 @@ public class DbHelper extends SQLiteOpenHelper {
         "  " + TABLE_ALERT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
         "  " + TABLE_ALERT_COLUMN_START_TIME + " INTEGER NOT NULL," +
         "  " + TABLE_ALERT_COLUMN_CONFIRM_TIME + " INTEGER," +
+        "  " + TABLE_ALERT_COLUMN_IS_CONFIRMED + " INTEGER NOT NULL," +
         "  " + TABLE_ALERT_COLUMN_END_TIME + " INTEGER" +
         ");");
-    db.execSQL("CREATE TABLE " + TABLE_ALERT_CALL +" (" +
+    db.execSQL("CREATE TABLE " + TABLE_ALERT_CALL + " (" +
         "  " + TABLE_ALERT_CALL_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
         "  " + TABLE_ALERT_CALL_COLUMN_ALERT_ID + " INTEGER REFERENCES " + TABLE_ALERT + " (" + TABLE_ALERT_COLUMN_ID + ") ON DELETE CASCADE," +
         "  " + TABLE_ALERT_CALL_COLUMN_TIME + " INTEGER NOT NULL," +
@@ -63,15 +68,8 @@ public class DbHelper extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     Log.i(TAG, String.format("Upgrade DB from %d to %d", oldVersion, newVersion));
-    if (oldVersion < 2) {
-      db.execSQL("ALTER TABLE " + TABLE_TEST_ALERT_STATE + " ADD COLUMN " + TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL");
-    }
-    if (oldVersion < 3) {
-      // Schema reworked we drop all and start from scratch
-      db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERT);
-      db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALERT_CALL);
-      db.execSQL("DROP TABLE IF EXISTS " + TABLE_TEST_ALERT_STATE);
-      onCreate(db);
-    }
+//    if (oldVersion < 2) {
+//       migrate to version 2 - do not change reference schema
+//    }
   }
 }

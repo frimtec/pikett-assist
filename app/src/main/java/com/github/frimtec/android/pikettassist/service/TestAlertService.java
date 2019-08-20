@@ -12,7 +12,7 @@ import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.*;
@@ -64,7 +64,7 @@ public class TestAlertService extends IntentService {
   }
 
   private boolean isTestMessageAvailable(String testAlarmContext, Instant messageAcceptedTime) {
-    try (SQLiteDatabase db = PikettAssist.getReadableDatabase()) {
+    try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
       try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext}, null, null, null)) {
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
           return Instant.ofEpochMilli(cursor.getLong(0))

@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class PikettAssist extends Application {
-  private static final String TAG = "PikettAssist";
+public class PAssist extends Application {
+  private static final String TAG = "PAssist";
 
   private static DbHelper openHelper;
 

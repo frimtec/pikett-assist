@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -43,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
   };
 
   private static final int REQUEST_CODE = 1;
+  private static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
+
   private static final String TAG = "MainActivity";
+
 
   private BroadcastReceiver broadcastReceiver;
   private StateFragement stateFragement;
@@ -124,12 +129,18 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+    startIfAllPermissionsGranted();
+  }
+
+  private void startIfAllPermissionsGranted() {
     if (!Settings.canDrawOverlays(this)) {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-      startActivityForResult(intent, 0);
+      startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+      return;
     }
-    if (!Settings.canDrawOverlays(this)) {
-      finish();
+
+    if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
+      ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
       return;
     }
 
@@ -137,15 +148,6 @@ public class MainActivity extends AppCompatActivity {
     if(!pm.isIgnoringBatteryOptimizations(getPackageName())) {
       NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> Log.i("MainActivity", "Battery optimazation dialog confirmed."));
     }
-
-    if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
-      ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
-      return;
-    }
-    onCreateAllPermissionsGranted();
-  }
-
-  private void onCreateAllPermissionsGranted() {
     loadStateFragment();
     startService(new Intent(this, PikettService.class));
   }
@@ -162,14 +164,29 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Log.v(TAG, "onActivityResult; request code:" + requestCode);
+    if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+      if (!Settings.canDrawOverlays(this)) {
+        Log.e(TAG, "Missing overlay permission.");
+        finish();
+        return;
+      }
+      startIfAllPermissionsGranted();
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+    }
+  }
+
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (Arrays.stream(grantResults).anyMatch(result -> result == PERMISSION_DENIED)) {
-      Log.e("MainActivity", "Missing permissions.");
+      Log.e(TAG, "Missing permissions.");
       finish();
       return;
     }
-    onCreateAllPermissionsGranted();
+    startIfAllPermissionsGranted();
   }
 
   @Override

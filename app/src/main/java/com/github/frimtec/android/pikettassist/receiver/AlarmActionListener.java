@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.PAssist;
 
 import java.time.Instant;
 
@@ -33,7 +33,7 @@ public class AlarmActionListener extends BroadcastReceiver {
   }
 
   private void closeAlarm(Context context) {
-    try(SQLiteDatabase writableDatabase = PikettAssist.getWritableDatabase()) {
+    try(SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
       ContentValues values = new ContentValues();
       values.put("end_time", Instant.now().toEpochMilli());
       int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);

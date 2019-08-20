@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
-import com.github.frimtec.android.pikettassist.state.PikettAssist;
+import com.github.frimtec.android.pikettassist.state.PAssist;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -74,8 +73,8 @@ public class AlertDetailActivity extends AppCompatActivity {
   }
 
   private Alert loadAlert(long id) {
-    try (SQLiteDatabase db = PikettAssist.getReadableDatabase();
-         Cursor alertCursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + " FROM " + TABLE_ALERT + " where " + TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
+    try (SQLiteDatabase db = PAssist.getReadableDatabase();
+         Cursor alertCursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + ", " + TABLE_ALERT_COLUMN_IS_CONFIRMED + " FROM " + TABLE_ALERT + " where " + TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
          Cursor callCursor = db.rawQuery("SELECT " + TABLE_ALERT_CALL_COLUMN_TIME + ", " + TABLE_ALERT_CALL_COLUMN_MESSAGE + " FROM " + TABLE_ALERT_CALL + " where " + TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=? order by " + TABLE_ALERT_CALL_COLUMN_TIME, new String[]{String.valueOf(id)})) {
       if (alertCursor != null && alertCursor.getCount() > 0 && alertCursor.moveToFirst()) {
         LinkedList<AlertCall> calls = new LinkedList<>();
@@ -98,6 +97,7 @@ public class AlertDetailActivity extends AppCompatActivity {
             id,
             Instant.ofEpochMilli(alertCursor.getLong(0)),
             alertCursor.getLong(1) > 0 ? Instant.ofEpochMilli(alertCursor.getLong(1)) : null,
+            alertCursor.getInt(3) == BOOLEAN_TRUE,
             alertCursor.getLong(2) > 0 ? Instant.ofEpochMilli(alertCursor.getLong(2)) : null,
             calls);
       } else {

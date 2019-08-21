@@ -16,6 +16,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
+import com.github.frimtec.android.pikettassist.helper.VibrateHelper;
 import com.github.frimtec.android.pikettassist.receiver.AlarmActionListener;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
@@ -50,9 +51,7 @@ public class AlertService extends Service {
         }
       }
     }, 1000*1, 1000*1);
-    Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-    long[] pattern = {0, 400, 200};
-    vibrator.vibrate(pattern, 0);
+    Vibrator vibrator = VibrateHelper.vibrate(context, 400, 200);
 
     NotificationHelper.confirm(context, (dialogInterface, integer) -> {
       Log.d(TAG, "Confirm received.");

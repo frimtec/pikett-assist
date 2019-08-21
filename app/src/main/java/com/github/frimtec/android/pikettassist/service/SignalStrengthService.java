@@ -6,6 +6,7 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
@@ -14,6 +15,7 @@ import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
+import com.github.frimtec.android.pikettassist.helper.VibrateHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
@@ -36,22 +38,24 @@ public class SignalStrengthService extends IntentService {
     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
-    SignalLevel level = SignalStremgthHelper.getSignalStrength(this);
-    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && isLowSignal(level)) {
+    SignalLevel iniTialLevel = SignalStremgthHelper.getSignalStrength(this);
+    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && isLowSignal(iniTialLevel)) {
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      long[] pattern = {0, 100, 500};
-      vibrator.vibrate(pattern, 0);
-      NotificationHelper.notifySignalLow(this, level);
-      do {
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-          Log.e(TAG, "Unexpected interrupt", e);
-        }
-        level = SignalStremgthHelper.getSignalStrength(this);
-      } while (isLowSignal(level));
-      vibrator.cancel();
+      vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 100, 500},1));
+      VibrateHelper.vibrateWhileDoing(getApplicationContext(), 100, 500, () -> {
+        SignalLevel level = iniTialLevel;
+        NotificationHelper.notifySignalLow(this, level);
+        do {
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            Log.e(TAG, "Unexpected interrupt", e);
+          }
+          level = SignalStremgthHelper.getSignalStrength(this);
+        } while (isLowSignal(level));
+
+      });
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
     }
   }

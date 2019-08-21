@@ -99,7 +99,7 @@
   <string name="notification_alert_text">Close alarm when all activities are finsished.</string>
   <string name="notification_missing_test_alert_title">Missing test alarm</string>
   <string name="notification_missing_test_alert_text">Test contexts: </string>
-  <string name="notification_alert_confirm_title">Standby alert received</string>
+  <string name="notification_alert_confirm_title">Standby Alert</string>
   <string name="notification_alert_confirm_text">Please confirm!</string>
   <string name="notification_alert_confirm_button">Confirm</string>
   <string name="notification_battery_optimization_title">Battery optimization is on!</string>

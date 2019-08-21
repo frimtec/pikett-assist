@@ -21,6 +21,8 @@ import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
@@ -38,6 +40,16 @@ public class AlertService extends Service {
     Context context = getApplicationContext();
     Ringtone ringtone = RingtoneManager.getRingtone(context, getAlarmTone(context));
     ringtone.play();
+
+    Timer timer = new Timer();
+    timer.scheduleAtFixedRate(new TimerTask() {
+      public void run() {
+        if (!ringtone.isPlaying()) {
+          Log.v(TAG, "Restart ringtone");
+          ringtone.play();
+        }
+      }
+    }, 1000*1, 1000*1);
     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     long[] pattern = {0, 400, 200};
     vibrator.vibrate(pattern, 0);
@@ -45,6 +57,7 @@ public class AlertService extends Service {
     NotificationHelper.confirm(context, (dialogInterface, integer) -> {
       Log.d(TAG, "Confirm received.");
       confirmAlarm(context, smsNumber);
+      timer.cancel();
       ringtone.stop();
       vibrator.cancel();
       context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));

@@ -8,9 +8,12 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
@@ -18,14 +21,17 @@ import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.Signa
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static android.app.Notification.*;
+import static android.app.Notification.CATEGORY_ALARM;
+import static android.app.Notification.CATEGORY_EVENT;
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 
 
 public class NotificationHelper {
   private static final String TAG = "NotificationHelper";
 
   private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
-  public  static final int ALERT_NOTIFICATION_ID = 1;
+  public static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
   public static final int SIGNAL_NOTIFICATION_ID = 3;
   public static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
@@ -97,7 +103,6 @@ public class NotificationHelper {
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle(context.getString(R.string.notification_pikett_on_title))
         .setContentText(context.getString(R.string.notification_pikett_on_text))
-        // TODO choose icon for confirm and close
         .setSmallIcon(R.drawable.ic_eye)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
@@ -135,18 +140,24 @@ public class NotificationHelper {
     LayoutInflater factory = LayoutInflater.from(context);
     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
     View view = factory.inflate(R.layout.alert_confirmation_dialog, null);
-    AlertDialog alertDialog = alertDialogBuilder
+    AlertDialog dialog = alertDialogBuilder
         .setView(view)
         .setTitle(R.string.notification_alert_confirm_title)
         .setMessage(R.string.notification_alert_confirm_text)
         .setCancelable(false)
-        .setPositiveButton(R.string.notification_alert_confirm_button, (dialog, id) -> {
+        .setPositiveButton(R.string.notification_alert_confirm_button, (alertDialog, id) -> {
               Log.d(TAG, "Alert confirmed!");
-              action.accept(dialog, id);
+              action.accept(alertDialog, id);
             }
         ).create();
-    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-    alertDialog.show();
+    Window window = dialog.getWindow();
+    window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON );
+
+    dialog.show();
+    Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+    button.setBackgroundColor(context.getColor(R.color.confirmButtonBack));
+    button.setTextColor(context.getColor(R.color.confirmButtonText));
+    button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24.0F);
   }
 
   public static void batteryOptimization(Context context, BiConsumer<DialogInterface, Integer> action) {
@@ -157,7 +168,7 @@ public class NotificationHelper {
         .setCancelable(true)
         .setPositiveButton("OK", action::accept
         ).create();
-    alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+    alertDialog.getWindow().setType(TYPE_APPLICATION_OVERLAY);
     alertDialog.show();
   }
 }

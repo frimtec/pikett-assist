@@ -119,5 +119,7 @@
   <string name="contact_helper_unknown_contact">Unknown</string>
   <string name="contact_preference_empty_selection">Empty</string>
   <string name="state_fragment_toast_open_unknown_contact">Cannot open unknown contact!</string>
+  <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
+    The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
 
 </resources>

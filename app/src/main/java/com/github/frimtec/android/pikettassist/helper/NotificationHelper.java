@@ -12,7 +12,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
@@ -170,5 +169,13 @@ public class NotificationHelper {
         ).create();
     alertDialog.getWindow().setType(TYPE_APPLICATION_OVERLAY);
     alertDialog.show();
+  }
+
+  public static void areYouSure(Context context, DialogInterface.OnClickListener onYes, DialogInterface.OnClickListener onNo) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    builder.setMessage(R.string.general_are_you_sure)
+        .setPositiveButton(R.string.general_yes, onYes)
+        .setNegativeButton(R.string.general_no, onNo)
+        .show();
   }
 }

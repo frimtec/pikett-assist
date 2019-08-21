@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.activity;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,8 +11,10 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
+import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 
 import java.time.Instant;
@@ -62,13 +65,14 @@ public class CallLogFragement extends Fragment {
     Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID:
-        Log.v(TAG, "View alert: " + selectedAlert.getId());
         showAlertDetails(selectedAlert);
         return true;
       case MENU_CONTEXT_DELETE_ID:
-        Log.v(TAG, "Delete alert: " + selectedAlert.getId());
-        deleteAlert(selectedAlert);
-        refresh();
+        NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
+          deleteAlert(selectedAlert);
+          refresh();
+          Toast.makeText(getContext(), R.string.genaral_entry_deleted, Toast.LENGTH_SHORT).show();
+        }, (dialog, which) -> {});
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -106,8 +110,8 @@ public class CallLogFragement extends Fragment {
               id,
               Instant.ofEpochMilli(cursor.getLong(1)),
               cursor.getLong(2) > 0 ? Instant.ofEpochMilli(cursor.getLong(2)) : null,
-                  cursor.getInt(4) == BOOLEAN_TRUE,
-                  cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)) : null,
+              cursor.getInt(4) == BOOLEAN_TRUE,
+              cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)) : null,
               Collections.emptyList()));
         } while (cursor.moveToNext());
       }

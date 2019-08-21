@@ -121,5 +121,9 @@
   <string name="state_fragment_toast_open_unknown_contact">Cannot open unknown contact!</string>
   <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
     The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
+  <string name="general_no">No</string>
+  <string name="general_yes">Yes</string>
+  <string name="general_are_you_sure">Are you sure?</string>
+  <string name="genaral_entry_deleted">Entry has been deleted.</string>
 
 </resources>

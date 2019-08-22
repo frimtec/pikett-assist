@@ -5,7 +5,7 @@ public class Contact {
   private final boolean valid;
   private final String name;
 
-  public Contact(long id, boolean valid,  String name) {
+  public Contact(long id, boolean valid, String name) {
     this.id = id;
     this.valid = valid;
     this.name = name;

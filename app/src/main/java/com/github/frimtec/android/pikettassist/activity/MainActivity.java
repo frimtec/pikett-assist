@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -19,7 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -54,16 +53,7 @@ public class MainActivity extends AppCompatActivity {
   private StateFragement stateFragement;
   private ShiftListFragement shiftListFragement;
   private CallLogFragement calLogFragement;
-
-
-  private enum Fragment {
-    STATE,
-    SHIFTS,
-    CALL_LOG
-  }
-
   private Fragment activeFragment = Fragment.STATE;
-
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
       case R.id.navigation_home: {
@@ -145,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    if(!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+    if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
       NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> Log.i("MainActivity", "Battery optimazation dialog confirmed."));
     }
     loadStateFragment();
@@ -240,6 +230,12 @@ public class MainActivity extends AppCompatActivity {
       unregisterReceiver(broadcastReceiver);
       broadcastReceiver = null;
     }
+  }
+
+  private enum Fragment {
+    STATE,
+    SHIFTS,
+    CALL_LOG
   }
 
 }

@@ -1,25 +1,25 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <!-- These settings headers are only used on tablets. -->
+    <!-- These settings headers are only used on tablets. -->
 
-  <header
-      android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment$CalendarFragment"
-      android:title="@string/pref_header_calendar"
-      android:icon="@drawable/ic_date_range_black_24dp"/>
+    <header
+        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment$CalendarFragment"
+        android:icon="@drawable/ic_date_range_black_24dp"
+        android:title="@string/pref_header_calendar" />
 
-  <header
-      android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment"
-      android:title="@string/pref_header_alarming"
-      android:icon="@drawable/ic_phone_in_talk_black_24dp"/>
+    <header
+        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment"
+        android:icon="@drawable/ic_phone_in_talk_black_24dp"
+        android:title="@string/pref_header_alarming" />
 
-  <header
-      android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$TestAlarmFragment"
-      android:title="@string/pref_header_test_alarm"
-      android:icon="@drawable/ic_perm_phone_msg_black_24dp"/>
+    <header
+        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$TestAlarmFragment"
+        android:icon="@drawable/ic_perm_phone_msg_black_24dp"
+        android:title="@string/pref_header_test_alarm" />
 
-  <header
-      android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$NotificationPreferenceFragment"
-      android:title="@string/pref_header_notifications"
-      android:icon="@drawable/ic_notifications_black_24dp"/>
+    <header
+        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$NotificationPreferenceFragment"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/pref_header_notifications" />
 
 </preference-headers>

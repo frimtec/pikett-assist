@@ -10,32 +10,27 @@ import static com.github.frimtec.android.pikettassist.domain.DualState.OFF;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-  private static final String TAG = "DbHelper";
-
-  private static final String DB_NAME = "PAssist.db";
-  private static final int DB_VERSION = 1;
-
   public static final String TABLE_ALERT = "t_alert";
   public static final String TABLE_ALERT_COLUMN_ID = "_id";
   public static final String TABLE_ALERT_COLUMN_START_TIME = "start_time";
   public static final String TABLE_ALERT_COLUMN_CONFIRM_TIME = "confirm_time";
   public static final String TABLE_ALERT_COLUMN_IS_CONFIRMED = "is_confirmed";
   public static final String TABLE_ALERT_COLUMN_END_TIME = "end_time";
-
   public static final String TABLE_ALERT_CALL = "t_alert_call";
   public static final String TABLE_ALERT_CALL_COLUMN_ID = "_id";
   public static final String TABLE_ALERT_CALL_COLUMN_ALERT_ID = "alert_id";
   public static final String TABLE_ALERT_CALL_COLUMN_TIME = "time";
   public static final String TABLE_ALERT_CALL_COLUMN_MESSAGE = "message";
-
   public static final String TABLE_TEST_ALERT_STATE = "t_test_alarm_state";
   public static final String TABLE_TEST_ALERT_STATE_COLUMN_ID = "_id";
   public static final String TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME = "last_received_time";
   public static final String TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE = "message";
   public static final String TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE = "alert_state";
-
   public static final int BOOLEAN_TRUE = 1;
   public static final int BOOLEAN_FALSE = 0;
+  private static final String TAG = "DbHelper";
+  private static final String DB_NAME = "PAssist.db";
+  private static final int DB_VERSION = 1;
 
   public DbHelper(@Nullable Context context) {
     super(context, DB_NAME, null, DB_VERSION);

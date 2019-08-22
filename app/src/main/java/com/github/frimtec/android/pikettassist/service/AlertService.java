@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -26,7 +27,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_CONFIRM_TIME;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 
 public class AlertService extends Service {
 
@@ -50,7 +55,7 @@ public class AlertService extends Service {
           ringtone.play();
         }
       }
-    }, 1000*1, 1000*1);
+    }, 1000 * 1, 1000 * 1);
     Vibrator vibrator = VibrateHelper.vibrate(context, 400, 200);
 
     NotificationHelper.confirm(context, (dialogInterface, integer) -> {
@@ -68,9 +73,9 @@ public class AlertService extends Service {
 
   private void confirmAlarm(Context context, String smsNumber) {
     try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
-      try(Cursor cursor = writableDatabase.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME}, TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null, null, null, null)) {
+      try (Cursor cursor = writableDatabase.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME}, TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null, null, null, null)) {
         ContentValues values = new ContentValues();
-        if(!cursor.moveToFirst() || cursor.getLong(0) == 0) {
+        if (!cursor.moveToFirst() || cursor.getLong(0) == 0) {
           values.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, Instant.now().toEpochMilli());
         }
         values.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_TRUE);
@@ -84,7 +89,7 @@ public class AlertService extends Service {
     NotificationHelper.notify(
         context,
         new Intent(context, AlarmActionListener.class),
-            ACTION_CLOSE_ALARM,
+        ACTION_CLOSE_ALARM,
         getString(R.string.alert_action_close),
         new Intent(context, MainActivity.class)
     );
@@ -92,7 +97,7 @@ public class AlertService extends Service {
 
   private Uri getAlarmTone(Context context) {
     String alarmRingTone = SharedState.getAlarmRingTone(context);
-    if(!alarmRingTone.isEmpty()) {
+    if (!alarmRingTone.isEmpty()) {
       Log.d(TAG, "Use configured ringtone: " + alarmRingTone);
       return Uri.parse(alarmRingTone);
     }

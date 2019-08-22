@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
->
-  <TextView
-      android:id="@+id/alert_cal_item_received_time"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentStart="true"
-      android:textStyle="bold"
-      android:textSize="15sp"
-  />
-  <TextView
-      android:id="@+id/alert_cal_item_message"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="5dp"
-      android:layout_toEndOf="@+id/alert_cal_item_received_time"
-      android:textSize="15sp"
-  />
+    android:paddingRight="10dp">
+
+    <TextView
+        android:id="@+id/alert_cal_item_received_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/alert_cal_item_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/alert_cal_item_received_time"
+        android:textSize="15sp" />
 </RelativeLayout>

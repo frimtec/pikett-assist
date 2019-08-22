@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <item android:id="@+id/settings"
-        android:title="@string/menu_settings"
+    <item
+        android:id="@+id/settings"
         android:icon="@drawable/ic_settings_white_24dp"
-        app:showAsAction="ifRoom|withText"/>
-  <item android:id="@+id/about"
-        android:title="@string/menu_about"
+        android:title="@string/menu_settings"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/about"
         android:icon="@drawable/ic_info_white_24dp"
-        app:showAsAction="always|withText"/>
+        android:title="@string/menu_about"
+        app:showAsAction="always|withText" />
 
 </menu>

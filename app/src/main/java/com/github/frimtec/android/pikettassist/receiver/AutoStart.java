@@ -4,8 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.github.frimtec.android.pikettassist.service.PikettService;
+
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.service.PikettService;
 
 public class AutoStart extends BroadcastReceiver {
   @SuppressLint("UnsafeProtectedBroadcastReceiver")

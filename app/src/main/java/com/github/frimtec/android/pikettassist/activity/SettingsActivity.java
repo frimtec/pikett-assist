@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 
@@ -21,7 +22,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.github.frimtec.android.pikettassist.state.SharedState.*;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_SMS_CONFIRM_TEXT;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_TEST_ALARM_CHECK_TIME;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_TEST_ALARM_MESSAGE_PATTERN;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -92,7 +98,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
   private static String weekDaysValues(Preference preference, Set<String> values) {
     String[] weekdays = preference.getContext().getResources().getStringArray(R.array.weekdays);
-    return values.stream().map(id -> weekdays[Integer.parseInt(id)-1]).collect(Collectors.joining(", "));
+    return values.stream().map(id -> weekdays[Integer.parseInt(id) - 1]).collect(Collectors.joining(", "));
   }
 
   @Override
@@ -174,6 +180,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_SMS_CONFIRM_TEXT));
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      int id = item.getItemId();
+      if (id == android.R.id.home) {
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
+        return true;
+      }
+      return super.onOptionsItemSelected(item);
+    }
+
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
@@ -187,16 +203,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         setHasOptionsMenu(true);
         bindPreferenceSummaryToValue(findPreference(PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN));
       }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-      int id = item.getItemId();
-      if (id == android.R.id.home) {
-        startActivity(new Intent(getActivity(), SettingsActivity.class));
-        return true;
-      }
-      return super.onOptionsItemSelected(item);
     }
   }
 

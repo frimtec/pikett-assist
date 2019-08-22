@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.content.Context;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 
@@ -23,7 +24,7 @@ final class AlertViewHelper {
 
   public static String getTimeWindow(Alert alert) {
     String timeWindowText = formatDateTime(alert.getStartTime(), DATE_TIME_FORMAT);
-    if(alert.isClosed()) {
+    if (alert.isClosed()) {
       timeWindowText = String.format("%s - %s", timeWindowText, formatDateTime(alert.getEndTime(), TIME_FORMAT));
     }
     return timeWindowText;
@@ -31,12 +32,12 @@ final class AlertViewHelper {
 
   public static String getDurations(Context context, Alert alert) {
     String confirmText = "";
-    if(alert.isConfirmed()) {
+    if (alert.isConfirmed()) {
       Duration confirmDuration = Duration.between(alert.getStartTime(), alert.getConfirmTime());
       confirmText = String.format(context.getString(R.string.alert_view_confirm_time), confirmDuration.getSeconds());
     }
     String durationText = "";
-    if(alert.isClosed()) {
+    if (alert.isClosed()) {
       Duration duration = Duration.between(alert.getStartTime(), alert.getEndTime());
       durationText = String.format(context.getString(R.string.alert_view_duration), duration.getSeconds() / 60d);
     }
@@ -45,9 +46,9 @@ final class AlertViewHelper {
 
   public static String getState(Context context, Alert alert) {
     String currentStateText;
-    if(alert.isClosed()) {
+    if (alert.isClosed()) {
       currentStateText = context.getString(R.string.alert_view_state_closed);
-    } else if(alert.isConfirmed() ) {
+    } else if (alert.isConfirmed()) {
       currentStateText = context.getString(R.string.alert_view_state_wip);
     } else {
       currentStateText = context.getString(R.string.alert_view_state_to_be_confirmed);

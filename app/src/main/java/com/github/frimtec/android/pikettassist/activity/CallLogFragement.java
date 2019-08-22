@@ -1,17 +1,22 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -22,7 +27,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_CONFIRM_TIME;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
 
 public class CallLogFragement extends Fragment {
 
@@ -72,7 +83,8 @@ public class CallLogFragement extends Fragment {
           deleteAlert(selectedAlert);
           refresh();
           Toast.makeText(getContext(), R.string.genaral_entry_deleted, Toast.LENGTH_SHORT).show();
-        }, (dialog, which) -> {});
+        }, (dialog, which) -> {
+        });
         return true;
       default:
         return super.onContextItemSelected(item);

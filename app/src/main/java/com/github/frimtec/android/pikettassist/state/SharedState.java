@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Pair;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.DualState;
@@ -15,11 +16,14 @@ import java.util.Collections;
 import java.util.Set;
 
 import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 
 public final class SharedState {
 
-  private static final String TAG = "SharedState";
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   public static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
   public static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
@@ -31,12 +35,11 @@ public final class SharedState {
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
-
-  private static final String PREF_KEY_TEST_ALARM_STATE_PREFIX = "test_alarm_state_";
-
   public static final String START_OF_TIME = "0";
   public static final String CALENDAR_FILTER_ALL = "-1";
   public static final long EMPTY_CONTACT = -1;
+  private static final String TAG = "SharedState";
+  private static final String PREF_KEY_TEST_ALARM_STATE_PREFIX = "test_alarm_state_";
 
   private SharedState() {
   }

@@ -1,6 +1,10 @@
 package com.github.frimtec.android.pikettassist.helper;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
@@ -27,16 +32,14 @@ import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 
 
 public class NotificationHelper {
-  private static final String TAG = "NotificationHelper";
-
-  private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
   public static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
   public static final int SIGNAL_NOTIFICATION_ID = 3;
   public static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
-
   public static final String ACTION_CONFIRM_ALARM = "com.github.frimtec.android.pikettassist.CONFIRM_ALARM";
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
+  private static final String TAG = "NotificationHelper";
+  private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
 
   public static void registerChannel(Context context) {
     CharSequence name = context.getString(R.string.channel_name);
@@ -150,7 +153,7 @@ public class NotificationHelper {
             }
         ).create();
     Window window = dialog.getWindow();
-    window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON );
+    window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);
 
     dialog.show();
     Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);

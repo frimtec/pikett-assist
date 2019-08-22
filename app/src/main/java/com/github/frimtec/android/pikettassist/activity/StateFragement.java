@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
@@ -33,11 +34,23 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Supplier;
 
-import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.*;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.GREEN;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
 
 public class StateFragement extends Fragment {
 

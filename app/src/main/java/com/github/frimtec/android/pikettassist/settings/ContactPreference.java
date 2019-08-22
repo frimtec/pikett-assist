@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.preference.RingtonePreference;
 import android.provider.ContactsContract;
 import android.util.AttributeSet;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;

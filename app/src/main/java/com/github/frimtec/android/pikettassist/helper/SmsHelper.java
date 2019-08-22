@@ -1,16 +1,13 @@
 package com.github.frimtec.android.pikettassist.helper;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import com.github.frimtec.android.pikettassist.domain.Sms;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Instant;
-import java.util.ArrayList;
+import com.github.frimtec.android.pikettassist.domain.Sms;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

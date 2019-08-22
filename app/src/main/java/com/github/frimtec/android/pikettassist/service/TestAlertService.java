@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.domain.DualState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -15,13 +16,17 @@ import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
 
 public class TestAlertService extends IntentService {
 
@@ -45,18 +50,18 @@ public class TestAlertService extends IntentService {
       ZonedDateTime now = ZonedDateTime.now();
       ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
       Set<String> missingTestAlarmContexts = SharedState.getSuperviseTestContexts(context).stream()
-              .filter(tc -> !isTestMessageAvailable(tc, messageAcceptedTime.toInstant()))
-              .collect(Collectors.toSet());
+          .filter(tc -> !isTestMessageAvailable(tc, messageAcceptedTime.toInstant()))
+          .collect(Collectors.toSet());
       missingTestAlarmContexts.forEach(testContext -> {
         Log.w(TAG, "Not received test messages: " + testContext);
         TestAlarmDao.updateAlarmState(testContext, DualState.ON);
       });
 
-      if(!missingTestAlarmContexts.isEmpty()) {
+      if (!missingTestAlarmContexts.isEmpty()) {
         NotificationHelper.notifyMissingTestAlarm(
-                context,
-                new Intent(context, MainActivity.class),
-                missingTestAlarmContexts
+            context,
+            new Intent(context, MainActivity.class),
+            missingTestAlarmContexts
         );
         context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
       }
@@ -68,7 +73,7 @@ public class TestAlertService extends IntentService {
       try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext}, null, null, null)) {
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
           return Instant.ofEpochMilli(cursor.getLong(0))
-                  .isAfter(messageAcceptedTime);
+              .isAfter(messageAcceptedTime);
         }
       }
     }
@@ -111,7 +116,7 @@ public class TestAlertService extends IntentService {
   private ZonedDateTime getTodaysCheckTime(ZonedDateTime now) {
     String[] testAlarmCheckTime = SharedState.getTestAlarmCheckTime(getApplicationContext()).split(":");
     return now.truncatedTo(ChronoUnit.MINUTES)
-            .with(ChronoField.HOUR_OF_DAY, Integer.parseInt(testAlarmCheckTime[0]))
-            .with(ChronoField.MINUTE_OF_HOUR, Integer.parseInt(testAlarmCheckTime[1]));
+        .with(ChronoField.HOUR_OF_DAY, Integer.parseInt(testAlarmCheckTime[0]))
+        .with(ChronoField.MINUTE_OF_HOUR, Integer.parseInt(testAlarmCheckTime[1]));
   }
 }

@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import com.github.frimtec.android.pikettassist.R;
 
 public class AboutActivity extends AppCompatActivity {

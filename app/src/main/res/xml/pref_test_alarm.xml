@@ -1,43 +1,42 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <EditTextPreference
-      android:key="test_alarm_message_pattern"
-      android:title="@string/pref_title_test_alarm_message_pattern"
-      android:icon="@drawable/ic_message_black_24dp"
-      android:defaultValue="@string/pref_default_test_alarm_message_pattern"
-      android:selectAllOnFocus="true"
-      android:inputType="text"
-      android:singleLine="true"
-      android:maxLines="1"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_test_alarm_message_pattern"
+        android:icon="@drawable/ic_message_black_24dp"
+        android:inputType="text"
+        android:key="test_alarm_message_pattern"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_test_alarm_message_pattern" />
 
-  <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference
-      android:key="supervise_test_contexts"
-      android:title="@string/pref_title_supervise_test_contexts"
-      android:icon="@drawable/ic_toc_black_24dp"
-      android:summary="%s"/>
+    <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference
+        android:icon="@drawable/ic_toc_black_24dp"
+        android:key="supervise_test_contexts"
+        android:summary="%s"
+        android:title="@string/pref_title_supervise_test_contexts" />
 
-  <com.github.frimtec.android.pikettassist.settings.TimePreference
-      android:key="test_alarm_check_time"
-      android:title="@string/pref_title_test_alarm_check_time"
-      android:defaultValue="@string/pref_default_test_alarm_check_time"
-      android:icon="@drawable/ic_watch_later_black_24dp"/>
+    <com.github.frimtec.android.pikettassist.settings.TimePreference
+        android:defaultValue="@string/pref_default_test_alarm_check_time"
+        android:icon="@drawable/ic_watch_later_black_24dp"
+        android:key="test_alarm_check_time"
+        android:title="@string/pref_title_test_alarm_check_time" />
 
-  <EditTextPreference
-          android:key="test_alarm_accept_time_window_minutes"
-          android:title="@string/pref_title_test_alarm_accept_time_window_minutes"
-          android:icon="@drawable/ic_message_black_24dp"
-          android:defaultValue="@string/pref_default_test_alarm_accept_time_window_minutes"
-          android:selectAllOnFocus="true"
-          android:inputType="number"
-          android:singleLine="true"
-          android:maxLines="1"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_test_alarm_accept_time_window_minutes"
+        android:icon="@drawable/ic_message_black_24dp"
+        android:inputType="number"
+        android:key="test_alarm_accept_time_window_minutes"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_test_alarm_accept_time_window_minutes" />
 
-  <MultiSelectListPreference
-      android:key="test_alarm_check_weekdays"
-      android:title="@string/pref_title_test_alarm_check_weekdays"
-      android:icon="@drawable/ic_date_range_black_24dp"
-      android:entries="@array/weekdays"
-      android:entryValues="@array/weekdays_values"
-      android:defaultValue="@array/default_weekdays"
-  />
+    <MultiSelectListPreference
+        android:defaultValue="@array/default_weekdays"
+        android:entries="@array/weekdays"
+        android:entryValues="@array/weekdays_values"
+        android:icon="@drawable/ic_date_range_black_24dp"
+        android:key="test_alarm_check_weekdays"
+        android:title="@string/pref_title_test_alarm_check_weekdays" />
 </PreferenceScreen>

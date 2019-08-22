@@ -8,17 +8,12 @@ import java.util.function.Supplier;
 
 public class State {
 
-  public enum TrafficLight {
-      OFF, RED, YELLOW, GREEN
-  }
-
   private final int iconResource;
   private final String title;
   private final String value;
   private final Supplier<Button> buttonSupplier;
   private final TrafficLight state;
   private final Consumer<Context> onClickAction;
-
   public State(int iconResource, String title, String value, Supplier<Button> buttonSupplier, TrafficLight state, Consumer<Context> onClickAction) {
     this.iconResource = iconResource;
     this.title = title;
@@ -49,6 +44,10 @@ public class State {
   }
 
   public void onClick(Context context) {
-      onClickAction.accept(context);
+    onClickAction.accept(context);
+  }
+
+  public enum TrafficLight {
+    OFF, RED, YELLOW, GREEN
   }
 }

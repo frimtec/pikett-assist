@@ -1,61 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:id="@+id/state_item_layout"
->
-
-  <ImageView
-      android:layout_height="50dp" android:layout_width="50dp"
-      android:id="@+id/state_item_image"
-      android:layout_alignParentStart="true"
-  />
-  <TextView
-      android:id="@+id/state_item_title"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="16sp"
-      android:textStyle="bold"
-      android:layout_below="@id/state_item_image"
-  />
-  <TextView
-      android:id="@+id/state_item_value"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="16sp"
-      android:textStyle="bold"
-      android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
-  />
-
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_centerVertical="true"
-      android:layout_alignParentEnd="true"
-      android:id="@+id/traffic_lights"
-  >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/state_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <ImageView
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        app:srcCompat="@drawable/led_circle_grey"
-        android:id="@+id/state_traffic_light_1"
-    />
-    <ImageView
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        app:srcCompat="@drawable/led_circle_grey"
-        android:id="@+id/state_traffic_light_2"
-    />
-    <ImageView
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        app:srcCompat="@drawable/led_circle_grey"
-        android:id="@+id/state_traffic_light_3"
-    />
-  </LinearLayout>
+        android:id="@+id/state_item_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/state_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/state_item_image"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/state_item_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/traffic_lights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/state_traffic_light_1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/led_circle_grey" />
+
+        <ImageView
+            android:id="@+id/state_traffic_light_2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/led_circle_grey" />
+
+        <ImageView
+            android:id="@+id/state_traffic_light_3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/led_circle_grey" />
+    </LinearLayout>
 </RelativeLayout>

@@ -1,48 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
->
-  <ImageView
-      android:layout_height="70dp" app:srcCompat="@drawable/ic_siren"
-      android:id="@+id/alert_detail_header_image" android:layout_width="70dp"
-      android:layout_marginTop="5dp" android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:layout_marginBottom="5dp"
-      android:layout_alignParentStart="true"
-      android:layout_centerHorizontal="true"
-  />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-  <TableLayout
-      android:layout_height="wrap_content"
-      android:layout_width="wrap_content"
-      android:layout_toEndOf="@+id/alert_detail_header_image"
-  >
-    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/alert_detail_header_time_window"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textStyle="bold"
-          android:textSize="15sp"
-      />
-    </TableRow>
-    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/alert_detail_header_current_state"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="15sp"
-      />
-    </TableRow>
-    <TableRow android:layout_width="wrap_content" android:layout_height="wrap_content">
-      <TextView
-          android:id="@+id/alert_detail_header_durations"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="15sp"
-      />
-    </TableRow>
-  </TableLayout>
+    <ImageView
+        android:id="@+id/alert_detail_header_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        app:srcCompat="@drawable/ic_siren" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/alert_detail_header_image">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/alert_detail_header_time_window"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/alert_detail_header_current_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/alert_detail_header_durations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
+        </TableRow>
+    </TableLayout>
 </RelativeLayout>

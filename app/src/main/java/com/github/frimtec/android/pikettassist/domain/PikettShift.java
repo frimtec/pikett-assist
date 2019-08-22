@@ -19,6 +19,10 @@ public class PikettShift {
     this.endTime = endTime;
   }
 
+  public static Instant now() {
+    return Instant.now();
+  }
+
   public long getId() {
     return id;
   }
@@ -33,10 +37,6 @@ public class PikettShift {
 
   public Instant getEndTime(boolean withTollerance) {
     return withTollerance ? endTime.plus(TIME_TOLLERANCE) : endTime;
-  }
-
-  public static Instant now() {
-    return Instant.now();
   }
 
   public boolean isNow() {

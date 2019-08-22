@@ -4,9 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.preference.RingtonePreference;
 import android.util.AttributeSet;
-import com.github.frimtec.android.pikettassist.R;
 
-import java.util.Collection;
+import com.github.frimtec.android.pikettassist.R;
 
 public class AlarmRingtonePreference extends RingtonePreference {
 
@@ -29,7 +28,7 @@ public class AlarmRingtonePreference extends RingtonePreference {
     return summary;
   }
 
-  private String getValue( String preferenceValue) {
+  private String getValue(String preferenceValue) {
     return (preferenceValue != null && preferenceValue.isEmpty()) ? getContext().getResources().getString(R.string.preferences_alarm_ringtone_default) : extractTitle(preferenceValue);
   }
 

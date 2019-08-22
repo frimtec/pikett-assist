@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 
@@ -33,11 +34,11 @@ public class AlarmActionListener extends BroadcastReceiver {
   }
 
   private void closeAlarm(Context context) {
-    try(SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
+    try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
       ContentValues values = new ContentValues();
       values.put("end_time", Instant.now().toEpochMilli());
       int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
-      if(update != 1) {
+      if (update != 1) {
         Log.e(TAG, "One open case expected, but got " + update);
       }
     }

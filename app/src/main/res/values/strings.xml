@@ -1,129 +1,129 @@
 <resources>
-  <string name="app_name" translatable="false">PAssist</string>
-  <string name="channel_name" translatable="false">pikett-assist-channel</string>
-  <string name="channel_description">pikett assist channel description</string>
-  <string name="confirm">CONFIRM</string>
-  <string name="title_home">Overview</string>
-  <string name="title_shift_overview">Calendar</string>
-  <string name="title_alert_log">Alert log</string>
-  <string name="title_activity_settings">Settings</string>
-  <string name="title_activity_about">About</string>
+    <string name="app_name" translatable="false">PAssist</string>
+    <string name="channel_name" translatable="false">pikett-assist-channel</string>
+    <string name="channel_description">pikett assist channel description</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="title_home">Overview</string>
+    <string name="title_shift_overview">Calendar</string>
+    <string name="title_alert_log">Alert log</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_about">About</string>
 
-  <string name="main_state_button_close_alert">Close</string>
+    <string name="main_state_button_close_alert">Close</string>
 
-  <!-- Strings related to Settings -->
+    <!-- Strings related to Settings -->
 
-  <string name="pref_header_calendar">Calendar</string>
-  <string name="pref_title_calendar_selection">Calendar filter</string>
-  <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (RegExp)</string>
-  <string name="pref_default_calendar_event_pikett_title_pattern">.*standby.*</string>
+    <string name="pref_header_calendar">Calendar</string>
+    <string name="pref_title_calendar_selection">Calendar filter</string>
+    <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (RegExp)</string>
+    <string name="pref_default_calendar_event_pikett_title_pattern">.*standby.*</string>
 
-  <string name="pref_header_alarming">Alarming</string>
-  <string name="pref_title_alarm_operations_center_contact">Operations center</string>
-  <string name="pref_default_sms_sender_number"></string>
-  <string name="pref_title_sms_confirm_text">Confirmation response</string>
-  <string name="pref_default_sms_confirm_text">OK</string>
+    <string name="pref_header_alarming">Alarming</string>
+    <string name="pref_title_alarm_operations_center_contact">Operations center</string>
+    <string name="pref_default_sms_sender_number"></string>
+    <string name="pref_title_sms_confirm_text">Confirmation response</string>
+    <string name="pref_default_sms_confirm_text">OK</string>
 
-  <string name="pref_header_test_alarm">Test alarm</string>
-  <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern (RegExp)</string>
-  <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
-  <string name="pref_title_supervise_test_contexts">Test contexs to supervise</string>
-  <string name="pref_default_supervise_test_contexts"></string>
-  <string name="pref_title_test_alarm_check_time">Check time</string>
-  <string name="pref_default_test_alarm_check_time">12:00</string>
-  <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window (minutes)</string>
-  <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
-  <string name="pref_title_test_alarm_check_weekdays">Check days</string>
-  <string-array name="weekdays">
-    <item>Monday</item>
-    <item>Tuesday</item>
-    <item>Wednesday</item>
-    <item>Thursday</item>
-    <item>Friday</item>
-    <item>Saturday</item>
-    <item>Sunday</item>
-  </string-array>
-  <string-array name="weekdays_values" translatable="false">
-    <item>1</item>
-    <item>2</item>
-    <item>3</item>
-    <item>4</item>
-    <item>5</item>
-    <item>6</item>
-    <item>7</item>
-  </string-array>
-  <string-array name="default_weekdays" translatable="false">
-    <item>1</item>
-    <item>2</item>
-    <item>3</item>
-    <item>4</item>
-    <item>5</item>
-  </string-array>
+    <string name="pref_header_test_alarm">Test alarm</string>
+    <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern (RegExp)</string>
+    <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
+    <string name="pref_title_supervise_test_contexts">Test contexs to supervise</string>
+    <string name="pref_default_supervise_test_contexts"></string>
+    <string name="pref_title_test_alarm_check_time">Check time</string>
+    <string name="pref_default_test_alarm_check_time">12:00</string>
+    <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window (minutes)</string>
+    <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
+    <string name="pref_title_test_alarm_check_weekdays">Check days</string>
+    <string-array name="weekdays">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string-array name="weekdays_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="default_weekdays" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 
-  <string-array name="signal_levels">
-    <item>Off</item>
-    <item>None</item>
-    <item>Poor</item>
-    <item>Moderate</item>
-    <item>Good</item>
-    <item>Great</item>
-  </string-array>
+    <string-array name="signal_levels">
+        <item>Off</item>
+        <item>None</item>
+        <item>Poor</item>
+        <item>Moderate</item>
+        <item>Good</item>
+        <item>Great</item>
+    </string-array>
 
-  <string name="pref_header_notifications">Notifications</string>
-  <string name="pref_title_alarm_ring_tone">Alarming ringtone</string>
-  <string name="pref_default_alarm_ring_tone"></string>
-  <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
-  <string name="menu_settings">Settings</string>
-  <string name="menu_about">About</string>
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_title_alarm_ring_tone">Alarming ringtone</string>
+    <string name="pref_default_alarm_ring_tone"></string>
+    <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
 
-  <string name="preferences_calendar_all">All</string>
-  <string name="preferences_alarm_ringtone_default">Default ringtone</string>
-  <string name="preferences_test_context_empty_selection">Empty selection</string>
-  <string name="preferences_time_set">OK</string>
-  <string name="preferences_time_cancel">Cancel</string>
-  <string name="alert_view_confirm_time">Time to confirm: %d seconds</string>
-  <string name="alert_view_duration">Duration: %.1f minutes</string>
-  <string name="alert_view_state_title">State</string>
-  <string name="alert_view_state_closed">Closed</string>
-  <string name="alert_view_state_wip">Work in progress</string>
-  <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
-  <string name="call_log_fragment_menu_view">View</string>
-  <string name="call_log_fragment_menu_delete">Delete</string>
-  <string name="test_alarm_context_general">General</string>
-  <string name="notification_low_signal_title">Low signal</string>
-  <string name="notification_low_signal_text">Signal level</string>
-  <string name="state_fragment_signal_level">Signal level</string>
-  <string name="notification_pikett_on_title">Standby</string>
-  <string name="notification_pikett_on_text">You are on standby!</string>
-  <string name="notification_alert_title">Standby alert</string>
-  <string name="notification_alert_text">Close alarm when all activities are finsished.</string>
-  <string name="notification_missing_test_alert_title">Missing test alarm</string>
-  <string name="notification_missing_test_alert_text">Test contexts: </string>
-  <string name="notification_alert_confirm_title">Standby Alert</string>
-  <string name="notification_alert_confirm_text">Please confirm!</string>
-  <string name="notification_alert_confirm_button">Confirm</string>
-  <string name="notification_battery_optimization_title">Battery optimization is on!</string>
-  <string name="notification_battery_optimization_text">To work reliabel, PAssist must run with battery optimizstion turned off.</string>
-  <string name="alert_action_close">Close</string>
-  <string name="state_fragment_operations_center">Operations center</string>
-  <string name="state_fragment_pikett_state">Standby state</string>
-  <string name="state_fragment_alarm_state">Alarm state</string>
-  <string name="state_fragment_signal_level_supervise_enabled">Enabled</string>
-  <string name="state_fragment_signal_level_supervise_disabled">Disabled</string>
-  <string name="pikett_state_on">On</string>
-  <string name="pikett_state_off">Off</string>
-  <string name="alarm_state_on">Unconfirmed</string>
-  <string name="alarm_state_on_confirmed">Confirmed</string>
-  <string name="alarm_state_off">Off</string>
-  <string name="state_fragment_test_alarm_never_received">Never received</string>
-  <string name="contact_helper_unknown_contact">Unknown</string>
-  <string name="contact_preference_empty_selection">Empty</string>
-  <string name="state_fragment_toast_open_unknown_contact">Cannot open unknown contact!</string>
-  <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
+    <string name="preferences_calendar_all">All</string>
+    <string name="preferences_alarm_ringtone_default">Default ringtone</string>
+    <string name="preferences_test_context_empty_selection">Empty selection</string>
+    <string name="preferences_time_set">OK</string>
+    <string name="preferences_time_cancel">Cancel</string>
+    <string name="alert_view_confirm_time">Time to confirm: %d seconds</string>
+    <string name="alert_view_duration">Duration: %.1f minutes</string>
+    <string name="alert_view_state_title">State</string>
+    <string name="alert_view_state_closed">Closed</string>
+    <string name="alert_view_state_wip">Work in progress</string>
+    <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
+    <string name="call_log_fragment_menu_view">View</string>
+    <string name="call_log_fragment_menu_delete">Delete</string>
+    <string name="test_alarm_context_general">General</string>
+    <string name="notification_low_signal_title">Low signal</string>
+    <string name="notification_low_signal_text">Signal level</string>
+    <string name="state_fragment_signal_level">Signal level</string>
+    <string name="notification_pikett_on_title">Standby</string>
+    <string name="notification_pikett_on_text">You are on standby!</string>
+    <string name="notification_alert_title">Standby alert</string>
+    <string name="notification_alert_text">Close alarm when all activities are finsished.</string>
+    <string name="notification_missing_test_alert_title">Missing test alarm</string>
+    <string name="notification_missing_test_alert_text">Test contexts: </string>
+    <string name="notification_alert_confirm_title">Standby Alert</string>
+    <string name="notification_alert_confirm_text">Please confirm!</string>
+    <string name="notification_alert_confirm_button">Confirm</string>
+    <string name="notification_battery_optimization_title">Battery optimization is on!</string>
+    <string name="notification_battery_optimization_text">To work reliabel, PAssist must run with battery optimizstion turned off.</string>
+    <string name="alert_action_close">Close</string>
+    <string name="state_fragment_operations_center">Operations center</string>
+    <string name="state_fragment_pikett_state">Standby state</string>
+    <string name="state_fragment_alarm_state">Alarm state</string>
+    <string name="state_fragment_signal_level_supervise_enabled">Enabled</string>
+    <string name="state_fragment_signal_level_supervise_disabled">Disabled</string>
+    <string name="pikett_state_on">On</string>
+    <string name="pikett_state_off">Off</string>
+    <string name="alarm_state_on">Unconfirmed</string>
+    <string name="alarm_state_on_confirmed">Confirmed</string>
+    <string name="alarm_state_off">Off</string>
+    <string name="state_fragment_test_alarm_never_received">Never received</string>
+    <string name="contact_helper_unknown_contact">Unknown</string>
+    <string name="contact_preference_empty_selection">Empty</string>
+    <string name="state_fragment_toast_open_unknown_contact">Cannot open unknown contact!</string>
+    <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
     The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
-  <string name="general_no">No</string>
-  <string name="general_yes">Yes</string>
-  <string name="general_are_you_sure">Are you sure?</string>
-  <string name="genaral_entry_deleted">Entry has been deleted.</string>
+    <string name="general_no">No</string>
+    <string name="general_yes">Yes</string>
+    <string name="general_are_you_sure">Are you sure?</string>
+    <string name="genaral_entry_deleted">Entry has been deleted.</string>
 
 </resources>

@@ -3,10 +3,9 @@ package com.github.frimtec.android.pikettassist.service;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
+
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -42,7 +41,7 @@ public class PikettService extends IntentService {
     Log.d(TAG, "Next run in " + waitMs);
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-    if(first.map(PikettShift::isNow).orElse(false)) {
+    if (first.map(PikettShift::isNow).orElse(false)) {
       NotificationHelper.notifyShiftOn(this);
       this.startService(new Intent(this, SignalStrengthService.class));
       this.startService(new Intent(this, TestAlertService.class));

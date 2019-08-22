@@ -1,19 +1,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <com.github.frimtec.android.pikettassist.settings.CalendarListPreference
-      android:key="calendar_selection"
-      android:title="@string/pref_title_calendar_selection"
-      android:icon="@drawable/ic_date_range_black_24dp"
-      android:summary="%s"
-  />
+    <com.github.frimtec.android.pikettassist.settings.CalendarListPreference
+        android:icon="@drawable/ic_date_range_black_24dp"
+        android:key="calendar_selection"
+        android:summary="%s"
+        android:title="@string/pref_title_calendar_selection" />
 
-  <EditTextPreference
-      android:key="calendar_event_pikett_title_pattern"
-      android:title="@string/pref_title_calendar_event_pikett_title_pattern"
-      android:icon="@drawable/ic_event_black_24dp"
-      android:defaultValue="@string/pref_default_calendar_event_pikett_title_pattern"
-      android:selectAllOnFocus="true"
-      android:inputType="text"
-      android:singleLine="true"
-      android:maxLines="1"/>
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_calendar_event_pikett_title_pattern"
+        android:icon="@drawable/ic_event_black_24dp"
+        android:inputType="text"
+        android:key="calendar_event_pikett_title_pattern"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_calendar_event_pikett_title_pattern" />
 </PreferenceScreen>

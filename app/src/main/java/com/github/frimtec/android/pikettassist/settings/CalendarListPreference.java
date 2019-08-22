@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.preference.ListPreference;
 import android.provider.CalendarContract;
 import android.util.AttributeSet;
+
 import com.github.frimtec.android.pikettassist.R;
 
 import java.util.ArrayList;
@@ -16,10 +17,10 @@ import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR
 
 public class CalendarListPreference extends ListPreference {
 
-  private Cursor cursor;
   private final static String[] PROJECTION = new String[]{CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME};
   private final static String SELECTION = "(" + CalendarContract.Calendars.VISIBLE + " = ?)";
   private final static String[] SELECTION_ARGS = new String[]{"1"};
+  private Cursor cursor;
 
   @SuppressLint("MissingPermission")
   public CalendarListPreference(Context context, AttributeSet attrs) {
@@ -31,7 +32,7 @@ public class CalendarListPreference extends ListPreference {
     entriesValues.add(CALENDAR_FILTER_ALL);
 
     ContentResolver cr = context.getContentResolver();
-    try(Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI, PROJECTION, SELECTION, SELECTION_ARGS, null)) {
+    try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI, PROJECTION, SELECTION, SELECTION_ARGS, null)) {
       while (cursor.moveToNext()) {
         entries.add(cursor.getString(1));
         entriesValues.add(String.valueOf(cursor.getInt(0)));

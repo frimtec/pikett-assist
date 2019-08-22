@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item
-      android:id="@+id/navigation_home"
-      android:icon="@drawable/ic_home_black_24dp"
-      android:title="@string/title_home"/>
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
 
-  <item
-      android:id="@+id/navigation_shifts"
-      android:icon="@drawable/ic_date_range_black_24dp"
-      android:title="@string/title_shift_overview"/>
+    <item
+        android:id="@+id/navigation_shifts"
+        android:icon="@drawable/ic_date_range_black_24dp"
+        android:title="@string/title_shift_overview" />
 
-  <item
-      android:id="@+id/navigation_alert_log"
-      android:icon="@drawable/ic_siren"
-      android:title="@string/title_alert_log"/>
+    <item
+        android:id="@+id/navigation_alert_log"
+        android:icon="@drawable/ic_siren"
+        android:title="@string/title_alert_log" />
 
 </menu>

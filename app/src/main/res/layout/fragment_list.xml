@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.frimtec.android.pikettassist.activity.StateFragement">
+    tools:context="com.github.frimtec.android.pikettassist.activity.StateFragment">
 
     <ListView
         android:id="@+id/activity_list"

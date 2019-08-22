@@ -5,7 +5,7 @@ import java.time.Instant;
 
 public class PikettShift {
 
-  static final Duration TIME_TOLLERANCE = Duration.ofMinutes(5);
+  static final Duration TIME_TOLERANCE = Duration.ofMinutes(5);
 
   private final long id;
   private final String title;
@@ -31,12 +31,12 @@ public class PikettShift {
     return title;
   }
 
-  public Instant getStartTime(boolean withTollerance) {
-    return withTollerance ? startTime.minus(TIME_TOLLERANCE) : startTime;
+  public Instant getStartTime(boolean withTolerance) {
+    return withTolerance ? startTime.minus(TIME_TOLERANCE) : startTime;
   }
 
-  public Instant getEndTime(boolean withTollerance) {
-    return withTollerance ? endTime.plus(TIME_TOLLERANCE) : endTime;
+  public Instant getEndTime(boolean withTolerance) {
+    return withTolerance ? endTime.plus(TIME_TOLERANCE) : endTime;
   }
 
   public boolean isNow() {

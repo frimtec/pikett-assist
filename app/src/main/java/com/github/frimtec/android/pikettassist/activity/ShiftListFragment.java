@@ -21,7 +21,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ShiftListFragement extends Fragment {
+public class ShiftListFragment extends Fragment {
 
   private View view;
 

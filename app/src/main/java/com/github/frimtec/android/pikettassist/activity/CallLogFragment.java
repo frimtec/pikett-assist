@@ -34,7 +34,7 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
 
-public class CallLogFragement extends Fragment {
+public class CallLogFragment extends Fragment {
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;

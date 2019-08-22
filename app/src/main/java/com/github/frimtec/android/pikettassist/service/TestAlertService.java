@@ -107,7 +107,7 @@ public class TestAlertService extends IntentService {
     }
     long waitMs = Duration.between(now, nextRun).toMillis();
     Log.i(TAG, "Next run at " + nextRun + "; wait ms: " + waitMs);
-    alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
+    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
         PendingIntent.getService(this, 0, intent, 0)
     );
   }

@@ -19,7 +19,7 @@ import android.widget.Button;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
-import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper.SignalLevel;
+import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper.SignalLevel;
 
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -31,13 +31,12 @@ import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 
 
 public class NotificationHelper {
+
   public static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
   public static final int SIGNAL_NOTIFICATION_ID = 3;
   public static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
-  public static final String ACTION_CONFIRM_ALARM = "com.github.frimtec.android.pikettassist.CONFIRM_ALARM";
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
-  private static final String TAG = "NotificationHelper";
   private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
 
   public static void registerChannel(Context context) {
@@ -149,7 +148,9 @@ public class NotificationHelper {
         .setPositiveButton(R.string.notification_alert_confirm_button, action::accept
         ).create();
     Window window = dialog.getWindow();
-    window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);
+    if (window != null) {
+      window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);
+    }
 
     dialog.show();
     Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -166,7 +167,10 @@ public class NotificationHelper {
         .setCancelable(true)
         .setPositiveButton("OK", action::accept
         ).create();
-    alertDialog.getWindow().setType(TYPE_APPLICATION_OVERLAY);
+    Window window = alertDialog.getWindow();
+    if (window != null) {
+      window.setType(TYPE_APPLICATION_OVERLAY);
+    }
     alertDialog.show();
   }
 

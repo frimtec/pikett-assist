@@ -13,8 +13,9 @@ import com.github.frimtec.android.pikettassist.R;
 
 import java.util.List;
 
-public class SignalStremgthHelper {
-  private static final String TAG = "SignalStremgthHelper";
+public class SignalStrengthHelper {
+
+  private static final String TAG = "SignalStrengthHelper";
 
   public static SignalLevel getSignalStrength(Context context) {
     TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);

@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
 
   private BroadcastReceiver broadcastReceiver;
-  private StateFragement stateFragement;
-  private ShiftListFragement shiftListFragement;
-  private CallLogFragement calLogFragement;
+  private StateFragment stateFragment;
+  private ShiftListFragment shiftListFragment;
+  private CallLogFragment calLogFragment;
   private Fragment activeFragment = Fragment.STATE;
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
@@ -77,33 +77,33 @@ public class MainActivity extends AppCompatActivity {
   };
 
   private void loadStateFragment() {
-    if (stateFragement == null) {
-      stateFragement = new StateFragement();
+    if (stateFragment == null) {
+      stateFragment = new StateFragment();
     }
     FragmentManager fm = getFragmentManager();
     FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, stateFragement);
-    fragmentTransaction.commit(); // save the changes
+    fragmentTransaction.replace(R.id.frame_layout, stateFragment);
+    fragmentTransaction.commit();
   }
 
   private void loadShiftListFragment() {
-    if (shiftListFragement == null) {
-      shiftListFragement = new ShiftListFragement();
+    if (shiftListFragment == null) {
+      shiftListFragment = new ShiftListFragment();
     }
     FragmentManager fm = getFragmentManager();
     FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, shiftListFragement);
-    fragmentTransaction.commit(); // save the changes
+    fragmentTransaction.replace(R.id.frame_layout, shiftListFragment);
+    fragmentTransaction.commit();
   }
 
   private void loadCallLogFragment() {
-    if (calLogFragement == null) {
-      calLogFragement = new CallLogFragement();
+    if (calLogFragment == null) {
+      calLogFragment = new CallLogFragment();
     }
     FragmentManager fm = getFragmentManager();
     FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, calLogFragement);
-    fragmentTransaction.commit(); // save the changes
+    fragmentTransaction.replace(R.id.frame_layout, calLogFragment);
+    fragmentTransaction.commit();
   }
 
   @Override
@@ -141,14 +141,14 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void refresh() {
-    if (stateFragement != null && activeFragment == Fragment.STATE) {
-      stateFragement.refresh();
+    if (stateFragment != null && activeFragment == Fragment.STATE) {
+      stateFragment.refresh();
     }
-    if (shiftListFragement != null && activeFragment == Fragment.SHIFTS) {
-      shiftListFragement.refresh();
+    if (shiftListFragment != null && activeFragment == Fragment.SHIFTS) {
+      shiftListFragment.refresh();
     }
-    if (calLogFragement != null && activeFragment == Fragment.CALL_LOG) {
-      calLogFragement.refresh();
+    if (calLogFragment != null && activeFragment == Fragment.CALL_LOG) {
+      calLogFragment.refresh();
     }
   }
 

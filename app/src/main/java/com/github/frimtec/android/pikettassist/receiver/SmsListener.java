@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.frimtec.android.pikettassist.helper.SmsHelper.confimSms;
+import static com.github.frimtec.android.pikettassist.helper.SmsHelper.confirmSms;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_FALSE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_CALL;
@@ -60,7 +60,7 @@ public class SmsListener extends BroadcastReceiver {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
             id = id != null ? id : context.getString(R.string.test_alarm_context_general);
             Log.i(TAG, "TEST alarm with ID: " + id);
-            confimSms(SharedState.getSmsConfirmText(context), sms.getNumber());
+            confirmSms(SharedState.getSmsConfirmText(context), sms.getNumber());
             try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
               try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{id}, null, null, null)) {
                 if (cursor.getCount() == 0) {

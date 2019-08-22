@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 
 public final class SmsHelper {
 
-  private static final String TAG = "SmsHelper";
-
   private SmsHelper() {
   }
 
@@ -33,7 +31,7 @@ public final class SmsHelper {
   }
 
 
-  public static void confimSms(String confirmText, String number) {
+  public static void confirmSms(String confirmText, String number) {
     SmsManager smgr = SmsManager.getDefault();
     smgr.sendTextMessage(number, null, confirmText, null, null);
   }

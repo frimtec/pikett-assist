@@ -25,7 +25,7 @@ import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
+import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
@@ -52,11 +52,11 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
 
-public class StateFragement extends Fragment {
+public class StateFragment extends Fragment {
 
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
 
-  private static final String TAG = "StateFragement";
+  private static final String TAG = "StateFragment";
 
   private View view;
 
@@ -90,16 +90,16 @@ public class StateFragement extends Fragment {
     }
 
     boolean superviseSignalStrength = SharedState.getSuperviseSignalStrength(getContext());
-    SignalStremgthHelper.SignalLevel level = SignalStremgthHelper.getSignalStrength(getContext());
+    SignalStrengthHelper.SignalLevel level = SignalStrengthHelper.getSignalStrength(getContext());
     String signalStrength = level.toString(getContext());
     State.TrafficLight signalStrengthTrafficLight;
     if (!superviseSignalStrength) {
       signalStrengthTrafficLight = YELLOW;
     } else if (pikettState == OnOffState.OFF) {
       signalStrengthTrafficLight = OFF;
-    } else if (level.ordinal() <= SignalStremgthHelper.SignalLevel.NONE.ordinal()) {
+    } else if (level.ordinal() <= SignalStrengthHelper.SignalLevel.NONE.ordinal()) {
       signalStrengthTrafficLight = RED;
-    } else if (level.ordinal() <= SignalStremgthHelper.SignalLevel.POOR.ordinal()) {
+    } else if (level.ordinal() <= SignalStrengthHelper.SignalLevel.POOR.ordinal()) {
       signalStrengthTrafficLight = YELLOW;
     } else {
       signalStrengthTrafficLight = GREEN;

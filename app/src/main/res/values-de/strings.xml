@@ -1,6 +1,5 @@
 <resources>
     <string name="channel_description">PAssist Kanalbeschreibung</string>
-    <string name="confirm">Bestaätigen</string>
     <string name="title_home">Übersicht</string>
     <string name="title_shift_overview">Kalender</string>
     <string name="title_alert_log">Aufgebote</string>

@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">PAssist</string>
     <string name="channel_name" translatable="false">pikett-assist-channel</string>
     <string name="channel_description">pikett assist channel description</string>
-    <string name="confirm">CONFIRM</string>
     <string name="title_home">Overview</string>
     <string name="title_shift_overview">Calendar</string>
     <string name="title_alert_log">Alert log</string>

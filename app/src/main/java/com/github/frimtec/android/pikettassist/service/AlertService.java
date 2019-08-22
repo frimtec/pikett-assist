@@ -41,7 +41,7 @@ public class AlertService extends Service {
   public int onStartCommand(Intent intent, int flags, int startId) {
     super.onStartCommand(intent, flags, startId);
     String smsNumber = intent.getStringExtra("sms_number");
-    Log.d(TAG, "Service cycle: " + smsNumber);
+    Log.i(TAG, "Service cycle: " + smsNumber);
 
     Context context = getApplicationContext();
     Ringtone ringtone = RingtoneManager.getRingtone(context, getAlarmTone(context));
@@ -51,7 +51,6 @@ public class AlertService extends Service {
     timer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
         if (!ringtone.isPlaying()) {
-          Log.v(TAG, "Restart ringtone");
           ringtone.play();
         }
       }
@@ -59,13 +58,11 @@ public class AlertService extends Service {
     Vibrator vibrator = VibrateHelper.vibrate(context, 400, 200);
 
     NotificationHelper.confirm(context, (dialogInterface, integer) -> {
-      Log.d(TAG, "Confirm received.");
       confirmAlarm(context, smsNumber);
       timer.cancel();
       ringtone.stop();
       vibrator.cancel();
       context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
-      Log.d(TAG, "Alarm finished.");
     });
     stopSelf();
     return START_NOT_STICKY;
@@ -98,10 +95,8 @@ public class AlertService extends Service {
   private Uri getAlarmTone(Context context) {
     String alarmRingTone = SharedState.getAlarmRingTone(context);
     if (!alarmRingTone.isEmpty()) {
-      Log.d(TAG, "Use configured ringtone: " + alarmRingTone);
       return Uri.parse(alarmRingTone);
     }
-    Log.d(TAG, "Use default ringtone");
     return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
   }
 

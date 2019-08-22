@@ -45,7 +45,7 @@ public class TestAlertService extends IntentService {
     boolean initial = intent.getBooleanExtra(PARAM_INITIAL, true);
     Context context = getApplicationContext();
     this.pikettState = SharedState.getPikettState(context);
-    Log.d(TAG, "Service cycle; pikett state: " + pikettState + "; initial: " + initial);
+    Log.i(TAG, "Service cycle; pikett state: " + pikettState + "; initial: " + initial);
     if (!initial && this.pikettState == OnOffState.ON) {
       ZonedDateTime now = ZonedDateTime.now();
       ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
@@ -53,7 +53,7 @@ public class TestAlertService extends IntentService {
           .filter(tc -> !isTestMessageAvailable(tc, messageAcceptedTime.toInstant()))
           .collect(Collectors.toSet());
       missingTestAlarmContexts.forEach(testContext -> {
-        Log.w(TAG, "Not received test messages: " + testContext);
+        Log.i(TAG, "Not received test messages: " + testContext);
         TestAlarmDao.updateAlarmState(testContext, OnOffState.ON);
       });
 
@@ -84,14 +84,13 @@ public class TestAlertService extends IntentService {
   public void onDestroy() {
     super.onDestroy();
     if (this.pikettState == OnOffState.OFF) {
-      Log.d(TAG, "End service");
+      Log.i(TAG, "End service");
       return;
     }
     Set<Integer> testAlarmCheckWeekdays = SharedState.getTestAlarmCheckWeekdays(getApplicationContext()).stream()
         .map(Integer::valueOf)
         .collect(Collectors.toSet());
     if (testAlarmCheckWeekdays.isEmpty()) {
-      Log.d(TAG, "No weekdays to test");
       return;
     }
 
@@ -107,7 +106,7 @@ public class TestAlertService extends IntentService {
       nextRun = nextRun.plusDays(1);
     }
     long waitMs = Duration.between(now, nextRun).toMillis();
-    Log.d(TAG, "Next run at " + nextRun + "; wait ms: " + waitMs);
+    Log.i(TAG, "Next run at " + nextRun + "; wait ms: " + waitMs);
     alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
         PendingIntent.getService(this, 0, intent, 0)
     );

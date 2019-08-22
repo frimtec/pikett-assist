@@ -113,7 +113,6 @@ public class StateFragement extends Fragment {
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
         button.setOnClickListener(v -> {
           try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
-            Log.v(TAG, "Close alert button pressed.");
             ContentValues values = new ContentValues();
             values.put("end_time", Instant.now().toEpochMilli());
             int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);

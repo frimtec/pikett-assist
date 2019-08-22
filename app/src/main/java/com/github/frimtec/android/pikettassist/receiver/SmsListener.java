@@ -47,21 +47,19 @@ public class SmsListener extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     if ("android.provider.Telephony.SMS_RECEIVED".equals(intent.getAction())) {
       if (SharedState.getPikettState(context) == OnOffState.OFF) {
-        Log.d(TAG, "SMS recived but not on pikett");
         return;
       }
       long operationCenterContactId = SharedState.getAlarmOperationsCenterContact(context);
       for (Sms sms : SmsHelper.getSmsFromIntent(intent)) {
         Optional<Long> contactId = ContactHelper.lookupContactIdByPhoneNumber(context, sms.getNumber());
-        Log.d(TAG, "Contact ID: " + contactId);
         if (operationCenterContactId != SharedState.EMPTY_CONTACT && operationCenterContactId == contactId.orElse(SharedState.EMPTY_CONTACT)) {
-          Log.d(TAG, "SMS from pikett number");
+          Log.i(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
           Matcher matcher = testSmsPattern.matcher(sms.getText());
           if (matcher.matches()) {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
             id = id != null ? id : context.getString(R.string.test_alarm_context_general);
-            Log.d(TAG, "TEST alarm with ID: " + id);
+            Log.i(TAG, "TEST alarm with ID: " + id);
             confimSms(SharedState.getSmsConfirmText(context), sms.getNumber());
             try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
               try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{id}, null, null, null)) {
@@ -80,28 +78,28 @@ public class SmsListener extends BroadcastReceiver {
               }
             }
           } else {
-            Log.d(TAG, "Alarm");
+            Log.i(TAG, "Alarm");
             Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(context);
             try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
               Long alertId;
               Intent alertServiceIntent = new Intent(context, AlertService.class);
               alertServiceIntent.putExtra("sms_number", sms.getNumber());
               if (alarmState.first == AlarmState.OFF) {
-                Log.d(TAG, "Alarm state OFF -> ON");
+                Log.i(TAG, "Alarm state OFF -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(TABLE_ALERT_COLUMN_START_TIME, Instant.now().toEpochMilli());
                 contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
                 alertId = db.insert(TABLE_ALERT, null, contentValues);
                 context.startService(alertServiceIntent);
               } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
-                Log.d(TAG, "Alarm state ON_CONFIRMED -> ON");
+                Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
                 alertId = alarmState.second;
                 db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
                 context.startService(alertServiceIntent);
               } else {
-                Log.d(TAG, "Alarm state ON -> ON");
+                Log.i(TAG, "Alarm state ON -> ON");
                 alertId = alarmState.second;
               }
               ContentValues contentValues = new ContentValues();

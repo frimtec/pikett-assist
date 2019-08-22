@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -147,10 +146,7 @@ public class NotificationHelper {
         .setTitle(R.string.notification_alert_confirm_title)
         .setMessage(R.string.notification_alert_confirm_text)
         .setCancelable(false)
-        .setPositiveButton(R.string.notification_alert_confirm_button, (alertDialog, id) -> {
-              Log.d(TAG, "Alert confirmed!");
-              action.accept(alertDialog, id);
-            }
+        .setPositiveButton(R.string.notification_alert_confirm_button, action::accept
         ).create();
     Window window = dialog.getWindow();
     window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);

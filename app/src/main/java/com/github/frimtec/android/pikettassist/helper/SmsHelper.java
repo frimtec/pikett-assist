@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Sms;
 
@@ -27,9 +26,7 @@ public final class SmsHelper {
       return Arrays.stream(pdus)
           .map(pdu -> {
             SmsMessage message = SmsMessage.createFromPdu((byte[]) pdu);
-            Sms sms = new Sms(message.getOriginatingAddress(), message.getMessageBody());
-            Log.d(TAG, "SMS recived: " + sms);
-            return sms;
+            return new Sms(message.getOriginatingAddress(), message.getMessageBody());
           }).collect(Collectors.toList());
     }
     return Collections.emptyList();

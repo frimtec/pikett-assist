@@ -33,7 +33,7 @@ public class SignalStrengthService extends IntentService {
 
   @Override
   public void onHandleIntent(Intent intent) {
-    Log.d(TAG, "Service cycle");
+    Log.i(TAG, "Service cycle");
 
     TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
@@ -74,11 +74,11 @@ public class SignalStrengthService extends IntentService {
     super.onDestroy();
     if (SharedState.getPikettState(this) == OnOffState.ON) {
       AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-      alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
+      alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );
     } else {
-      Log.d(TAG, "SignalStrengthService stopped as pikett state is OFF");
+      Log.i(TAG, "SignalStrengthService stopped as pikett state is OFF");
     }
   }
 }

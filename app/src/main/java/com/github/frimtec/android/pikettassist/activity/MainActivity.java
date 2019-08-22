@@ -58,19 +58,16 @@ public class MainActivity extends AppCompatActivity {
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     switch (item.getItemId()) {
       case R.id.navigation_home: {
-        Log.v("MainActivity", "Tab selected: home");
         loadStateFragment();
         activeFragment = Fragment.STATE;
         return true;
       }
       case R.id.navigation_shifts: {
-        Log.v("MainActivity", "Tab selected: shifts");
         activeFragment = Fragment.SHIFTS;
         loadShiftListFragment();
         return true;
       }
       case R.id.navigation_alert_log: {
-        Log.v("MainActivity", "Tab selected: alert log");
         activeFragment = Fragment.CALL_LOG;
         loadCallLogFragment();
         return true;
@@ -137,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
     if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
-      NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> Log.i("MainActivity", "Battery optimazation dialog confirmed."));
+      NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> {});
     }
     loadStateFragment();
     startService(new Intent(this, PikettService.class));
@@ -157,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Log.v(TAG, "onActivityResult; request code:" + requestCode);
     if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
       if (!Settings.canDrawOverlays(this)) {
         Log.e(TAG, "Missing overlay permission.");
@@ -204,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
     broadcastReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-        Log.v(TAG, "Event received: " + intent.getAction());
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
             SharedState.getPikettState(context) == OnOffState.ON) {
           try {
@@ -213,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
           } catch (InterruptedException e) {
             throw new RuntimeException("Unexpected interrupt");
           }
-          Log.v(TAG, "Start signal strength service as pikett state is ON");
           context.startService(new Intent(context, SignalStrengthService.class));
         }
         refresh();

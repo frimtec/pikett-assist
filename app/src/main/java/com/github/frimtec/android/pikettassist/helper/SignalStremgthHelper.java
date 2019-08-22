@@ -21,9 +21,7 @@ public class SignalStremgthHelper {
     @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
     CellSignalStrength signalStrength = null;
-    if (cellInfos.size() == 0) {
-      Log.w(TAG, "No signal");
-    } else {
+    if (cellInfos.size() != 0) {
       CellInfo cellInfo = cellInfos.get(0);
       if (cellInfo instanceof CellInfoGsm) {
         signalStrength = ((CellInfoGsm) cellInfo).getCellSignalStrength();

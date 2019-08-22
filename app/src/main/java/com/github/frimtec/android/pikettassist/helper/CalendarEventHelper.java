@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.provider.CalendarContract;
-import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
@@ -43,14 +42,12 @@ public final class CalendarEventHelper {
     Calendar endTime = Calendar.getInstance();
 
     endTime.add(Calendar.DATE, 180);
-    Log.d(TAG, "calendarSelection: " + calendarSelection);
     String selection = "( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTEND + " <= " + endTime.getTimeInMillis() + " ) AND ( deleted != 1 )";
     String[] args = new String[0];
     if (!CALENDAR_FILTER_ALL.equals(calendarSelection)) {
       selection = selection + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?)";
       args = new String[]{calendarSelection};
     }
-    Log.d(TAG, "selection: " + selection);
     List<PikettShift> events = new LinkedList<>();
     try (@SuppressLint("MissingPermission") Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {

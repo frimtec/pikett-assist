@@ -26,7 +26,7 @@ public class PikettService extends IntentService {
 
   @Override
   public void onHandleIntent(Intent intent) {
-    Log.d(TAG, "Service cycle");
+    Log.i(TAG, "Service cycle");
     sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
   }
 
@@ -38,7 +38,7 @@ public class PikettService extends IntentService {
         .stream().filter(shift -> !shift.isOver(now)).findFirst();
     Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime(true) : shift.getStartTime(true)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
     long waitMs = Math.min(Duration.between(now, nextRun).toMillis(), MAX_SLEEP.toMillis());
-    Log.d(TAG, "Next run in " + waitMs);
+    Log.i(TAG, "Next run in " + waitMs);
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
     if (first.map(PikettShift::isNow).orElse(false)) {

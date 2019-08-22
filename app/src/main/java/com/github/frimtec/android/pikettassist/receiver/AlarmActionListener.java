@@ -23,7 +23,6 @@ public class AlarmActionListener extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
-    Log.v(TAG, "Action received: " + action);
     if (ACTION_CLOSE_ALARM.equals(action)) {
       closeAlarm(context);
     } else {

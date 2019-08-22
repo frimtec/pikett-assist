@@ -4,7 +4,8 @@ android:
   components:
     - platform-tools
     - tools
-    - build-tools-28.0.3
-    - android-28
 
-script: ./gradlew test jacocoTestReport coveralls
+script:
+    - yes | sdkmanager "platforms;android-28"
+    - yes | sdkmanager "build-tools;28.0.3"
+    - ./gradlew test jacocoTestReport coveralls

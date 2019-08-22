@@ -23,7 +23,8 @@ public final class SmsHelper {
       Object[] pdus = (Object[]) bundle.get("pdus");
       return Arrays.stream(pdus)
           .map(pdu -> {
-            SmsMessage message = SmsMessage.createFromPdu((byte[]) pdu);
+            String format = bundle.getString("format");
+            SmsMessage message = SmsMessage.createFromPdu((byte[]) pdu, format);
             return new Sms(message.getOriginatingAddress(), message.getMessageBody());
           }).collect(Collectors.toList());
     }
@@ -32,8 +33,8 @@ public final class SmsHelper {
 
 
   public static void confirmSms(String confirmText, String number) {
-    SmsManager smgr = SmsManager.getDefault();
-    smgr.sendTextMessage(number, null, confirmText, null, null);
+    SmsManager smsManager = SmsManager.getDefault();
+    smsManager.sendTextMessage(number, null, confirmText, null, null);
   }
 
 }

@@ -20,7 +20,7 @@ import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
-import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +51,8 @@ public class SmsListener extends BroadcastReceiver {
       }
       long operationCenterContactId = SharedState.getAlarmOperationsCenterContact(context);
       for (Sms sms : SmsHelper.getSmsFromIntent(intent)) {
-        Optional<Long> contactId = ContactHelper.lookupContactIdByPhoneNumber(context, sms.getNumber());
-        if (operationCenterContactId != SharedState.EMPTY_CONTACT && operationCenterContactId == contactId.orElse(SharedState.EMPTY_CONTACT)) {
+        Set<Long> contactIds = ContactHelper.lookupContactIdByPhoneNumber(context, sms.getNumber());
+        if (operationCenterContactId != SharedState.EMPTY_CONTACT && contactIds.contains(operationCenterContactId)) {
           Log.i(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
           Matcher matcher = testSmsPattern.matcher(sms.getText());

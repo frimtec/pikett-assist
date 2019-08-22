@@ -9,7 +9,9 @@ import android.provider.ContactsContract;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 
-import java.util.Optional;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ContactHelper {
 
@@ -40,17 +42,20 @@ public class ContactHelper {
     return new Contact(id, false, context.getString(R.string.contact_helper_unknown_contact));
   }
 
-  public static Optional<Long> lookupContactIdByPhoneNumber(Context context, String phoneNumber) {
+  public static Set<Long> lookupContactIdByPhoneNumber(Context context, String phoneNumber) {
     ContentResolver cr = context.getContentResolver();
     try (Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
         ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
         new String[]{phoneNumber}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
-        return Optional.of(cursor.getLong(
-            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)));
+        Set<Long> contactIds = new HashSet<>();
+        do {
+          contactIds.add(cursor.getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)));
+        } while (cursor.moveToNext());
+        return contactIds;
       }
-      return Optional.empty();
+      return Collections.emptySet();
     }
   }
 }

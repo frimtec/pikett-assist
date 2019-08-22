@@ -10,7 +10,7 @@ import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
-import com.github.frimtec.android.pikettassist.domain.DualState;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
 
 import java.util.Collections;
 import java.util.Set;
@@ -35,17 +35,16 @@ public final class SharedState {
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
-  public static final String START_OF_TIME = "0";
   public static final String CALENDAR_FILTER_ALL = "-1";
   public static final long EMPTY_CONTACT = -1;
+
   private static final String TAG = "SharedState";
-  private static final String PREF_KEY_TEST_ALARM_STATE_PREFIX = "test_alarm_state_";
 
   private SharedState() {
   }
 
-  public static DualState getPikettState(Context context) {
-    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? DualState.ON : DualState.OFF;
+  public static OnOffState getPikettState(Context context) {
+    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
   }
 
   public static Pair<AlarmState, Long> getAlarmState(Context context) {

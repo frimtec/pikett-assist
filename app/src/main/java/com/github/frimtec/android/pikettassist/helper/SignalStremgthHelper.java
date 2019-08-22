@@ -38,17 +38,12 @@ public class SignalStremgthHelper {
   }
 
   public enum SignalLevel {
-    OFF(-1),
-    NONE(0),
-    POOR(1),
-    MODERATE(2),
-    GOOD(3),
-    GREAT(4);
-    private final int level;
-
-    SignalLevel(int level) {
-      this.level = level;
-    }
+    OFF,
+    NONE,
+    POOR,
+    MODERATE,
+    GOOD,
+    GREAT;
 
     private static SignalLevel from(Integer level) {
       if (level == null) {

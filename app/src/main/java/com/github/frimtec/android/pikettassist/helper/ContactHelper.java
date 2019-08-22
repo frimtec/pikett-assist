@@ -19,7 +19,7 @@ public class ContactHelper {
         new String[]{ContactsContract.Contacts.DISPLAY_NAME_PRIMARY},
         ContactsContract.Contacts._ID + " = ?",
         new String[]{String.valueOf(id)}, null)) {
-      if (cursor.moveToFirst()) {
+      if (cursor != null && cursor.moveToFirst()) {
         return new Contact(id, true, cursor.getString(0));
       }
     }
@@ -46,7 +46,7 @@ public class ContactHelper {
         new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
         ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
         new String[]{phoneNumber}, null)) {
-      if (cursor.moveToFirst()) {
+      if (cursor != null && cursor.moveToFirst()) {
         return Optional.of(cursor.getLong(
             cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)));
       }

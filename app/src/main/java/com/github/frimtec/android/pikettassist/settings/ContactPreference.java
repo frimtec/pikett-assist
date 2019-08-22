@@ -14,8 +14,6 @@ import com.github.frimtec.android.pikettassist.state.SharedState;
 
 public class ContactPreference extends RingtonePreference {
 
-  private static final String TAG = "ContactPreference";
-
   public ContactPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }

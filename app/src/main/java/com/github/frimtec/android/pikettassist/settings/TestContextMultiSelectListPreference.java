@@ -19,6 +19,7 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 
 public class TestContextMultiSelectListPreference extends MultiSelectListPreference {
+
   public TestContextMultiSelectListPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
 

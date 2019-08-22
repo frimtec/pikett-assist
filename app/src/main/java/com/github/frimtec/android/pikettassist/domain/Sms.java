@@ -1,6 +1,9 @@
 package com.github.frimtec.android.pikettassist.domain;
 
+import android.support.annotation.NonNull;
+
 public class Sms {
+
   private final String number;
   private final String text;
 
@@ -17,6 +20,7 @@ public class Sms {
     return text;
   }
 
+  @NonNull
   @Override
   public String toString() {
     return "Sms{" +

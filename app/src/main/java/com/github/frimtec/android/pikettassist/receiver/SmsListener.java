@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -12,7 +11,7 @@ import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
-import com.github.frimtec.android.pikettassist.domain.DualState;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.Sms;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
@@ -43,12 +42,11 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 public class SmsListener extends BroadcastReceiver {
 
   private static final String TAG = "SmsListener";
-  private SharedPreferences preferences;
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
-      if (SharedState.getPikettState(context) == DualState.OFF) {
+    if ("android.provider.Telephony.SMS_RECEIVED".equals(intent.getAction())) {
+      if (SharedState.getPikettState(context) == OnOffState.OFF) {
         Log.d(TAG, "SMS recived but not on pikett");
         return;
       }

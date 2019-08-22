@@ -5,6 +5,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 public class VibrateHelper {
+
   public static void vibrateWhileDoing(Context context, long onPhaseMs, long pausePhaseMs, Runnable executeWhileVibrating) {
     Vibrator vibrator = vibrate(context, onPhaseMs, pausePhaseMs);
     try {

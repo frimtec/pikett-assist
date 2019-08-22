@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
-import com.github.frimtec.android.pikettassist.domain.DualState;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStremgthHelper;
@@ -74,7 +74,7 @@ public class StateFragement extends Fragment {
   }
 
   private StateArrayAdapter createAdapter() {
-    DualState pikettState = SharedState.getPikettState(getContext());
+    OnOffState pikettState = SharedState.getPikettState(getContext());
     AlarmState alarmState = SharedState.getAlarmState(getContext()).first;
     State.TrafficLight alarmTrafficLight;
     String alarmValue;
@@ -85,7 +85,7 @@ public class StateFragement extends Fragment {
       alarmTrafficLight = YELLOW;
       alarmValue = getString(R.string.alarm_state_on_confirmed);
     } else {
-      alarmTrafficLight = pikettState == DualState.ON ? GREEN : OFF;
+      alarmTrafficLight = pikettState == OnOffState.ON ? GREEN : OFF;
       alarmValue = getString(R.string.alarm_state_off);
     }
 
@@ -95,7 +95,7 @@ public class StateFragement extends Fragment {
     State.TrafficLight signalStrengthTrafficLight;
     if (!superviseSignalStrength) {
       signalStrengthTrafficLight = YELLOW;
-    } else if (pikettState == DualState.OFF) {
+    } else if (pikettState == OnOffState.OFF) {
       signalStrengthTrafficLight = OFF;
     } else if (level.ordinal() <= SignalStremgthHelper.SignalLevel.NONE.ordinal()) {
       signalStrengthTrafficLight = RED;
@@ -141,7 +141,7 @@ public class StateFragement extends Fragment {
             Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact, Toast.LENGTH_SHORT).show();
           }
         }),
-        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == DualState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == DualState.ON ? GREEN : OFF, context -> {
+        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == OnOffState.ON ? GREEN : OFF, context -> {
           Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
           builder.appendPath("time");
           ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
@@ -151,31 +151,28 @@ public class StateFragement extends Fragment {
         new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButtonSupplier, alarmTrafficLight, context -> {
         }),
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
-            superviseSignalStrength ? (pikettState == DualState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight, context -> {
+            superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight, context -> {
         }))
     );
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
-      DualState testAlarmState = DualState.OFF;
+      OnOffState testAlarmState = OnOffState.OFF;
       Supplier<Button> testAlarmCloseButtonSupplier = null;
       try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
         try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
           if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
             Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
             lastReceived = formatDateTime(lastReceiveTime, DATE_TIME_FORMAT);
-            testAlarmState = DualState.valueOf(cursor.getString(2));
+            testAlarmState = OnOffState.valueOf(cursor.getString(2));
 
-            if (testAlarmState != DualState.OFF) {
+            if (testAlarmState != OnOffState.OFF) {
               testAlarmCloseButtonSupplier = () -> {
                 Button button = new Button(getContext());
 
                 button.setText(getString(R.string.main_state_button_close_alert));
                 button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
                 button.setOnClickListener(v -> {
-                  try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
-                    Log.v(TAG, "Close test alert button pressed.");
-                    TestAlarmDao.updateAlarmState(testContext, DualState.OFF);
-                  }
+                  TestAlarmDao.updateAlarmState(testContext, OnOffState.OFF);
                   refresh();
                 });
                 return button;
@@ -183,7 +180,7 @@ public class StateFragement extends Fragment {
             }
           }
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == DualState.ON ? (testAlarmState == DualState.ON ? RED : GREEN) : OFF, context -> {
+        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF, context -> {
         }));
       }
     }

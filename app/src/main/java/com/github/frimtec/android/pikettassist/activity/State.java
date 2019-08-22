@@ -14,6 +14,7 @@ public class State {
   private final Supplier<Button> buttonSupplier;
   private final TrafficLight state;
   private final Consumer<Context> onClickAction;
+
   public State(int iconResource, String title, String value, Supplier<Button> buttonSupplier, TrafficLight state, Consumer<Context> onClickAction) {
     this.iconResource = iconResource;
     this.title = title;

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,7 +36,6 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 
 public class CallLogFragement extends Fragment {
 
-  private static final String TAG = "CallLogFragement";
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
 
@@ -52,8 +50,6 @@ public class CallLogFragement extends Fragment {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {
       Alert selectedAlert = (Alert) listView.getItemAtPosition(position);
-      long eventId = selectedAlert.getId();
-      Log.v(TAG, "Selected alert: " + selectedAlert.getId());
       showAlertDetails(selectedAlert);
     });
     registerForContextMenu(listView);
@@ -62,9 +58,6 @@ public class CallLogFragement extends Fragment {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    ListView view = (ListView) v;
-    AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    Alert selectedAlert = (Alert) view.getItemAtPosition(acmi.position);
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.call_log_fragment_menu_view);
     menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.call_log_fragment_menu_delete);
   }

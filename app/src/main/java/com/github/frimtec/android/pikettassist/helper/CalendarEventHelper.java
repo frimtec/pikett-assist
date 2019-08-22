@@ -10,8 +10,6 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +59,6 @@ public final class CalendarEventHelper {
           String eventTitle = cursor.getString(1);
           Instant eventStartTime = Instant.ofEpochMilli(cursor.getLong(2));
           Instant eventEndTime = Instant.ofEpochMilli(cursor.getLong(3));
-          Instant now = LocalDateTime.now().toInstant(ZoneOffset.UTC);
 
           Pattern pattern = Pattern.compile(eventTitleFilterPattern, Pattern.CASE_INSENSITIVE);
           if (pattern.matcher(eventTitle).matches()) {

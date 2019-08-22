@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class PAssist extends Application {
+
   private static final String TAG = "PAssist";
 
   private static DbHelper openHelper;

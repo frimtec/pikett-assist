@@ -55,7 +55,7 @@ public class AlertService extends Service {
           ringtone.play();
         }
       }
-    }, 1000 * 1, 1000 * 1);
+    }, 1000, 1000);
     Vibrator vibrator = VibrateHelper.vibrate(context, 400, 200);
 
     NotificationHelper.confirm(context, (dialogInterface, integer) -> {

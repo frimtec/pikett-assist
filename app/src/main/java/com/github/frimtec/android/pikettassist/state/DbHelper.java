@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import static com.github.frimtec.android.pikettassist.domain.DualState.OFF;
+import static com.github.frimtec.android.pikettassist.domain.OnOffState.OFF;
 
 public class DbHelper extends SQLiteOpenHelper {
 

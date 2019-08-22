@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.DualState;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_main);
 
-    BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+    BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     startIfAllPermissionsGranted();
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (Arrays.stream(grantResults).anyMatch(result -> result == PERMISSION_DENIED)) {
       Log.e(TAG, "Missing permissions.");
@@ -204,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Event received: " + intent.getAction());
-        if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED) &&
-            SharedState.getPikettState(context) == DualState.ON) {
+        if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
+            SharedState.getPikettState(context) == OnOffState.ON) {
           try {
             // wait for change
             Thread.sleep(2000);

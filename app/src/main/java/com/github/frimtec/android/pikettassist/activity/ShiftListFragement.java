@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 
 public class ShiftListFragement extends Fragment {
 
-  private static final String TAG = "ListFragement";
-
   private View view;
 
   @Override

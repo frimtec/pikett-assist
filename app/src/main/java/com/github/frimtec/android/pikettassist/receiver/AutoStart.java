@@ -9,6 +9,7 @@ import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 
 public class AutoStart extends BroadcastReceiver {
+
   @SuppressLint("UnsafeProtectedBroadcastReceiver")
   @Override
   public void onReceive(Context context, Intent intent) {

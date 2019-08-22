@@ -23,28 +23,23 @@ class PikettShiftArrayAdapter extends ArrayAdapter<PikettShift> {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
 
-  public PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
+  PikettShiftArrayAdapter(Context context, List<PikettShift> shifts) {
     super(context, 0, shifts);
   }
 
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    // Get the data item for this position
     PikettShift shift = getItem(position);
-    // Check if an existing view is being reused, otherwise inflate the view
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
     }
-    // Lookup view for data population
-    TextView startTimeView = (TextView) convertView.findViewById(R.id.shift_item_start_time);
-    TextView endTimeView = (TextView) convertView.findViewById(R.id.shift_item_end_time);
-    TextView titleView = (TextView) convertView.findViewById(R.id.shift_item_title);
-    // Populate the data into the template view using the data object
+    TextView startTimeView = convertView.findViewById(R.id.shift_item_start_time);
+    TextView endTimeView = convertView.findViewById(R.id.shift_item_end_time);
+    TextView titleView = convertView.findViewById(R.id.shift_item_title);
     startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
     endTimeView.setText(formatDateTime(shift.getEndTime(false)));
     titleView.setText(shift.getTitle());
-    // Return the completed view to render on screen
     return convertView;
   }
 

@@ -20,7 +20,7 @@ import java.util.List;
 
 class StateArrayAdapter extends ArrayAdapter<State> {
 
-  public StateArrayAdapter(Context context, List<State> states) {
+  StateArrayAdapter(Context context, List<State> states) {
     super(context, 0, states);
   }
 
@@ -54,15 +54,15 @@ class StateArrayAdapter extends ArrayAdapter<State> {
         break;
     }
 
-    TextView titleView = (TextView) convertView.findViewById(R.id.state_item_title);
+    TextView titleView = convertView.findViewById(R.id.state_item_title);
     titleView.setText(state.getTitle());
 
-    TextView valueView = (TextView) convertView.findViewById(R.id.state_item_value);
+    TextView valueView = convertView.findViewById(R.id.state_item_value);
     valueView.setText(state.getValue());
 
     Button button = state.getButton();
     if (button != null) {
-      ViewGroup layout = (ViewGroup) convertView.findViewById(R.id.state_item_layout);
+      ViewGroup layout = convertView.findViewById(R.id.state_item_layout);
       layout.addView(button);
       RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) button.getLayoutParams();
       params.addRule(RelativeLayout.BELOW, R.id.state_item_value);

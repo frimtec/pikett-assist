@@ -16,7 +16,7 @@ import java.util.List;
 
 class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
-  public AlertArrayAdapter(Context context, List<Alert> shifts) {
+  AlertArrayAdapter(Context context, List<Alert> shifts) {
     super(context, 0, shifts);
   }
 
@@ -27,8 +27,8 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_log_item, parent, false);
     }
-    TextView timeWindow = (TextView) convertView.findViewById(R.id.alert_log_item_time_window);
-    TextView durations = (TextView) convertView.findViewById(R.id.alert_log_item_durations);
+    TextView timeWindow = convertView.findViewById(R.id.alert_log_item_time_window);
+    TextView durations = convertView.findViewById(R.id.alert_log_item_durations);
     timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
     durations.setText(AlertViewHelper.getDurations(getContext(), alert));
     return convertView;

@@ -24,12 +24,10 @@ public class AlarmActionListener extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
     Log.v(TAG, "Action received: " + action);
-    switch (action) {
-      case ACTION_CLOSE_ALARM:
-        closeAlarm(context);
-        break;
-      default:
-        Log.e(TAG, "Unknown action: " + action);
+    if (ACTION_CLOSE_ALARM.equals(action)) {
+      closeAlarm(context);
+    } else {
+      Log.e(TAG, "Unknown action: " + action);
     }
   }
 

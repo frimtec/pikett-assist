@@ -48,7 +48,7 @@ public class PikettService extends IntentService {
     } else {
       NotificationHelper.cancel(this, NotificationHelper.SHIFT_NOTIFICATION_ID);
     }
-    alarm.setExactAndAllowWhileIdle(alarm.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
+    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
         PendingIntent.getService(this, 0, new Intent(this, PikettService.class), 0)
     );
   }

@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.domain;
 
+import android.support.annotation.NonNull;
+
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +17,7 @@ public class Alert {
   private final boolean confirmed;
   private final Instant endTime;
   private final List<AlertCall> calls;
+
   public Alert(long id, Instant startTime, Instant confirmTime, boolean confirmed, Instant endTime, List<AlertCall> calls) {
     this.id = id;
     Objects.requireNonNull(startTime);
@@ -55,6 +58,7 @@ public class Alert {
     return endTime != null;
   }
 
+  @NonNull
   @Override
   public String toString() {
     return "Alert{" +
@@ -86,6 +90,7 @@ public class Alert {
       return message;
     }
 
+    @NonNull
     @Override
     public String toString() {
       return "AlertCall{" +

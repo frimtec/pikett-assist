@@ -10,6 +10,7 @@ import android.widget.TimePicker;
 import com.github.frimtec.android.pikettassist.R;
 
 public class TimePreference extends DialogPreference {
+
   private int lastHour = 0;
   private int lastMinute = 0;
   private TimePicker picker = null;
@@ -20,16 +21,12 @@ public class TimePreference extends DialogPreference {
     setNegativeButtonText(context.getResources().getString(R.string.preferences_time_cancel));
   }
 
-  public static int getHour(String time) {
-    String[] pieces = time.split(":");
-
-    return (Integer.parseInt(pieces[0]));
+  private static int getHour(String time) {
+    return (Integer.parseInt(time.split(":")[0]));
   }
 
-  public static int getMinute(String time) {
-    String[] pieces = time.split(":");
-
-    return (Integer.parseInt(pieces[1]));
+  private static int getMinute(String time) {
+    return (Integer.parseInt(time.split(":")[1]));
   }
 
   @Override
@@ -56,7 +53,7 @@ public class TimePreference extends DialogPreference {
       lastHour = picker.getCurrentHour();
       lastMinute = picker.getCurrentMinute();
 
-      String time = String.valueOf(lastHour) + ":" + String.valueOf(lastMinute);
+      String time = lastHour + ":" + lastMinute;
 
       if (callChangeListener(time)) {
         persistString(time);
@@ -71,8 +68,7 @@ public class TimePreference extends DialogPreference {
 
   @Override
   protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-    String time = null;
-
+    String time;
     if (restoreValue) {
       if (defaultValue == null) {
         time = getPersistedString("00:00");

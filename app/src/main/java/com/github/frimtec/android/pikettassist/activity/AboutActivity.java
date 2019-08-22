@@ -25,13 +25,13 @@ public class AboutActivity extends AppCompatActivity {
   }
 
   private void setupDisclaimer() {
-    TextView textView = (TextView) findViewById(R.id.disclaimer);
+    TextView textView = findViewById(R.id.disclaimer);
     textView.setText(Html.fromHtml(getString(R.string.about_disclaimer), Html.FROM_HTML_MODE_COMPACT));
     textView.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   private void setupAppInfo() {
-    TextView textView = (TextView) findViewById(R.id.app_info);
+    TextView textView = findViewById(R.id.app_info);
 
     String version = "N/A";
     int build = 0;

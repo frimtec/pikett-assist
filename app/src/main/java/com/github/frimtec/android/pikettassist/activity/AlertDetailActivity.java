@@ -17,11 +17,7 @@ import com.github.frimtec.android.pikettassist.state.PAssist;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
@@ -37,11 +33,6 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 
 public class AlertDetailActivity extends AppCompatActivity {
 
-  private static final String TAG = "AlertDetailActivity";
-
-  private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM yyyy HH:mm";
-  private static final String TIME_FORMAT = "HH:mm";
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -51,13 +42,13 @@ public class AlertDetailActivity extends AppCompatActivity {
     if (b != null) {
       long alertId = b.getLong("alertId");
       Alert alert = loadAlert(alertId);
-      ListView listView = (ListView) findViewById(R.id.alert_call_list);
+      ListView listView = findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 
       View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, null);
-      TextView timeWindow = (TextView) headerView.findViewById(R.id.alert_detail_header_time_window);
-      TextView currentState = (TextView) headerView.findViewById(R.id.alert_detail_header_current_state);
-      TextView durations = (TextView) headerView.findViewById(R.id.alert_detail_header_durations);
+      TextView timeWindow = headerView.findViewById(R.id.alert_detail_header_time_window);
+      TextView currentState = headerView.findViewById(R.id.alert_detail_header_current_state);
+      TextView durations = headerView.findViewById(R.id.alert_detail_header_durations);
 
       timeWindow.setText(AlertViewHelper.getTimeWindow(alert));
       currentState.setText(AlertViewHelper.getState(this, alert));
@@ -76,11 +67,6 @@ public class AlertDetailActivity extends AppCompatActivity {
       return true;
     }
     return super.onOptionsItemSelected(item);
-  }
-
-  private String formatDateTime(Instant time, String format) {
-    return time != null ?
-        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format, Locale.getDefault())) : "";
   }
 
   private Alert loadAlert(long id) {

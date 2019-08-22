@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
-import com.github.frimtec.android.pikettassist.domain.DualState;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.PAssist;
@@ -34,7 +34,7 @@ public class TestAlertService extends IntentService {
 
   private static final String PARAM_INITIAL = "initial";
 
-  private DualState pikettState;
+  private OnOffState pikettState;
 
   public TestAlertService() {
     super(TAG);
@@ -46,7 +46,7 @@ public class TestAlertService extends IntentService {
     Context context = getApplicationContext();
     this.pikettState = SharedState.getPikettState(context);
     Log.d(TAG, "Service cycle; pikett state: " + pikettState + "; initial: " + initial);
-    if (!initial && this.pikettState == DualState.ON) {
+    if (!initial && this.pikettState == OnOffState.ON) {
       ZonedDateTime now = ZonedDateTime.now();
       ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
       Set<String> missingTestAlarmContexts = SharedState.getSuperviseTestContexts(context).stream()
@@ -54,7 +54,7 @@ public class TestAlertService extends IntentService {
           .collect(Collectors.toSet());
       missingTestAlarmContexts.forEach(testContext -> {
         Log.w(TAG, "Not received test messages: " + testContext);
-        TestAlarmDao.updateAlarmState(testContext, DualState.ON);
+        TestAlarmDao.updateAlarmState(testContext, OnOffState.ON);
       });
 
       if (!missingTestAlarmContexts.isEmpty()) {
@@ -83,7 +83,7 @@ public class TestAlertService extends IntentService {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (this.pikettState == DualState.OFF) {
+    if (this.pikettState == OnOffState.OFF) {
       Log.d(TAG, "End service");
       return;
     }

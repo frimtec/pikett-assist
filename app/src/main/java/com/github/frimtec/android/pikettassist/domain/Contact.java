@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.domain;
 
 public class Contact {
+
   private final long id;
   private final boolean valid;
   private final String name;

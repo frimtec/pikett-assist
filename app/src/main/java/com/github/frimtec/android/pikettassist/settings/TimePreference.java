@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
@@ -40,9 +41,8 @@ public class TimePreference extends DialogPreference {
   @Override
   protected void onBindDialogView(View v) {
     super.onBindDialogView(v);
-
-    picker.setCurrentHour(lastHour);
-    picker.setCurrentMinute(lastMinute);
+    picker.setHour(lastHour);
+    picker.setMinute(lastMinute);
   }
 
   @Override
@@ -50,10 +50,11 @@ public class TimePreference extends DialogPreference {
     super.onDialogClosed(positiveResult);
 
     if (positiveResult) {
-      lastHour = picker.getCurrentHour();
-      lastMinute = picker.getCurrentMinute();
+      lastHour = picker.getHour();
+      lastMinute = picker.getMinute();
 
-      String time = lastHour + ":" + lastMinute;
+      @SuppressLint("DefaultLocale")
+      String time = String.format("%02d:%02d", lastHour, lastMinute);
 
       if (callChangeListener(time)) {
         persistString(time);

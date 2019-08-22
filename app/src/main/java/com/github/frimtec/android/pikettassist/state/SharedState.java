@@ -47,7 +47,7 @@ public final class SharedState {
     return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
   }
 
-  public static Pair<AlarmState, Long> getAlarmState(Context context) {
+  public static Pair<AlarmState, Long> getAlarmState() {
     try (SQLiteDatabase db = PAssist.getReadableDatabase();
          Cursor cursor = db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_IS_CONFIRMED}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null)) {
       if (cursor.getCount() == 0) {

@@ -75,7 +75,7 @@ public class StateFragement extends Fragment {
 
   private StateArrayAdapter createAdapter() {
     OnOffState pikettState = SharedState.getPikettState(getContext());
-    AlarmState alarmState = SharedState.getAlarmState(getContext()).first;
+    AlarmState alarmState = SharedState.getAlarmState().first;
     State.TrafficLight alarmTrafficLight;
     String alarmValue;
     if (alarmState == AlarmState.ON) {

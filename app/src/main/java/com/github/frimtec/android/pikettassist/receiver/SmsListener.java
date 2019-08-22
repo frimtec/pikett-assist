@@ -79,7 +79,7 @@ public class SmsListener extends BroadcastReceiver {
             }
           } else {
             Log.i(TAG, "Alarm");
-            Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(context);
+            Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
             try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
               Long alertId;
               Intent alertServiceIntent = new Intent(context, AlertService.class);

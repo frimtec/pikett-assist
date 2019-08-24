@@ -1,20 +1,16 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.app.Fragment;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -52,28 +48,21 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
 
-public class StateFragment extends Fragment {
+public class StateFragment extends AbstractListFragment<State> {
 
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
-
   private static final String TAG = "StateFragment";
 
-  private View view;
-
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    view = inflater.inflate(R.layout.fragment_list, container, false);
-    ListView listView = view.findViewById(R.id.activity_list);
-    listView.setAdapter(createAdapter());
+  protected void configureListView(ListView listView) {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {
       State selectedState = (State) listView.getItemAtPosition(position);
       selectedState.onClick(getContext());
     });
-    return view;
   }
 
-  private StateArrayAdapter createAdapter() {
+  protected ArrayAdapter<State> createAdapter() {
     OnOffState pikettState = SharedState.getPikettState(getContext());
     AlarmState alarmState = SharedState.getAlarmState().first;
     State.TrafficLight alarmTrafficLight;
@@ -161,7 +150,7 @@ public class StateFragment extends Fragment {
         try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
           if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
             Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
-            lastReceived = formatDateTime(lastReceiveTime, DATE_TIME_FORMAT);
+            lastReceived = formatDateTime(lastReceiveTime);
             testAlarmState = OnOffState.valueOf(cursor.getString(2));
 
             if (testAlarmState != OnOffState.OFF) {
@@ -186,13 +175,8 @@ public class StateFragment extends Fragment {
     return new StateArrayAdapter(getContext(), states);
   }
 
-  void refresh() {
-    ListView listView = view.findViewById(R.id.activity_list);
-    listView.setAdapter(createAdapter());
-  }
-
-  private String formatDateTime(Instant time, String format) {
+  private String formatDateTime(Instant time) {
     return time != null ?
-        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format, Locale.getDefault())) : "";
+        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(StateFragment.DATE_TIME_FORMAT, Locale.getDefault())) : "";
   }
 }

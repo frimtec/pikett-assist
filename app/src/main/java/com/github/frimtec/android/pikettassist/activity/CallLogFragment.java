@@ -1,16 +1,13 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -34,26 +31,24 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
 
-public class CallLogFragment extends Fragment {
+public class CallLogFragment extends AbstractListFragment<Alert> {
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
 
-  private View view;
-
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    view = inflater.inflate(R.layout.fragment_list, container, false);
-    ListView listView = view.findViewById(R.id.activity_list);
-    ArrayAdapter<Alert> adapter = new AlertArrayAdapter(getContext(), loadAlertList());
-    listView.setAdapter(adapter);
+  protected void configureListView(ListView listView) {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {
       Alert selectedAlert = (Alert) listView.getItemAtPosition(position);
       showAlertDetails(selectedAlert);
     });
     registerForContextMenu(listView);
-    return view;
+  }
+
+  @Override
+  protected ArrayAdapter<Alert> createAdapter() {
+    return new AlertArrayAdapter(getContext(), loadAlertList());
   }
 
   @Override
@@ -65,7 +60,7 @@ public class CallLogFragment extends Fragment {
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-    ListView listView = view.findViewById(R.id.activity_list);
+    ListView listView = getListView();
     Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID:
@@ -90,12 +85,6 @@ public class CallLogFragment extends Fragment {
     b.putLong("alertId", selectedAlert.getId());
     intent.putExtras(b);
     startActivity(intent);
-  }
-
-  public void refresh() {
-    ListView listView = view.findViewById(R.id.activity_list);
-    ArrayAdapter<Alert> adapter = new AlertArrayAdapter(getContext(), loadAlertList());
-    listView.setAdapter(adapter);
   }
 
   private void deleteAlert(Alert selectedAlert) {

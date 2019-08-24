@@ -172,6 +172,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
    */
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public static class AlarmingFragment extends PreferenceFragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -196,6 +197,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class CalendarFragment extends PreferenceFragment {
+
       @Override
       public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,6 +214,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
    */
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public static class TestAlarmFragment extends PreferenceFragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -240,6 +243,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
    */
   @TargetApi(Build.VERSION_CODES.HONEYCOMB)
   public static class NotificationPreferenceFragment extends PreferenceFragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);

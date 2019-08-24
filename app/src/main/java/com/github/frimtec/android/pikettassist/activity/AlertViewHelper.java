@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 final class AlertViewHelper {
+
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM yyyy HH:mm";
   private static final String TIME_FORMAT = "HH:mm";
 

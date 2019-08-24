@@ -134,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
 
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
     if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
-      NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> {});
+      NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> {
+      });
     }
     loadStateFragment();
     startService(new Intent(this, PikettService.class));

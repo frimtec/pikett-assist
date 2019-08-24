@@ -5,9 +5,10 @@ jacoco {
     toolVersion = "0.8.4"
 }
 
+System.setProperty("line.separator", "\n")
 Properties versionProps = new Properties()
 def versionPropsFile = file('version.properties')
-if(versionPropsFile.exists()) {
+if (versionPropsFile.exists()) {
     versionProps.load(new FileInputStream(versionPropsFile))
 }
 int vcode = (versionProps['VERSION_CODE'] ?: "0").toInteger() + 1

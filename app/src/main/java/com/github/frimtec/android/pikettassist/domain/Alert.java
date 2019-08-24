@@ -72,6 +72,7 @@ public class Alert {
   }
 
   public static class AlertCall {
+
     private final Instant time;
     private final String message;
 

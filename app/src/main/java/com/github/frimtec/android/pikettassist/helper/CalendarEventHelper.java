@@ -8,6 +8,7 @@ import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
 import java.time.Instant;
@@ -32,7 +33,7 @@ public final class CalendarEventHelper {
 
   public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern, String calendarSelection) {
     if(ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PERMISSION_GRANTED) {
-      Toast.makeText(context, "Missing permission to read calendar!", Toast.LENGTH_LONG).show();
+      Toast.makeText(context, context.getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       return Collections.emptyList();
     }
     String[] projection = new String[]{

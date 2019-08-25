@@ -124,5 +124,6 @@
     <string name="state_fragment_permissions_value">Missing</string>
     <string name="state_fragment_draw_overlays">Draw Overlays</string>
     <string name="state_fragment_battery_optimization">Battery Optimization</string>
+    <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
 
 </resources>

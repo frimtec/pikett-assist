@@ -5,6 +5,7 @@ import android.content.Context;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -28,8 +29,10 @@ public class SignalStrengthHelper {
         signalStrength = ((CellInfoGsm) cellInfo).getCellSignalStrength();
       } else if (cellInfo instanceof CellInfoLte) {
         signalStrength = ((CellInfoLte) cellInfo).getCellSignalStrength();
+      } else if (cellInfo instanceof CellInfoWcdma) {
+        signalStrength = ((CellInfoWcdma) cellInfo).getCellSignalStrength();
       } else {
-        Log.e(TAG, "Unknown cell info type: " + cellInfos.getClass().getName());
+        Log.e(TAG, "Unknown cell info type: " + cellInfo.getClass().getName());
       }
     }
     Integer level = signalStrength != null ? signalStrength.getLevel() : null;

@@ -182,7 +182,7 @@ public class StateFragment extends AbstractListFragment<State> {
             intent.setData(uri);
             startActivity(intent);
           } else {
-            Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact, Toast.LENGTH_LONG).show();
           }
         }),
         new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.state_on : R.string.state_off), null, pikettState == OnOffState.ON ? GREEN : OFF, context -> {

@@ -47,7 +47,10 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
-import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.REQUIRED_PERMISSIONS;
+import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.REQUIRED_LOW_RISK_PERMISSIONS;
+import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.REQUIRED_SMS_PERMISSIONS;
+import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.hasMissingLowRiskSmsPermissions;
+import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.hasMissingSmsPermissions;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
@@ -87,7 +90,13 @@ public class StateFragment extends AbstractListFragment<State> {
   protected ArrayAdapter<State> createAdapter() {
     List<State> states = new ArrayList<>();
     if (PermissionHelper.hasMissingPermissions(getContext())) {
-      states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(R.string.state_fragment_permissions_value), null, RED, context -> ActivityCompat.requestPermissions(this.getActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE)));
+      if (hasMissingSmsPermissions(getContext())) {
+        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_sms_permissions), getString(R.string.state_fragment_permissions_value), null, RED, context -> {
+          NotificationHelper.requireSmsPermissions(getContext(), (dialogInterface, integer) -> ActivityCompat.requestPermissions(this.getActivity(), REQUIRED_SMS_PERMISSIONS, REQUEST_CODE));
+        }));
+      } else if (hasMissingLowRiskSmsPermissions(getContext())) {
+        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(R.string.state_fragment_permissions_value), null, RED, context -> ActivityCompat.requestPermissions(this.getActivity(), REQUIRED_LOW_RISK_PERMISSIONS, REQUEST_CODE)));
+      }
     } else {
       regularStates(states);
     }
@@ -101,8 +110,7 @@ public class StateFragment extends AbstractListFragment<State> {
 
     PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
     if (!pm.isIgnoringBatteryOptimizations(getContext().getPackageName())) {
-      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> NotificationHelper.batteryOptimizationWarning(getContext(), (dialogInterface, integer) -> {
-      })));
+      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> NotificationHelper.batteryOptimizationWarning(getContext())));
     }
     return new StateArrayAdapter(getContext(), states);
   }

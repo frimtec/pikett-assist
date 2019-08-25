@@ -99,6 +99,8 @@
     <string name="notification_alert_confirm_button">Confirm</string>
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
     <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimizstion turned off.</string>
+    <string name="notification_sms_permission_title">SMS permissions missing!</string>
+    <string name="notification_sms_permission_text">The main use case is to alert on received SMS from your operation center and sending back an acknowledge. Without these permissions the application is useless.</string>
     <string name="alert_action_close">Close</string>
     <string name="state_fragment_operations_center">Operations center</string>
     <string name="state_fragment_pikett_state">On-call state</string>
@@ -120,6 +122,7 @@
     <string name="general_yes">Yes</string>
     <string name="general_are_you_sure">Are you sure?</string>
     <string name="genaral_entry_deleted">Entry has been deleted.</string>
+    <string name="state_fragment_sms_permissions">SMS permissions</string>
     <string name="state_fragment_permissions">Permissions</string>
     <string name="state_fragment_permissions_value">Missing</string>
     <string name="state_fragment_draw_overlays">Draw Overlays</string>

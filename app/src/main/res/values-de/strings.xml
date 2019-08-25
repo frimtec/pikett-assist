@@ -82,6 +82,8 @@
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
     <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>
+    <string name="notification_sms_permission_title">SMS Berechtigung fehlt!</string>
+    <string name="notification_sms_permission_text">Die Hauptfunktion ist das Alarmieren beim empfang einer SMS von deiner Zentrale. Ohne diese Berechtigung ist die App nutzlos.</string>
     <string name="alert_action_close">Schliessen</string>
     <string name="state_fragment_operations_center">Zentrale</string>
     <string name="state_fragment_pikett_state">Pikettzustand</string>
@@ -104,6 +106,7 @@
     <string name="general_are_you_sure">Bist Du sicher?</string>
     <string name="genaral_entry_deleted">Eintrag wurde gelöscht.</string>
     <string name="state_fragment_permissions">Berechtigungen</string>
+    <string name="state_fragment_sms_permissions">SMS Berechtigungen</string>
     <string name="state_fragment_permissions_value">Fehlend</string>
     <string name="state_fragment_draw_overlays">Overlays anzeigen</string>
     <string name="state_fragment_battery_optimization">Batterieoptimierung</string>

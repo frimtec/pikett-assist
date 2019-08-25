@@ -159,14 +159,25 @@ public class NotificationHelper {
     button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24.0F);
   }
 
-  public static void batteryOptimizationWarning(Context context, BiConsumer<DialogInterface, Integer> action) {
+  public static void batteryOptimizationWarning(Context context) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
         // set dialog message
         .setTitle(R.string.notification_battery_optimization_title)
         .setMessage(R.string.notification_battery_optimization_text)
         .setCancelable(true)
-        .setPositiveButton("OK", action::accept
+        .setPositiveButton("OK", (dialogInterface, i) -> {
+            }
         ).create();
+    alertDialog.show();
+  }
+
+  public static void requireSmsPermissions(Context context, BiConsumer<DialogInterface, Integer> action) {
+    AlertDialog alertDialog = new AlertDialog.Builder(context)
+        .setTitle(R.string.notification_sms_permission_title)
+        .setMessage(R.string.notification_sms_permission_text)
+        .setCancelable(true)
+        .setPositiveButton("OK", action::accept)
+        .create();
     alertDialog.show();
   }
 

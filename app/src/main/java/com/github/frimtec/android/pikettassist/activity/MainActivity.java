@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
     if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
-      NotificationHelper.batteryOptimization(this, (dialogInterface, integer) -> {
+      NotificationHelper.batteryOptimizationWarning(this, (dialogInterface, integer) -> {
       });
     }
     loadStateFragment();

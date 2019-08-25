@@ -57,7 +57,7 @@ public class AlertService extends Service {
     }, 1000, 1000);
     Vibrator vibrator = VibrateHelper.vibrate(context, 400, 200);
 
-    NotificationHelper.confirm(context, (dialogInterface, integer) -> {
+    NotificationHelper.confirmAlarm(context, (dialogInterface, integer) -> {
       confirmAlarm(context, smsNumber);
       timer.cancel();
       ringtone.stop();
@@ -83,7 +83,7 @@ public class AlertService extends Service {
       }
     }
     SmsHelper.confirmSms(SharedState.getSmsConfirmText(context), smsNumber);
-    NotificationHelper.notify(
+    NotificationHelper.notifyAlarm(
         context,
         new Intent(context, AlarmActionListener.class),
         ACTION_CLOSE_ALARM,

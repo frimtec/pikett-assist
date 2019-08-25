@@ -48,7 +48,7 @@ public class NotificationHelper {
     notificationManager.createNotificationChannel(channel);
   }
 
-  public static void notify(Context context, Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
+  public static void notifyAlarm(Context context, Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
     actionIntent.setAction(action);
     PendingIntent confirmPendingIntent =
         PendingIntent.getBroadcast(context, 0, actionIntent, 0);
@@ -131,19 +131,18 @@ public class NotificationHelper {
     notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
   }
 
-  public static void cancel(Context context, int id) {
+  public static void cancelNotification(Context context, int id) {
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.cancel(id);
   }
 
-  public static void confirm(Context context, BiConsumer<DialogInterface, Integer> action) {
+  public static void confirmAlarm(Context context, BiConsumer<DialogInterface, Integer> action) {
     LayoutInflater factory = LayoutInflater.from(context);
     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
     View view = factory.inflate(R.layout.alert_confirmation_dialog, null);
     AlertDialog dialog = alertDialogBuilder
         .setView(view)
         .setTitle(R.string.notification_alert_confirm_title)
-        .setMessage(R.string.notification_alert_confirm_text)
         .setCancelable(false)
         .setPositiveButton(R.string.notification_alert_confirm_button, action::accept
         ).create();
@@ -159,7 +158,7 @@ public class NotificationHelper {
     button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24.0F);
   }
 
-  public static void batteryOptimization(Context context, BiConsumer<DialogInterface, Integer> action) {
+  public static void batteryOptimizationWarning(Context context, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
         // set dialog message
         .setTitle(R.string.notification_battery_optimization_title)

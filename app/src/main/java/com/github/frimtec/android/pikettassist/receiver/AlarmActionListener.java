@@ -39,7 +39,7 @@ public class AlarmActionListener extends BroadcastReceiver {
         Log.e(TAG, "One open case expected, but got " + update);
       }
     }
-    NotificationHelper.cancel(context, NotificationHelper.ALERT_NOTIFICATION_ID);
+    NotificationHelper.cancelNotification(context, NotificationHelper.ALERT_NOTIFICATION_ID);
     context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
   }
 }

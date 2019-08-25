@@ -109,7 +109,7 @@ public class StateFragment extends AbstractListFragment<State> {
               Log.e(TAG, "One open case expected, but got " + update);
             }
           }
-          NotificationHelper.cancel(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
+          NotificationHelper.cancelNotification(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
           refresh();
         });
         return button;

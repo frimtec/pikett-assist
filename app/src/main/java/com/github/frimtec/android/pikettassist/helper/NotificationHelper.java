@@ -171,10 +171,10 @@ public class NotificationHelper {
     alertDialog.show();
   }
 
-  public static void requireSmsPermissions(Context context, BiConsumer<DialogInterface, Integer> action) {
+  public static void requirePermissions(Context context, PermissionHelper.PermissionSet permissionSet, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
-        .setTitle(R.string.notification_sms_permission_title)
-        .setMessage(R.string.notification_sms_permission_text)
+        .setTitle(context.getString(R.string.permission_required) + " " + context.getString(permissionSet.getTitleResourceId()))
+        .setMessage(permissionSet.getTextResourceId())
         .setCancelable(true)
         .setPositiveButton("OK", action::accept)
         .create();

@@ -1,11 +1,13 @@
 package com.github.frimtec.android.pikettassist.settings;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.preference.ListPreference;
 import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -13,6 +15,7 @@ import com.github.frimtec.android.pikettassist.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public class CalendarListPreference extends ListPreference {
@@ -30,11 +33,13 @@ public class CalendarListPreference extends ListPreference {
     entries.add(context.getResources().getString(R.string.preferences_calendar_all));
     entriesValues.add(CALENDAR_FILTER_ALL);
 
-    ContentResolver cr = context.getContentResolver();
-    try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI, PROJECTION, SELECTION, SELECTION_ARGS, null)) {
-      while (cursor != null && cursor.moveToNext()) {
-        entries.add(cursor.getString(1));
-        entriesValues.add(String.valueOf(cursor.getInt(0)));
+    if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) == PERMISSION_GRANTED) {
+      ContentResolver cr = context.getContentResolver();
+      try (Cursor cursor = cr.query(CalendarContract.Calendars.CONTENT_URI, PROJECTION, SELECTION, SELECTION_ARGS, null)) {
+        while (cursor != null && cursor.moveToNext()) {
+          entries.add(cursor.getString(1));
+          entriesValues.add(String.valueOf(cursor.getInt(0)));
+        }
       }
     }
     setEntries(entries.toArray(new CharSequence[]{}));

@@ -41,16 +41,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
-import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.REQUIRED_LOW_RISK_PERMISSIONS;
-import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.REQUIRED_SMS_PERMISSIONS;
-import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.hasMissingLowRiskSmsPermissions;
-import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.hasMissingSmsPermissions;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
@@ -89,13 +86,19 @@ public class StateFragment extends AbstractListFragment<State> {
 
   protected ArrayAdapter<State> createAdapter() {
     List<State> states = new ArrayList<>();
-    if (PermissionHelper.hasMissingPermissions(getContext())) {
-      if (hasMissingSmsPermissions(getContext())) {
-        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_sms_permissions), getString(R.string.state_fragment_permissions_value), null, RED, context -> {
-          NotificationHelper.requireSmsPermissions(getContext(), (dialogInterface, integer) -> ActivityCompat.requestPermissions(this.getActivity(), REQUIRED_SMS_PERMISSIONS, REQUEST_CODE));
-        }));
-      } else if (hasMissingLowRiskSmsPermissions(getContext())) {
-        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(R.string.state_fragment_permissions_value), null, RED, context -> ActivityCompat.requestPermissions(this.getActivity(), REQUIRED_LOW_RISK_PERMISSIONS, REQUEST_CODE)));
+
+
+    Optional<PermissionHelper.PermissionSet> missingPermissionSet = Arrays.stream(PermissionHelper.PermissionSet.values())
+        .filter(set -> PermissionHelper.hasMissingPermissions(getContext(), set))
+        .findFirst();
+
+    if(missingPermissionSet.isPresent()) {
+      PermissionHelper.PermissionSet set = missingPermissionSet.get();
+      if(set.isSensitive()) {
+        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(set.getTitleResourceId()), null, RED,
+            context -> NotificationHelper.requirePermissions(getContext(), set, (dialogInterface, integer) -> ActivityCompat.requestPermissions(this.getActivity(), set.getPermissions().toArray(new String[0]), REQUEST_CODE))));
+      } else {
+        ActivityCompat.requestPermissions(this.getActivity(), set.getPermissions().toArray(new String[0]), REQUEST_CODE);
       }
     } else {
       regularStates(states);

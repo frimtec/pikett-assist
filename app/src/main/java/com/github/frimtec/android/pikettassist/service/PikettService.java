@@ -9,6 +9,7 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.helper.PermissionHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Duration;
@@ -33,6 +34,9 @@ public class PikettService extends IntentService {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    if(PermissionHelper.hasMissingPermissions(getApplicationContext())) {
+      return;
+    }
     Instant now = PikettShift.now();
     Optional<PikettShift> first = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this), SharedState.getCalendarSelection(this))
         .stream().filter(shift -> !shift.isOver(now)).findFirst();

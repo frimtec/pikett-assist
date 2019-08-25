@@ -1,25 +1,26 @@
 package com.github.frimtec.android.pikettassist.helper;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public final class CalendarEventHelper {
-
-  private static final String TAG = "CalendarEventHelper";
-
 
   private CalendarEventHelper() {
   }
@@ -30,6 +31,10 @@ public final class CalendarEventHelper {
   }
 
   public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern, String calendarSelection) {
+    if(ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PERMISSION_GRANTED) {
+      Toast.makeText(context, "Missing permission to read calendar!", Toast.LENGTH_LONG).show();
+      return Collections.emptyList();
+    }
     String[] projection = new String[]{
         CalendarContract.Events._ID,
         CalendarContract.Events.TITLE,
@@ -49,7 +54,7 @@ public final class CalendarEventHelper {
       args = new String[]{calendarSelection};
     }
     List<PikettShift> events = new LinkedList<>();
-    try (@SuppressLint("MissingPermission") Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
+    try (Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);

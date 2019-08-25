@@ -88,8 +88,8 @@
     <string name="state_fragment_alarm_state">Alarmzustand</string>
     <string name="state_fragment_signal_level_supervise_enabled">Aktiviert</string>
     <string name="state_fragment_signal_level_supervise_disabled">Deaktiviert</string>
-    <string name="pikett_state_on">Ein</string>
-    <string name="pikett_state_off">Aus</string>
+    <string name="state_on">Ein</string>
+    <string name="state_off">Aus</string>
 
     <string name="alarm_state_on">Unbestätigt</string>
     <string name="alarm_state_on_confirmed">Bestätigt</string>
@@ -103,5 +103,9 @@
     <string name="general_yes">Ja</string>
     <string name="general_are_you_sure">Bist Du sicher?</string>
     <string name="genaral_entry_deleted">Eintrag wurde gelöscht.</string>
+    <string name="state_fragment_permissions">Berechtigungen</string>
+    <string name="state_fragment_permissions_value">Fehlend</string>
+    <string name="state_fragment_draw_overlays">Overlays anzeigen</string>
+    <string name="state_fragment_battery_optimization">Batterieoptimierung</string>
 
 </resources>

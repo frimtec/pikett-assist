@@ -1,21 +1,15 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,28 +21,9 @@ import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.util.Arrays;
-
-import static android.content.pm.PackageManager.PERMISSION_DENIED;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
 public class MainActivity extends AppCompatActivity {
 
-  private static final String[] REQUIRED_PERMISSIONS = {
-      Manifest.permission.READ_CALENDAR,
-      Manifest.permission.SEND_SMS,
-      Manifest.permission.RECEIVE_SMS,
-      Manifest.permission.RECEIVE_BOOT_COMPLETED,
-      Manifest.permission.VIBRATE,
-      Manifest.permission.ACCESS_COARSE_LOCATION,
-      Manifest.permission.READ_CONTACTS
-  };
-
-  private static final int REQUEST_CODE = 1;
-  private static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
-
   private static final String TAG = "MainActivity";
-
 
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
@@ -80,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     if (stateFragment == null) {
       stateFragment = new StateFragment();
     }
+    activeFragment = Fragment.STATE;
     FragmentManager fm = getFragmentManager();
     FragmentTransaction fragmentTransaction = fm.beginTransaction();
     fragmentTransaction.replace(R.id.frame_layout, stateFragment);
@@ -117,26 +93,6 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    startIfAllPermissionsGranted();
-  }
-
-  private void startIfAllPermissionsGranted() {
-    if (!Settings.canDrawOverlays(this)) {
-      Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-      startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-      return;
-    }
-
-    if (Arrays.stream(REQUIRED_PERMISSIONS).anyMatch(permission -> ActivityCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED)) {
-      ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE);
-      return;
-    }
-
-    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
-      NotificationHelper.batteryOptimizationWarning(this, (dialogInterface, integer) -> {
-      });
-    }
     loadStateFragment();
     startService(new Intent(this, PikettService.class));
   }
@@ -153,28 +109,10 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-      if (!Settings.canDrawOverlays(this)) {
-        Log.e(TAG, "Missing overlay permission.");
-        finish();
-        return;
-      }
-      startIfAllPermissionsGranted();
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
-    }
-  }
-
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    if (Arrays.stream(grantResults).anyMatch(result -> result == PERMISSION_DENIED)) {
-      Log.e(TAG, "Missing permissions.");
-      finish();
-      return;
-    }
-    startIfAllPermissionsGranted();
+    refresh();
+    startService(new Intent(this, PikettService.class));
   }
 
   @Override

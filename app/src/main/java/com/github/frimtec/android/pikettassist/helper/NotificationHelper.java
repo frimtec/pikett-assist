@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.TypedValue;
@@ -147,7 +148,7 @@ public class NotificationHelper {
         .setPositiveButton(R.string.notification_alert_confirm_button, action::accept
         ).create();
     Window window = dialog.getWindow();
-    if (window != null) {
+    if (window != null && Settings.canDrawOverlays(context)) {
       window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);
     }
 
@@ -166,10 +167,6 @@ public class NotificationHelper {
         .setCancelable(true)
         .setPositiveButton("OK", action::accept
         ).create();
-    Window window = alertDialog.getWindow();
-    if (window != null) {
-      window.setType(TYPE_APPLICATION_OVERLAY);
-    }
     alertDialog.show();
   }
 

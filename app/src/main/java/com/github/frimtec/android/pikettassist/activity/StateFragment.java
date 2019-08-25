@@ -2,12 +2,16 @@ package com.github.frimtec.android.pikettassist.activity;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ArrayAdapter;
@@ -21,8 +25,10 @@ import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.helper.PermissionHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
@@ -41,6 +47,7 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
+import static com.github.frimtec.android.pikettassist.helper.PermissionHelper.REQUIRED_PERMISSIONS;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
@@ -53,6 +60,9 @@ public class StateFragment extends AbstractListFragment<State> {
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
   private static final String TAG = "StateFragment";
 
+  private static final int REQUEST_CODE = 1;
+  private static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
+
   @Override
   protected void configureListView(ListView listView) {
     listView.setClickable(true);
@@ -62,7 +72,42 @@ public class StateFragment extends AbstractListFragment<State> {
     });
   }
 
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
+      if (Settings.canDrawOverlays(getContext())) {
+        refresh();
+        getContext().startService(new Intent(getContext(), PikettService.class));
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+    }
+  }
+
   protected ArrayAdapter<State> createAdapter() {
+    List<State> states = new ArrayList<>();
+    if (PermissionHelper.hasMissingPermissions(getContext())) {
+      states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(R.string.state_fragment_permissions_value), null, RED, context -> ActivityCompat.requestPermissions(this.getActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE)));
+    } else {
+      regularStates(states);
+    }
+
+    if (!Settings.canDrawOverlays(getContext())) {
+      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, YELLOW, context -> {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
+        startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+      }));
+    }
+
+    PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+    if (!pm.isIgnoringBatteryOptimizations(getContext().getPackageName())) {
+      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> NotificationHelper.batteryOptimizationWarning(getContext(), (dialogInterface, integer) -> {
+      })));
+    }
+    return new StateArrayAdapter(getContext(), states);
+  }
+
+  private void regularStates(List<State> states) {
     OnOffState pikettState = SharedState.getPikettState(getContext());
     AlarmState alarmState = SharedState.getAlarmState().first;
     State.TrafficLight alarmTrafficLight;
@@ -117,7 +162,7 @@ public class StateFragment extends AbstractListFragment<State> {
     }
 
     Contact operationCenter = ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
-    List<State> states = new ArrayList<>(Arrays.asList(
+    states.addAll(Arrays.asList(
         new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : RED, context -> {
           Intent intent = new Intent(Intent.ACTION_VIEW);
           long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
@@ -129,7 +174,7 @@ public class StateFragment extends AbstractListFragment<State> {
             Toast.makeText(getContext(), R.string.state_fragment_toast_open_unknown_contact, Toast.LENGTH_SHORT).show();
           }
         }),
-        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.pikett_state_on : R.string.pikett_state_off), null, pikettState == OnOffState.ON ? GREEN : OFF, context -> {
+        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.state_on : R.string.state_off), null, pikettState == OnOffState.ON ? GREEN : OFF, context -> {
           Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
           builder.appendPath("time");
           ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
@@ -172,7 +217,6 @@ public class StateFragment extends AbstractListFragment<State> {
         }));
       }
     }
-    return new StateArrayAdapter(getContext(), states);
   }
 
   private String formatDateTime(Instant time) {

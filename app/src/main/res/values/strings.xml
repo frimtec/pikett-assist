@@ -132,7 +132,7 @@
     <string name="permission_contacts_title">Contacts</string>
     <string name="permission_contacts_text">PAssist reads the contact of the configured operation center to find out for what phone numbers the SMS must be supervised during on-call duty. Without this permission PAssist does not work.</string>
     <string name="permission_calendar_title">Calendar</string>
-    <string name="permission_calendar_text">PAssist reads the calendar to determine the time windows in which on-call service is active. Only on active on-call state the supervise functions of PAssist are activated. Without this permission PAssist does not work.</string>
+    <string name="permission_calendar_text">PAssist reads the calendar to determine the time windows in which on-call duty is active. Only on active on-call state the supervise functions of PAssist are activated. Without this permission PAssist does not work.</string>
     <string name="permission_location_title">Location</string>
     <string name="permission_location_text">To supervise the phone signal strength during on-call duty, PAssist must access phone cell information. This data is protected by the permission coarse location. Without this permission PAssist does not work.</string>
 

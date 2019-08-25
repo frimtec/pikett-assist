@@ -46,7 +46,7 @@ public class SignalStrengthService extends IntentService {
             Log.e(TAG, "Unexpected interrupt", e);
           }
           level = SignalStrengthHelper.getSignalStrength(this);
-        } while (isLowSignal(level));
+        } while (isLowSignal(level) && SharedState.getSuperviseSignalStrength(getApplicationContext()));
 
       });
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));

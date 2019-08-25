@@ -108,5 +108,6 @@
     <string name="state_fragment_draw_overlays">Overlays anzeigen</string>
     <string name="state_fragment_battery_optimization">Batterieoptimierung</string>
     <string name="missing_permission_calendar_access">Fehlende Berechtigung zum Lesen des Kalenders!</string>
+    <string name="general_no_data">Noch keine Daten vorhanden.</string>
 
 </resources>

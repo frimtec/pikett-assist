@@ -125,5 +125,6 @@
     <string name="state_fragment_draw_overlays">Draw Overlays</string>
     <string name="state_fragment_battery_optimization">Battery Optimization</string>
     <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
+    <string name="general_no_data">No data available yet.</string>
 
 </resources>

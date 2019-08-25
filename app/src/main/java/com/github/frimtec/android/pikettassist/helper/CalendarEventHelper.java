@@ -1,24 +1,18 @@
 package com.github.frimtec.android.pikettassist.helper;
 
-import android.Manifest;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
 
-import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public final class CalendarEventHelper {
@@ -32,10 +26,6 @@ public final class CalendarEventHelper {
   }
 
   public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern, String calendarSelection) {
-    if(ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PERMISSION_GRANTED) {
-      Toast.makeText(context, context.getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
-      return Collections.emptyList();
-    }
     String[] projection = new String[]{
         CalendarContract.Events._ID,
         CalendarContract.Events.TITLE,

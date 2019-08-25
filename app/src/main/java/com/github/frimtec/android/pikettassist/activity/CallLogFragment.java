@@ -110,6 +110,9 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
         } while (cursor.moveToNext());
       }
     }
+    if (alertList.isEmpty()) {
+      Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
+    }
     return alertList;
   }
 }

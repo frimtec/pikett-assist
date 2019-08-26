@@ -82,6 +82,8 @@
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Batterieoptimierung ist aktiv!</string>
     <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Batterieoptimierung deaktiviert werden.</string>
+    <string name="notification_draw_overlays_title">Overlays anzeigen ist deaktiviert!</string>
+    <string name="notification_draw_overlays_text">Um den Alarmdialog darzustellen, auch wenn PAssist nicht aktiv oder im Hintergrung ist, muss die Einstellung Overlays anzeigen aktiviert werden.</string>
     <string name="alert_action_close">Schliessen</string>
     <string name="state_fragment_operations_center">Zentrale</string>
     <string name="state_fragment_pikett_state">Pikettzustand</string>

@@ -171,6 +171,17 @@ public class NotificationHelper {
     alertDialog.show();
   }
 
+  public static void drawOverlaysWarning(Context context, BiConsumer<DialogInterface, Integer> action) {
+    AlertDialog alertDialog = new AlertDialog.Builder(context)
+        // set dialog message
+        .setTitle(R.string.notification_draw_overlays_title)
+        .setMessage(R.string.notification_draw_overlays_text)
+        .setCancelable(true)
+        .setPositiveButton("OK", action::accept)
+        .create();
+    alertDialog.show();
+  }
+
   public static void requirePermissions(Context context, PermissionHelper.PermissionSet permissionSet, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
         .setTitle(context.getString(R.string.permission_required) + " " + context.getString(permissionSet.getTitleResourceId()))

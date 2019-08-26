@@ -92,7 +92,8 @@ public class StateFragment extends AbstractListFragment<State> {
         .filter(set -> PermissionHelper.hasMissingPermissions(getContext(), set))
         .findFirst();
 
-    if(missingPermissionSet.isPresent()) {
+    boolean missingPermissions = missingPermissionSet.isPresent();
+    if(missingPermissions) {
       PermissionHelper.PermissionSet set = missingPermissionSet.get();
       if(set.isSensitive()) {
         states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(set.getTitleResourceId()), null, RED,
@@ -100,21 +101,25 @@ public class StateFragment extends AbstractListFragment<State> {
       } else {
         ActivityCompat.requestPermissions(this.getActivity(), set.getPermissions().toArray(new String[0]), REQUEST_CODE);
       }
-    } else {
-      regularStates(states);
     }
 
-    if (!Settings.canDrawOverlays(getContext())) {
-      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, YELLOW, context -> {
+    boolean canDrawOverlays = Settings.canDrawOverlays(getContext());
+    if (!canDrawOverlays) {
+      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED, context -> NotificationHelper.drawOverlaysWarning(getContext(), (dialogInterface, integer) -> {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
         startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-      }));
+      })));
     }
 
     PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
     if (!pm.isIgnoringBatteryOptimizations(getContext().getPackageName())) {
       states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> NotificationHelper.batteryOptimizationWarning(getContext())));
     }
+
+    if(!missingPermissions && canDrawOverlays) {
+      regularStates(states);
+    }
+
     return new StateArrayAdapter(getContext(), states);
   }
 

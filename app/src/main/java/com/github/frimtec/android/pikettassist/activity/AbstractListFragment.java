@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,13 @@ abstract class AbstractListFragment<T> extends Fragment {
   @Override
   public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_list, container, false);
-    listView = view.findViewById(R.id.activity_list);
+    SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.fragment_list_pull_to_request);
+    pullToRefresh.setOnRefreshListener(() -> {
+      refresh();
+      pullToRefresh.setRefreshing(false);
+    });
+
+    listView = view.findViewById(R.id.fragment_list_list);
     configureListView(listView);
     refresh();
     return view;

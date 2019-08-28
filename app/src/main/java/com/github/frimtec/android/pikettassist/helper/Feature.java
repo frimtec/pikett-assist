@@ -40,7 +40,7 @@ public enum Feature {
     requestPermissions(fragment, PermissionSets.NON_CRITICAL.getPermissions());
   }),
   SETTING_DRAW_OVERLAYS(false, false, R.string.notification_draw_overlays_title, Settings::canDrawOverlays, (context, fragment) -> {
-    NotificationHelper.drawOverlaysWarning(context, (dialogInterface, integer) -> {
+    NotificationHelper.infoDialog(context, R.string.notification_draw_overlays_title, R.string.notification_draw_overlays_text, (dialogInterface, integer) -> {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
       fragment.startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
     });
@@ -49,7 +49,8 @@ public enum Feature {
     PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
     return pm.isIgnoringBatteryOptimizations(context.getPackageName());
   }, (context, fragment) -> {
-    NotificationHelper.batteryOptimizationWarning(context);
+    NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_text, (dialogInterface, integer) -> {
+    });
   });
 
   private final boolean sensitive;
@@ -100,6 +101,7 @@ public enum Feature {
   }
 
   public final static class RequestCodes {
+
     public final static int PERMISSION_CHANGED_REQUEST_CODE = 1;
     public final static int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
   }

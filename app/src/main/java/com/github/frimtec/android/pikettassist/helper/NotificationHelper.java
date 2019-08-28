@@ -126,6 +126,7 @@ public class NotificationHelper {
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)
+        .setAutoCancel(true)
         .build();
 
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);

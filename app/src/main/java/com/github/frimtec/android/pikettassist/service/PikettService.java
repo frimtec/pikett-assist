@@ -8,12 +8,13 @@ import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
+import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.helper.PermissionHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Optional;
 
 public class PikettService extends IntentService {
@@ -34,7 +35,11 @@ public class PikettService extends IntentService {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if(PermissionHelper.hasMissingPermissions(getApplicationContext())) {
+
+    if (Arrays.stream(Feature.values())
+        .filter(Feature::isPermissionType)
+        .anyMatch(set -> !set.isAllowed(this))) {
+      Log.w(TAG, "Not all required permissions are granted. Services is stopped.");
       return;
     }
     Instant now = PikettShift.now();

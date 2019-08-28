@@ -2,16 +2,12 @@ package com.github.frimtec.android.pikettassist.activity;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.PowerManager;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ArrayAdapter;
@@ -24,8 +20,8 @@ import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
+import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.helper.PermissionHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.PikettService;
@@ -48,6 +44,9 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
+import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
+import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
+import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_DRAW_OVERLAYS;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
@@ -59,9 +58,6 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
   private static final String TAG = "StateFragment";
-
-  private static final int REQUEST_CODE = 1;
-  private static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
 
   @Override
   protected void configureListView(ListView listView) {
@@ -75,7 +71,7 @@ public class StateFragment extends AbstractListFragment<State> {
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-      if (Settings.canDrawOverlays(getContext())) {
+      if (SETTING_DRAW_OVERLAYS.isAllowed(getContext())) {
         refresh();
         getContext().startService(new Intent(getContext(), PikettService.class));
       }
@@ -86,37 +82,32 @@ public class StateFragment extends AbstractListFragment<State> {
 
   protected ArrayAdapter<State> createAdapter() {
     List<State> states = new ArrayList<>();
-
-
-    Optional<PermissionHelper.PermissionSet> missingPermissionSet = Arrays.stream(PermissionHelper.PermissionSet.values())
-        .filter(set -> PermissionHelper.hasMissingPermissions(getContext(), set))
+    Optional<Feature> missingPermission = Arrays.stream(Feature.values())
+        .filter(Feature::isPermissionType)
+        .filter(set -> !set.isAllowed(getContext()))
         .findFirst();
 
-    boolean missingPermissions = missingPermissionSet.isPresent();
-    if(missingPermissions) {
-      PermissionHelper.PermissionSet set = missingPermissionSet.get();
-      if(set.isSensitive()) {
-        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(set.getTitleResourceId()), null, RED,
-            context -> NotificationHelper.requirePermissions(getContext(), set, (dialogInterface, integer) -> ActivityCompat.requestPermissions(this.getActivity(), set.getPermissions().toArray(new String[0]), REQUEST_CODE))));
+    boolean missingPermissions = missingPermission.isPresent();
+    if (missingPermissions) {
+      Feature permission = missingPermission.get();
+      if (permission.isSensitive()) {
+        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(permission.getNameResourceId()), null, RED,
+            context -> permission.request(context, this)));
       } else {
-        ActivityCompat.requestPermissions(this.getActivity(), set.getPermissions().toArray(new String[0]), REQUEST_CODE);
+        permission.request(getContext(), this);
       }
     }
 
-    boolean canDrawOverlays = Settings.canDrawOverlays(getContext());
+    boolean canDrawOverlays = SETTING_DRAW_OVERLAYS.isAllowed(getContext());
     if (!canDrawOverlays) {
-      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED, context -> NotificationHelper.drawOverlaysWarning(getContext(), (dialogInterface, integer) -> {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
-        startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-      })));
+      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED, context -> SETTING_DRAW_OVERLAYS.request(context, this)));
     }
 
-    PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
-    if (!pm.isIgnoringBatteryOptimizations(getContext().getPackageName())) {
-      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> NotificationHelper.batteryOptimizationWarning(getContext())));
+    if (!SETTING_BATTERY_OPTIMIZATION_OFF.isAllowed(getContext())) {
+      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> SETTING_BATTERY_OPTIMIZATION_OFF.request(context, this)));
     }
 
-    if(!missingPermissions && canDrawOverlays) {
+    if (!missingPermissions && canDrawOverlays) {
       regularStates(states);
     }
 

@@ -23,8 +23,6 @@ import com.github.frimtec.android.pikettassist.state.SharedState;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String TAG = "MainActivity";
-
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
   private ShiftListFragment shiftListFragment;

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.TypedValue;
@@ -149,7 +148,7 @@ public class NotificationHelper {
         .setPositiveButton(R.string.notification_alert_confirm_button, action::accept
         ).create();
     Window window = dialog.getWindow();
-    if (window != null && Settings.canDrawOverlays(context)) {
+    if (window != null && Feature.SETTING_DRAW_OVERLAYS.isAllowed(context)) {
       window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);
     }
 
@@ -183,10 +182,10 @@ public class NotificationHelper {
     alertDialog.show();
   }
 
-  public static void requirePermissions(Context context, PermissionHelper.PermissionSet permissionSet, BiConsumer<DialogInterface, Integer> action) {
+  public static void requirePermissions(Context context, int titleResourceId, int textResourceId, BiConsumer<DialogInterface, Integer> action) {
     AlertDialog alertDialog = new AlertDialog.Builder(context)
-        .setTitle(context.getString(R.string.permission_required) + " " + context.getString(permissionSet.getTitleResourceId()))
-        .setMessage(permissionSet.getTextResourceId())
+        .setTitle(context.getString(R.string.permission_required) + " " + context.getString(titleResourceId))
+        .setMessage(textResourceId)
         .setCancelable(true)
         .setPositiveButton("OK", action::accept)
         .create();

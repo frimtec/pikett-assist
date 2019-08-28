@@ -1,11 +1,9 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.Manifest;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.github.frimtec.android.pikettassist.helper.Feature.PERMISSION_CALENDAR_READ;
 
 public class ShiftListFragment extends AbstractListFragment<PikettShift> {
 
@@ -39,7 +37,7 @@ public class ShiftListFragment extends AbstractListFragment<PikettShift> {
   @Override
   protected ArrayAdapter<PikettShift> createAdapter() {
     List<PikettShift> shifts;
-    if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CALENDAR) != PERMISSION_GRANTED) {
+    if(!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
       Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {

@@ -1,12 +1,10 @@
 package com.github.frimtec.android.pikettassist.settings;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.RingtonePreference;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
 import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -14,7 +12,7 @@ import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.github.frimtec.android.pikettassist.helper.Feature.PERMISSION_CONTACTS_READ;
 
 public class ContactPreference extends RingtonePreference {
 
@@ -54,7 +52,7 @@ public class ContactPreference extends RingtonePreference {
 
   private String getValue(String preferenceValue) {
     if (!preferenceValue.isEmpty()) {
-      if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PERMISSION_GRANTED) {
+      if(PERMISSION_CONTACTS_READ.isAllowed(getContext())) {
         return ContactHelper.getContact(getContext(), Long.parseLong(preferenceValue)).getName();
       }
       return preferenceValue;

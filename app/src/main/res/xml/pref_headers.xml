@@ -14,7 +14,7 @@
 
     <header
         android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$TestAlarmFragment"
-        android:icon="@drawable/ic_perm_phone_msg_black_24dp"
+        android:icon="@drawable/ic_test_alarm"
         android:title="@string/pref_header_test_alarm" />
 
     <header

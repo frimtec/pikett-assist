@@ -24,7 +24,7 @@
 
     <EditTextPreference
         android:defaultValue="@string/pref_default_test_alarm_accept_time_window_minutes"
-        android:icon="@drawable/ic_message_black_24dp"
+        android:icon="@drawable/ic_time_window"
         android:inputType="number"
         android:key="test_alarm_accept_time_window_minutes"
         android:maxLines="1"

@@ -45,4 +45,7 @@
   <component name="ProjectType">
     <option name="id" value="Android" />
   </component>
+  <component name="TaskProjectConfiguration">
+    <server type="GitHub" url="https://github.com" />
+  </component>
 </project>

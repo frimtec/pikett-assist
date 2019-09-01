@@ -7,13 +7,13 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_list_pull_to_request"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="55dp">
 
         <ListView
             android:id="@+id/fragment_list_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="55dp" />
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

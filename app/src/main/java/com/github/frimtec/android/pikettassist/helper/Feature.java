@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -33,7 +34,7 @@ public enum Feature {
   PERMISSION_CALENDAR_READ(true, true, R.string.permission_calendar_title, context -> allPermissionsGranted(context, PermissionSets.CALENDAR_READ.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.CALENDAR_READ.getPermissions(), R.string.permission_calendar_title, R.string.permission_calendar_text);
   }),
-  PERMISSION_COARSE_LOCATION(true, true, R.string.permission_location_title, context -> allPermissionsGranted(context, PermissionSets.COARSE_LOCATION.getPermissions()), (context, fragment) -> {
+  PERMISSION_COARSE_LOCATION(true, true, R.string.permission_location_title, context -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || allPermissionsGranted(context, PermissionSets.COARSE_LOCATION.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.COARSE_LOCATION.getPermissions(), R.string.permission_location_title, R.string.permission_location_text);
   }),
   PERMISSION_NON_CRITICAL(false, true, 0, context -> allPermissionsGranted(context, PermissionSets.NON_CRITICAL.getPermissions()), (context, fragment) -> {

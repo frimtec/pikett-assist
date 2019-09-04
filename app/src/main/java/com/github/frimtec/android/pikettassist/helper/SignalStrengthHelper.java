@@ -2,11 +2,13 @@ package com.github.frimtec.android.pikettassist.helper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrength;
+import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -20,23 +22,28 @@ public class SignalStrengthHelper {
 
   public static SignalLevel getSignalStrength(Context context) {
     TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-    @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
 
-    CellSignalStrength signalStrength = null;
-    if (cellInfos.size() != 0) {
-      CellInfo cellInfo = cellInfos.get(0);
-      if (cellInfo instanceof CellInfoGsm) {
-        signalStrength = ((CellInfoGsm) cellInfo).getCellSignalStrength();
-      } else if (cellInfo instanceof CellInfoLte) {
-        signalStrength = ((CellInfoLte) cellInfo).getCellSignalStrength();
-      } else if (cellInfo instanceof CellInfoWcdma) {
-        signalStrength = ((CellInfoWcdma) cellInfo).getCellSignalStrength();
-      } else {
-        Log.e(TAG, "Unknown cell info type: " + cellInfo.getClass().getName());
+    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+      @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
+      CellSignalStrength signalStrength = null;
+      if (cellInfos.size() != 0) {
+        CellInfo cellInfo = cellInfos.get(0);
+        if (cellInfo instanceof CellInfoGsm) {
+          signalStrength = ((CellInfoGsm) cellInfo).getCellSignalStrength();
+        } else if (cellInfo instanceof CellInfoLte) {
+          signalStrength = ((CellInfoLte) cellInfo).getCellSignalStrength();
+        } else if (cellInfo instanceof CellInfoWcdma) {
+          signalStrength = ((CellInfoWcdma) cellInfo).getCellSignalStrength();
+        } else {
+          Log.e(TAG, "Unknown cell info type: " + cellInfo.getClass().getName());
+        }
       }
+      Integer level = signalStrength != null ? signalStrength.getLevel() : null;
+      return SignalLevel.from(level);
+    } else {
+      SignalStrength signalStrength = telephonyManager.getSignalStrength();
+      return SignalLevel.from(signalStrength != null ? signalStrength.getLevel() : null);
     }
-    Integer level = signalStrength != null ? signalStrength.getLevel() : null;
-    return SignalLevel.from(level);
   }
 
   public enum SignalLevel {

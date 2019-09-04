@@ -15,12 +15,12 @@ PAssist is works with SMS based alerting systems.
 
 ## Features
 * PAssist activates and deactivates itself based on your calendar. All calendar events with a configured title pattern are considered.
-* PAssist shows your up coming on-call calendar.
+* PAssist shows you your future on-call calender events.
 * When on-call, PAssist does the following:
   * Creates an alarm if an SMS is received from your configured operations center, and acknowledges the alarm with a replay SMS when confirmed.
   * Supervises the telephone signal strength and notifies you with vibration if it is bad or switched off.
   * Optional: Automatically acknowledges test alarms (identified with a configured SMS message pattern) and notifies you when expected test alarms are missed.     
-    Can be used if your alarming systems sends periodic test alarms to ensure that the alarming chain works end to end.
+    This feature can be used if your alarming systems sends periodic test alarms to ensure that the alarming chain works end to end.
 * Creates an alarm log with start and end time of all incidents including all SMS received for the incident case. 
 
 ## Installation

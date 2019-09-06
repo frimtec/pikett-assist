@@ -54,7 +54,7 @@ public final class CalendarEventHelper {
           Instant eventEndTime = Instant.ofEpochMilli(cursor.getLong(3));
 
           Pattern pattern = Pattern.compile(eventTitleFilterPattern, Pattern.CASE_INSENSITIVE);
-          if (pattern.matcher(eventTitle).matches()) {
+          if (pattern.matcher(nonNullString(eventTitle)).matches()) {
             events.add(new PikettShift(id, eventTitle, eventStartTime, eventEndTime));
           }
         } while (cursor.moveToNext());
@@ -62,5 +62,9 @@ public final class CalendarEventHelper {
     }
     events.sort(Comparator.comparing(shift -> shift.getStartTime(false)));
     return events;
+  }
+
+  private static CharSequence nonNullString(String value) {
+    return value != null ? value : "";
   }
 }

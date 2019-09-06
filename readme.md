@@ -28,8 +28,15 @@ PAssist is works with SMS based alerting systems.
 PAssist is in the process to be published on Google-Play.
 The link will follow as soon as available.
 
+Unfortunately this is not a walk in the park. PAssist requires SMS permissions which are classified as highly sensitive by Google.
+If you are experienced in the app verification process of Google, please let me know if you could support me.   
+
+### Install pre build APK
+You can download the APK file from the [GitHub release page](https://github.com/frimtec/pikett-assist/releases).
+To install the APK you need to disable "Play Protect" in "Google Play" for the time of the installation (don't forget to re-enable "Play Protect" after installation).
+
 ### Self build
-Build PAssist on your own and then install the APK or the App-Bundle file via adb to your android phone.
+Build PAssist on your own and then install the APK via ADB to your android phone.
 
 ## Configuration 
 The configuration is split into the following blocks:

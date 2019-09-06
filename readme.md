@@ -47,10 +47,10 @@ The configuration is split into the following blocks:
   
 * Calendar
   * Calendar filter: Defines one or all of your calenders that should be used to look for on-call events. 
-  * Event filter: [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to detect the events that are relevant for on-call.
+  * Event filter: [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to detect the events that are relevant for on-call.
     
 * Test alarm
-  * Test alarm message pattern: [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) to identify the SMS alarm message as a test alarm. 
+  * Test alarm message pattern: [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) to identify the SMS alarm message as a test alarm (case sensitive). 
     WARNING: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!
     The regular expression can use a group to extract the test context (for example the name of the system) out of the SMS.
     As an example the following regular expression could handle test alarms from two different system Helios and Lunar: `^Test alarm for system (Helios|Lunar)?.*`  

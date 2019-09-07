@@ -122,5 +122,8 @@
     <string name="permission_calendar_text">PAssist liest den Kalender um die Zeitfenster zu ermitteln, in denen der Bereitschaftsdienst stattfindet. Nur bei aktivem Bereitschaftsdienst ist die Überwachungsfunktion von PAssist aktiv. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
     <string name="permission_location_title">Position</string>
     <string name="permission_location_text">Um die Telefonempfangsqualität während des Bereitschaftsdienstes zu überwachen, muss auf die Telefonzelleninformation zugegriffen werden. Diese Daten werden mit dem Recht Gerätestandort geschützt, da mit diesen Daten auch die grobe Position ermittelt werden könnte. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
+    <string name="send_log_title">PAssist Crash-Report</string>
+    <string name="send_log_message">PAssist wurde unerwarteterweise beendet. Bitte sende den Crash-Report via E-Mail an den Autor, um die Stabilität von PAssist zu erhöhen.</string>
+    <string name="send_log_button_send">Senden</string>
 
 </resources>

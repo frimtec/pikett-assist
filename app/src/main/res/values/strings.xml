@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">PAssist</string>
-    <string name="channel_name" >PAssist notifications</string>
+    <string name="channel_name">PAssist notifications</string>
     <string name="channel_description">PAssist notifications</string>
     <string name="title_home">Overview</string>
     <string name="title_shift_overview">Calendar</string>
@@ -138,5 +138,8 @@
     <string name="permission_calendar_text">PAssist reads the events from the calendar to determine whether on-call duty is active or not. Only in an active on-call state, the supervise functions of PAssist are enabled. Without this permission PAssist does not work.</string>
     <string name="permission_location_title">Location</string>
     <string name="permission_location_text">To supervise the phone signal strength during on-call duty, PAssist must access information from the phone cells in range. This data is protected by the permission coarse location. Without this permission PAssist does not work.</string>
+    <string name="send_log_title">PAssist crash report</string>
+    <string name="send_log_message">PAssist was crashed unexpectedly. To improve the stability of PAssist, please send the crash report to the author via e-mail.</string>
+    <string name="send_log_button_send">Send</string>
 
 </resources>

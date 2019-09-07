@@ -22,6 +22,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activity.SendLogActivity">
+            <intent-filter>
+                <action android:name="android.permission.SEND_LOG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask">
@@ -44,7 +51,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
         </activity>
-
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -59,13 +65,15 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.SmsListener"
+        <receiver
+            android:name=".receiver.SmsListener"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.AlarmActionListener"
+        <receiver
+            android:name=".receiver.AlarmActionListener"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.github.frimtec.android.pikettassist.*" />

@@ -13,7 +13,7 @@
 
     <string name="pref_header_calendar">Kalender</string>
     <string name="pref_title_calendar_selection">Kalenderauswahl</string>
-    <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter (RegExp)</string>
+    <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter (Hilfe: Regular-Expression ohne Gross-/ Kleinschreibung)</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
 
     <string name="pref_header_alarming">Alarmierung</string>
@@ -22,7 +22,7 @@
     <string name="pref_default_sms_confirm_text">OK</string>
 
     <string name="pref_header_test_alarm">Testalarm</string>
-    <string name="pref_title_test_alarm_message_pattern">Testalarm Meldungsmuster (RegExp)</string>
+    <string name="pref_title_test_alarm_message_pattern">Testalarm Meldungsmuster (Hilfe: Regular-Expression mit maximaler einer Gruppe als Testkontext)</string>
     <string name="pref_default_test_alarm_message_pattern">--- UNDEFINIERT ---</string>
     <string name="pref_title_supervise_test_contexts">Überwachte Testkontexte</string>
     <string name="pref_title_test_alarm_check_time">Überwachungszeitpunkt</string>

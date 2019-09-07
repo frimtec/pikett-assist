@@ -14,5 +14,6 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        android:singleLineTitle="false"
         android:title="@string/pref_title_calendar_event_pikett_title_pattern" />
 </PreferenceScreen>

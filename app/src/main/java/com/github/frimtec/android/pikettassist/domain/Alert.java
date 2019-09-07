@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.time.Instant;
 import java.util.Collections;

@@ -8,6 +8,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        android:singleLineTitle="false"
         android:title="@string/pref_title_test_alarm_message_pattern" />
 
     <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference

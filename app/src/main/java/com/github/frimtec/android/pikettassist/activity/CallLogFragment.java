@@ -81,9 +81,9 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
 
   private void showAlertDetails(Alert selectedAlert) {
     Intent intent = new Intent(this.getContext(), AlertDetailActivity.class);
-    Bundle b = new Bundle();
-    b.putLong("alertId", selectedAlert.getId());
-    intent.putExtras(b);
+    Bundle bundle = new Bundle();
+    bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, selectedAlert.getId());
+    intent.putExtras(bundle);
     startActivity(intent);
   }
 

@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -116,13 +118,13 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private void regularStates(List<State> states) {
     OnOffState pikettState = SharedState.getPikettState(getContext());
-    AlarmState alarmState = SharedState.getAlarmState().first;
+    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
     State.TrafficLight alarmTrafficLight;
     String alarmValue;
-    if (alarmState == AlarmState.ON) {
+    if (alarmState.first == AlarmState.ON) {
       alarmTrafficLight = RED;
       alarmValue = getString(R.string.alarm_state_on);
-    } else if (alarmState == AlarmState.ON_CONFIRMED) {
+    } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
       alarmTrafficLight = YELLOW;
       alarmValue = getString(R.string.alarm_state_on_confirmed);
     } else {
@@ -147,7 +149,7 @@ public class StateFragment extends AbstractListFragment<State> {
     }
 
     Supplier<Button> alarmCloseButtonSupplier = null;
-    if (alarmState != AlarmState.OFF) {
+    if (alarmState.first != AlarmState.OFF) {
       alarmCloseButtonSupplier = () -> {
         Button button = new Button(getContext());
         button.setText(getString(R.string.main_state_button_close_alert));
@@ -189,6 +191,15 @@ public class StateFragment extends AbstractListFragment<State> {
           startActivity(intent);
         }),
         new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButtonSupplier, alarmTrafficLight, context -> {
+          if (alarmState.second != null) {
+            Intent intent = new Intent(getContext(), AlertDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, alarmState.second);
+            intent.putExtras(bundle);
+            startActivity(intent);
+          } else {
+            switchFragment(MainActivity.Fragment.CALL_LOG);
+          }
         }),
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
             superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight, context -> {

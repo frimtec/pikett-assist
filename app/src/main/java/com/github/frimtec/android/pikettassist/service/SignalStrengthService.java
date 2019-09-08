@@ -5,8 +5,6 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -34,8 +32,6 @@ public class SignalStrengthService extends IntentService {
     SignalLevel initialSignalLevel = SignalStrengthHelper.getSignalStrength(this);
     if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && isLowSignal(initialSignalLevel)) {
       this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
-      Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-      vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 100, 500}, 1));
       VibrateHelper.vibrateWhileDoing(getApplicationContext(), 100, 500, () -> {
         SignalLevel level = initialSignalLevel;
         NotificationHelper.notifySignalLow(this, level);

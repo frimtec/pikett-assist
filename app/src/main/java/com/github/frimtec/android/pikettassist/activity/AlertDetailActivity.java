@@ -34,6 +34,8 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 
 public class AlertDetailActivity extends AppCompatActivity {
 
+  public static final String EXTRA_ALERT_ID = "alertId";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -41,7 +43,7 @@ public class AlertDetailActivity extends AppCompatActivity {
 
     Bundle b = getIntent().getExtras();
     if (b != null) {
-      long alertId = b.getLong("alertId");
+      long alertId = b.getLong(EXTRA_ALERT_ID);
       Alert alert = loadAlert(alertId);
       ListView listView = findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());

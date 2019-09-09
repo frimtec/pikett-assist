@@ -43,4 +43,8 @@ abstract class AbstractListFragment<T> extends Fragment {
   protected ListView getListView() {
     return listView;
   }
+
+  protected void switchFragment(MainActivity.Fragment fragment) {
+    ((MainActivity)getActivity()).switchFragment(fragment);
+  }
 }

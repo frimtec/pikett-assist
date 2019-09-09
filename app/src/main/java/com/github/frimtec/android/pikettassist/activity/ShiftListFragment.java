@@ -37,7 +37,7 @@ public class ShiftListFragment extends AbstractListFragment<PikettShift> {
   @Override
   protected ArrayAdapter<PikettShift> createAdapter() {
     List<PikettShift> shifts;
-    if(!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
+    if (!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
       Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {

@@ -22,62 +22,74 @@ import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
   private ShiftListFragment shiftListFragment;
   private CallLogFragment calLogFragment;
-  private Fragment activeFragment = Fragment.STATE;
+  private AbstractListFragment activeFragment;
+
+  private static final Map<Fragment, Integer> FRAGMENT_BUTTON_ID_MAP;
+  private static final Map<Integer, Fragment> BUTTON_ID_FRAGMENT_MAP;
+
+  static {
+    FRAGMENT_BUTTON_ID_MAP = new EnumMap<>(Fragment.class);
+    FRAGMENT_BUTTON_ID_MAP.put(Fragment.STATE, R.id.navigation_home);
+    FRAGMENT_BUTTON_ID_MAP.put(Fragment.SHIFTS, R.id.navigation_shifts);
+    FRAGMENT_BUTTON_ID_MAP.put(Fragment.CALL_LOG, R.id.navigation_alert_log);
+
+    BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
+    FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
+  }
+
   private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
-    switch (item.getItemId()) {
-      case R.id.navigation_home: {
-        loadStateFragment();
-        activeFragment = Fragment.STATE;
-        return true;
-      }
-      case R.id.navigation_shifts: {
-        activeFragment = Fragment.SHIFTS;
-        loadShiftListFragment();
-        return true;
-      }
-      case R.id.navigation_alert_log: {
-        activeFragment = Fragment.CALL_LOG;
-        loadCallLogFragment();
-        return true;
-      }
+    Fragment fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
+
+    if (fragment != null) {
+      loadFragment(fragment);
+      return true;
     }
     return false;
   };
 
-  private void loadStateFragment() {
-    if (stateFragment == null) {
-      stateFragment = new StateFragment();
-    }
-    activeFragment = Fragment.STATE;
-    FragmentManager fm = getFragmentManager();
-    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, stateFragment);
-    fragmentTransaction.commit();
+  void switchFragment(Fragment fragment) {
+    loadFragment(fragment);
+    BottomNavigationView navigation = findViewById(R.id.navigation);
+    //noinspection ConstantConditions
+    navigation.setSelectedItemId(FRAGMENT_BUTTON_ID_MAP.get(fragment));
   }
 
-  private void loadShiftListFragment() {
-    if (shiftListFragment == null) {
-      shiftListFragment = new ShiftListFragment();
+  private void loadFragment(Fragment fragment) {
+    switch (fragment) {
+      case STATE:
+        if (stateFragment == null) {
+          stateFragment = new StateFragment();
+        }
+        activeFragment = stateFragment;
+        break;
+      case SHIFTS:
+        if (shiftListFragment == null) {
+          shiftListFragment = new ShiftListFragment();
+        }
+        activeFragment = shiftListFragment;
+        break;
+      case CALL_LOG:
+        if (calLogFragment == null) {
+          calLogFragment = new CallLogFragment();
+        }
+        activeFragment = calLogFragment;
+        break;
+      default:
+        throw new IllegalStateException("Unknown fragment: " + fragment);
     }
     FragmentManager fm = getFragmentManager();
     FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, shiftListFragment);
-    fragmentTransaction.commit();
-  }
-
-  private void loadCallLogFragment() {
-    if (calLogFragment == null) {
-      calLogFragment = new CallLogFragment();
-    }
-    FragmentManager fm = getFragmentManager();
-    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, calLogFragment);
+    fragmentTransaction.replace(R.id.frame_layout, activeFragment);
     fragmentTransaction.commit();
   }
 
@@ -92,19 +104,13 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    loadStateFragment();
+    loadFragment(Fragment.STATE);
     startService(new Intent(this, PikettService.class));
   }
 
   private void refresh() {
-    if (stateFragment != null && activeFragment == Fragment.STATE) {
-      stateFragment.refresh();
-    }
-    if (shiftListFragment != null && activeFragment == Fragment.SHIFTS) {
-      shiftListFragment.refresh();
-    }
-    if (calLogFragment != null && activeFragment == Fragment.CALL_LOG) {
-      calLogFragment.refresh();
+    if (activeFragment != null) {
+      activeFragment.refresh();
     }
   }
 
@@ -165,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private enum Fragment {
+  enum Fragment {
     STATE,
     SHIFTS,
     CALL_LOG

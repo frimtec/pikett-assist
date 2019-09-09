@@ -57,6 +57,7 @@ public class LowSignalAlarmActivity extends AppCompatActivity {
     if (supportActionBar != null) {
       supportActionBar.hide();
     }
+
     stopped.set(false);
 
     this.timer = new Timer();

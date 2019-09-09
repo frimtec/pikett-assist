@@ -34,9 +34,9 @@
         android:layout_below="@id/alarm_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        app:bg_color="#00AA00"
-        app:text_color="#FFFFFF"
-        app:arrow_color="#AAFFAA"
+        app:bg_color="@color/confirmButtonBackGreen"
+        app:text_color="@color/confirmButtonTextGreen"
+        app:arrow_color="@color/confirmButtonArrowGreen"
         app:text_size="20sp"
         app:btn_text="@string/notification_alert_confirm_button" />
 

@@ -48,7 +48,7 @@ public class SignalStrengthService extends IntentService {
       Intent alarmIntent = new Intent(this, LowSignalAlarmActivity.class);
       PendingIntent pendingIntent = PendingIntent.getActivity(this,
           1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-      this.alarmManager.setExact(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 10, pendingIntent);
+      this.alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 10, pendingIntent);
     }
   }
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/alarm_logo"
+        android:tooltipText="PAssist"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/alarm_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alarm_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/white"
+        android:textSize="24sp"/>
+
+    <in.shadowfax.proswipebutton.ProSwipeButton
+        android:id="@+id/alarm_button_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/alarm_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        app:bg_color="#00AA00"
+        app:text_color="#FFFFFF"
+        app:arrow_color="#AAFFAA"
+        app:text_size="20sp"
+        app:btn_text="@string/notification_alert_confirm_button" />
+
+</RelativeLayout>

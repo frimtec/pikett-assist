@@ -12,6 +12,10 @@
     <color name="confirmButtonTextGreen">#FFFFFF</color>
     <color name="confirmButtonArrowGreen">#AAFFAA</color>
 
+    <color name="confirmButtonBackBlue">#0000AA</color>
+    <color name="confirmButtonTextBlue">#FFFFFF</color>
+    <color name="confirmButtonArrowBlue">#AAAAFF</color>
+
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 </resources>

@@ -2,7 +2,6 @@ package com.github.frimtec.android.pikettassist.receiver;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -86,28 +85,22 @@ public class SmsListener extends BroadcastReceiver {
             Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
             try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
               Long alertId;
-
               AlarmManager alarmManager = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
               Objects.requireNonNull(alarmManager);
-              Intent alarmIntent = new Intent(context, PikettAlarmActivity.class);
-              alarmIntent.putExtra("sms_number", sms.getNumber());
-              PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                  1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
               if (alarmState.first == AlarmState.OFF) {
                 Log.i(TAG, "Alarm state OFF -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(TABLE_ALERT_COLUMN_START_TIME, Instant.now().toEpochMilli());
                 contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
                 alertId = db.insert(TABLE_ALERT, null, contentValues);
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 10, pendingIntent);
+                PikettAlarmActivity.trigger(sms.getNumber(), context, alarmManager);
               } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
                 Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
                 alertId = alarmState.second;
                 db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 10, pendingIntent);
+                PikettAlarmActivity.trigger(sms.getNumber(), context, alarmManager);
               } else {
                 Log.i(TAG, "Alarm state ON -> ON");
                 alertId = alarmState.second;

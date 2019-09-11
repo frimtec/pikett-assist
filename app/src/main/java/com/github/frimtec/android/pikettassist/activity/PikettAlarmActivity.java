@@ -1,39 +1,26 @@
 package com.github.frimtec.android.pikettassist.activity;
 
+import android.app.AlarmManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.os.Vibrator;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
-import com.github.frimtec.android.pikettassist.helper.VibrateHelper;
 import com.github.frimtec.android.pikettassist.receiver.AlarmActionListener;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import in.shadowfax.proswipebutton.ProSwipeButton;
+import java.util.Collections;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
@@ -42,87 +29,22 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 
-public class PikettAlarmActivity extends AppCompatActivity {
+public class PikettAlarmActivity extends AbstractAlarmActivity {
 
-  private final AtomicBoolean stopped = new AtomicBoolean(false);
-  private PowerManager.WakeLock wakeLock;
-  private Vibrator vibrate;
-  private Timer timer;
-  private Ringtone ringtone;
+  private static final String EXTRA_SMS_NUMBER = "sms_number";
 
   private static final String TAG = "PikettAlarmActivity";
 
+  public PikettAlarmActivity() {
+    super(TAG, R.string.notification_alert_title, Pair.create(400, 200), SwipeButtonStyle.RED);
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    String smsNumber = getIntent().getStringExtra("sms_number");
-
-    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    Objects.requireNonNull(pm);
-    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PikettAlarmActivity:alarm");
-    Objects.requireNonNull(wakeLock);
-    wakeLock.acquire(0);
-
-    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
-        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
-    setContentView(R.layout.alarm);
-
-    TextView textView = findViewById(R.id.alarm_text);
-    textView.setText(R.string.notification_alert_title);
-
-    ActionBar supportActionBar = getSupportActionBar();
-    if (supportActionBar != null) {
-      supportActionBar.hide();
-    }
-
-    stopped.set(false);
-
-    this.timer = new Timer();
-    this.ringtone = RingtoneManager.getRingtone(this, getAlarmTone(this));
-
-    ProSwipeButton swipeButton = findViewById(R.id.alarm_button_confirm);
-    swipeButton.setBackgroundColor(getColor(R.color.confirmButtonBackRed));
-    swipeButton.setTextColor(getColor(R.color.confirmButtonTextRed));
-    swipeButton.setArrowColor(getColor(R.color.confirmButtonArrowRed));
-    swipeButton.setOnSwipeListener(() -> {
-      swipeButton.showResultIcon(true);
-      confirmAlarm(this, smsNumber);
-      stopped.set(true);
-      finish();
-    });
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    this.ringtone.play();
-    this.timer.scheduleAtFixedRate(new TimerTask() {
-      public void run() {
-        if (!PikettAlarmActivity.this.ringtone.isPlaying()) {
-          PikettAlarmActivity.this.ringtone.play();
-        }
-      }
-    }, 1000, 1000);
-    this.vibrate = VibrateHelper.vibrate(this, 400, 200);
-  }
-
-  @Override
-  protected void onStop() {
-    super.onStop();
-    this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
-    if (stopped.get()) {
-      super.onStop();
-      timer.cancel();
-      vibrate.cancel();
-      ringtone.stop();
-      wakeLock.release();
-    }
+    String smsNumber = getIntent().getStringExtra(EXTRA_SMS_NUMBER);
+    setSwipeAction(() -> confirmAlarm(this, smsNumber));
+    setRingtone(RingtoneManager.getRingtone(this, getAlarmTone(this)));
   }
 
   private void confirmAlarm(Context context, String smsNumber) {
@@ -156,6 +78,10 @@ public class PikettAlarmActivity extends AppCompatActivity {
       return Uri.parse(alarmRingTone);
     }
     return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+  }
+
+  public static void trigger(String smsNumber, Context context, AlarmManager alarmManager) {
+    AbstractAlarmActivity.trigger(PikettAlarmActivity.class, context, alarmManager, Collections.singletonList(Pair.create(EXTRA_SMS_NUMBER, smsNumber)));
   }
 
 }

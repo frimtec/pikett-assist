@@ -60,12 +60,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
         </activity>
-        <activity
-            android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity"/>
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity"/>
         <receiver android:name=".receiver.AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

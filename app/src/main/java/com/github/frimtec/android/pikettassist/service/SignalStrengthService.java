@@ -16,8 +16,6 @@ import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Instant;
-
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 
 public class SignalStrengthService extends IntentService {
@@ -45,10 +43,7 @@ public class SignalStrengthService extends IntentService {
     SignalLevel level = SignalStrengthHelper.getSignalStrength(this);
     if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && isLowSignal(level)) {
       NotificationHelper.notifySignalLow(this, level);
-      Intent alarmIntent = new Intent(this, LowSignalAlarmActivity.class);
-      PendingIntent pendingIntent = PendingIntent.getActivity(this,
-          1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-      this.alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 10, pendingIntent);
+      LowSignalAlarmActivity.trigger(this, this.alarmManager);
     }
   }
 

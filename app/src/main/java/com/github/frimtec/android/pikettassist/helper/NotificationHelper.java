@@ -12,11 +12,6 @@ import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
@@ -31,8 +26,6 @@ import java.util.function.BiConsumer;
 
 import static android.app.Notification.CATEGORY_ALARM;
 import static android.app.Notification.CATEGORY_EVENT;
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 
 
 public class NotificationHelper {
@@ -142,28 +135,6 @@ public class NotificationHelper {
     notificationManagerCompat.cancel(id);
   }
 
-  public static void confirmAlarm(Context context, BiConsumer<DialogInterface, Integer> action) {
-    LayoutInflater factory = LayoutInflater.from(context);
-    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-    View view = factory.inflate(R.layout.alert_confirmation_dialog, null);
-    AlertDialog dialog = alertDialogBuilder
-        .setView(view)
-        .setTitle(R.string.notification_alert_confirm_title)
-        .setCancelable(false)
-        .setPositiveButton(R.string.notification_alert_confirm_button, action::accept
-        ).create();
-    Window window = dialog.getWindow();
-    if (window != null && Feature.SETTING_DRAW_OVERLAYS.isAllowed(context)) {
-      window.setType(TYPE_APPLICATION_OVERLAY | FLAG_KEEP_SCREEN_ON);
-    }
-
-    dialog.show();
-    Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-    button.setBackgroundColor(context.getColor(R.color.confirmButtonBack));
-    button.setTextColor(context.getColor(R.color.confirmButtonText));
-    button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24.0F);
-  }
-
   public static void infoDialog(Context context, int titleResourceId, int textResourceId, BiConsumer<DialogInterface, Integer> action) {
     SpannableString message = new SpannableString(Html.fromHtml(context.getString(textResourceId), Html.FROM_HTML_MODE_COMPACT));
     AlertDialog alertDialog = new AlertDialog.Builder(context)
@@ -173,7 +144,7 @@ public class NotificationHelper {
         .setCancelable(true)
         .setPositiveButton("OK", action::accept).create();
     alertDialog.show();
-    ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+    ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   public static void requirePermissions(Context context, int titleResourceId, int textResourceId, BiConsumer<DialogInterface, Integer> action) {

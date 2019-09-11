@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.receiver;
 
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,16 +12,17 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.Sms;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
-import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,22 +85,22 @@ public class SmsListener extends BroadcastReceiver {
             Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
             try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
               Long alertId;
-              Intent alertServiceIntent = new Intent(context, AlertService.class);
-              alertServiceIntent.putExtra("sms_number", sms.getNumber());
+              AlarmManager alarmManager = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
+              Objects.requireNonNull(alarmManager);
               if (alarmState.first == AlarmState.OFF) {
                 Log.i(TAG, "Alarm state OFF -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(TABLE_ALERT_COLUMN_START_TIME, Instant.now().toEpochMilli());
                 contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
                 alertId = db.insert(TABLE_ALERT, null, contentValues);
-                context.startService(alertServiceIntent);
+                PikettAlarmActivity.trigger(sms.getNumber(), context, alarmManager);
               } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
                 Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
                 alertId = alarmState.second;
                 db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
-                context.startService(alertServiceIntent);
+                PikettAlarmActivity.trigger(sms.getNumber(), context, alarmManager);
               } else {
                 Log.i(TAG, "Alarm state ON -> ON");
                 alertId = alarmState.second;

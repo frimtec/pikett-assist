@@ -112,7 +112,7 @@ public enum Feature {
     CONTACTS_READ(Collections.singleton(Manifest.permission.READ_CONTACTS)),
     CALENDAR_READ(Collections.singleton(Manifest.permission.READ_CALENDAR)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),
-    NON_CRITICAL(Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Manifest.permission.RECEIVE_BOOT_COMPLETED, Manifest.permission.VIBRATE))));
+    NON_CRITICAL(Collections.unmodifiableSet(new HashSet<>(Arrays.asList(Manifest.permission.RECEIVE_BOOT_COMPLETED, Manifest.permission.VIBRATE, Manifest.permission.WAKE_LOCK))));
 
     private final String[] permissions;
 

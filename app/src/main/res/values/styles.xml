@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="deactivatedItem">
+        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

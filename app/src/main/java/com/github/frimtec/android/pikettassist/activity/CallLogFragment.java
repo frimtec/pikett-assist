@@ -53,8 +53,8 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
 
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-    menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.call_log_fragment_menu_view);
-    menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.call_log_fragment_menu_delete);
+    menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
+    menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.list_item_menu_delete);
   }
 
   @Override
@@ -70,7 +70,7 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
         NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
           deleteAlert(selectedAlert);
           refresh();
-          Toast.makeText(getContext(), R.string.genaral_entry_deleted, Toast.LENGTH_SHORT).show();
+          Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();
         }, (dialog, which) -> {
         });
         return true;

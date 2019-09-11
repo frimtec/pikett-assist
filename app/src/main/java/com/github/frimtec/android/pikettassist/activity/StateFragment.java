@@ -212,8 +212,7 @@ public class StateFragment extends AbstractListFragment<State> {
       try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
         try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
           if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-            Instant lastReceiveTime = Instant.ofEpochMilli(cursor.getLong(1));
-            lastReceived = formatDateTime(lastReceiveTime);
+            lastReceived = formatDateTime(cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null);
             testAlarmState = OnOffState.valueOf(cursor.getString(2));
 
             if (testAlarmState != OnOffState.OFF) {
@@ -232,6 +231,11 @@ public class StateFragment extends AbstractListFragment<State> {
           }
         }
         states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF, context -> {
+          Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
+          Bundle bundle = new Bundle();
+          bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
+          intent.putExtras(bundle);
+          startActivity(intent);
         }));
       }
     }

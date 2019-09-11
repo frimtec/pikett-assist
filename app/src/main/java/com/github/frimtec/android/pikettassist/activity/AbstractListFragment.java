@@ -11,6 +11,9 @@ import android.widget.ListView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Optional;
 
 abstract class AbstractListFragment<T> extends Fragment {
 
@@ -26,9 +29,22 @@ abstract class AbstractListFragment<T> extends Fragment {
     });
 
     listView = view.findViewById(R.id.fragment_list_list);
+
+
+    FloatingActionButton addButton = view.findViewById(R.id.list_add_button);
+    addAction().map(onClickListener -> {
+      addButton.setVisibility(View.VISIBLE);
+      addButton.setOnClickListener(onClickListener);
+      return true;
+    });
+
     configureListView(listView);
     refresh();
     return view;
+  }
+
+  protected Optional<View.OnClickListener> addAction() {
+    return Optional.empty();
   }
 
   public final void refresh() {

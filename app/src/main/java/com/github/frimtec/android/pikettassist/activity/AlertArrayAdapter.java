@@ -17,8 +17,8 @@ import java.util.List;
 
 class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
-  AlertArrayAdapter(Context context, List<Alert> shifts) {
-    super(context, 0, shifts);
+  AlertArrayAdapter(Context context, List<Alert> alerts) {
+    super(context, 0, alerts);
   }
 
   @NonNull

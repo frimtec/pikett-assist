@@ -6,6 +6,12 @@
         android:summary="%s"
         android:title="@string/pref_title_alarm_ring_tone" />
 
+    <com.github.frimtec.android.pikettassist.settings.AlarmRingtonePreference
+        android:icon="@drawable/ic_test_alarm"
+        android:key="test_alarm_ring_tone"
+        android:summary="%s"
+        android:title="@string/pref_title_test_alarm_ring_tone" />
+
     <SwitchPreference
         android:defaultValue="true"
         android:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"

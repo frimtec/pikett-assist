@@ -4,6 +4,7 @@
     <string name="title_home">Übersicht</string>
     <string name="title_shift_overview">Kalender</string>
     <string name="title_alert_log">Aufgebote</string>
+    <string name="title_test_alarms">Testalarme</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_about">Über</string>
 
@@ -50,7 +51,8 @@
     </string-array>
 
     <string name="pref_header_notifications">Benachrichtigungen</string>
-    <string name="pref_title_alarm_ring_tone">Alarm Klingelton</string>
+    <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>
+    <string name="pref_title_test_alarm_ring_tone">Vehlender Testalarm Klingelton</string>
     <string name="pref_title_supervise_signal_strength">Signalstärke überwachen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">Über</string>
@@ -67,8 +69,10 @@
     <string name="alert_view_state_closed">Geschlossen</string>
     <string name="alert_view_state_wip">In Arbeit</string>
     <string name="alert_view_state_to_be_confirmed">Zu Bestätigen</string>
-    <string name="call_log_fragment_menu_view">Anzeigen</string>
-    <string name="call_log_fragment_menu_delete">Löschen</string>
+    <string name="list_item_menu_view">Anzeigen</string>
+    <string name="list_item_menu_delete">Löschen</string>
+    <string name="list_item_menu_activate">Aktivieren</string>
+    <string name="list_item_menu_deactivate">Deaktivieren</string>
     <string name="test_alarm_context_general">Allgemein</string>
     <string name="notification_low_signal_title">Unzureichender Signalempfang</string>
     <string name="notification_low_signal_text">Empfangsstufe</string>
@@ -103,10 +107,12 @@
     <string name="contact_preference_empty_selection">Leer</string>
     <string name="state_fragment_toast_open_unknown_contact">Bitte einen gültigen Kontakt in den Alarmierungseinstellungen setzen!</string>
     <string name="about_disclaimer">&lt;h3&gt;Haftungsausschluss&lt;/h3&gt;&lt;p&gt;Der Autor übernimmt keine Verantwortung, gibt keinerlei Garantie bei der Nutzung der Anwendung.&lt;/p&gt;&lt;p&gt;Die Anwendung ist kostenlos. Der Quellcode steht als Open-Source unter der &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 Lizenz&lt;/a&gt; zur Verfügung.&lt;/p&gt;</string>
+    <string name="general_ok">Ok</string>
+    <string name="general_cancel">Abbruch</string>
     <string name="general_no">Nein</string>
     <string name="general_yes">Ja</string>
     <string name="general_are_you_sure">Bist Du sicher?</string>
-    <string name="genaral_entry_deleted">Eintrag wurde gelöscht.</string>
+    <string name="general_entry_deleted">Eintrag wurde gelöscht.</string>
     <string name="state_fragment_permissions">Berechtigungen</string>
     <string name="state_fragment_draw_overlays">Overlays anzeigen</string>
     <string name="state_fragment_battery_optimization">Akku-Optimierung</string>
@@ -125,5 +131,17 @@
     <string name="send_log_title">PAssist Crash-Report</string>
     <string name="send_log_message">PAssist wurde unerwarteterweise beendet. Bitte sende den Crash-Report via E-Mail an den Autor, um die Stabilität von PAssist zu erhöhen.</string>
     <string name="send_log_button_send">Senden</string>
+    <string name="title_activity_test_alarm_details">Testalarm Details</string>
+    <string name="test_alarm_details_alarm_state_label">Alarmzustand:</string>
+    <string name="test_alarm_details_supervised_label">Überwachung:</string>
+    <string name="test_alarm_details_last_received_label">Zuletzt empfangen:</string>
+    <string name="test_alarm_details_message_label">Empfangene Meldung:</string>
+    <string name="test_alarm_activated_toast">Testalarm aktiviert.</string>
+    <string name="test_alarm_deactivated_toast">Testalarm deaktiviert.</string>
+    <string name="test_alarm_message_empty">Keine</string>
+    <string name="test_alarm_received_never">Nie</string>
+    <string name="test_alarm_add_title">Neuer Testalarmkontext</string>
+    <string name="test_alarm_toast_added_success">Neuer Testalarmkontext wurde hinzugefügt.</string>
+    <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
+import com.github.frimtec.android.pikettassist.activity.MissingTestAlarmAlarmActivity;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
@@ -36,8 +37,17 @@ public class TestAlertService extends IntentService {
 
   private OnOffState pikettState;
 
+  private AlarmManager alarmManager;
+
+
   public TestAlertService() {
     super(TAG);
+  }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    this.alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
   }
 
   @Override
@@ -63,7 +73,7 @@ public class TestAlertService extends IntentService {
             new Intent(context, MainActivity.class),
             missingTestAlarmContexts
         );
-        context.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+        MissingTestAlarmAlarmActivity.trigger(context, this.alarmManager);
       }
     }
   }
@@ -94,7 +104,6 @@ public class TestAlertService extends IntentService {
       return;
     }
 
-    AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
     Intent intent = new Intent(this, TestAlertService.class);
     intent.putExtra(PARAM_INITIAL, false);
     ZonedDateTime now = ZonedDateTime.now();
@@ -107,7 +116,7 @@ public class TestAlertService extends IntentService {
     }
     long waitMs = Duration.between(now, nextRun).toMillis();
     Log.i(TAG, "Next run at " + nextRun + "; wait ms: " + waitMs);
-    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
+    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
         PendingIntent.getService(this, 0, intent, 0)
     );
   }

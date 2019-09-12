@@ -19,9 +19,9 @@ PAssist is works with SMS based alerting systems.
 * When on-call, PAssist does the following:
   * Creates an alarm if an SMS is received from your configured operations center, and acknowledges the alarm with a replay SMS when confirmed.
   * Supervises the telephone signal strength and notifies you with vibration if it is bad or switched off.
-  * Optional: Automatically acknowledges test alarms (identified with a configured SMS message pattern) and notifies you when expected test alarms are missed.     
+  * Optional: Automatically acknowledges test alarms (identified with a configured SMS message pattern) and notifies you when expected test alarms are missing.     
     This feature can be used if your alarming systems sends periodic test alarms to ensure that the alarming chain works end to end.
-* Creates an alarm log with start and end time of all incidents including all SMS received for the incident case. 
+* Creates an alarm log with start and end time of each incident. All SMS received during the incident are attached to the alarm in the log.
 
 ## Installation
 ### Google-Play

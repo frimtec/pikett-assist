@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_siren"
         android:title="@string/title_alert_log" />
 
+    <item
+        android:id="@+id/navigation_test_alarms"
+        android:icon="@drawable/ic_test_alarm"
+        android:title="@string/title_test_alarms" />
+
 </menu>

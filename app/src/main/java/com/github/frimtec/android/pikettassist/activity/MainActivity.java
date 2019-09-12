@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
   private ShiftListFragment shiftListFragment;
-  private CallLogFragment calLogFragment;
+  private CallLogFragment callLogFragment;
+  private TestAlarmFragment testAlarmFragment;
   private AbstractListFragment activeFragment;
 
   private static final Map<Fragment, Integer> FRAGMENT_BUTTON_ID_MAP;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     FRAGMENT_BUTTON_ID_MAP.put(Fragment.STATE, R.id.navigation_home);
     FRAGMENT_BUTTON_ID_MAP.put(Fragment.SHIFTS, R.id.navigation_shifts);
     FRAGMENT_BUTTON_ID_MAP.put(Fragment.CALL_LOG, R.id.navigation_alert_log);
+    FRAGMENT_BUTTON_ID_MAP.put(Fragment.TEST_ALARMS, R.id.navigation_test_alarms);
 
     BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
@@ -79,10 +81,16 @@ public class MainActivity extends AppCompatActivity {
         activeFragment = shiftListFragment;
         break;
       case CALL_LOG:
-        if (calLogFragment == null) {
-          calLogFragment = new CallLogFragment();
+        if (callLogFragment == null) {
+          callLogFragment = new CallLogFragment();
         }
-        activeFragment = calLogFragment;
+        activeFragment = callLogFragment;
+        break;
+      case TEST_ALARMS:
+        if (testAlarmFragment == null) {
+          testAlarmFragment = new TestAlarmFragment();
+        }
+        activeFragment = testAlarmFragment;
         break;
       default:
         throw new IllegalStateException("Unknown fragment: " + fragment);
@@ -174,7 +182,8 @@ public class MainActivity extends AppCompatActivity {
   enum Fragment {
     STATE,
     SHIFTS,
-    CALL_LOG
+    CALL_LOG,
+    TEST_ALARMS
   }
 
 }

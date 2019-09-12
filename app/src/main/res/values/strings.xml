@@ -5,6 +5,7 @@
     <string name="title_home">Overview</string>
     <string name="title_shift_overview">Calendar</string>
     <string name="title_alert_log">Alert log</string>
+    <string name="title_test_alarms">Test alarms</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about">About</string>
 
@@ -67,7 +68,8 @@
     </string-array>
 
     <string name="pref_header_notifications">Notifications</string>
-    <string name="pref_title_alarm_ring_tone">Alarming ringtone</string>
+    <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>
+    <string name="pref_title_test_alarm_ring_tone">Missing test alarm ringtone</string>
     <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
@@ -83,8 +85,10 @@
     <string name="alert_view_state_closed">Closed</string>
     <string name="alert_view_state_wip">Work in progress</string>
     <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
-    <string name="call_log_fragment_menu_view">View</string>
-    <string name="call_log_fragment_menu_delete">Delete</string>
+    <string name="list_item_menu_view">View</string>
+    <string name="list_item_menu_delete">Delete</string>
+    <string name="list_item_menu_activate">Activate</string>
+    <string name="list_item_menu_deactivate">Deactivate</string>
     <string name="test_alarm_context_general">General</string>
     <string name="notification_low_signal_title">Low signal</string>
     <string name="notification_low_signal_text">Signal level</string>
@@ -119,10 +123,12 @@
     <string name="state_fragment_toast_open_unknown_contact">Please set a valid contact in the alarming settings!</string>
     <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
     The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
+    <string name="general_ok">Ok</string>
+    <string name="general_cancel">Cancel</string>
     <string name="general_no">No</string>
     <string name="general_yes">Yes</string>
     <string name="general_are_you_sure">Are you sure?</string>
-    <string name="genaral_entry_deleted">Entry has been deleted.</string>
+    <string name="general_entry_deleted">Entry has been deleted.</string>
     <string name="state_fragment_permissions">Permissions</string>
     <string name="state_fragment_draw_overlays">Draw Overlays</string>
     <string name="state_fragment_battery_optimization">Battery Optimization</string>
@@ -141,5 +147,17 @@
     <string name="send_log_title">PAssist crash report</string>
     <string name="send_log_message">PAssist was crashed unexpectedly. To improve the stability of PAssist, please send the crash report to the author via e-mail.</string>
     <string name="send_log_button_send">Send</string>
+    <string name="title_activity_test_alarm_details">Test alarm details</string>
+    <string name="test_alarm_details_alarm_state_label">Alarm state:</string>
+    <string name="test_alarm_details_supervised_label">Supervised:</string>
+    <string name="test_alarm_details_last_received_label">Last received:</string>
+    <string name="test_alarm_details_message_label">Received message:</string>
+    <string name="test_alarm_activated_toast">Test alarm activated.</string>
+    <string name="test_alarm_deactivated_toast">Test alarm deactivated.</string>
+    <string name="test_alarm_message_empty">Empty</string>
+    <string name="test_alarm_received_never">Never</string>
+    <string name="test_alarm_add_title">Enter new test alarm context</string>
+    <string name="test_alarm_toast_added_success">New test alarm context added.</string>
+    <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
 
 </resources>

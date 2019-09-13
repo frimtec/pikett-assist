@@ -107,7 +107,7 @@
     <string name="notification_draw_overlays_title">Draw overlays is off!</string>
     <string name="notification_draw_overlays_text">To show an alter dialog even when the PAssist activity is not started or in background, the draw overlay setting must be switched on.</string>
     <string name="alert_action_close">Close</string>
-    <string name="state_fragment_operations_center">Operations center</string>
+    <string name="state_fragment_operations_center">Op. center</string>
     <string name="state_fragment_pikett_state">On-call state</string>
     <string name="state_fragment_alarm_state">Alarm state</string>
     <string name="state_fragment_signal_level_supervise_enabled">Enabled</string>

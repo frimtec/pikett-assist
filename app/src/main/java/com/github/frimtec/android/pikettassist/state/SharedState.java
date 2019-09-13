@@ -10,6 +10,7 @@ import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
+import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 
 import java.util.Collections;
@@ -74,6 +75,10 @@ public final class SharedState {
 
   public static long getAlarmOperationsCenterContact(Context context) {
     return Long.parseLong(getSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, String.valueOf(EMPTY_CONTACT)));
+  }
+
+  public static void setAlarmOperationsCenterContact(Context context, Contact contact) {
+    setSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, String.valueOf(contact.getId()));
   }
 
   public static String getSmsTestMessagePattern(Context context) {

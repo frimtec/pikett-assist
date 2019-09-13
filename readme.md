@@ -17,10 +17,10 @@ PAssist is works with SMS based alerting systems.
 * PAssist activates and deactivates itself based on your calendar. All calendar events with a configured title pattern are considered.
 * PAssist shows you your future on-call calender events.
 * When on-call, PAssist does the following:
-  * Creates an alarm if an SMS is received from your configured operations center, and acknowledges the alarm with a replay SMS when confirmed.
+  * Aleets if an SMS is received from your configured operations center, and acknowledges the alarm with a replay SMS when confirmed via swipe button.
   * Supervises the telephone signal strength and notifies you with vibration if it is bad or switched off.
   * Optional: Automatically acknowledges test alarms (identified with a configured SMS message pattern) and notifies you when expected test alarms are missing.     
-    This feature can be used if your alarming systems sends periodic test alarms to ensure that the alarming chain works end to end.
+    This feature can be used if your alarming systems sends periodic test alarms to ensure that the alarming chain works from end to end.
 * Creates an alarm log with start and end time of each incident. All SMS received during the incident are attached to the alarm in the log.
 
 ## Installation
@@ -53,15 +53,16 @@ The configuration is split into the following blocks:
   * Test alarm message pattern: [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) to identify the SMS alarm message as a test alarm (case sensitive). 
     WARNING: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!
     The regular expression can use a group to extract the test context (for example the name of the system) out of the SMS.
-    As an example the following regular expression could handle test alarms from two different system Helios and Lunar: `^Test alarm for system (Helios|Lunar)?.*`  
+    As an example the following regular expression could handle test alarms from two different systems Helios and Lunar: `^Test alarm for system (Helios|Lunar)?.*`  
     Test alarms of each group can be supervised individually. 
-  * Test contexts to supervise: Defines which test context should be supervised. Before you can see a context to select, a first test alarm with the specific test context must be received.
+  * Test contexts to supervise: Defines which test context should be supervised.
   * Check time: Time of the day when it is checked that test alarms has been received recently for all selected test contexts.
   * Test alarm time window: Time window in which the test alarm must have been received before the check time. 
   * Check days: Weekdays on which the test alarms are checked.
 
 * Notifications
-  * Alarm ringtone: Defines the alarm ringtone to be used. 
+  * Alarm ringtone: Selects the ringtone to be used to alert for on-call alarms.
+  * Missing test alarm ringtone: Selects the ringtone to be used to alert for missing test alarms.
   * Supervise signal strength: Decides if the signal strength is supervised or not.
 
 ## Open-Source and free

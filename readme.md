@@ -14,7 +14,7 @@ PAssist is works with SMS based alerting systems.
 ![Alert detail](images/screenshot-alertlog-detail.png)
 
 ## Features
-* PAssist activates and deactivates itself based on your calendar. All calendar events with a configured title pattern are considered. PAssist activates five minutes before and keeps activated five minutes after the events start and stop time. This ensures you won't miss an alert in case of a small time discrepancy between the operations center time and your phone time.
+* PAssist activates and deactivates itself based on your calendar. All calendar events matching a configured title pattern are considered. PAssist activates five minutes before and keeps activated five minutes after the events start and stop time. This ensures you won't miss an alert in case of a small time discrepancy between the operations center time and your phone time.
 * PAssist shows you your future on-call calender events.
 * When on-call, PAssist does the following:
   * Aleets if an SMS is received from your configured operations center, and acknowledges the alarm with a replay SMS when confirmed via swipe button.

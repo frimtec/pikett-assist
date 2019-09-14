@@ -1,16 +1,20 @@
-PAssist ist eine Assistentsapplikation für Personen die Bereitschaftsdienst (in der Schweiz genannt Pikett) leisten.
-Damit PAssist eingesetzt werden kann muss die Alarmierung der dienstleistenden Person über einen SMS-Dienst funktionieren.
+PAssist unterstützt dich beim Leisten von Bereitschaftsdienst im Zusammenspiel mit einem SMS basierten Alarmierungssystem.
 
 <h1>Funktionsumfang</h1>
 Die Applikation wird über definierte Bereitschaftsdienst-Termine im Kalender automatisch aktiviert und übernimmt während des Bereitschaftsdienstes die folgenden Funktionen:<br/>
-&bull; Entgegennahme von Aufgeboten via SMS, Auslösen eines Alarms auf dem Gerät und Quittierung via SMS nach der Bestätigung des Alarmes durch den Benutzer.<br/>
+&bull; Auslösen eines Alarms beim Eingang einer SMS von der Alarmierungszentrale sowie die Quittierung via SMS nach der Bestätigung des Alarmes durch den Benutzer.<br/>
 &bull; Überwachung des Telefonempfangspegel und Benachrichtigung bei schlechtem oder ausgeschaltetem Empfang.<br/>
 &bull; Protokollierung der Aufgebote mit Start- und Endzeit sowie aller dazugehörigen SMS-Meldungen.<br/>
-&bull; Optional: Überwachung und Quittierung von periodischen Testalarmen und der Alarmierung bei deren Ausbleiben (Überwachung der Alarmierungskette).<br/>
+&bull; Überwachung und Quittierung von periodischen Testalarmen zum Testen der Alarmierungskette.<br/>
 <br/>
 Weitere Funktionen die unabhängig vom aktuellen Bereitschaftsdienst zur Verfügung stehen:<br/>
 &bull; Bereitschaftsdienstkalender<br/>
 &bull; Historie aller Aufgebote<br/>
+
+<h1>SMS Berechtigungen</h1>
+Um die Funktionen von PAssist wahrzunehmen, brauch PAssist die Berechtigung SMS zu empfangen und zu senden.
+PAssist verarbeited SMS nur während des Bereitschaftsdienstes und nur, wenn sie von der konfigurierten Alarmierungszentrale gesendet wurden.
+Gesendet werden SMS ausschliesslich als Quittierung eines eingehnden Alarms und somit auschliesslich an die Nummer der konfigurierten Alarmierungszentrale.
 
 <h1>PAssist ist gratis und Open-Source</h1>
 PAssist ist kostenlos. Der Code steht als Open-Source unter der Apache-2.0 Lizenz zur Verfügung.
@@ -19,23 +23,6 @@ Wenn Du PAssist nützlich findest und für deinen Bereitschafdienst regelmässig
 <h1>Haftungsausschluss</h1>
 Die Benutzung von PAssist erfolgt auf eigenes Risiko. Der Autor übernimmt keinerlei Haftung durch Fehlfunktionen der Applikation.
 Jegliche Garantieansprüche sind ausgeschlossen.
-
-<h1>Benötige Berechtigungen</h1>
-Damit PAssist  funktioniert sind die folgenden Berechtigungen notwendig (der Start der Applikation wird ansonsten verweigert):<br/>
-&bull; <i>RECEIVE_SMS</i>: Empfang von Alarmaufgeboten<br/>
-&bull; <i>SEND_SMS</i>: Quittierung von Alarmaufgeboten<br/>
-&bull; <i>SYSTEM_ALERT_WINDOW</i>: Alarme werden über andere Applikation angezeigt<br/>
-&bull; <i>VIBRATE</i>: Bei wichtigen Ereignisse wird die Benachrichtigung mit Vibrationsmuster verstärkt<br/>
-&bull; <i>READ_CALENDAR</i>: Ermitteln des Bereitschaftskalender<br/>
-&bull; <i>READ_CONTACTS"</i>: Ermitteln der Telefonnummern der Alarmierungszentrale<br/>
-&bull; <i>RECEIVE_BOOT_COMPLETED</i>: Aktivierung bei einem Neustart<br/>
-&bull; <i>ACCESS_COARSE_LOCATION</i>: Zur Überwachung des Telefonempfangspegel<br/>
-&bull; <i>INTERNET</i>: Ausschliesslich zur Abwicklung von Spenden via Google-Play<br/>
-<br/>
-
-<h1>Batterieoptimierung</h1>
-Die standartmässige Batterieoptimierung von Android kann dazu führen, dass wichtige Ereignisse verspätet oder gar nicht von PAssist verarbeitet werden.
-Aus diesem Grund ist ein sinnvoller Betrieb nur möglich, wenn die Batterieoptimierung für PAssist ausgeschalten wird.
 
 <h1>Feedback willkommen</h1>
 Ideen für neue Funktionen oder Verbesserungen sowie Bug-Reports nimmt der Autor gerne entgegen.

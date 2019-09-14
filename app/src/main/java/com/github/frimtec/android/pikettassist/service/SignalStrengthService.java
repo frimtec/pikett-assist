@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity;
+import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
@@ -41,10 +42,14 @@ public class SignalStrengthService extends IntentService {
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
     SignalLevel level = SignalStrengthHelper.getSignalStrength(this);
-    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && isLowSignal(level)) {
+    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(level)) {
       NotificationHelper.notifySignalLow(this, level);
       LowSignalAlarmActivity.trigger(this, this.alarmManager);
     }
+  }
+
+  private boolean isAlarmStateOn() {
+    return SharedState.getAlarmState().first == AlarmState.ON;
   }
 
   private boolean isCallStateIdle() {

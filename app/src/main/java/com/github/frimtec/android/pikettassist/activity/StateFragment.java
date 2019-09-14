@@ -9,12 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -67,11 +65,7 @@ public class StateFragment extends AbstractListFragment<State> {
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
   private static final String TAG = "StateFragment";
 
-  private static final int SELECT_PHONE_NUMBER = 111;
-
-  private static final int MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID = 1;
-  private static final int MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID = 2;
-  private static final int MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID = 3;
+  static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
 
   @Override
   protected void configureListView(ListView listView) {
@@ -90,7 +84,7 @@ public class StateFragment extends AbstractListFragment<State> {
         refresh();
         getContext().startService(new Intent(getContext(), PikettService.class));
       }
-    } else if (requestCode == SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
+    } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
       Contact contact = ContactHelper.getContact(getContext(), data.getData());
       SharedState.setAlarmOperationsCenterContact(getContext(), contact);
       refresh();
@@ -201,51 +195,8 @@ public class StateFragment extends AbstractListFragment<State> {
       };
     }
 
-    Contact operationCenter = ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
     states.addAll(Arrays.asList(
-        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : RED) {
-          @Override
-          public void onClickAction(Context context) {
-            long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
-            if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
-              actionViewContact(alarmOperationsCenterContact);
-            } else {
-              actionSelectContact();
-            }
-          }
-
-          @Override
-          public void onCreateContextMenu(Context context, ContextMenu menu) {
-            long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
-            if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
-              menu.add(Menu.NONE, MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_view);
-            }
-            menu.add(Menu.NONE, MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_select);
-            menu.add(Menu.NONE, MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_clear);
-          }
-
-          @Override
-          public boolean onContextItemSelected(Context context, MenuItem item) {
-            switch (item.getItemId()) {
-              case MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID:
-                actionViewContact(SharedState.getAlarmOperationsCenterContact(context));
-                return true;
-              case MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID:
-                actionSelectContact();
-                refresh();
-                return true;
-              case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
-                NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
-                  SharedState.setAlarmOperationsCenterContact(context, ContactHelper.notFound(context));
-                  refresh();
-                }, (dialog, which) -> {
-                });
-                return true;
-              default:
-                return false;
-            }
-          }
-        },
+        new OperationsCenterState(this, ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()))),
         new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.state_on : R.string.state_off), null, pikettState == OnOffState.ON ? GREEN : OFF) {
           @Override
           public void onClickAction(Context context) {
@@ -312,19 +263,6 @@ public class StateFragment extends AbstractListFragment<State> {
     }
   }
 
-  private void actionSelectContact() {
-    Intent intent = new Intent(Intent.ACTION_PICK);
-    intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-    startActivityForResult(intent, SELECT_PHONE_NUMBER);
-  }
-
-  private void actionViewContact(long alarmOperationsCenterContact) {
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
-    intent.setData(uri);
-    startActivity(intent);
-  }
-
   private String formatDateTime(Instant time) {
     return time != null ?
         LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(StateFragment.DATE_TIME_FORMAT, Locale.getDefault())) : "";
@@ -349,4 +287,5 @@ public class StateFragment extends AbstractListFragment<State> {
       return super.onContextItemSelected(item);
     }
   }
+
 }

@@ -8,6 +8,7 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_about">Über</string>
 
+    <string name="main_state_button_confirm_alert">Bestätigen</string>
     <string name="main_state_button_close_alert">Schliessen</string>
 
     <!-- Strings related to Settings -->

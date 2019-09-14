@@ -47,8 +47,11 @@ public class PikettAlarmActivity extends AbstractAlarmActivity {
     setRingtone(RingtoneManager.getRingtone(this, getAlarmTone(this)));
   }
 
-  private void confirmAlarm(Context context, String smsNumber) {
-    Log.v(TAG, "Confirm Alarm");
+  static void confirmAlarm(Context context) {
+    confirmAlarm(context, SharedState.getLastAlarmSmsNumber(context));
+  }
+
+  static void confirmAlarm(Context context, String smsNumber) {
     try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
       try (Cursor cursor = writableDatabase.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME}, TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null, null, null, null)) {
         ContentValues values = new ContentValues();
@@ -67,7 +70,7 @@ public class PikettAlarmActivity extends AbstractAlarmActivity {
         context,
         new Intent(context, AlarmActionListener.class),
         ACTION_CLOSE_ALARM,
-        getString(R.string.alert_action_close),
+        context.getString(R.string.alert_action_close),
         new Intent(context, MainActivity.class)
     );
   }
@@ -81,6 +84,7 @@ public class PikettAlarmActivity extends AbstractAlarmActivity {
   }
 
   public static void trigger(String smsNumber, Context context, AlarmManager alarmManager) {
+    SharedState.setLastAlarmSmsNumber(context, smsNumber);
     AbstractAlarmActivity.trigger(PikettAlarmActivity.class, context, alarmManager, Collections.singletonList(Pair.create(EXTRA_SMS_NUMBER, smsNumber)));
   }
 

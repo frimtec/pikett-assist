@@ -38,6 +38,9 @@ public final class SharedState {
   public static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String CALENDAR_FILTER_ALL = "-1";
+
+  private static final String LAST_ALARM_SMS_NUMBER = "last_alarm_sms_number";
+
   public static final long EMPTY_CONTACT = -1;
 
   private static final String TAG = "SharedState";
@@ -127,6 +130,14 @@ public final class SharedState {
     SharedPreferences.Editor editor = preferences.edit();
     editor.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, values);
     editor.apply();
+  }
+
+  public static String getLastAlarmSmsNumber(Context context) {
+    return getSharedPreferences(context, LAST_ALARM_SMS_NUMBER, "");
+  }
+
+  public static void setLastAlarmSmsNumber(Context context, String smsNumber) {
+    setSharedPreferences(context, LAST_ALARM_SMS_NUMBER, smsNumber);
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

@@ -177,18 +177,23 @@ public class StateFragment extends AbstractListFragment<State> {
     if (alarmState.first != AlarmState.OFF) {
       alarmCloseButtonSupplier = () -> {
         Button button = new Button(getContext());
-        button.setText(getString(R.string.main_state_button_close_alert));
+        boolean unconfirmed = alarmState.first == AlarmState.ON;
+        button.setText(unconfirmed ? getString(R.string.main_state_button_confirm_alert) : getString(R.string.main_state_button_close_alert));
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
         button.setOnClickListener(v -> {
-          try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
-            ContentValues values = new ContentValues();
-            values.put("end_time", Instant.now().toEpochMilli());
-            int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
-            if (update != 1) {
-              Log.e(TAG, "One open case expected, but got " + update);
+          if (unconfirmed) {
+            PikettAlarmActivity.confirmAlarm(getContext());
+          } else {
+            try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
+              ContentValues values = new ContentValues();
+              values.put("end_time", Instant.now().toEpochMilli());
+              int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
+              if (update != 1) {
+                Log.e(TAG, "One open case expected, but got " + update);
+              }
             }
+            NotificationHelper.cancelNotification(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
           }
-          NotificationHelper.cancelNotification(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
           refresh();
         });
         return button;

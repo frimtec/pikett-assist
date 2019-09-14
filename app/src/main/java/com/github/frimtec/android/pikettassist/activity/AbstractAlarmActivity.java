@@ -220,6 +220,6 @@ abstract class AbstractAlarmActivity extends AppCompatActivity {
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
         1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     Objects.requireNonNull(alarmManager);
-    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli(), pendingIntent);
+    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 5, pendingIntent);
   }
 }

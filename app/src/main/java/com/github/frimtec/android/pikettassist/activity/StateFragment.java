@@ -20,6 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
@@ -29,6 +31,7 @@ import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
@@ -66,6 +69,14 @@ public class StateFragment extends AbstractListFragment<State> {
   private static final String TAG = "StateFragment";
 
   static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
+
+  private AlarmService alarmService;
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    this.alarmService = new AlarmService(this.getContext());
+  }
 
   @Override
   protected void configureListView(ListView listView) {
@@ -182,7 +193,7 @@ public class StateFragment extends AbstractListFragment<State> {
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
         button.setOnClickListener(v -> {
           if (unconfirmed) {
-            PikettAlarmActivity.confirmAlarm(getContext());
+            alarmService.confirmAlarm();
           } else {
             try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
               ContentValues values = new ContentValues();

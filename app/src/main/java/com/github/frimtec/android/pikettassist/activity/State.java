@@ -1,9 +1,10 @@
 package com.github.frimtec.android.pikettassist.activity;
 
 import android.content.Context;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.widget.Button;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class State {
@@ -13,15 +14,17 @@ public class State {
   private final String value;
   private final Supplier<Button> buttonSupplier;
   private final TrafficLight state;
-  private final Consumer<Context> onClickAction;
 
-  public State(int iconResource, String title, String value, Supplier<Button> buttonSupplier, TrafficLight state, Consumer<Context> onClickAction) {
+  public enum TrafficLight {
+    OFF, RED, YELLOW, GREEN
+  }
+
+  public State(int iconResource, String title, String value, Supplier<Button> buttonSupplier, TrafficLight state) {
     this.iconResource = iconResource;
     this.title = title;
     this.value = value;
     this.buttonSupplier = buttonSupplier;
     this.state = state;
-    this.onClickAction = onClickAction;
   }
 
   public int getIconResource() {
@@ -44,11 +47,14 @@ public class State {
     return state;
   }
 
-  public void onClick(Context context) {
-    onClickAction.accept(context);
+  public void onClickAction(Context context) {
   }
 
-  public enum TrafficLight {
-    OFF, RED, YELLOW, GREEN
+  public void onCreateContextMenu(Context context, ContextMenu menu) {
   }
+
+  public boolean onContextItemSelected(Context context, MenuItem item) {
+    return false;
+  }
+
 }

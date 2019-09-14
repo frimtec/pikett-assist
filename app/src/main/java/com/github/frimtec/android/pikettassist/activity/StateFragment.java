@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.activity;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +13,11 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -63,13 +69,18 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private static final int SELECT_PHONE_NUMBER = 111;
 
+  private static final int MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID = 1;
+  private static final int MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID = 2;
+  private static final int MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID = 3;
+
   @Override
   protected void configureListView(ListView listView) {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {
       State selectedState = (State) listView.getItemAtPosition(position);
-      selectedState.onClick(getContext());
+      selectedState.onClickAction(getContext());
     });
+    registerForContextMenu(listView);
   }
 
   @Override
@@ -99,8 +110,12 @@ public class StateFragment extends AbstractListFragment<State> {
     if (missingPermissions) {
       Feature permission = missingPermission.get();
       if (permission.isSensitive()) {
-        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(permission.getNameResourceId()), null, RED,
-            context -> permission.request(context, this)));
+        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(permission.getNameResourceId()), null, RED) {
+          @Override
+          public void onClickAction(Context context) {
+            permission.request(context, StateFragment.this);
+          }
+        });
       } else {
         permission.request(getContext(), this);
       }
@@ -108,11 +123,21 @@ public class StateFragment extends AbstractListFragment<State> {
 
     boolean canDrawOverlays = SETTING_DRAW_OVERLAYS.isAllowed(getContext());
     if (!canDrawOverlays) {
-      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED, context -> SETTING_DRAW_OVERLAYS.request(context, this)));
+      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED) {
+        @Override
+        public void onClickAction(Context context) {
+          SETTING_DRAW_OVERLAYS.request(context, StateFragment.this);
+        }
+      });
     }
 
     if (!SETTING_BATTERY_OPTIMIZATION_OFF.isAllowed(getContext())) {
-      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW, context -> SETTING_BATTERY_OPTIMIZATION_OFF.request(context, this)));
+      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW) {
+        @Override
+        public void onClickAction(Context context) {
+          SETTING_BATTERY_OPTIMIZATION_OFF.request(context, StateFragment.this);
+        }
+      });
     }
 
     if (!missingPermissions && canDrawOverlays) {
@@ -178,40 +203,75 @@ public class StateFragment extends AbstractListFragment<State> {
 
     Contact operationCenter = ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
     states.addAll(Arrays.asList(
-        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : RED, context -> {
-          long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
-          if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
-            intent.setData(uri);
-            startActivity(intent);
-          } else {
-            Intent intent  = new Intent(Intent.ACTION_PICK);
-            intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-            startActivityForResult(intent, SELECT_PHONE_NUMBER);
+        new State(R.drawable.ic_phone_black_24dp, getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? GREEN : RED) {
+          @Override
+          public void onClickAction(Context context) {
+            long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
+            if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
+              actionViewContact(alarmOperationsCenterContact);
+            } else {
+              actionSelectContact();
+            }
           }
-        }),
-        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.state_on : R.string.state_off), null, pikettState == OnOffState.ON ? GREEN : OFF, context -> {
-          Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-          builder.appendPath("time");
-          ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
-          Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
-          startActivity(intent);
-        }),
-        new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButtonSupplier, alarmTrafficLight, context -> {
-          if (alarmState.second != null) {
-            Intent intent = new Intent(getContext(), AlertDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, alarmState.second);
-            intent.putExtras(bundle);
-            startActivity(intent);
-          } else {
-            switchFragment(MainActivity.Fragment.CALL_LOG);
+
+          @Override
+          public void onCreateContextMenu(Context context, ContextMenu menu) {
+            long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
+            if (ContactHelper.getContact(context, alarmOperationsCenterContact).isValid()) {
+              menu.add(Menu.NONE, MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_view);
+            }
+            menu.add(Menu.NONE, MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_select);
+            menu.add(Menu.NONE, MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_clear);
           }
-        }),
+
+          @Override
+          public boolean onContextItemSelected(Context context, MenuItem item) {
+            switch (item.getItemId()) {
+              case MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID:
+                actionViewContact(SharedState.getAlarmOperationsCenterContact(context));
+                return true;
+              case MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID:
+                actionSelectContact();
+                refresh();
+                return true;
+              case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
+                NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
+                  SharedState.setAlarmOperationsCenterContact(context, ContactHelper.notFound(context));
+                  refresh();
+                }, (dialog, which) -> {
+                });
+                return true;
+              default:
+                return false;
+            }
+          }
+        },
+        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.state_on : R.string.state_off), null, pikettState == OnOffState.ON ? GREEN : OFF) {
+          @Override
+          public void onClickAction(Context context) {
+            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+            builder.appendPath("time");
+            ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+            startActivity(intent);
+          }
+        },
+        new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButtonSupplier, alarmTrafficLight) {
+          @Override
+          public void onClickAction(Context context) {
+            if (alarmState.second != null) {
+              Intent intent = new Intent(getContext(), AlertDetailActivity.class);
+              Bundle bundle = new Bundle();
+              bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, alarmState.second);
+              intent.putExtras(bundle);
+              startActivity(intent);
+            } else {
+              switchFragment(MainActivity.Fragment.CALL_LOG);
+            }
+          }
+        },
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
-            superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight, context -> {
-        }))
+            superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight))
     );
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
@@ -238,15 +298,31 @@ public class StateFragment extends AbstractListFragment<State> {
             }
           }
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF, context -> {
-          Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
-          Bundle bundle = new Bundle();
-          bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
-          intent.putExtras(bundle);
-          startActivity(intent);
-        }));
+        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
+          @Override
+          public void onClickAction(Context context) {
+            Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
+            intent.putExtras(bundle);
+            startActivity(intent);
+          }
+        });
       }
     }
+  }
+
+  private void actionSelectContact() {
+    Intent intent = new Intent(Intent.ACTION_PICK);
+    intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
+    startActivityForResult(intent, SELECT_PHONE_NUMBER);
+  }
+
+  private void actionViewContact(long alarmOperationsCenterContact) {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
+    intent.setData(uri);
+    startActivity(intent);
   }
 
   private String formatDateTime(Instant time) {
@@ -254,5 +330,23 @@ public class StateFragment extends AbstractListFragment<State> {
         LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(StateFragment.DATE_TIME_FORMAT, Locale.getDefault())) : "";
   }
 
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+    State selectedItem = (State) getListView().getItemAtPosition(info.position);
+    selectedItem.onCreateContextMenu(getContext(), menu);
+  }
 
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    ListView listView = getListView();
+    State selectedItem = (State) listView.getItemAtPosition(info.position);
+    boolean selected = selectedItem.onContextItemSelected(getContext(), item);
+    if (selected) {
+      return true;
+    } else {
+      return super.onContextItemSelected(item);
+    }
+  }
 }

@@ -87,6 +87,8 @@
     <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
     <string name="list_item_menu_view">View</string>
     <string name="list_item_menu_delete">Delete</string>
+    <string name="list_item_menu_select">Select</string>
+    <string name="list_item_menu_clear">Clear</string>
     <string name="list_item_menu_activate">Activate</string>
     <string name="list_item_menu_deactivate">Deactivate</string>
     <string name="test_alarm_context_general">General</string>

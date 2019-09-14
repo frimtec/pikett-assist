@@ -15,6 +15,8 @@ import java.util.Set;
 
 public class ContactHelper {
 
+  private static final long UNKNOWN_ID = -1;
+
   public static Contact getContact(Context context, long id) {
     ContentResolver cr = context.getContentResolver();
     try (Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI,
@@ -25,7 +27,7 @@ public class ContactHelper {
         return new Contact(id, true, cursor.getString(0));
       }
     }
-    return notFound(context, id);
+    return notFound(context);
   }
 
   public static Contact getContact(Context context, Uri contactUri) {
@@ -35,11 +37,11 @@ public class ContactHelper {
         return new Contact(cursor.getLong(0), true, cursor.getString(1));
       }
     }
-    return notFound(context, -1);
+    return notFound(context);
   }
 
-  private static Contact notFound(Context context, long id) {
-    return new Contact(id, false, context.getString(R.string.contact_helper_unknown_contact));
+  public static Contact notFound(Context context) {
+    return new Contact(UNKNOWN_ID, false, context.getString(R.string.contact_helper_unknown_contact));
   }
 
   public static Set<Long> lookupContactIdByPhoneNumber(Context context, String phoneNumber) {

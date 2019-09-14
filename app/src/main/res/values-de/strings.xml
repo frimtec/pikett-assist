@@ -71,6 +71,8 @@
     <string name="alert_view_state_to_be_confirmed">Zu Bestätigen</string>
     <string name="list_item_menu_view">Anzeigen</string>
     <string name="list_item_menu_delete">Löschen</string>
+    <string name="list_item_menu_select">Auswählen</string>
+    <string name="list_item_menu_clear">Entfernen</string>
     <string name="list_item_menu_activate">Aktivieren</string>
     <string name="list_item_menu_deactivate">Deaktivieren</string>
     <string name="test_alarm_context_general">Allgemein</string>

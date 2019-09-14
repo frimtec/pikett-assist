@@ -24,9 +24,16 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/disclaimer"
+        android:id="@+id/documentation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_info"
+        android:layout_marginStart="10dp" />
+
+    <TextView
+        android:id="@+id/disclaimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/documentation"
         android:layout_marginStart="10dp" />
 </RelativeLayout>

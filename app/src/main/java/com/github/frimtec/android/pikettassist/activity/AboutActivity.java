@@ -22,13 +22,17 @@ public class AboutActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_about);
     setupAppInfo();
+    setupDocumentation();
     setupDisclaimer();
   }
 
-  private void setupDisclaimer() {
-    TextView textView = findViewById(R.id.disclaimer);
-    textView.setText(Html.fromHtml(getString(R.string.about_disclaimer), Html.FROM_HTML_MODE_COMPACT));
-    textView.setMovementMethod(LinkMovementMethod.getInstance());
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == android.R.id.home) {
+      onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private void setupAppInfo() {
@@ -53,14 +57,16 @@ public class AboutActivity extends AppCompatActivity {
     textView.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      // Override home navigation button to call onBackPressed (b/35152749).
-      onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
+  private void setupDocumentation() {
+    TextView textView = findViewById(R.id.documentation);
+    textView.setText(Html.fromHtml(getString(R.string.about_documentation), Html.FROM_HTML_MODE_COMPACT));
+    textView.setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  private void setupDisclaimer() {
+    TextView textView = findViewById(R.id.disclaimer);
+    textView.setText(Html.fromHtml(getString(R.string.about_disclaimer), Html.FROM_HTML_MODE_COMPACT));
+    textView.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
 }

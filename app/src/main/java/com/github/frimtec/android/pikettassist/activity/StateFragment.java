@@ -13,6 +13,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -238,7 +239,36 @@ public class StateFragment extends AbstractListFragment<State> {
           }
         },
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
-            superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight))
+            superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight) {
+
+          private static final int MENU_CONTEXT_DEACTIVATE = 1;
+          private static final int MENU_CONTEXT_ACTIVATE = 2;
+
+          @Override
+          public void onCreateContextMenu(Context context, ContextMenu menu) {
+            if (SharedState.getSuperviseSignalStrength(context)) {
+              menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE, Menu.NONE, R.string.list_item_menu_deactivate);
+            } else {
+              menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE, Menu.NONE, R.string.list_item_menu_activate);
+            }
+          }
+
+          @Override
+          public boolean onContextItemSelected(Context context, MenuItem item) {
+            switch (item.getItemId()) {
+              case MENU_CONTEXT_DEACTIVATE:
+                SharedState.setSuperviseSignalStrength(context, false);
+                StateFragment.this.refresh();
+                return true;
+              case MENU_CONTEXT_ACTIVATE:
+                SharedState.setSuperviseSignalStrength(context, true);
+                StateFragment.this.refresh();
+                return true;
+              default:
+                return false;
+            }
+          }
+        })
     );
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {

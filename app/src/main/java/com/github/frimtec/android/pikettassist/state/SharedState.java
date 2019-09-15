@@ -97,6 +97,13 @@ public final class SharedState {
     return preferences.getBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, true);
   }
 
+  public static void setSuperviseSignalStrength(Context context, boolean supervise) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, supervise);
+    editor.apply();
+  }
+
   public static String getAlarmRingTone(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getString(PREF_KEY_ALARM_RING_TONE, "");

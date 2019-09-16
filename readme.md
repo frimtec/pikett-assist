@@ -149,8 +149,7 @@ Currently the following languages are supported in PAssist:
 
 ## Open-Source and free
 PAssist is Open-Source and available under Apache-2.0 licence.
-PAssist is published as a free application on Google-Play.
-If you find PAssist useful and use it on a regular basis for your on-call duties, a voluntary donation via In-App purchase is warmly welcome.
+If you find PAssist useful and use it on a regular basis for your on-call duties, a voluntary donation is warmly welcome.
 
 ## Disclaimer
 The use of PAssist is at your own risk. The author assumes no liability for malfunctions of the application.

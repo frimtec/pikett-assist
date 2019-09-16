@@ -53,7 +53,7 @@
 
     <string name="pref_header_notifications">Benachrichtigungen</string>
     <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>
-    <string name="pref_title_test_alarm_ring_tone">Vehlender Testalarm Klingelton</string>
+    <string name="pref_title_test_alarm_ring_tone">Fehlender Testalarm Klingelton</string>
     <string name="pref_title_supervise_signal_strength">Signalstärke überwachen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">Über</string>

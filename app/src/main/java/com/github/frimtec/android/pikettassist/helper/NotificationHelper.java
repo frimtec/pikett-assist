@@ -26,6 +26,7 @@ import java.util.function.BiConsumer;
 
 import static android.app.Notification.CATEGORY_ALARM;
 import static android.app.Notification.CATEGORY_EVENT;
+import static android.app.Notification.CATEGORY_REMINDER;
 
 
 public class NotificationHelper {
@@ -34,7 +35,9 @@ public class NotificationHelper {
   public static final int SHIFT_NOTIFICATION_ID = 2;
   public static final int SIGNAL_NOTIFICATION_ID = 3;
   public static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
+  public static final int UPDATE_NOTIFICATION_ID = 5;
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
+  public static final String ACTION_UPDATE_NOW = "com.github.frimtec.android.pikettassist.UPDATE_NOW";
   private static final String CHANNEL_ID = "com.github.frimtec.android.pikettassist";
 
   public static void registerChannel(Context context) {
@@ -71,6 +74,21 @@ public class NotificationHelper {
 
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
+  }
+
+  public static void notifyNewVersion(Context context, String newVersion, Intent updateIntent) {
+    PendingIntent updatePendingIntent = PendingIntent.getBroadcast(context, 0, updateIntent, 0);
+    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+        .setContentTitle(String.format(context.getString(R.string.notification_update_available_title), newVersion))
+        .setSmallIcon(R.drawable.ic_system_update_alt_black_24dp)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setCategory(CATEGORY_REMINDER)
+        .setOnlyAlertOnce(true)
+        .addAction(R.drawable.ic_siren, context.getString(R.string.notification_update_button), updatePendingIntent)
+        .build();
+
+    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+    notificationManagerCompat.notify(UPDATE_NOTIFICATION_ID, notification);
   }
 
   public static void notifyMissingTestAlarm(Context context, Intent notifyIntent, Set<String> testContexts) {

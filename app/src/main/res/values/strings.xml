@@ -163,5 +163,6 @@
     <string name="test_alarm_add_title">Enter new test alarm context</string>
     <string name="test_alarm_toast_added_success">New test alarm context added.</string>
     <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
-
+    <string name="notification_update_available_title">PAssist version %s is available!</string>
+    <string name="notification_update_button">Update now</string>
 </resources>

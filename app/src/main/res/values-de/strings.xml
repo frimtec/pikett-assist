@@ -147,5 +147,7 @@
     <string name="test_alarm_add_title">Neuer Testalarmkontext</string>
     <string name="test_alarm_toast_added_success">Neuer Testalarmkontext wurde hinzugefügt.</string>
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
+    <string name="notification_update_available_title">PAssist Version %s steht bereit!</string>
+    <string name="notification_update_button">Jetzt aktualisieren</string>
 
 </resources>

@@ -15,7 +15,7 @@ import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Sms;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
-import com.github.frimtec.android.pikettassist.receiver.AlarmActionListener;
+import com.github.frimtec.android.pikettassist.receiver.NotificationActionListener;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
@@ -101,7 +101,7 @@ public class AlarmService {
     SmsHelper.confirmSms(SharedState.getSmsConfirmText(context), smsNumber);
     NotificationHelper.notifyAlarm(
         context,
-        new Intent(context, AlarmActionListener.class),
+        new Intent(context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,
         context.getString(R.string.alert_action_close),
         new Intent(context, MainActivity.class)

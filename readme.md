@@ -99,7 +99,7 @@ Defines the text to send back as alarm acknowledgement to your operations center
 Defines one specific or all of your calenders, that should be used to look for on-call events. 
 
 #### Event filter
-Defines the a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to 
+Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to 
 match the titles of your calendar events, which should be considered for your on-call duties.
 
 ![Calendar settings](images/PAssist_12.png)
@@ -164,4 +164,4 @@ The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 26 (A
 
 ## Feedback
 Feedback, bug reports or feature requests are very welcome.
-You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue in GitHub](https://github.com/frimtec/pikett-assist/issues).
+You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub](https://github.com/frimtec/pikett-assist/issues).

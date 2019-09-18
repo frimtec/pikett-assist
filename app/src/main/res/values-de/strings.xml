@@ -55,6 +55,7 @@
     <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>
     <string name="pref_title_test_alarm_ring_tone">Fehlender Testalarm Klingelton</string>
     <string name="pref_title_supervise_signal_strength">Signalstärke überwachen</string>
+    <string name="pref_title_check_for_updates">Aktualisierungen prüfen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">Über</string>
 
@@ -147,5 +148,7 @@
     <string name="test_alarm_add_title">Neuer Testalarmkontext</string>
     <string name="test_alarm_toast_added_success">Neuer Testalarmkontext wurde hinzugefügt.</string>
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
-
+    <string name="notification_update_available_title">PAssist Version %s steht bereit!</string>
+    <string name="notification_update_button">Jetzt herunterladen</string>
+s
 </resources>

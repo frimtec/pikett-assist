@@ -84,6 +84,6 @@ public class GitHubService {
         }
       }
     }
-    return "N/A";
+    return null;
   }
 }

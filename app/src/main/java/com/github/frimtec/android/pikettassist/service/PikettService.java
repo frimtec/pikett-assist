@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_UPDATE_NOW;
+import static com.github.frimtec.android.pikettassist.receiver.NotificationActionListener.EXTRA_DOWNLOAD_URL;
+import static com.github.frimtec.android.pikettassist.receiver.NotificationActionListener.EXTRA_VERSION_NAME;
 
 public class PikettService extends IntentService {
 
@@ -36,10 +38,6 @@ public class PikettService extends IntentService {
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
     sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
-
-    if (SharedState.getPikettState(this) == OnOffState.OFF) {
-      versionCheck();
-    }
   }
 
   @Override
@@ -51,6 +49,9 @@ public class PikettService extends IntentService {
         .anyMatch(set -> !set.isAllowed(this))) {
       Log.w(TAG, "Not all required permissions are granted. Services is stopped.");
       return;
+    }
+    if (SharedState.getPikettState(this) == OnOffState.OFF && SharedState.checkForUpdates(this)) {
+      versionCheck();
     }
     Instant now = PikettShift.now();
     Optional<PikettShift> first = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this), SharedState.getCalendarSelection(this))
@@ -81,6 +82,8 @@ public class PikettService extends IntentService {
         Log.i(TAG, String.format("Version check: installed version=%s; latest version=%s", installedVersionName, latestVersionName));
         if (installedVersionName.compareTo(latestVersionName) <= 0) {
           Intent updateIntent = new Intent(context, NotificationActionListener.class);
+          updateIntent.putExtra(EXTRA_VERSION_NAME, latestVersionName);
+          updateIntent.putExtra(EXTRA_DOWNLOAD_URL, latestRelease.getApkUrl());
           updateIntent.setAction(ACTION_UPDATE_NOW);
           NotificationHelper.notifyNewVersion(context, latestVersionName, updateIntent);
         }

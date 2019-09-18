@@ -72,6 +72,7 @@
     <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>
     <string name="pref_title_test_alarm_ring_tone">Missing test alarm ringtone</string>
     <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
+    <string name="pref_title_check_for_updates">Check for updates</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
 
@@ -164,5 +165,5 @@
     <string name="test_alarm_toast_added_success">New test alarm context added.</string>
     <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
     <string name="notification_update_available_title">PAssist version %s is available!</string>
-    <string name="notification_update_button">Update now</string>
+    <string name="notification_update_button">Download now</string>
 </resources>

@@ -1,17 +1,16 @@
 package com.github.frimtec.android.pikettassist.receiver;
 
-import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Environment;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.AlarmService;
-import com.github.frimtec.android.pikettassist.service.GitHubService;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_UPDATE_NOW;
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.UPDATE_NOTIFICATION_ID;
@@ -19,6 +18,9 @@ import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.
 public class NotificationActionListener extends BroadcastReceiver {
 
   private static final String TAG = "NotificationActionListener";
+
+  public static final String EXTRA_VERSION_NAME = "version_name";
+  public static final String EXTRA_DOWNLOAD_URL = "download_url";
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -30,18 +32,21 @@ public class NotificationActionListener extends BroadcastReceiver {
           break;
         case ACTION_UPDATE_NOW:
           NotificationHelper.cancelNotification(context, UPDATE_NOTIFICATION_ID);
-          Log.i(TAG, "Update now!");
-
-          GitHubService.getInstance(context).loadLatestRelease(context, (context1, release) -> {
-            String url = release.getApkUrl();
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-            request.setTitle("Download PAssist version " + release.getName());
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, String.format("passist-app-%s.apk", release.getName()));
-            DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-            long downloadId = manager.enqueue(request);
-            Log.i(TAG, "Start download: " + downloadId);
-          });
+          Bundle intentExtras = intent.getExtras();
+          if (intentExtras != null) {
+            String versionName = intentExtras.getString(EXTRA_VERSION_NAME);
+            try {
+              String url = intentExtras.getString(EXTRA_DOWNLOAD_URL);
+              if (url != null) {
+                Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(openBrowserIntent);
+              }
+            } catch (Exception e) {
+              Log.e(TAG, "Cannot parse download URI for version " + versionName, e);
+              return;
+            }
+          }
           break;
         default:
           Log.e(TAG, "Unknown action: " + action);

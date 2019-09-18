@@ -1,6 +1,5 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -8,11 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,8 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-
-  private static final String TAG = "MainActivity";
 
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
@@ -157,11 +152,6 @@ public class MainActivity extends AppCompatActivity {
     broadcastReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-        if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
-          Log.i(TAG, "Download completed: " + intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID, -1));
-          Toast.makeText(MainActivity.this, "Download Completed", Toast.LENGTH_SHORT).show();
-          return;
-        }
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
             SharedState.getPikettState(context) == OnOffState.ON) {
           try {
@@ -177,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
     };
     IntentFilter filter = new IntentFilter("com.github.frimtec.android.pikettassist.refresh");
     filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-    filter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
     registerReceiver(broadcastReceiver, filter);
   }
 

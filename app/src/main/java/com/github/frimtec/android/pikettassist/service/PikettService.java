@@ -80,7 +80,7 @@ public class PikettService extends IntentService {
         String installedVersionName = packageInfo.versionName;
         String latestVersionName = latestRelease.getName();
         Log.i(TAG, String.format("Version check: installed version=%s; latest version=%s", installedVersionName, latestVersionName));
-        if (installedVersionName.compareTo(latestVersionName) <= 0) {
+        if (installedVersionName.compareTo(latestVersionName) < 0) {
           Intent updateIntent = new Intent(context, NotificationActionListener.class);
           updateIntent.putExtra(EXTRA_VERSION_NAME, latestVersionName);
           updateIntent.putExtra(EXTRA_DOWNLOAD_URL, latestRelease.getApkUrl());

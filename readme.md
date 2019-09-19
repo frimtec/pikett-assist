@@ -72,7 +72,8 @@ If you are experienced in the app verification process of Google, please let me 
 
 ### Install pre build APK
 You can download the APK file from the [GitHub release page](https://github.com/frimtec/pikett-assist/releases).
-To install the APK you need to disable "Play Protect" in "Google Play" for the time of the installation (don't forget to re-enable "Play Protect" after the installation).
+To install the APK you need to disable "Play Protect" in "Google Play" for the time of the installation (don't forget to re-enable "Play Protect" after the installation). This is only required for the first installation. Updates can be installed with "Play Protect" enabled.
+Once installed PAssist will inform you when updates are available and initiates the download on request.
 
 ### Self build
 Build PAssist on your own and then install the APK via ADB to your android phone.

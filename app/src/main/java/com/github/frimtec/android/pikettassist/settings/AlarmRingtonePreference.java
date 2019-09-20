@@ -33,6 +33,7 @@ public class AlarmRingtonePreference extends RingtonePreference {
   }
 
   private String extractTitle(String preferenceValue) {
-    return Uri.parse(preferenceValue).getQueryParameter("title");
+    String title = Uri.parse(preferenceValue).getQueryParameter("title");
+    return title != null ? title : preferenceValue.substring(preferenceValue.lastIndexOf("/") + 1);
   }
 }

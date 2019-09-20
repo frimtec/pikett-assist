@@ -18,7 +18,7 @@ import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 
-import java.time.Instant;
+import org.threeten.bp.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

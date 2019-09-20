@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
@@ -43,10 +44,12 @@ public class NotificationHelper {
   public static void registerChannel(Context context) {
     CharSequence name = context.getString(R.string.channel_name);
     String description = context.getString(R.string.channel_description);
-    NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH);
-    channel.setDescription(description);
-    NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-    notificationManager.createNotificationChannel(channel);
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH);
+      channel.setDescription(description);
+      NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+      notificationManager.createNotificationChannel(channel);
+    }
   }
 
   public static void notifyAlarm(Context context, Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
@@ -96,7 +99,7 @@ public class NotificationHelper {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
     );
-    String message = context.getString(R.string.notification_missing_test_alert_text) + String.join(", ", testContexts);
+    String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testContexts);
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
         .setContentTitle(context.getString(R.string.notification_missing_test_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))

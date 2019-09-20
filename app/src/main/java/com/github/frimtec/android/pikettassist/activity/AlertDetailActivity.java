@@ -16,8 +16,8 @@ import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 
-import java.time.Duration;
-import java.time.Instant;
+import org.threeten.bp.Duration;
+import org.threeten.bp.Instant;
 import java.util.LinkedList;
 
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;

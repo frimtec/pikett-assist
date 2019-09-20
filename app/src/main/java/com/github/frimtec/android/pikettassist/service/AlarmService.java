@@ -19,7 +19,7 @@ import com.github.frimtec.android.pikettassist.receiver.NotificationActionListen
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Instant;
+import org.threeten.bp.Instant;
 
 import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_FALSE;

@@ -7,7 +7,7 @@ import android.provider.CalendarContract;
 
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
 
-import java.time.Instant;
+import org.threeten.bp.Instant;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;

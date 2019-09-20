@@ -17,7 +17,7 @@ import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Instant;
+import org.threeten.bp.Instant;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Process;
 import android.util.Log;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -32,6 +34,7 @@ public class PAssist extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    AndroidThreeTen.init(this);
     Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
     openHelper = new DbHelper(this);
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");

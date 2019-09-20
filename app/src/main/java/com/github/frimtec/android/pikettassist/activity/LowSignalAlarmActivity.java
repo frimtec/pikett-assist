@@ -8,7 +8,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Duration;
+import org.threeten.bp.Duration;
 import java.util.Collections;
 
 import static com.github.frimtec.android.pikettassist.service.SignalStrengthService.isLowSignal;

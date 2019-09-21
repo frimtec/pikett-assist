@@ -59,6 +59,7 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_DRAW_OVERLAYS;
+import static com.github.frimtec.android.pikettassist.helper.Feature.SMS_SERVICE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
@@ -144,6 +145,15 @@ public class StateFragment extends AbstractListFragment<State> {
         @Override
         public void onClickAction(Context context) {
           SETTING_BATTERY_OPTIMIZATION_OFF.request(context, StateFragment.this);
+        }
+      });
+    }
+
+    if (!SMS_SERVICE.isAllowed(getContext())) {
+      states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter), getString(R.string.state_fragment_sms_adapter_not_installed), null, RED) {
+        @Override
+        public void onClickAction(Context context) {
+          SMS_SERVICE.request(context, StateFragment.this);
         }
       });
     }

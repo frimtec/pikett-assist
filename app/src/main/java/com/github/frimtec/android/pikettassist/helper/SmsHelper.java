@@ -1,40 +1,29 @@
 package com.github.frimtec.android.pikettassist.helper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.telephony.SmsMessage;
+import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Sms;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public final class SmsHelper {
+
+  private final static String TAG = "SmsHelper";
 
   private SmsHelper() {
   }
 
-  public static List<Sms> getSmsFromIntent(Intent intent) {
+  public static Sms getSmsFromIntent(Intent intent) {
     Bundle bundle = intent.getExtras();
-    if (bundle != null) {
-      Object[] pdus = (Object[]) bundle.get("pdus");
-      return Arrays.stream(pdus)
-          .map(pdu -> {
-            String format = bundle.getString("format");
-            SmsMessage message = SmsMessage.createFromPdu((byte[]) pdu, format);
-            return new Sms(message.getOriginatingAddress(), message.getMessageBody());
-          }).collect(Collectors.toList());
-    }
-    return Collections.emptyList();
+    return new Sms(bundle.getString(Intent.EXTRA_PHONE_NUMBER), bundle.getString(Intent.EXTRA_TEXT));
   }
 
-
-  public static void confirmSms(String confirmText, String number) {
-    SmsManager smsManager = SmsManager.getDefault();
-    smsManager.sendTextMessage(number, null, confirmText, null, null);
+  public static void confirmSms(Context context, String confirmText, String number) {
+    Intent sendSmsIntent = new Intent("com.github.frimtec.android.SEND_SMS");
+    sendSmsIntent.putExtra(Intent.EXTRA_PHONE_NUMBER, number);
+    sendSmsIntent.putExtra(Intent.EXTRA_TEXT, confirmText);
+    Log.d(TAG, "Broadcast: SMS send");
+    context.sendOrderedBroadcast(sendSmsIntent, null);
   }
-
 }

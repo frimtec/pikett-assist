@@ -55,7 +55,6 @@
     <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>
     <string name="pref_title_test_alarm_ring_tone">Fehlender Testalarm Klingelton</string>
     <string name="pref_title_supervise_signal_strength">Signalstärke überwachen</string>
-    <string name="pref_title_check_for_updates">Aktualisierungen prüfen</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">Über</string>
 
@@ -89,7 +88,6 @@
     <string name="notification_alert_text">Schliesse den Alarm wenn alle Aktivitäten abgeschlossen sind.</string>
     <string name="notification_missing_test_alert_title">Fehlender Testalarm</string>
     <string name="notification_missing_test_alert_text">Testkontexte: </string>
-    <string name="notification_alert_confirm_title">Pikettalarm</string>
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Akku-Optimierung ist aktiv!</string>
     <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.&lt;br/&gt;
@@ -112,7 +110,6 @@
     <string name="state_fragment_test_alarm_never_received">Nie erhalten</string>
     <string name="contact_helper_unknown_contact">Unbekannt</string>
     <string name="contact_preference_empty_selection">Leer</string>
-    <string name="state_fragment_toast_open_unknown_contact">Bitte einen gültigen Kontakt in den Alarmierungseinstellungen setzen!</string>
     <string name="about_documentation">&lt;h3&gt;Dokumentation&lt;/h3&gt;&lt;p&gt;Eine Dokumentation für die Benutzung von PAssist findest Du hier: &lt;a href=https://github.com/frimtec/pikett-assist/blob/master/readme.md#passist&gt;Anleitung&lt;/a&gt;.&lt;/p&gt;</string>
     <string name="about_disclaimer">&lt;h3&gt;Haftungsausschluss&lt;/h3&gt;&lt;p&gt;Der Autor übernimmt keine Verantwortung, gibt keinerlei Garantie bei der Nutzung der Anwendung.&lt;/p&gt;&lt;p&gt;Die Anwendung ist kostenlos. Der Quellcode steht als Open-Source unter der &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 Lizenz&lt;/a&gt; zur Verfügung.&lt;/p&gt;</string>
     <string name="general_ok">Ok</string>
@@ -128,8 +125,8 @@
     <string name="general_no_data">Noch keine Daten vorhanden.</string>
 
     <string name="permission_required">Benötigte Berechtigung:</string>
-    <string name="permission_sms_title">SMS</string>
-    <string name="permission_sms_text">Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfiguriertten Zentrale. Zur Quittierung wird eine SMS an den Sender zurückgeschickt. Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
+    <string name="permission_sms_title">SMS Adapter</string>
+    <string name="permission_sms_text">Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfiguriertten Zentrale. Zur Quittierung wird eine SMS an den Sender zurückgeschickt. Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können. Da SMS Berechtigungen von Google nicht mehr gewährt werden, musst du einen der unterstützen SMS Adapter installieren.</string>
     <string name="permission_contacts_title">Kontakte</string>
     <string name="permission_contacts_text">PAssist liest den konfigurierten Kontakt der Alarmierungszentrale, um zu ermitteln, von welcher Telefonnummer die zu überwachenden SMS gesendet werden. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
     <string name="permission_calendar_title">Kalender</string>
@@ -151,7 +148,6 @@
     <string name="test_alarm_add_title">Neuer Testalarmkontext</string>
     <string name="test_alarm_toast_added_success">Neuer Testalarmkontext wurde hinzugefügt.</string>
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
-    <string name="notification_update_available_title">PAssist Version %s steht bereit!</string>
-    <string name="notification_update_button">Jetzt herunterladen</string>
-s
+    <string name="state_fragment_sms_adapter">SMS Adapter</string>
+    <string name="state_fragment_sms_adapter_not_installed">Nicht vorhanden</string>
 </resources>

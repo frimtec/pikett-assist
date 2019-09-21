@@ -72,7 +72,6 @@
     <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>
     <string name="pref_title_test_alarm_ring_tone">Missing test alarm ringtone</string>
     <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
-    <string name="pref_title_check_for_updates">Check for updates</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_about">About</string>
 
@@ -105,7 +104,6 @@
     <string name="notification_alert_text">Close alarm when all activities are finsished.</string>
     <string name="notification_missing_test_alert_title">Missing test alarm</string>
     <string name="notification_missing_test_alert_text">Test contexts: </string>
-    <string name="notification_alert_confirm_title">On-call Alert</string>
     <string name="notification_alert_confirm_button">Confirm</string>
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
     <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimization turned off.&lt;br/&gt;
@@ -127,7 +125,6 @@
     <string name="state_fragment_test_alarm_never_received">Never received</string>
     <string name="contact_helper_unknown_contact">Unknown</string>
     <string name="contact_preference_empty_selection">Empty</string>
-    <string name="state_fragment_toast_open_unknown_contact">Please set a valid contact in the alarming settings!</string>
     <string name="about_documentation">&lt;h3&gt;Documentation&lt;/h3&gt;&lt;p&gt;A manual for the use of PAssist can be found here: &lt;a href=https://github.com/frimtec/pikett-assist/blob/master/readme.md#passist&gt;Manual&lt;/a&gt;.&lt;/p&gt;</string>
     <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
     The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
@@ -144,8 +141,8 @@
     <string name="general_no_data">No data available yet.</string>
 
     <string name="permission_required">Required permission:</string>
-    <string name="permission_sms_title">SMS</string>
-    <string name="permission_sms_text">The main function of PAssist is to trigger an alarm when receiving an SMS from a configured operations center. The alarm will be automatically acknowledged after the users confirmation by a SMS reply to the operations center. The received alarm SMS are showed in the alert log tab. Without this permission PAssist does not work.</string>
+    <string name="permission_sms_title">SMS adapter</string>
+    <string name="permission_sms_text">The main function of PAssist is to trigger an alarm when receiving an SMS from a configured operations center. The alarm will be automatically acknowledged after the users confirmation by a SMS reply to the operations center. The received alarm SMS are showed in the alert log tab. As SMS permissions are no more granted by Google, you must install one of the supported SMS adapters.</string>
     <string name="permission_contacts_title">Contacts</string>
     <string name="permission_contacts_text">PAssist reads the phone number from the contact of the configured operations center. This is used to decide which SMS must be supervised during on-call duty. Without this permission PAssist does not work.</string>
     <string name="permission_calendar_title">Calendar</string>
@@ -167,6 +164,6 @@
     <string name="test_alarm_add_title">Enter new test alarm context</string>
     <string name="test_alarm_toast_added_success">New test alarm context added.</string>
     <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
-    <string name="notification_update_available_title">PAssist version %s is available!</string>
-    <string name="notification_update_button">Download now</string>
+    <string name="state_fragment_sms_adapter">SMS adapter</string>
+    <string name="state_fragment_sms_adapter_not_installed">Not available</string>
 </resources>

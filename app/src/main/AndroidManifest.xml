@@ -3,8 +3,6 @@
     package="com.github.frimtec.android.pikettassist">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -78,10 +76,9 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.SmsListener"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:name=".receiver.SmsListener">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="com.github.frimtec.android.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <receiver

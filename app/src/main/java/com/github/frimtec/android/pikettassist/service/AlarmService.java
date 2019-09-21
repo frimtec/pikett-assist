@@ -98,7 +98,7 @@ public class AlarmService {
         }
       }
     }
-    SmsHelper.confirmSms(SharedState.getSmsConfirmText(context), smsNumber);
+    SmsHelper.confirmSms(context, SharedState.getSmsConfirmText(context), smsNumber);
     NotificationHelper.notifyAlarm(
         context,
         new Intent(context, NotificationActionListener.class),

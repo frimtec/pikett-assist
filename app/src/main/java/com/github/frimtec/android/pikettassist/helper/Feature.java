@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -25,9 +27,6 @@ import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCode
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.PERMISSION_CHANGED_REQUEST_CODE;
 
 public enum Feature {
-  PERMISSION_SMS(true, true, R.string.permission_sms_title, context -> allPermissionsGranted(context, PermissionSets.SMS.getPermissions()), (context, fragment) -> {
-    requestPermissionsWithExplanation(context, fragment, PermissionSets.SMS.getPermissions(), R.string.permission_sms_title, R.string.permission_sms_text);
-  }),
   PERMISSION_CONTACTS_READ(true, true, R.string.permission_contacts_title, context -> allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.CONTACTS_READ.getPermissions(), R.string.permission_contacts_title, R.string.permission_contacts_text);
   }),
@@ -44,6 +43,10 @@ public enum Feature {
     NotificationHelper.infoDialog(context, R.string.notification_draw_overlays_title, R.string.notification_draw_overlays_text, (dialogInterface, integer) -> {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
       fragment.startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+    });
+  }),
+  SMS_SERVICE(false, false, R.string.permission_sms_title, (context) -> isPackageInstalled("com.github.frimtec.android.smswall", context.getPackageManager()), (context, fragment) -> {
+    NotificationHelper.infoDialog(context, R.string.permission_sms_title, R.string.permission_sms_text, (dialogInterface, integer) -> {
     });
   }),
   SETTING_BATTERY_OPTIMIZATION_OFF(false, false, R.string.notification_battery_optimization_title, context -> {
@@ -99,6 +102,15 @@ public enum Feature {
 
   private static void requestPermissions(Fragment fragment, String[] permissions) {
     ActivityCompat.requestPermissions(fragment.getActivity(), permissions, PERMISSION_CHANGED_REQUEST_CODE);
+  }
+
+  private static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+    try {
+      packageManager.getPackageInfo(packageName, 0);
+      return true;
+    } catch (PackageManager.NameNotFoundException e) {
+      return false;
+    }
   }
 
   public final static class RequestCodes {

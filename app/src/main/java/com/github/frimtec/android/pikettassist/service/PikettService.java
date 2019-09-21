@@ -16,8 +16,8 @@ import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.receiver.NotificationActionListener;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Duration;
-import java.time.Instant;
+import org.threeten.bp.Duration;
+import org.threeten.bp.Instant;
 import java.util.Arrays;
 import java.util.Optional;
 

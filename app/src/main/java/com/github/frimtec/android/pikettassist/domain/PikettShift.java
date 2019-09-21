@@ -1,7 +1,7 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import java.time.Duration;
-import java.time.Instant;
+import org.threeten.bp.Duration;
+import org.threeten.bp.Instant;
 
 public class PikettShift {
 

@@ -23,8 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.helper.VibrateHelper;
 
-import java.time.Duration;
-import java.time.Instant;
+import org.threeten.bp.Duration;
+import org.threeten.bp.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;

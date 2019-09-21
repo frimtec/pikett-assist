@@ -13,7 +13,7 @@ import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Instant;
+import org.threeten.bp.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

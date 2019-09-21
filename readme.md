@@ -158,10 +158,11 @@ Any warranty claims are excluded.
 
 ## Development
 PAssist is developed with [Android-Studio 3.5](https://developer.android.com/studio) with Java 8.
-The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 26 (Android 8.0-Oreo). 
+The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 24 (Android 7.0-Nougat).
 
 ## Used libraries
 * [proSwipeButton](https://github.com/shadowfaxtech/proSwipeButton)
+* [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) (java.time backport for SDK 25)
 
 ## Feedback
 Feedback, bug reports or feature requests are very welcome.

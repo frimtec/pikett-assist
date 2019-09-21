@@ -94,7 +94,9 @@ abstract class AbstractAlarmActivity extends AppCompatActivity {
     Objects.requireNonNull(pm);
     wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, tag + ":alarm");
     Objects.requireNonNull(wakeLock);
-    wakeLock.acquire(0);
+    if (!wakeLock.isHeld()) {
+      wakeLock.acquire(0);
+    }
 
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -206,7 +208,9 @@ abstract class AbstractAlarmActivity extends AppCompatActivity {
   protected void onDestroy() {
     Log.v(tag, "onDestroy");
     super.onDestroy();
-    wakeLock.release();
+    if (wakeLock.isHeld()) {
+      wakeLock.release();
+    }
 
     this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
   }

@@ -34,6 +34,7 @@ import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
@@ -41,6 +42,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -219,9 +221,47 @@ public class StateFragment extends AbstractListFragment<State> {
       };
     }
 
+    boolean pikettStateManuallyOn = SharedState.getPikettStateManuallyOn(getContext());
     states.addAll(Arrays.asList(
         new OperationsCenterState(this, ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()))),
-        new State(R.drawable.ic_eye, getString(R.string.state_fragment_pikett_state), getString(pikettState == OnOffState.ON ? R.string.state_on : R.string.state_off), null, pikettState == OnOffState.ON ? GREEN : OFF) {
+        new State(
+            R.drawable.ic_eye,
+            getString(R.string.state_fragment_pikett_state),
+            getString(pikettState == OnOffState.ON ? (pikettStateManuallyOn ? R.string.state_manually_on : R.string.state_on) : R.string.state_off),
+            null,
+            pikettState == OnOffState.ON ? (pikettStateManuallyOn ? YELLOW : GREEN) : OFF) {
+
+          private static final int MENU_CONTEXT_SET_MANUALLY_ON = 1;
+          private static final int MENU_CONTEXT_RESET = 2;
+
+          @Override
+          public void onCreateContextMenu(Context context, ContextMenu menu) {
+            if (SharedState.getPikettStateManuallyOn(getContext())) {
+              menu.add(Menu.NONE, MENU_CONTEXT_RESET, Menu.NONE, R.string.list_item_menu_reset);
+            } else {
+              menu.add(Menu.NONE, MENU_CONTEXT_SET_MANUALLY_ON, Menu.NONE, R.string.list_item_menu_set_manually_on);
+            }
+          }
+          @Override
+          public boolean onContextItemSelected(Context context, MenuItem item) {
+            switch (item.getItemId()) {
+              case MENU_CONTEXT_SET_MANUALLY_ON:
+                SharedState.setPikettStateManuallyOn(context, true);
+                context.startService(new Intent(context, SignalStrengthService.class));
+                context.startService(new Intent(context, PikettService.class));
+                StateFragment.this.refresh();
+                return true;
+              case MENU_CONTEXT_RESET:
+                SharedState.setPikettStateManuallyOn(context, false);
+                context.startService(new Intent(context, SignalStrengthService.class));
+                context.startService(new Intent(context, PikettService.class));
+                StateFragment.this.refresh();
+                return true;
+              default:
+                return false;
+            }
+          }
+
           @Override
           public void onClickAction(Context context) {
             Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();

@@ -93,6 +93,8 @@
     <string name="list_item_menu_clear">Clear</string>
     <string name="list_item_menu_activate">Activate</string>
     <string name="list_item_menu_deactivate">Deactivate</string>
+    <string name="list_item_menu_set_manually_on">Set manually on</string>
+    <string name="list_item_menu_reset">Reset</string>
     <string name="test_alarm_context_general">General</string>
     <string name="notification_low_signal_title">Low signal</string>
     <string name="notification_low_signal_text">Signal level</string>
@@ -117,6 +119,7 @@
     <string name="state_fragment_signal_level_supervise_enabled">Enabled</string>
     <string name="state_fragment_signal_level_supervise_disabled">Disabled</string>
     <string name="state_on">On</string>
+    <string name="state_manually_on">On (manually)</string>
     <string name="state_off">Off</string>
     <string name="alarm_state_on">Unconfirmed</string>
     <string name="alarm_state_on_confirmed">Confirmed</string>

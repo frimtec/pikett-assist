@@ -61,7 +61,7 @@ public class PikettService extends IntentService {
     Log.i(TAG, "Next run in " + waitMs);
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-    if (first.map(PikettShift::isNow).orElse(false)) {
+    if (SharedState.getPikettStateManuallyOn(this) || first.map(PikettShift::isNow).orElse(false)) {
       NotificationHelper.notifyShiftOn(this);
       this.startService(new Intent(this, SignalStrengthService.class));
       this.startService(new Intent(this, TestAlertService.class));

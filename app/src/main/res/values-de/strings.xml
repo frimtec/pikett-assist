@@ -114,6 +114,7 @@
     <string name="about_disclaimer">&lt;h3&gt;Haftungsausschluss&lt;/h3&gt;&lt;p&gt;Der Autor übernimmt keine Verantwortung, gibt keinerlei Garantie bei der Nutzung der Anwendung.&lt;/p&gt;&lt;p&gt;Die Anwendung ist kostenlos. Der Quellcode steht als Open-Source unter der &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 Lizenz&lt;/a&gt; zur Verfügung.&lt;/p&gt;</string>
     <string name="general_ok">Ok</string>
     <string name="general_cancel">Abbruch</string>
+    <string name="general_download">Herunterladen</string>
     <string name="general_no">Nein</string>
     <string name="general_yes">Ja</string>
     <string name="general_are_you_sure">Bist Du sicher?</string>
@@ -125,8 +126,6 @@
     <string name="general_no_data">Noch keine Daten vorhanden.</string>
 
     <string name="permission_required">Benötigte Berechtigung:</string>
-    <string name="permission_sms_title">SMS Adapter</string>
-    <string name="permission_sms_text">Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfiguriertten Zentrale. Zur Quittierung wird eine SMS an den Sender zurückgeschickt. Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können. Da SMS Berechtigungen von Google nicht mehr gewährt werden, musst du einen der unterstützen SMS Adapter installieren.</string>
     <string name="permission_contacts_title">Kontakte</string>
     <string name="permission_contacts_text">PAssist liest den konfigurierten Kontakt der Alarmierungszentrale, um zu ermitteln, von welcher Telefonnummer die zu überwachenden SMS gesendet werden. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
     <string name="permission_calendar_title">Kalender</string>
@@ -150,4 +149,20 @@
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
     <string name="state_fragment_sms_adapter">SMS Adapter</string>
     <string name="state_fragment_sms_adapter_not_installed">Nicht vorhanden</string>
+    <string name="state_fragment_phone_numbers_blocked">Telefonnummer blockiert</string>
+    <string name="state_fragment_loopback_sms_sent">Test-SMS gesendet…</string>
+    <string name="sms_listener_loopback_sms_received">Test-SMS empfangen!</string>
+    <string name="state_fragment_s2smp_requires_update">Benötigt Update</string>
+
+    <string name="permission_sms_title">SMS-Adapter Installation</string>
+    <string name="permission_sms_text">
+        Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfiguriertten Zentrale.
+        Zur Quittierung wird eine SMS an den Sender zurückgeschickt.
+        Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können.
+        Da SMS Berechtigungen von Google nicht mehr gewährt werden, musst du einen der unterstützen SMS Adapter installieren.
+        Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; als SMS-Adapter unterstützt.
+    </string>
+    <string name="permission_sms_update_title">SMS-Adapter Update</string>
+    <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; muss aktualisiert werden.</string>
+    <string name="list_item_menu_send_test_sms">Sende Test SMS</string>
 </resources>

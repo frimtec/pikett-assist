@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +11,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
@@ -20,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -32,11 +39,15 @@ import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.receiver.SmsListener;
 import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
+import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
@@ -49,9 +60,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
@@ -59,7 +72,6 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_DRAW_OVERLAYS;
-import static com.github.frimtec.android.pikettassist.helper.Feature.SMS_SERVICE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
@@ -75,11 +87,19 @@ public class StateFragment extends AbstractListFragment<State> {
   static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
 
   private AlarmService alarmService;
+  private SecureSmsProxyFacade s2smp;
+  private Activity parent;
+
+
+  public void setParent(Activity parent) {
+    this.parent = parent;
+  }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.alarmService = new AlarmService(this.getContext());
+    this.s2smp = SecureSmsProxyFacade.instance(this.getContext());
   }
 
   @Override
@@ -149,15 +169,6 @@ public class StateFragment extends AbstractListFragment<State> {
       });
     }
 
-    if (!SMS_SERVICE.isAllowed(getContext())) {
-      states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter), getString(R.string.state_fragment_sms_adapter_not_installed), null, RED) {
-        @Override
-        public void onClickAction(Context context) {
-          SMS_SERVICE.request(context, StateFragment.this);
-        }
-      });
-    }
-
     if (!missingPermissions && canDrawOverlays) {
       regularStates(states);
     }
@@ -166,6 +177,90 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   private void regularStates(List<State> states) {
+    Installation installation = this.s2smp.getInstallation();
+    boolean installed = installation.getAppVersion().isPresent();
+    Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
+    boolean allowed = phoneNumbers.isEmpty() || s2smp.isAllowed(phoneNumbers);
+    boolean newVersion = installed && installation.getApiVersion().compareTo(installation.getAppVersion().get()) > 0;
+    states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter),
+        installed ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? "S2SMP V" + installation.getAppVersion().get() : getString(R.string.state_fragment_phone_numbers_blocked))) : getString(R.string.state_fragment_sms_adapter_not_installed), null, installed ? (newVersion ? YELLOW : (allowed ? GREEN : RED)) : RED) {
+      @Override
+      public void onClickAction(Context context) {
+        if (!installed) {
+          SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_text), Html.FROM_HTML_MODE_COMPACT));
+          AlertDialog alertDialog = new AlertDialog.Builder(context)
+              // set dialog message
+              .setTitle(R.string.permission_sms_title)
+              .setMessage(message)
+              .setCancelable(true)
+              .setPositiveButton(R.string.general_download, (dialog, which) -> {
+                Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
+                openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(openBrowserIntent);
+              }).setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+              }).create();
+          alertDialog.show();
+          ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+          return;
+        }
+        if (!allowed) {
+          Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
+          StateFragment.this.s2smp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
+          return;
+        }
+        if (newVersion) {
+          SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_update_text), Html.FROM_HTML_MODE_COMPACT));
+          AlertDialog alertDialog = new AlertDialog.Builder(context)
+              // set dialog message
+              .setTitle(R.string.permission_sms_update_title)
+              .setMessage(message)
+              .setCancelable(true)
+              .setPositiveButton(R.string.general_download, (dialog, which) -> {
+                Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
+                openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(openBrowserIntent);
+              }).setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+              }).create();
+          alertDialog.show();
+          ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+          return;
+        }
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
+        if (launchIntent != null) {
+          startActivity(launchIntent);
+        }
+      }
+
+      private static final int MENU_CONTEXT_VIEW = 1;
+      private static final int SEND_TEST_SMS = 2;
+
+
+      @Override
+      public void onCreateContextMenu(Context context, ContextMenu menu) {
+        super.onCreateContextMenu(context, menu);
+        menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view);
+        menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms);
+      }
+
+      @Override
+      public boolean onContextItemSelected(Context context, MenuItem item) {
+        switch (item.getItemId()) {
+          case MENU_CONTEXT_VIEW:
+            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
+            if (launchIntent != null) {
+              startActivity(launchIntent);
+            }
+            return true;
+          case SEND_TEST_SMS:
+            StateFragment.this.s2smp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), SharedState.getSmsAdapterSecret(context));
+            Toast.makeText(context, R.string.state_fragment_loopback_sms_sent, Toast.LENGTH_SHORT).show();
+            return true;
+          default:
+            return false;
+        }
+      }
+    });
+
     OnOffState pikettState = SharedState.getPikettState(getContext());
     Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
     State.TrafficLight alarmTrafficLight;
@@ -245,6 +340,7 @@ public class StateFragment extends AbstractListFragment<State> {
               menu.add(Menu.NONE, MENU_CONTEXT_SET_MANUALLY_ON, Menu.NONE, R.string.list_item_menu_set_manually_on);
             }
           }
+
           @Override
           public boolean onContextItemSelected(Context context, MenuItem item) {
             switch (item.getItemId()) {

@@ -76,9 +76,11 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.SmsListener">
+            android:name=".receiver.SmsListener"
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="com.github.frimtec.android.SMS_RECEIVED" />
+                <action android:name="com.github.frimtec.android.securesmsproxy.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <receiver

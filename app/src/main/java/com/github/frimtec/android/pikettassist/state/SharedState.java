@@ -33,6 +33,7 @@ public final class SharedState {
   public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   public static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
+  public static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
@@ -91,6 +92,14 @@ public final class SharedState {
 
   public static String getSmsConfirmText(Context context) {
     return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, context.getString(R.string.pref_default_sms_confirm_text));
+  }
+
+  public static String getSmsAdapterSecret(Context context) {
+    return getSharedPreferences(context, PREF_KEY_SMS_ADAPTER_SECRET, "");
+  }
+
+  public static void setSmsAdapterSecret(Context context, String secret) {
+    setSharedPreferences(context, PREF_KEY_SMS_ADAPTER_SECRET, secret);
   }
 
   public static boolean getSuperviseSignalStrength(Context context) {

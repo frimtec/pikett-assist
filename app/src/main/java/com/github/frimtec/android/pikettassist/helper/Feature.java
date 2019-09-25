@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
@@ -13,6 +12,7 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public enum Feature {
       fragment.startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
     });
   }),
-  SMS_SERVICE(false, false, R.string.permission_sms_title, (context) -> isPackageInstalled("com.github.frimtec.android.smswall", context.getPackageManager()), (context, fragment) -> {
+  SMS_ADAPTER(false, false, R.string.permission_sms_title, (context) -> SecureSmsProxyFacade.instance(context).getInstallation().getAppVersion().isPresent(), (context, fragment) -> {
     NotificationHelper.infoDialog(context, R.string.permission_sms_title, R.string.permission_sms_text, (dialogInterface, integer) -> {
     });
   }),
@@ -104,15 +104,6 @@ public enum Feature {
     ActivityCompat.requestPermissions(fragment.getActivity(), permissions, PERMISSION_CHANGED_REQUEST_CODE);
   }
 
-  private static boolean isPackageInstalled(String packageName, PackageManager packageManager) {
-    try {
-      packageManager.getPackageInfo(packageName, 0);
-      return true;
-    } catch (PackageManager.NameNotFoundException e) {
-      return false;
-    }
-  }
-
   public final static class RequestCodes {
 
     public final static int PERMISSION_CHANGED_REQUEST_CODE = 1;
@@ -120,7 +111,6 @@ public enum Feature {
   }
 
   private enum PermissionSets {
-    SMS(new HashSet<>(Arrays.asList(Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS))),
     CONTACTS_READ(Collections.singleton(Manifest.permission.READ_CONTACTS)),
     CALENDAR_READ(Collections.singleton(Manifest.permission.READ_CALENDAR)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),

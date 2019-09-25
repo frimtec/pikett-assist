@@ -12,12 +12,12 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.activity.MainActivity;
 import com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
-import com.github.frimtec.android.pikettassist.domain.Sms;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SmsHelper;
 import com.github.frimtec.android.pikettassist.receiver.NotificationActionListener;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.threeten.bp.Instant;
 

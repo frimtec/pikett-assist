@@ -130,6 +130,7 @@
     The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
     <string name="general_ok">Ok</string>
     <string name="general_cancel">Cancel</string>
+    <string name="general_download">Download</string>
     <string name="general_no">No</string>
     <string name="general_yes">Yes</string>
     <string name="general_are_you_sure">Are you sure?</string>
@@ -141,8 +142,6 @@
     <string name="general_no_data">No data available yet.</string>
 
     <string name="permission_required">Required permission:</string>
-    <string name="permission_sms_title">SMS adapter</string>
-    <string name="permission_sms_text">The main function of PAssist is to trigger an alarm when receiving an SMS from a configured operations center. The alarm will be automatically acknowledged after the users confirmation by a SMS reply to the operations center. The received alarm SMS are showed in the alert log tab. As SMS permissions are no more granted by Google, you must install one of the supported SMS adapters.</string>
     <string name="permission_contacts_title">Contacts</string>
     <string name="permission_contacts_text">PAssist reads the phone number from the contact of the configured operations center. This is used to decide which SMS must be supervised during on-call duty. Without this permission PAssist does not work.</string>
     <string name="permission_calendar_title">Calendar</string>
@@ -165,5 +164,21 @@
     <string name="test_alarm_toast_added_success">New test alarm context added.</string>
     <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
     <string name="state_fragment_sms_adapter">SMS adapter</string>
-    <string name="state_fragment_sms_adapter_not_installed">Not available</string>
+    <string name="state_fragment_sms_adapter_not_installed">Not installed</string>
+    <string name="state_fragment_phone_numbers_blocked">Phone number blocked</string>
+    <string name="state_fragment_loopback_sms_sent">Test-SMS sent…</string>
+    <string name="sms_listener_loopback_sms_received">Test-SMS received!</string>
+    <string name="state_fragment_s2smp_requires_update">Requires update</string>
+
+    <string name="permission_sms_title">SMS adapter installation</string>
+    <string name="permission_sms_text">
+        The main function of PAssist is to trigger an alarm when receiving an SMS from a configured operations center.
+        The alarm will be automatically acknowledged after the users confirmation by a SMS reply to the operations center.
+        The received alarm SMS are showed in the alert log tab.
+        As SMS permissions are no more granted by Google, you must install one of the supported SMS adapters.
+        Currently &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; is supported as SMS adapter.
+    </string>
+    <string name="permission_sms_update_title">SMS adapter update</string>
+    <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; needs to be updated.</string>
+    <string name="list_item_menu_send_test_sms">Send test SMS</string>
 </resources>

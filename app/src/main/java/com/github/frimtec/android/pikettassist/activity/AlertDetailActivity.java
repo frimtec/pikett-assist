@@ -48,7 +48,7 @@ public class AlertDetailActivity extends AppCompatActivity {
       ListView listView = findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 
-      View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, null);
+      View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, listView, false);
       TextView timeWindow = headerView.findViewById(R.id.alert_detail_header_time_window);
       TextView currentState = headerView.findViewById(R.id.alert_detail_header_current_state);
       TextView durations = headerView.findViewById(R.id.alert_detail_header_durations);

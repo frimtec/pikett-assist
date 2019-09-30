@@ -1,40 +1,27 @@
 package com.github.frimtec.android.pikettassist.helper;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.telephony.SmsMessage;
 
-import com.github.frimtec.android.pikettassist.domain.Sms;
+import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
+import com.github.frimtec.android.securesmsproxyapi.Sms;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class SmsHelper {
 
   private SmsHelper() {
   }
 
-  public static List<Sms> getSmsFromIntent(Intent intent) {
-    Bundle bundle = intent.getExtras();
-    if (bundle != null) {
-      Object[] pdus = (Object[]) bundle.get("pdus");
-      return Arrays.stream(pdus)
-          .map(pdu -> {
-            String format = bundle.getString("format");
-            SmsMessage message = SmsMessage.createFromPdu((byte[]) pdu, format);
-            return new Sms(message.getOriginatingAddress(), message.getMessageBody());
-          }).collect(Collectors.toList());
-    }
-    return Collections.emptyList();
+  public static List<Sms> getSmsFromIntent(Context context, Intent intent) {
+    SecureSmsProxyFacade s2smp = SecureSmsProxyFacade.instance(context);
+    return s2smp.extractReceivedSms(intent, SharedState.getSmsAdapterSecret(context));
   }
 
-
-  public static void confirmSms(String confirmText, String number) {
-    SmsManager smsManager = SmsManager.getDefault();
-    smsManager.sendTextMessage(number, null, confirmText, null, null);
+  public static void confirmSms(Context context, String confirmText, String number) {
+    SecureSmsProxyFacade s2smp = SecureSmsProxyFacade.instance(context);
+    com.github.frimtec.android.securesmsproxyapi.Sms sms = new Sms(number, confirmText);
+    s2smp.sendSms(sms, SharedState.getSmsAdapterSecret(context));
   }
-
 }

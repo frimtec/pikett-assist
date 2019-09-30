@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,9 +27,6 @@ import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCode
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.PERMISSION_CHANGED_REQUEST_CODE;
 
 public enum Feature {
-  PERMISSION_SMS(true, true, R.string.permission_sms_title, context -> allPermissionsGranted(context, PermissionSets.SMS.getPermissions()), (context, fragment) -> {
-    requestPermissionsWithExplanation(context, fragment, PermissionSets.SMS.getPermissions(), R.string.permission_sms_title, R.string.permission_sms_text);
-  }),
   PERMISSION_CONTACTS_READ(true, true, R.string.permission_contacts_title, context -> allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.CONTACTS_READ.getPermissions(), R.string.permission_contacts_title, R.string.permission_contacts_text);
   }),
@@ -44,6 +43,10 @@ public enum Feature {
     NotificationHelper.infoDialog(context, R.string.notification_draw_overlays_title, R.string.notification_draw_overlays_text, (dialogInterface, integer) -> {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
       fragment.startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+    });
+  }),
+  SMS_ADAPTER(false, false, R.string.permission_sms_title, (context) -> SecureSmsProxyFacade.instance(context).getInstallation().getAppVersion().isPresent(), (context, fragment) -> {
+    NotificationHelper.infoDialog(context, R.string.permission_sms_title, R.string.permission_sms_text, (dialogInterface, integer) -> {
     });
   }),
   SETTING_BATTERY_OPTIMIZATION_OFF(false, false, R.string.notification_battery_optimization_title, context -> {
@@ -108,7 +111,6 @@ public enum Feature {
   }
 
   private enum PermissionSets {
-    SMS(new HashSet<>(Arrays.asList(Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS))),
     CONTACTS_READ(Collections.singleton(Manifest.permission.READ_CONTACTS)),
     CALENDAR_READ(Collections.singleton(Manifest.permission.READ_CALENDAR)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),

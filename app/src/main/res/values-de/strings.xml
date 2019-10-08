@@ -51,6 +51,16 @@
         <item>Excellent</item>
     </string-array>
 
+    <string-array name="registration_errors">
+        <item>Erfolgreich</item>
+        <item>Fehlgeschlagen, fehlendes Geheimnis</item>
+        <item>Abgelehnt</item>
+        <item>Fehlgeschlagen, S2SMP hat keine SMS-Rechte</item>
+        <item>Fehlgeschlagen, kein Referrer</item>
+        <item>Fehlgeschlagen, keine Parameter</item>
+        <item>Fehlgeschlagen</item>
+    </string-array>
+
     <string name="pref_header_notifications">Benachrichtigungen</string>
     <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>
     <string name="pref_title_test_alarm_ring_tone">Fehlender Testalarm Klingelton</string>
@@ -165,4 +175,5 @@
     <string name="permission_sms_update_title">SMS-Adapter Update</string>
     <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; muss aktualisiert werden.</string>
     <string name="list_item_menu_send_test_sms">Sende Test SMS</string>
+    <string name="sms_adapter_registration">Registrierung</string>
 </resources>

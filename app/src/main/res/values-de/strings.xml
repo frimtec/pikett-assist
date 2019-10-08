@@ -150,5 +150,7 @@
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
     <string name="notification_update_available_title">PAssist Version %s steht bereit!</string>
     <string name="notification_update_button">Jetzt herunterladen</string>
-s
+    <string name="switch_google_play_title">Wechsle nach Google-Play</string>
+    <string name="switch_google_play_text">Eine neue Version von PAssist steht auf Google-Play bereit.
+        Bitte PAssist deinstallieren und neu über &lt;a href=https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist&gt;Google-Play&lt;/a&gt; installieren.</string>
 </resources>

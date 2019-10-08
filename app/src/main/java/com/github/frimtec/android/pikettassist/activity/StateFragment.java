@@ -112,6 +112,13 @@ public class StateFragment extends AbstractListFragment<State> {
         .filter(set -> !set.isAllowed(getContext()))
         .findFirst();
 
+    states.add(new State(R.drawable.ic_system_update_alt_black_24dp, "Update", getString(R.string.switch_google_play_title), null, RED) {
+      @Override
+      public void onClickAction(Context context) {
+        NotificationHelper.infoDialog(context, R.string.switch_google_play_title, R.string.switch_google_play_text, (dialogInterface, integer) -> {});
+      }
+    });
+
     boolean missingPermissions = missingPermission.isPresent();
     if (missingPermissions) {
       Feature permission = missingPermission.get();

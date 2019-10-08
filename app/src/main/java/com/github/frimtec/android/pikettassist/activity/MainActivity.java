@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
   }
 
-  private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+  private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     Fragment fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
 
     if (fragment != null) {
@@ -141,11 +141,13 @@ public class MainActivity extends AppCompatActivity {
     if (requestCode == 1000) {
       RegistrationResult result = s2smp.getRegistrationResult(resultCode, data);
       result.getSecret().ifPresent(secret -> SharedState.setSmsAdapterSecret(this, secret));
+
+      String[] registrationErrors = getResources().getStringArray(R.array.registration_errors);
+      String registrationText = getString(R.string.sms_adapter_registration) + ": " +
+          registrationErrors[result.getReturnCode().ordinal()];
+      Toast.makeText(this, registrationText, Toast.LENGTH_LONG).show();
       if (result.getReturnCode().isSuccess()) {
-        Toast.makeText(this, "Registration OK.", Toast.LENGTH_LONG).show();
         refresh();
-      } else {
-        Toast.makeText(this, "Registration FAILED: " + result.getReturnCode().name(), Toast.LENGTH_LONG).show();
       }
     }
   }

@@ -12,7 +12,6 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,10 +42,6 @@ public enum Feature {
     NotificationHelper.infoDialog(context, R.string.notification_draw_overlays_title, R.string.notification_draw_overlays_text, (dialogInterface, integer) -> {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
       fragment.startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-    });
-  }),
-  SMS_ADAPTER(false, false, R.string.permission_sms_title, (context) -> SecureSmsProxyFacade.instance(context).getInstallation().getAppVersion().isPresent(), (context, fragment) -> {
-    NotificationHelper.infoDialog(context, R.string.permission_sms_title, R.string.permission_sms_text, (dialogInterface, integer) -> {
     });
   }),
   SETTING_BATTERY_OPTIMIZATION_OFF(false, false, R.string.notification_battery_optimization_title, context -> {
@@ -104,10 +99,10 @@ public enum Feature {
     ActivityCompat.requestPermissions(fragment.getActivity(), permissions, PERMISSION_CHANGED_REQUEST_CODE);
   }
 
-  public final static class RequestCodes {
+  public static final class RequestCodes {
 
     public final static int PERMISSION_CHANGED_REQUEST_CODE = 1;
-    public final static int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
+    public static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
   }
 
   private enum PermissionSets {

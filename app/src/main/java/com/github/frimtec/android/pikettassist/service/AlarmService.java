@@ -37,7 +37,7 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 
 public class AlarmService {
 
-  private final static String TAG = "AlarmService";
+  private static final String TAG = "AlarmService";
 
   private final Context context;
 

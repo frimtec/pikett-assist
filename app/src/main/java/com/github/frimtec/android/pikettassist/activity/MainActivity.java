@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
   }
 
-  private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+  private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     Fragment fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
 
     if (fragment != null) {

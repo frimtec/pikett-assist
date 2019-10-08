@@ -21,8 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.SendLogActivity">
+        <activity android:name=".activity.SendLogActivity">
             <intent-filter>
                 <action android:name="android.permission.SEND_LOG" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -67,18 +66,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
         </activity>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity"/>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity"/>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.MissingTestAlarmAlarmActivity"/>
-        <receiver android:name=".receiver.AutoStart">
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.MissingTestAlarmAlarmActivity" />
+
+        <receiver
+            android:name=".receiver.AutoStart"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.SmsListener"
-            android:exported="true"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.github.frimtec.android.securesmsproxy.SMS_RECEIVED" />
             </intent-filter>

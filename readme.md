@@ -1,14 +1,12 @@
 # PAssist
-<a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
-
-[![Build Status](https://travis-ci.org/frimtec/pikett-assist.svg?branch=master)](https://travis-ci.org/frimtec/pikett-assist) 
-<!-- [![Coverage Status](https://coveralls.io/repos/github/frimtec/pikett-assist/badge.svg?branch=master)](https://coveralls.io/github/frimtec/pikett-assist?branch=master) -->
-[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://travis-ci.org/frimtec/pikett-assist.svg?branch=master)](https://travis-ci.org/frimtec/pikett-assist) <!-- [![Coverage Status](https://coveralls.io/repos/github/frimtec/pikett-assist/badge.svg?branch=master)](https://coveralls.io/github/frimtec/pikett-assist?branch=master) --> [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 PAssist is an Android application to assist you while doing on-call duties.
 The name PAssist is the short form of Pikett-Assist ('Pikett' is the Swiss German term for on-call).
 
 PAssist works for SMS based alerting systems.
+
+<a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ## Features
 ### PAssist is controlled by your calender

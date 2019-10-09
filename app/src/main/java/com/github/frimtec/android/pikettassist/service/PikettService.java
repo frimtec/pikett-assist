@@ -12,8 +12,8 @@ import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.time.Duration;
-import java.time.Instant;
+import org.threeten.bp.Duration;
+import org.threeten.bp.Instant;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -50,7 +50,7 @@ public class PikettService extends IntentService {
     Log.i(TAG, "Next run in " + waitMs);
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-    if (first.map(PikettShift::isNow).orElse(false)) {
+    if (SharedState.getPikettStateManuallyOn(this) || first.map(PikettShift::isNow).orElse(false)) {
       NotificationHelper.notifyShiftOn(this);
       this.startService(new Intent(this, SignalStrengthService.class));
       this.startService(new Intent(this, TestAlertService.class));

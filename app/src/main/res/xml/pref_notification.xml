@@ -17,10 +17,4 @@
         android:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
         android:key="supervise_signal_strength"
         android:title="@string/pref_title_supervise_signal_strength" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:icon="@drawable/ic_system_update_alt_black_24dp"
-        android:key="check_for_updates"
-        android:title="@string/pref_title_check_for_updates" />
-
 </PreferenceScreen>

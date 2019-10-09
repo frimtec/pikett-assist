@@ -3,8 +3,6 @@
     package="com.github.frimtec.android.pikettassist">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -23,8 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.SendLogActivity">
+        <activity android:name=".activity.SendLogActivity">
             <intent-filter>
                 <action android:name="android.permission.SEND_LOG" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -69,19 +66,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
         </activity>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity"/>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity"/>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.MissingTestAlarmAlarmActivity"/>
-        <receiver android:name=".receiver.AutoStart">
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.activity.MissingTestAlarmAlarmActivity" />
+
+        <receiver
+            android:name=".receiver.AutoStart"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.SmsListener"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="com.github.frimtec.android.securesmsproxy.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <receiver

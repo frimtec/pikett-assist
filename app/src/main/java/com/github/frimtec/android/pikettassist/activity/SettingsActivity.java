@@ -47,13 +47,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
    * A preference value change listener that updates the preference's summary
    * to reflect its new value.
    */
-  private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
+  private static final Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
     String stringValue = value.toString();
     preference.setSummary(stringValue);
     return true;
   };
 
-  private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToWeekdaysListener = (preference, value) -> {
+  private static final Preference.OnPreferenceChangeListener sBindPreferenceSummaryToWeekdaysListener = (preference, value) -> {
     preference.setSummary(weekDaysValues(preference, (Set) value));
     return true;
   };

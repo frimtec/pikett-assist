@@ -2,11 +2,11 @@ package com.github.frimtec.android.pikettassist.domain;
 
 import org.junit.Test;
 
-import java.time.Instant;
+import org.threeten.bp.Instant;
 import java.util.function.Supplier;
 
 import static com.github.frimtec.android.pikettassist.domain.PikettShift.TIME_TOLERANCE;
-import static java.time.Duration.ofMinutes;
+import static org.threeten.bp.Duration.ofMinutes;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

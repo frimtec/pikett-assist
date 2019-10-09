@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+
 import androidx.core.app.ActivityCompat;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -25,9 +26,6 @@ import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCode
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.PERMISSION_CHANGED_REQUEST_CODE;
 
 public enum Feature {
-  PERMISSION_SMS(true, true, R.string.permission_sms_title, context -> allPermissionsGranted(context, PermissionSets.SMS.getPermissions()), (context, fragment) -> {
-    requestPermissionsWithExplanation(context, fragment, PermissionSets.SMS.getPermissions(), R.string.permission_sms_title, R.string.permission_sms_text);
-  }),
   PERMISSION_CONTACTS_READ(true, true, R.string.permission_contacts_title, context -> allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.CONTACTS_READ.getPermissions(), R.string.permission_contacts_title, R.string.permission_contacts_text);
   }),
@@ -101,14 +99,13 @@ public enum Feature {
     ActivityCompat.requestPermissions(fragment.getActivity(), permissions, PERMISSION_CHANGED_REQUEST_CODE);
   }
 
-  public final static class RequestCodes {
+  public static final class RequestCodes {
 
     public final static int PERMISSION_CHANGED_REQUEST_CODE = 1;
-    public final static int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
+    public static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
   }
 
   private enum PermissionSets {
-    SMS(new HashSet<>(Arrays.asList(Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS))),
     CONTACTS_READ(Collections.singleton(Manifest.permission.READ_CONTACTS)),
     CALENDAR_READ(Collections.singleton(Manifest.permission.READ_CALENDAR)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),

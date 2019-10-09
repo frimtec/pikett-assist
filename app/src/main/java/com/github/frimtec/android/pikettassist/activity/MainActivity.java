@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -20,6 +22,8 @@ import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.EnumMap;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
   private CallLogFragment callLogFragment;
   private TestAlarmFragment testAlarmFragment;
   private AbstractListFragment activeFragment;
+  private SecureSmsProxyFacade s2smp;
 
   private static final Map<Fragment, Integer> FRAGMENT_BUTTON_ID_MAP;
   private static final Map<Integer, Fragment> BUTTON_ID_FRAGMENT_MAP;
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
   }
 
-  private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
+  private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
     Fragment fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
 
     if (fragment != null) {
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
       case STATE:
         if (stateFragment == null) {
           stateFragment = new StateFragment();
+          stateFragment.setParent(this);
         }
         activeFragment = stateFragment;
         break;
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    this.s2smp = SecureSmsProxyFacade.instance(this);
     registerReceiver();
     NotificationHelper.registerChannel(this);
 
@@ -126,6 +133,23 @@ public class MainActivity extends AppCompatActivity {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     refresh();
     startService(new Intent(this, PikettService.class));
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == 1000) {
+      RegistrationResult result = s2smp.getRegistrationResult(resultCode, data);
+      result.getSecret().ifPresent(secret -> SharedState.setSmsAdapterSecret(this, secret));
+
+      String[] registrationErrors = getResources().getStringArray(R.array.registration_errors);
+      String registrationText = getString(R.string.sms_adapter_registration) + ": " +
+          registrationErrors[result.getReturnCode().ordinal()];
+      Toast.makeText(this, registrationText, Toast.LENGTH_LONG).show();
+      if (result.getReturnCode().isSuccess()) {
+        refresh();
+      }
+    }
   }
 
   @Override

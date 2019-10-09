@@ -18,9 +18,9 @@ import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR
 
 public class CalendarListPreference extends ListPreference {
 
-  private final static String[] PROJECTION = new String[]{CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME};
-  private final static String SELECTION = "(" + CalendarContract.Calendars.VISIBLE + " = ?)";
-  private final static String[] SELECTION_ARGS = new String[]{"1"};
+  private static final String[] PROJECTION = new String[]{CalendarContract.Calendars._ID, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME};
+  private static final String SELECTION = "(" + CalendarContract.Calendars.VISIBLE + " = ?)";
+  private static final String[] SELECTION_ARGS = new String[]{"1"};
 
   @SuppressLint("MissingPermission")
   public CalendarListPreference(Context context, AttributeSet attrs) {

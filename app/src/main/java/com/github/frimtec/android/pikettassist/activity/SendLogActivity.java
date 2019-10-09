@@ -13,7 +13,7 @@ import static android.content.Intent.EXTRA_BUG_REPORT;
 
 public class SendLogActivity extends AppCompatActivity {
 
-  public final static String ACTION_SEND_LOG = "android.permission.SEND_LOG";
+  public static final String ACTION_SEND_LOG = "android.permission.SEND_LOG";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class SendLogActivity extends AppCompatActivity {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
     terminate();
   }
 

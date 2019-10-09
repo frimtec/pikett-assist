@@ -60,4 +60,21 @@ public class ContactHelper {
       return Collections.emptySet();
     }
   }
+
+  public static Set<String> getPhoneNumbers(Context context, long contactId) {
+    ContentResolver cr = context.getContentResolver();
+    try (Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+        new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER},
+        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+        new String[]{String.valueOf(contactId)}, null)) {
+      if (cursor != null && cursor.moveToFirst()) {
+        Set<String> phoneNumbers = new HashSet<>();
+        do {
+          phoneNumbers.add(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)));
+        } while (cursor.moveToNext());
+        return phoneNumbers;
+      }
+      return Collections.emptySet();
+    }
+  }
 }

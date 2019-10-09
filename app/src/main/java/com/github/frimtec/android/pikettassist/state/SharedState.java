@@ -33,12 +33,13 @@ public final class SharedState {
   public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   public static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
+  public static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
-  public static final String PREF_KEY_CHECK_FOR_UPDATES = "check_for_updates";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String CALENDAR_FILTER_ALL = "-1";
+  public static final String PREF_KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state_manually_on";
 
   private static final String LAST_ALARM_SMS_NUMBER = "last_alarm_sms_number";
 
@@ -50,7 +51,7 @@ public final class SharedState {
   }
 
   public static OnOffState getPikettState(Context context) {
-    return hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
+    return getPikettStateManuallyOn(context) || hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
   }
 
   public static Pair<AlarmState, Long> getAlarmState() {
@@ -93,6 +94,14 @@ public final class SharedState {
     return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, context.getString(R.string.pref_default_sms_confirm_text));
   }
 
+  public static String getSmsAdapterSecret(Context context) {
+    return getSharedPreferences(context, PREF_KEY_SMS_ADAPTER_SECRET, "");
+  }
+
+  public static void setSmsAdapterSecret(Context context, String secret) {
+    setSharedPreferences(context, PREF_KEY_SMS_ADAPTER_SECRET, secret);
+  }
+
   public static boolean getSuperviseSignalStrength(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, true);
@@ -105,9 +114,16 @@ public final class SharedState {
     editor.apply();
   }
 
-  public static boolean checkForUpdates(Context context) {
+  public static boolean getPikettStateManuallyOn(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getBoolean(PREF_KEY_CHECK_FOR_UPDATES, true);
+    return preferences.getBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, false);
+  }
+
+  public static void setPikettStateManuallyOn(Context context, boolean manuallyOn) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, manuallyOn);
+    editor.apply();
   }
 
   public static String getAlarmRingTone(Context context) {

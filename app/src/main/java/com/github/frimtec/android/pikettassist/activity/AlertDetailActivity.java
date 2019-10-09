@@ -16,8 +16,8 @@ import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 
-import java.time.Duration;
-import java.time.Instant;
+import org.threeten.bp.Duration;
+import org.threeten.bp.Instant;
 import java.util.LinkedList;
 
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
@@ -48,7 +48,7 @@ public class AlertDetailActivity extends AppCompatActivity {
       ListView listView = findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 
-      View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, null);
+      View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, listView, false);
       TextView timeWindow = headerView.findViewById(R.id.alert_detail_header_time_window);
       TextView currentState = headerView.findViewById(R.id.alert_detail_header_current_state);
       TextView durations = headerView.findViewById(R.id.alert_detail_header_durations);

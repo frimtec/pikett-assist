@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.MultiSelectListPreference;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -61,7 +62,7 @@ public class TestContextMultiSelectListPreference extends MultiSelectListPrefere
 
   private String toSummary(Set<String> values) {
     String summary;
-    summary = String.join(", ", values);
+    summary = TextUtils.join(", ", values);
     if (summary.isEmpty()) {
       summary = getContext().getResources().getString(R.string.preferences_test_context_empty_selection);
     }

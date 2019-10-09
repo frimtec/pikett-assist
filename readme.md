@@ -1,4 +1,6 @@
 # PAssist
+<a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+
 [![Build Status](https://travis-ci.org/frimtec/pikett-assist.svg?branch=master)](https://travis-ci.org/frimtec/pikett-assist) 
 <!-- [![Coverage Status](https://coveralls.io/repos/github/frimtec/pikett-assist/badge.svg?branch=master)](https://coveralls.io/github/frimtec/pikett-assist?branch=master) -->
 [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -62,10 +64,11 @@ that are under supervision.
 
 
 ## Installation
-### Google-Play
-PAssist can be installed from [Google-Play](https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist).
-
 To allow PAssist to send and receive SMS an additional SMS-Adapter application like [secure-sms-adapter](https://github.com/frimtec/secure-sms-proxy/blob/master/README.md) is required. 
+### Google&nbsp;Play
+PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist).
+
+<a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ### Self build
 Build PAssist on your own and then install the APK via ADB to your android phone.
@@ -148,7 +151,7 @@ The use of PAssist is at your own risk. The author assumes no liability for malf
 Any warranty claims are excluded.
 
 ## Development
-PAssist is developed with [Android-Studio 3.5](https://developer.android.com/studio) with Java 8.
+PAssist is developed with [Android-Studio 3.5.1](https://developer.android.com/studio) with Java 8.
 The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 24 (Android 7.0-Nougat).
 
 ## Used libraries

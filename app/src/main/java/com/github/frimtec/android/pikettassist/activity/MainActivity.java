@@ -16,8 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.donation.DonationFragment;
+import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
+import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
@@ -26,11 +30,16 @@ import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+import static com.android.billingclient.api.BillingClient.BillingResponseCode;
+import static com.github.frimtec.android.pikettassist.activity.StateFragment.DIALOG_TAG;
+
+public class MainActivity extends AppCompatActivity implements BillingProvider {
 
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
@@ -39,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
   private TestAlarmFragment testAlarmFragment;
   private AbstractListFragment activeFragment;
   private SecureSmsProxyFacade s2smp;
+
+  private BillingManager billingManager;
+  private DonationFragment donationFragment;
 
   private static final Map<Fragment, Integer> FRAGMENT_BUTTON_ID_MAP;
   private static final Map<Integer, Fragment> BUTTON_ID_FRAGMENT_MAP;
@@ -120,12 +132,25 @@ public class MainActivity extends AppCompatActivity {
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     loadFragment(Fragment.STATE);
+
+    // Create and initialize BillingManager which talks to BillingLibrary
+    billingManager = new BillingManager(this, stateFragment);
+
     startService(new Intent(this, PikettService.class));
   }
 
   private void refresh() {
     if (activeFragment != null) {
       activeFragment.refresh();
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (activeFragment == stateFragment && billingManager != null
+        && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
+      billingManager.queryPurchases();
     }
   }
 
@@ -165,11 +190,45 @@ public class MainActivity extends AppCompatActivity {
       case R.id.settings:
         startActivity(new Intent(this, SettingsActivity.class));
         return true;
+      case R.id.donate:
+        showDonationDialog();
+        return true;
       case R.id.about:
-        startActivity(new Intent(this, AboutActivity.class));
+        Intent intent = new Intent(this, AboutActivity.class);
+
+        List<Integer> sponsorMedals = new ArrayList<>();
+        if (getBronzeSponsor() == BillingState.PURCHASED) {
+          sponsorMedals.add(R.drawable.bronze_icon);
+        }
+        if (getSilverSponsor() == BillingState.PURCHASED) {
+          sponsorMedals.add(R.drawable.silver_icon);
+        }
+        if (getGoldSponsor() == BillingState.PURCHASED) {
+          sponsorMedals.add(R.drawable.gold_icon);
+        }
+
+        intent.putExtra(AboutActivity.EXTRA_SPONSOR_ICONS, sponsorMedals.stream().mapToInt(value -> value).toArray());
+        startActivity(intent);
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  void showDonationDialog() {
+    if (donationFragment == null) {
+      donationFragment = new DonationFragment();
+    }
+    if (!isAcquireFragmentShown()) {
+      donationFragment.show(getSupportFragmentManager(), DIALOG_TAG);
+      if (getBillingManager() != null &&
+          getBillingManager().getBillingClientResponseCode() > BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
+        donationFragment.onManagerReady(this);
+      }
+    }
+  }
+
+  public boolean isAcquireFragmentShown() {
+    return donationFragment != null && donationFragment.isVisible();
   }
 
   private void registerReceiver() {
@@ -196,11 +255,14 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    super.onDestroy();
     if (broadcastReceiver != null) {
       unregisterReceiver(broadcastReceiver);
       broadcastReceiver = null;
     }
+    if (billingManager != null) {
+      billingManager.destroy();
+    }
+    super.onDestroy();
   }
 
   enum Fragment {
@@ -210,4 +272,23 @@ public class MainActivity extends AppCompatActivity {
     TEST_ALARMS
   }
 
+  @Override
+  public BillingManager getBillingManager() {
+    return billingManager;
+  }
+
+  @Override
+  public BillingState getBronzeSponsor() {
+    return stateFragment.getBronzeSponsor();
+  }
+
+  @Override
+  public BillingState getSilverSponsor() {
+    return stateFragment.getSilverSponsor();
+  }
+
+  @Override
+  public BillingState getGoldSponsor() {
+    return stateFragment.getGoldSponsor();
+  }
 }

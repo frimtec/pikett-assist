@@ -1,11 +1,12 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -30,10 +31,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.android.billingclient.api.Purchase;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.donation.DonationFragment;
+import com.github.frimtec.android.pikettassist.donation.billing.BillingConstants;
+import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
+import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
@@ -49,6 +55,7 @@ import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
+import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
@@ -57,11 +64,14 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -69,6 +79,10 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_DRAW_OVERLAYS;
@@ -79,19 +93,26 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
 
-public class StateFragment extends AbstractListFragment<State> {
+public class StateFragment extends AbstractListFragment<State> implements BillingManager.BillingUpdatesListener {
+
+  public static final String DIALOG_TAG = "dialog";
 
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
   private static final String TAG = "StateFragment";
 
   static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
 
+  private final Random random = new Random(System.currentTimeMillis());
+
   private AlarmService alarmService;
   private SecureSmsProxyFacade s2smp;
-  private Activity parent;
+  private MainActivity parent;
 
+  private BillingState bronzeSponsor = NOT_LOADED;
+  private BillingState silverSponsor = NOT_LOADED;
+  private BillingState goldSponsor = NOT_LOADED;
 
-  public void setParent(Activity parent) {
+  public void setParent(MainActivity parent) {
     this.parent = parent;
   }
 
@@ -129,7 +150,7 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   protected ArrayAdapter<State> createAdapter() {
-    List<State> states = new ArrayList<>();
+    List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
         .filter(set -> !set.isAllowed(getContext()))
@@ -173,7 +194,7 @@ public class StateFragment extends AbstractListFragment<State> {
       regularStates(states);
     }
 
-    return new StateArrayAdapter(getContext(), states);
+    return new StateArrayAdapter(getContext(), new ArrayList<>(states));
   }
 
   private void regularStates(List<State> states) {
@@ -416,6 +437,7 @@ public class StateFragment extends AbstractListFragment<State> {
           }
         })
     );
+
     String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
     for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
       OnOffState testAlarmState = OnOffState.OFF;
@@ -453,6 +475,28 @@ public class StateFragment extends AbstractListFragment<State> {
         });
       }
     }
+
+    if (Stream.of(this.bronzeSponsor, silverSponsor, goldSponsor).allMatch(billing -> billing != NOT_LOADED) &&
+        Stream.of(this.bronzeSponsor, silverSponsor, goldSponsor).noneMatch(billing -> billing == PURCHASED) &&
+        randomizedOn()) {
+      states.add(this.random.nextInt(states.size() + 1), new State(R.drawable.ic_monetization_on_black_24dp, getString(R.string.state_fragment_donation), getString(R.string.state_fragment_donation_value), null, YELLOW) {
+        @Override
+        public void onClickAction(Context context) {
+          parent.showDonationDialog();
+        }
+      });
+    }
+  }
+
+  private boolean randomizedOn() {
+    long installationAgeInDays = Integer.MAX_VALUE;
+    try {
+      PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+      installationAgeInDays = Duration.between(Instant.ofEpochMilli(packageInfo.firstInstallTime), Instant.now()).toDays();
+    } catch (PackageManager.NameNotFoundException e) {
+      Log.e(TAG, "Can not get package info", e);
+    }
+    return this.random.nextFloat() <= Math.min((installationAgeInDays - 10f) * 0.01f, 0.5f);
   }
 
   private String formatDateTime(Instant time) {
@@ -478,6 +522,66 @@ public class StateFragment extends AbstractListFragment<State> {
     } else {
       return super.onContextItemSelected(item);
     }
+  }
+
+  @Override
+  public void onBillingClientSetupFinished() {
+    DonationFragment donationFragment = (DonationFragment) parent.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
+    if (donationFragment != null) {
+      donationFragment.onManagerReady(parent);
+    }
+  }
+
+  @Override
+  public void onPurchasesUpdated(List<Purchase> purchases) {
+    bronzeSponsor = NOT_PURCHASED;
+    silverSponsor = NOT_PURCHASED;
+    goldSponsor = NOT_PURCHASED;
+    for (Purchase purchase : purchases) {
+      BillingState state = getBillingState(purchase);
+      switch (purchase.getSku()) {
+        case BillingConstants.SKU_SPONSOR_BRONZE:
+          bronzeSponsor = state;
+          break;
+        case BillingConstants.SKU_SPONSOR_SILVER:
+          silverSponsor = state;
+          break;
+        case BillingConstants.SKU_SPONSOR_GOLD:
+          goldSponsor = state;
+          break;
+        default:
+          Log.e(TAG, "Has unknown product: " + purchase.getSku());
+      }
+    }
+    DonationFragment donationFragment = (DonationFragment) parent.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
+    if (donationFragment != null) {
+      donationFragment.refreshUI();
+    }
+    refresh();
+  }
+
+  private BillingState getBillingState(Purchase purchase) {
+    switch (purchase.getPurchaseState()) {
+      case Purchase.PurchaseState.PURCHASED:
+        return PURCHASED;
+      case Purchase.PurchaseState.PENDING:
+        return PENDING;
+      case Purchase.PurchaseState.UNSPECIFIED_STATE:
+      default:
+        return NOT_PURCHASED;
+    }
+  }
+
+  public BillingState getBronzeSponsor() {
+    return bronzeSponsor;
+  }
+
+  public BillingState getSilverSponsor() {
+    return silverSponsor;
+  }
+
+  public BillingState getGoldSponsor() {
+    return goldSponsor;
   }
 
 }

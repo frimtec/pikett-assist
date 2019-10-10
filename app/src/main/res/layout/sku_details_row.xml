@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    style="@style/CardViewStyle"
+    android:layout_height="@dimen/sku_details_row_height"
+    app:cardBackgroundColor="@color/row_bg_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/sku_details_row_padding">
+
+        <ImageView
+            android:id="@+id/sku_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="@dimen/single_padding"
+            android:layout_marginEnd="@dimen/single_padding"
+            android:layout_marginTop="@dimen/single_padding"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:textSize="@dimen/sku_details_row_text_size"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/single_padding"
+                android:layout_marginEnd="@dimen/single_padding"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sku_details_row_text_size"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/state_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/button_buy"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

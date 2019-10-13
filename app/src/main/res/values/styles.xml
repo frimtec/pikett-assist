@@ -13,4 +13,43 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <!-- CardView -->
+    <style name="CardViewStyle" parent="CardView">
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginRight">@dimen/card_view_margin</item>
+        <item name="android:layout_marginLeft">@dimen/card_view_margin</item>
+        <item name="cardCornerRadius">@dimen/card_view_card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_view_card_elevation</item>
+        <item name="cardPreventCornerOverlap">false</item>
+    </style>
+
+    <!-- ToolBar -->
+    <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="titleTextColor">@android:color/white</item>
+    </style>
+
+
+    <dimen name="single_padding">8dp</dimen>
+    <dimen name="double_padding">16dp</dimen>
+
+    <dimen name="header_gap">8dp</dimen>
+    <dimen name="row_gap">1px</dimen>
+    <dimen name="button_width">152dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="title_margin">8dp</dimen>
+    <dimen name="image_margin">32dp</dimen>
+
+    <dimen name="sku_details_row_height">120dp</dimen>
+    <dimen name="sku_details_row_padding">24dp</dimen>
+    <dimen name="sku_details_row_text_size">16sp</dimen>
+
+    <dimen name="sku_details_row_header_height">64dp</dimen>
+    <!-- CardViewStyle -->
+    <dimen name="card_view_margin">8dp</dimen>
+    <dimen name="card_view_card_corner_radius">2dp</dimen>
+    <dimen name="card_view_card_elevation">2sp</dimen>
+
+    <item name="screen_wait" type="id" />
 </resources>

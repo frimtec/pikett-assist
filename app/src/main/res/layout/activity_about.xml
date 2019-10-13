@@ -24,10 +24,38 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/documentation"
+        android:id="@+id/sponsoring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_info"
+        android:layout_marginStart="10dp" />
+
+    <LinearLayout
+        android:id="@+id/sponsor_medals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/sponsoring">
+        <ImageView
+            android:id="@+id/sponsor_0"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+        <ImageView
+            android:id="@+id/sponsor_1"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+        <ImageView
+            android:id="@+id/sponsor_2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/documentation"
+        android:layout_marginTop="10sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sponsor_medals"
         android:layout_marginStart="10dp" />
 
     <TextView

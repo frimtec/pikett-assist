@@ -1,27 +1,35 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.frimtec.android.pikettassist.BuildConfig;
 import com.github.frimtec.android.pikettassist.R;
 
 public class AboutActivity extends AppCompatActivity {
 
-  private static final String TAG = "AboutActivity";
+  public static final String EXTRA_SPONSOR_ICONS = "sponsorIcons";
+
+  private int[] sponsorIcons = new int[0];
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    Bundle b = getIntent().getExtras();
+    if (b != null) {
+      sponsorIcons = b.getIntArray(EXTRA_SPONSOR_ICONS);
+    }
     setContentView(R.layout.activity_about);
     setupAppInfo();
+    setupSponsoring(sponsorIcons);
     setupDocumentation();
     setupDisclaimer();
   }
@@ -37,16 +45,8 @@ public class AboutActivity extends AppCompatActivity {
 
   private void setupAppInfo() {
     TextView textView = findViewById(R.id.app_info);
-
-    String version = "N/A";
-    int build = 0;
-    try {
-      PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-      version = packageInfo.versionName;
-      build = packageInfo.versionCode;
-    } catch (PackageManager.NameNotFoundException e) {
-      Log.e(TAG, "Can not read version info", e);
-    }
+    String version = BuildConfig.VERSION_NAME;
+    int build = BuildConfig.VERSION_CODE;
 
     textView.setText(Html.fromHtml(
         "<h2><a href='https://github.com/frimtec/pikett-assist'>PAssist</a></h2>" +
@@ -55,6 +55,25 @@ public class AboutActivity extends AppCompatActivity {
             ""
         , Html.FROM_HTML_MODE_COMPACT));
     textView.setMovementMethod(LinkMovementMethod.getInstance());
+  }
+
+  private void setupSponsoring(int[] icons) {
+    TextView textView = findViewById(R.id.sponsoring);
+    ImageView[] imageViews = new ImageView[]{findViewById(R.id.sponsor_0), findViewById(R.id.sponsor_1), findViewById(R.id.sponsor_2)};
+    if (icons == null || icons.length == 0) {
+      textView.setText(Html.fromHtml(getString(R.string.about_no_sponsoring), Html.FROM_HTML_MODE_COMPACT));
+      for (ImageView imageView : imageViews) {
+        ((ViewManager) imageView.getParent()).removeView(imageView);
+      }
+    } else {
+      textView.setText(Html.fromHtml(getString(R.string.about_sponsoring), Html.FROM_HTML_MODE_COMPACT));
+      for (int i = 0; i < icons.length; i++) {
+        imageViews[i].setImageDrawable(getBaseContext().getDrawable(icons[i]));
+      }
+      for (int i = icons.length; i < imageViews.length; i++) {
+        ((ViewManager) imageViews[i].getParent()).removeView(imageViews[i]);
+      }
+    }
   }
 
   private void setupDocumentation() {

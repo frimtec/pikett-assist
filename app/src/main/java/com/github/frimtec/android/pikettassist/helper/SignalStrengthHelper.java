@@ -70,7 +70,8 @@ public class SignalStrengthHelper {
         case 4:
           return GREAT;
         default:
-          throw new IllegalArgumentException("Unknown level: " + level);
+          // Workaround for Huawei CLT-L29
+          return level > 4 ? GREAT : OFF;
       }
     }
 

@@ -21,7 +21,7 @@
 
     <string name="pref_header_alarming">Alarmierung</string>
     <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
-    <string name="pref_title_sms_confirm_text">Betsätigungsantwort</string>
+    <string name="pref_title_sms_confirm_text">Bestätigungsantwort</string>
     <string name="pref_default_sms_confirm_text">OK</string>
 
     <string name="pref_header_test_alarm">Testalarm</string>

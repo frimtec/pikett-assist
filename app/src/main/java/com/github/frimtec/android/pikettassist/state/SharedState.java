@@ -14,6 +14,7 @@ import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
@@ -138,7 +139,7 @@ public final class SharedState {
 
   public static Set<String> getSuperviseTestContexts(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, Collections.emptySet());
+    return new HashSet<>(preferences.getStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, Collections.emptySet()));
   }
 
   public static String getTestAlarmCheckTime(Context context) {
@@ -157,7 +158,7 @@ public final class SharedState {
   public static void setSuperviseTestContexts(Context context, Set<String> values) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     SharedPreferences.Editor editor = preferences.edit();
-    editor.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, values);
+    editor.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, new HashSet<>(values));
     editor.apply();
   }
 

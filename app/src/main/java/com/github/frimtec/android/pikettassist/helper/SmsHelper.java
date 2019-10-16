@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.helper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
@@ -11,6 +12,8 @@ import java.util.List;
 
 public final class SmsHelper {
 
+  private static final String TAG = "SmsHelper";
+
   private SmsHelper() {
   }
 
@@ -19,9 +22,10 @@ public final class SmsHelper {
     return s2smp.extractReceivedSms(intent, SharedState.getSmsAdapterSecret(context));
   }
 
-  public static void confirmSms(Context context, String confirmText, String number) {
+  public static void confirmSms(Context context, String confirmText, String number, Integer subscriptionId) {
     SecureSmsProxyFacade s2smp = SecureSmsProxyFacade.instance(context);
-    com.github.frimtec.android.securesmsproxyapi.Sms sms = new Sms(number, confirmText);
+    Log.d(TAG, "Send SMS to SIM with subscription: " + subscriptionId);
+    com.github.frimtec.android.securesmsproxyapi.Sms sms = new Sms(number, confirmText, subscriptionId);
     s2smp.sendSms(sms, SharedState.getSmsAdapterSecret(context));
   }
 }

@@ -162,12 +162,14 @@ public final class SharedState {
     editor.apply();
   }
 
-  public static String getLastAlarmSmsNumber(Context context) {
-    return getSharedPreferences(context, LAST_ALARM_SMS_NUMBER, "");
+  public static Pair<String, Integer> getLastAlarmSmsNumberWithSubscriptionId(Context context) {
+    String sharedPreferences = getSharedPreferences(context, LAST_ALARM_SMS_NUMBER, ";");
+    String[] split = sharedPreferences.split(";");
+    return Pair.create(split[0], split.length > 1 && !split[1].isEmpty() ? Integer.valueOf(split[1]) : null);
   }
 
-  public static void setLastAlarmSmsNumber(Context context, String smsNumber) {
-    setSharedPreferences(context, LAST_ALARM_SMS_NUMBER, smsNumber);
+  public static void setLastAlarmSmsNumberWithSubscriptionId(Context context, String smsNumber, Integer subscriptionId) {
+    setSharedPreferences(context, LAST_ALARM_SMS_NUMBER, smsNumber + ";" + (subscriptionId != null ? subscriptionId : ""));
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

@@ -47,7 +47,7 @@ public class AlarmService {
 
   public void newAlarm(Sms sms) {
     Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
-    SharedState.setLastAlarmSmsNumber(context, sms.getNumber());
+    SharedState.setLastAlarmSmsNumberWithSubscriptionId(context, sms.getNumber(), sms.getSubscriptionId());
     try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
       Long alertId;
       if (alarmState.first == AlarmState.OFF) {
@@ -56,14 +56,14 @@ public class AlarmService {
         contentValues.put(TABLE_ALERT_COLUMN_START_TIME, Instant.now().toEpochMilli());
         contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
         alertId = db.insert(TABLE_ALERT, null, contentValues);
-        PikettAlarmActivity.trigger(sms.getNumber(), context);
+        PikettAlarmActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
       } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
         Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
         ContentValues contentValues = new ContentValues();
         contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
         alertId = alarmState.second;
         db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
-        PikettAlarmActivity.trigger(sms.getNumber(), context);
+        PikettAlarmActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
       } else {
         Log.i(TAG, "Alarm state ON -> ON");
         alertId = alarmState.second;
@@ -77,10 +77,11 @@ public class AlarmService {
   }
 
   public void confirmAlarm() {
-    confirmAlarm(context, SharedState.getLastAlarmSmsNumber(context));
+    final Pair<String, Integer> smsNumberWithSubscriptionId = SharedState.getLastAlarmSmsNumberWithSubscriptionId(context);
+    confirmAlarm(context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);
   }
 
-  public void confirmAlarm(Context context, String smsNumber) {
+  public void confirmAlarm(Context context, String smsNumber, Integer subscriptionId) {
     try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
       try (Cursor cursor = writableDatabase.query(TABLE_ALERT,
           new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME},
@@ -98,7 +99,7 @@ public class AlarmService {
         }
       }
     }
-    SmsHelper.confirmSms(context, SharedState.getSmsConfirmText(context), smsNumber);
+    SmsHelper.confirmSms(context, SharedState.getSmsConfirmText(context), smsNumber, subscriptionId);
     NotificationHelper.notifyAlarm(
         context,
         new Intent(context, NotificationActionListener.class),

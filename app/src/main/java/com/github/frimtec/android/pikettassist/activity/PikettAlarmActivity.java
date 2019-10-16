@@ -12,11 +12,12 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 public class PikettAlarmActivity extends AbstractAlarmActivity {
 
   private static final String EXTRA_SMS_NUMBER = "sms_number";
+  private static final String EXTRA_SUBSCRIPTION_ID = "subscriptionId";
 
   private static final String TAG = "PikettAlarmActivity";
 
@@ -31,7 +32,8 @@ public class PikettAlarmActivity extends AbstractAlarmActivity {
     super.onCreate(savedInstanceState);
     this.alarmService = new AlarmService(this);
     String smsNumber = getIntent().getStringExtra(EXTRA_SMS_NUMBER);
-    setSwipeAction(() -> alarmService.confirmAlarm(this, smsNumber));
+    String subscriptionId = getIntent().getStringExtra(EXTRA_SUBSCRIPTION_ID);
+    setSwipeAction(() -> alarmService.confirmAlarm(this, smsNumber, subscriptionId != null ? Integer.valueOf(subscriptionId) : null));
     setRingtone(RingtoneManager.getRingtone(this, getAlarmTone(this)));
   }
 
@@ -43,12 +45,12 @@ public class PikettAlarmActivity extends AbstractAlarmActivity {
     return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
   }
 
-  public static void trigger(String smsNumber, Context context) {
+  public static void trigger(String smsNumber, Integer subscriptionId, Context context) {
     AbstractAlarmActivity.trigger(
         PikettAlarmActivity.class,
         context,
         (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE),
-        Collections.singletonList(Pair.create(EXTRA_SMS_NUMBER, smsNumber))
+        Arrays.asList(Pair.create(EXTRA_SMS_NUMBER, smsNumber), Pair.create(EXTRA_SUBSCRIPTION_ID, subscriptionId != null ? String.valueOf(subscriptionId) : null))
     );
   }
 

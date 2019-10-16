@@ -9,7 +9,7 @@ PAssist works for SMS based alerting systems.
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ## Features
-### PAssist is controlled by your calender
+### PAssist is controlled by your calendar
 PAssist activates and deactivates itself based on your calendar. All supervision features are only running, when PAssist is activated.
 PAssist activates five minutes before and keeps activated five minutes after the events start and stop time. 
 This ensures you won't miss an alert in case of a small time discrepancy between the operations center time and your phone time.

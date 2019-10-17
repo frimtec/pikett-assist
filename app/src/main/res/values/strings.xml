@@ -118,8 +118,7 @@
     <string name="notification_missing_test_alert_text">Test contexts: </string>
     <string name="notification_alert_confirm_button">Confirm</string>
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
-    <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimization turned off.&lt;br/&gt;
-        &lt;a href=https://www.youtube.com/watch?v=GjLttjp1iCU&gt;How do I do that?&lt;/a&gt;</string>
+    <string name="notification_battery_optimization_text"><![CDATA[To work reliable, PAssist must run with battery optimization turned off.<br/><br/><b>Manual:</b>On the next \"Battery optimisation\" settings dialog, choose drop-down \"All apps\", search and  select \"PAssist\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
     <string name="notification_draw_overlays_title">Draw overlays is off!</string>
     <string name="notification_draw_overlays_text">To show an alter dialog even when the PAssist activity is not started or in background, the draw overlay setting must be switched on.</string>
     <string name="alert_action_close">Close</string>

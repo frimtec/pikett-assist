@@ -94,6 +94,7 @@
     <string name="notification_low_signal_title">Unzureichender Signalempfang</string>
     <string name="notification_low_signal_text">Empfangsstufe</string>
     <string name="state_fragment_signal_level">Signalempfang</string>
+    <string name="state_fragment_signal_level_operator">Signalempfang (%s)</string>
     <string name="notification_pikett_on_title">Pikett</string>
     <string name="notification_pikett_on_text">Du bist auf Pikett!</string>
     <string name="notification_alert_title">Pikettalarm</string>

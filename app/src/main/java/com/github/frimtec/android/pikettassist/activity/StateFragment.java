@@ -410,7 +410,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
             }
           }
         },
-        new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, networkOperatorName != null ? networkOperatorName : getString(R.string.state_fragment_signal_level),
+        new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, networkOperatorName != null ? String.format("%s %s", getString(R.string.state_fragment_signal_level), networkOperatorName) : getString(R.string.state_fragment_signal_level),
             superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight) {
 
           private static final int MENU_CONTEXT_DEACTIVATE = 1;

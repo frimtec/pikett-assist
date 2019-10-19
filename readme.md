@@ -157,7 +157,8 @@ The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 24 (A
 
 ## Used libraries
 * [proSwipeButton](https://github.com/shadowfaxtech/proSwipeButton)
-* [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) (java.time backport for SDK 25)
+* [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) (java.time backport for SDK 24 and 25)
+* [Secure-SMS-Proxy API](https://github.com/frimtec/secure-sms-proxy)
 
 ## Feedback
 Feedback, bug reports or feature requests are very welcome.

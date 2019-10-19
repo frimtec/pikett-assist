@@ -13,8 +13,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SignalStrengthHelper {
 
@@ -22,11 +24,17 @@ public class SignalStrengthHelper {
   private final TelephonyManager telephonyManager;
 
   public SignalStrengthHelper(Context context) {
-    this.telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    this(context, SharedState.getSuperviseSignalStrengthSubscription(context));
+  }
+
+  public SignalStrengthHelper(Context context, int subscriptionId) {
+    TelephonyManager mainTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    Objects.requireNonNull(mainTelephonyManager);
+    TelephonyManager subscriptionTelephonyManager = mainTelephonyManager.createForSubscriptionId(subscriptionId);
+    this.telephonyManager = subscriptionTelephonyManager != null ? subscriptionTelephonyManager : mainTelephonyManager;
   }
 
   public SignalLevel getSignalStrength() {
-
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
       @SuppressLint("MissingPermission") List<CellInfo> cellInfos = this.telephonyManager.getAllCellInfo();
       CellSignalStrength signalStrength = null;

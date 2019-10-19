@@ -63,6 +63,9 @@
     <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
     <string name="pref_title_supervise_signal_strength_min_level">Minimal signal strength</string>
     <string name="pref_default_supervise_signal_strength_min_level" translatable="false">2</string>
+    <string name="pref_title_supervise_signal_strength_subscription">Supervised subscription</string>
+    <string name="subscription">Subscription</string>
+    <string name="pref_default_supervise_signal_strength_subscription" translatable="false">1</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_donate">Donate</string>
     <string name="menu_about">About</string>

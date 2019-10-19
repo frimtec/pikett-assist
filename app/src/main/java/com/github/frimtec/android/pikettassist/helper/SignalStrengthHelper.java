@@ -46,6 +46,19 @@ public class SignalStrengthHelper {
     }
   }
 
+  /**
+   * @param context
+   * @return the current network operator name or null.
+   */
+  public static String getNetworkOperatorName(Context context) {
+    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+    String name = telephonyManager.getNetworkOperatorName();
+    if (name == null || name.trim().isEmpty()) {
+      return null;
+    }
+    return name;
+  }
+
   public enum SignalLevel {
     OFF,
     NONE,

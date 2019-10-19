@@ -92,6 +92,7 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
+import static java.lang.String.format;
 
 public class StateFragment extends AbstractListFragment<State> implements BillingManager.BillingUpdatesListener {
 
@@ -299,6 +300,9 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
 
     boolean superviseSignalStrength = SharedState.getSuperviseSignalStrength(getContext());
     SignalStrengthHelper.SignalLevel level = SignalStrengthHelper.getSignalStrength(getContext());
+    String networkOperatorName = SignalStrengthHelper.getNetworkOperatorName(getContext());
+    String signalLevelText = networkOperatorName == null ? getString(R.string.state_fragment_signal_level) : format(getString(R.string.state_fragment_signal_level_operator), networkOperatorName);
+
     String signalStrength = level.toString(getContext());
     State.TrafficLight signalStrengthTrafficLight;
     if (!superviseSignalStrength) {
@@ -405,7 +409,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
             }
           }
         },
-        new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, getString(R.string.state_fragment_signal_level),
+        new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, signalLevelText,
             superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight) {
 
           private static final int MENU_CONTEXT_DEACTIVATE = 1;

@@ -164,6 +164,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         || AlarmingFragment.CalendarFragment.class.getName().equals(fragmentName)
         || AlarmingFragment.class.getName().equals(fragmentName)
         || TestAlarmFragment.class.getName().equals(fragmentName)
+        || SignalStrengthPreferenceFragment.class.getName().equals(fragmentName)
         || NotificationPreferenceFragment.class.getName().equals(fragmentName);
   }
 
@@ -225,6 +226,31 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_TEST_ALARM_CHECK_TIME));
       bindPreferenceSummaryToValue(findPreference(PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES));
       bindPreferenceSummaryToMultiValue(findPreference(PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      int id = item.getItemId();
+      if (id == android.R.id.home) {
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
+        return true;
+      }
+      return super.onOptionsItemSelected(item);
+    }
+  }
+
+  /**
+   * This fragment shows signal strength preferences only. It is used when the
+   * activity is showing a two-pane settings UI.
+   */
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+  public static class SignalStrengthPreferenceFragment extends PreferenceFragment {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      addPreferencesFromResource(R.xml.pref_signal_strength);
+      setHasOptionsMenu(true);
     }
 
     @Override

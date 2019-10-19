@@ -19,12 +19,16 @@ import java.util.List;
 public class SignalStrengthHelper {
 
   private static final String TAG = "SignalStrengthHelper";
+  private final TelephonyManager telephonyManager;
 
-  public static SignalLevel getSignalStrength(Context context) {
-    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+  public SignalStrengthHelper(Context context) {
+    this.telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+  }
 
-    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-      @SuppressLint("MissingPermission") List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
+  public SignalLevel getSignalStrength() {
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+      @SuppressLint("MissingPermission") List<CellInfo> cellInfos = this.telephonyManager.getAllCellInfo();
       CellSignalStrength signalStrength = null;
       if (cellInfos.size() != 0) {
         CellInfo cellInfo = cellInfos.get(0);
@@ -41,17 +45,17 @@ public class SignalStrengthHelper {
       Integer level = signalStrength != null ? signalStrength.getLevel() : null;
       return SignalLevel.from(level);
     } else {
-      SignalStrength signalStrength = telephonyManager.getSignalStrength();
+      SignalStrength signalStrength = this.telephonyManager.getSignalStrength();
       return SignalLevel.from(signalStrength != null ? signalStrength.getLevel() : null);
     }
   }
 
   /**
-   * @param context
+   * Gets the network operator name if available.
+   *
    * @return the current network operator name or null.
    */
-  public static String getNetworkOperatorName(Context context) {
-    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+  public String getNetworkOperatorName() {
     String name = telephonyManager.getNetworkOperatorName();
     if (name == null || name.trim().isEmpty()) {
       return null;

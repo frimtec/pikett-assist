@@ -90,7 +90,6 @@
     <string name="notification_low_signal_title">Low signal</string>
     <string name="notification_low_signal_text">Signal level</string>
     <string name="state_fragment_signal_level">Signal level</string>
-    <string name="state_fragment_signal_level_operator">Signal level (%s)</string>
     <string name="notification_pikett_on_title">On-call</string>
     <string name="notification_pikett_on_text">You are on-call!</string>
     <string name="notification_alert_title">On-call Alert</string>

@@ -44,6 +44,7 @@ import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
+import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper.SignalLevel;
 import com.github.frimtec.android.pikettassist.helper.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.receiver.SmsListener;
 import com.github.frimtec.android.pikettassist.service.AlarmService;
@@ -92,7 +93,6 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
-import static java.lang.String.format;
 
 public class StateFragment extends AbstractListFragment<State> implements BillingManager.BillingUpdatesListener {
 
@@ -113,6 +113,8 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   private BillingState silverSponsor = NOT_LOADED;
   private BillingState goldSponsor = NOT_LOADED;
 
+  private SignalStrengthHelper signalStrengthHelper;
+
   public void setParent(MainActivity parent) {
     this.parent = parent;
   }
@@ -122,6 +124,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     super.onCreate(savedInstanceState);
     this.alarmService = new AlarmService(this.getContext());
     this.s2smp = SecureSmsProxyFacade.instance(this.getContext());
+    this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
   }
 
   @Override
@@ -299,17 +302,15 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     }
 
     boolean superviseSignalStrength = SharedState.getSuperviseSignalStrength(getContext());
-    SignalStrengthHelper.SignalLevel level = SignalStrengthHelper.getSignalStrength(getContext());
-    String networkOperatorName = SignalStrengthHelper.getNetworkOperatorName(getContext());
-    String signalLevelText = networkOperatorName == null ? getString(R.string.state_fragment_signal_level) : format(getString(R.string.state_fragment_signal_level_operator), networkOperatorName);
-
+    SignalLevel level = this.signalStrengthHelper.getSignalStrength();
     String signalStrength = level.toString(getContext());
+    String networkOperatorName = this.signalStrengthHelper.getNetworkOperatorName();
     State.TrafficLight signalStrengthTrafficLight;
     if (!superviseSignalStrength) {
       signalStrengthTrafficLight = YELLOW;
     } else if (pikettState == OnOffState.OFF) {
       signalStrengthTrafficLight = OFF;
-    } else if (level.ordinal() <= SignalStrengthHelper.SignalLevel.NONE.ordinal()) {
+    } else if (level.ordinal() <= SignalLevel.NONE.ordinal()) {
       signalStrengthTrafficLight = RED;
     } else if (level.ordinal() <= SharedState.getSuperviseSignalStrengthMinLevel(getContext())) {
       signalStrengthTrafficLight = YELLOW;
@@ -409,7 +410,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
             }
           }
         },
-        new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, signalLevelText,
+        new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, networkOperatorName != null ? networkOperatorName : getString(R.string.state_fragment_signal_level),
             superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight) {
 
           private static final int MENU_CONTEXT_DEACTIVATE = 1;

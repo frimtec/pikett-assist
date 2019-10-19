@@ -41,7 +41,7 @@ public class SignalStrengthService extends IntentService {
   @Override
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
-    SignalLevel level = SignalStrengthHelper.getSignalStrength(this);
+    SignalLevel level = new SignalStrengthHelper(this).getSignalStrength();
     if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
       NotificationHelper.notifySignalLow(this, level);
       LowSignalAlarmActivity.trigger(this, this.alarmManager);

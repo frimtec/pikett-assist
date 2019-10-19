@@ -307,7 +307,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       signalStrengthTrafficLight = OFF;
     } else if (level.ordinal() <= SignalStrengthHelper.SignalLevel.NONE.ordinal()) {
       signalStrengthTrafficLight = RED;
-    } else if (level.ordinal() <= SignalStrengthHelper.SignalLevel.POOR.ordinal()) {
+    } else if (level.ordinal() <= SharedState.getSuperviseSignalStrengthMinLevel(getContext())) {
       signalStrengthTrafficLight = YELLOW;
     } else {
       signalStrengthTrafficLight = GREEN;

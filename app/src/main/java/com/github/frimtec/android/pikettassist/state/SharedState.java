@@ -36,6 +36,7 @@ public final class SharedState {
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
   public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
+  public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL = "supervise_signal_strength_min_level";
   public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
   public static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
@@ -106,6 +107,10 @@ public final class SharedState {
   public static boolean getSuperviseSignalStrength(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, true);
+  }
+
+  public static int getSuperviseSignalStrengthMinLevel(Context context) {
+    return Integer.valueOf(getSharedPreferences(context, PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL, context.getString(R.string.pref_default_supervise_signal_strength_min_level)));
   }
 
   public static void setSuperviseSignalStrength(Context context, boolean supervise) {

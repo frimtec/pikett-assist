@@ -133,6 +133,9 @@ Defines the ringtone that is used to alert for missing test alarms.
 #### Supervise signal strength
 Defines whether the signal strength is supervised or not.
 
+#### Minimal signal strength
+Defines the lowest accepted signal strength level.
+
 ![Overview](images/PAssist_15.png)
 
 ## Supported languages

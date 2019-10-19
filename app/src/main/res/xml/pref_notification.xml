@@ -17,4 +17,13 @@
         android:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
         android:key="supervise_signal_strength"
         android:title="@string/pref_title_supervise_signal_strength" />
+
+    <ListPreference
+        android:defaultValue="@string/pref_default_supervise_signal_strength_min_level"
+        android:entries="@array/signal_strength"
+        android:entryValues="@array/signal_strength_values"
+        android:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
+        android:summary="%s"
+        android:key="supervise_signal_strength_min_level"
+        android:title="@string/pref_title_supervise_signal_strength_min_level" />
 </PreferenceScreen>

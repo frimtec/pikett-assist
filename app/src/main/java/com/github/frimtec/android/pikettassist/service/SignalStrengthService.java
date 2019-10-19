@@ -42,7 +42,7 @@ public class SignalStrengthService extends IntentService {
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
     SignalLevel level = SignalStrengthHelper.getSignalStrength(this);
-    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(level)) {
+    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
       NotificationHelper.notifySignalLow(this, level);
       LowSignalAlarmActivity.trigger(this, this.alarmManager);
     }
@@ -56,8 +56,8 @@ public class SignalStrengthService extends IntentService {
     return this.telephonyManager.getCallState() == CALL_STATE_IDLE;
   }
 
-  public static boolean isLowSignal(SignalLevel level) {
-    return level.ordinal() <= SignalLevel.POOR.ordinal();
+  public static boolean isLowSignal(Context context, SignalLevel level) {
+    return level.ordinal() <= SharedState.getSuperviseSignalStrengthMinLevel(context);
   }
 
   @Override

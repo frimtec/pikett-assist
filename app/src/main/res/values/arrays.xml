@@ -11,7 +11,7 @@
         <item>@string/weekdays_sunday</item>
     </string-array>
 
-    <string-array name="weekdays_values" translatable="false">
+    <string-array name="weekdays_values">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -21,7 +21,21 @@
         <item>7</item>
     </string-array>
 
-    <string-array name="default_weekdays" translatable="false">
+    <string-array name="signal_strength">
+        <item>@string/signal_levels_poor</item>
+        <item>@string/signal_levels_moderate</item>
+        <item>@string/signal_levels_good</item>
+        <item>@string/signal_levels_great</item>
+    </string-array>
+
+    <string-array name="signal_strength_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="default_weekdays">
         <item>1</item>
         <item>2</item>
         <item>3</item>

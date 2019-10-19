@@ -34,50 +34,28 @@
     <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window (minutes)</string>
     <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
     <string name="pref_title_test_alarm_check_weekdays">Check days</string>
-    <string-array name="weekdays">
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-        <item>Sunday</item>
-    </string-array>
-    <string-array name="weekdays_values" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-    </string-array>
-    <string-array name="default_weekdays" translatable="false">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-    </string-array>
+    <string name="weekdays_monday">Monday</string>
+    <string name="weekdays_tuesday">Tuesday</string>
+    <string name="weekdays_wednesday">Wednesday</string>
+    <string name="weekdays_thursday">Thursday</string>
+    <string name="weekdays_friday">Friday</string>
+    <string name="weekdays_saturday">Saturday</string>
+    <string name="weekdays_sunday">Sunday</string>
 
-    <string-array name="signal_levels">
-        <item>Off</item>
-        <item>None</item>
-        <item>Poor</item>
-        <item>Moderate</item>
-        <item>Good</item>
-        <item>Great</item>
-    </string-array>
+    <string name="signal_levels_off">Off</string>
+    <string name="signal_levels_none">None</string>
+    <string name="signal_levels_poor">Poor</string>
+    <string name="signal_levels_moderate">Moderate</string>
+    <string name="signal_levels_good">Good</string>
+    <string name="signal_levels_great">Great</string>
 
-    <string-array name="registration_errors">
-        <item>Successful</item>
-        <item>Failed, no secret</item>
-        <item>Rejected</item>
-        <item>Failed, S2SMP is missing SMS permissions</item>
-        <item>Failed, no referrer</item>
-        <item>Failed, no extras</item>
-        <item>Failed</item>
-    </string-array>
+    <string name="registration_errors_successful">Successful</string>
+    <string name="registration_errors_no_secret">Failed, no secret</string>
+    <string name="registration_errors_rejected">Rejected</string>
+    <string name="registration_errors_missing_sms_permissions">Failed, S2SMP is missing SMS permissions</string>
+    <string name="registration_errors_no_referrer">Failed, no referrer</string>
+    <string name="registration_errors_no_extras">Failed, no extras</string>
+    <string name="registration_errors_failed">Failed</string>
 
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>

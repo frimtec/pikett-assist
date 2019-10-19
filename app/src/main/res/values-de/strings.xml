@@ -33,34 +33,28 @@
     <string name="pref_title_test_alarm_accept_time_window_minutes">Testalarm Zeitfenster (Minuten)</string>
     <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
     <string name="pref_title_test_alarm_check_weekdays">Überwachte Wochentage</string>
-    <string-array name="weekdays">
-        <item>Montag</item>
-        <item>Dienstag</item>
-        <item>Mittwoch</item>
-        <item>Donnerstag</item>
-        <item>Freitag</item>
-        <item>Samstag</item>
-        <item>Sonntag</item>
-    </string-array>
+    <string name="weekdays_monday">Montag</string>
+    <string name="weekdays_tuesday">Dienstag</string>
+    <string name="weekdays_wednesday">Mittwoch</string>
+    <string name="weekdays_thursday">Donnerstag</string>
+    <string name="weekdays_friday">Freitag</string>
+    <string name="weekdays_saturday">Samstag</string>
+    <string name="weekdays_sunday">Sonntag</string>
 
-    <string-array name="signal_levels">
-        <item>Aus</item>
-        <item>Kein</item>
-        <item>Schlecht</item>
-        <item>Moderat</item>
-        <item>Gut</item>
-        <item>Exzellent</item>
-    </string-array>
+    <string name="signal_levels_off">Aus</string>
+    <string name="signal_levels_none">Kein</string>
+    <string name="signal_levels_poor">Schlecht</string>
+    <string name="signal_levels_moderate">Moderat</string>
+    <string name="signal_levels_good">Gut</string>
+    <string name="signal_levels_great">Exzellent</string>
 
-    <string-array name="registration_errors">
-        <item>Erfolgreich</item>
-        <item>Fehlgeschlagen, fehlendes Geheimnis</item>
-        <item>Abgelehnt</item>
-        <item>Fehlgeschlagen, S2SMP hat keine SMS-Rechte</item>
-        <item>Fehlgeschlagen, kein Referrer</item>
-        <item>Fehlgeschlagen, keine Parameter</item>
-        <item>Fehlgeschlagen</item>
-    </string-array>
+    <string name="registration_errors_successful">Erfolgreich</string>
+    <string name="registration_errors_no_secret">Fehlgeschlagen, fehlendes Geheimnis</string>
+    <string name="registration_errors_rejected">Abgelehnt</string>
+    <string name="registration_errors_missing_sms_permissions">Fehlgeschlagen, S2SMP hat keine SMS-Rechte</string>
+    <string name="registration_errors_no_referrer">Fehlgeschlagen, kein Referrer</string>
+    <string name="registration_errors_no_extras">Fehlgeschlagen, keine Parameter</string>
+    <string name="registration_errors_failed">Fehlgeschlagen</string>
 
     <string name="pref_header_notifications">Benachrichtigungen</string>
     <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="weekdays">
+        <item>@string/weekdays_monday</item>
+        <item>@string/weekdays_tuesday</item>
+        <item>@string/weekdays_wednesday</item>
+        <item>@string/weekdays_thursday</item>
+        <item>@string/weekdays_friday</item>
+        <item>@string/weekdays_saturday</item>
+        <item>@string/weekdays_sunday</item>
+    </string-array>
+
+    <string-array name="weekdays_values" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="default_weekdays" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="signal_levels">
+        <item>@string/signal_levels_off</item>
+        <item>@string/signal_levels_none</item>
+        <item>@string/signal_levels_poor</item>
+        <item>@string/signal_levels_moderate</item>
+        <item>@string/signal_levels_good</item>
+        <item>@string/signal_levels_great</item>
+    </string-array>
+
+    <string-array name="registration_errors">
+        <item>@string/registration_errors_successful</item>
+        <item>@string/registration_errors_no_secret</item>
+        <item>@string/registration_errors_rejected</item>
+        <item>@string/registration_errors_missing_sms_permissions</item>
+        <item>@string/registration_errors_no_referrer</item>
+        <item>@string/registration_errors_no_extras</item>
+        <item>@string/registration_errors_failed</item>
+    </string-array>
+
+</resources>

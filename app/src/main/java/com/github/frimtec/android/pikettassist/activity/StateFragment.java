@@ -501,7 +501,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     } catch (PackageManager.NameNotFoundException e) {
       Log.e(TAG, "Can not get package info", e);
     }
-    return this.random.nextFloat() <= Math.min((installationAgeInDays - 10f) * 0.01f, 0.5f);
+    return this.random.nextFloat() <= Math.min((installationAgeInDays - 30f) * 0.01f, 0.3f);
   }
 
   private String formatDateTime(Instant time) {

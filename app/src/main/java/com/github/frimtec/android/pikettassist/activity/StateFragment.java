@@ -128,6 +128,13 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    // the configured subscription may have been changed
+    this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
+  }
+
+  @Override
   protected void configureListView(ListView listView) {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {

@@ -72,7 +72,7 @@ PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/a
 Build PAssist on your own and then install the APK via ADB to your android phone.
 
 ## Configuration 
-The configuration is split into four blocks:
+The configuration is split into five blocks:
 
 ![Settings](images/PAssist_10.png)
 
@@ -123,18 +123,24 @@ Defines the weekdays on which the test alarms are checked.
 
 ![Test alarm settings](images/PAssist_14.png)
 
+### Supervise signal strength
+#### Supervise signal strength
+Defines whether the signal strength is supervised or not.
+
+#### Minimal signal strength
+Defines the lowest accepted signal strength level.
+
+#### Supervised subscription (for Dual SIM only)
+For dual SIM phones you can select the subscription for which the signal strength is supervised.
+
+![Overview](images/PAssist_19.png)
+
 ### Notifications
 #### Alarm ringtone
 Defines the ringtone that is used to alert for on-call alarms.
 
 #### Missing test alarm ringtone
 Defines the ringtone that is used to alert for missing test alarms.
-
-#### Supervise signal strength
-Defines whether the signal strength is supervised or not.
-
-#### Minimal signal strength
-Defines the lowest accepted signal strength level.
 
 ![Overview](images/PAssist_15.png)
 

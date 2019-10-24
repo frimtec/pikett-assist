@@ -66,6 +66,9 @@ public class SmsListener extends BroadcastReceiver {
                   contentValues.put(TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, Instant.now().toEpochMilli());
                   contentValues.put(TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE, sms.getText());
                   db.insert(TABLE_TEST_ALERT_STATE, null, contentValues);
+                  Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(context);
+                  superviseTestContexts.add(id);
+                  SharedState.setSuperviseTestContexts(context, superviseTestContexts);
                 } else {
                   ContentValues contentValues = new ContentValues();
                   contentValues.put(TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, Instant.now().toEpochMilli());

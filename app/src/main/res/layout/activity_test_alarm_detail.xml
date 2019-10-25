@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="10dp"
     android:paddingTop="10dp"
     android:paddingRight="10dp"
@@ -19,17 +19,25 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
-        app:srcCompat="@drawable/ic_test_alarm"
-        android:contentDescription="@string/pref_header_test_alarm" />
+        android:contentDescription="@string/pref_header_test_alarm"
+        app:srcCompat="@drawable/ic_test_alarm" />
 
     <TextView
         android:id="@+id/test_alarm_details_context"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/test_alarm_details_image"
-        android:layout_marginTop="7dp"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
+
+    <Switch
+        android:id="@+id/test_alarm_enabling_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="@string/test_alarm_details_supervised_label"
+        android:layout_marginTop="14dp" />
 
     <TextView
         android:id="@+id/test_alarm_details_alarm_state_title"
@@ -37,32 +45,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/test_alarm_details_image"
         android:text="@string/test_alarm_details_alarm_state_label"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/test_alarm_details_alarm_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/test_alarm_details_image"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/test_alarm_details_alarm_state_title"
-        android:layout_marginStart="10dp"
-        android:textSize="16sp"/>
-    <TextView
-        android:id="@+id/test_alarm_details_supervised_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/test_alarm_details_image"
-        android:layout_toEndOf="@id/test_alarm_details_alarm_state"
-        android:layout_marginStart="30dp"
-        android:text="@string/test_alarm_details_supervised_label"
-        android:textSize="16sp"/>
-    <TextView
-        android:id="@+id/test_alarm_details_supervised"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/test_alarm_details_image"
-        android:layout_toEndOf="@id/test_alarm_details_supervised_title"
-        android:layout_marginStart="10dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/test_alarm_details_last_received_title"
@@ -71,14 +63,15 @@
         android:layout_below="@id/test_alarm_details_alarm_state_title"
         android:layout_marginTop="10dp"
         android:text="@string/test_alarm_details_last_received_label"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/test_alarm_details_last_received"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/test_alarm_details_last_received_title"
         android:layout_marginStart="10dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/test_alarm_details_message_title"
@@ -87,13 +80,14 @@
         android:layout_below="@id/test_alarm_details_last_received"
         android:layout_marginTop="10dp"
         android:text="@string/test_alarm_details_message_label"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/test_alarm_details_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/test_alarm_details_message_title"
         android:layout_marginStart="10dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
 </RelativeLayout>

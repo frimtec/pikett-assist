@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.Locale;
 import java.util.Set;
 
@@ -41,14 +43,22 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
       String testAlarmContext = extras.getString(EXTRA_TEST_ALARM_CONTEXT);
       setContentView(R.layout.activity_test_alarm_detail);
 
-      TextView context = findViewById(R.id.test_alarm_details_context);
-      context.setText(testAlarmContext);
+      TextView contextText = findViewById(R.id.test_alarm_details_context);
+      contextText.setText(testAlarmContext);
 
       TextView lastReceived = findViewById(R.id.test_alarm_details_last_received);
       TextView alarmState = findViewById(R.id.test_alarm_details_alarm_state);
-      TextView supervised = findViewById(R.id.test_alarm_details_supervised);
-      Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(this);
-      supervised.setText(getOnOffText(superviseTestContexts.contains(testAlarmContext)));
+      Switch supervisedSwitch = findViewById(R.id.test_alarm_enabling_switch);
+      supervisedSwitch.setChecked(SharedState.getSuperviseTestContexts(this).contains(testAlarmContext));
+      supervisedSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(this);
+        if(isChecked) {
+          superviseTestContexts.add(testAlarmContext);
+        } else {
+          superviseTestContexts.remove(testAlarmContext);
+        }
+        SharedState.setSuperviseTestContexts(this, superviseTestContexts);
+      });
       TextView message = findViewById(R.id.test_alarm_details_message);
 
       try (SQLiteDatabase db = PAssist.getReadableDatabase()) {

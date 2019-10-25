@@ -59,6 +59,12 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarm> {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    refresh();
+  }
+
+  @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     TestAlarm selectedItem = (TestAlarm) getListView().getItemAtPosition(info.position);
@@ -128,6 +134,9 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarm> {
               contentValues.put(TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, 0);
               contentValues.put(TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE, getString(R.string.test_alarm_message_empty));
               db.insert(TABLE_TEST_ALERT_STATE, null, contentValues);
+              Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(getContext());
+              superviseTestContexts.add(newTestContext);
+              SharedState.setSuperviseTestContexts(getContext(), superviseTestContexts);
               refresh();
               Toast.makeText(getContext(), R.string.test_alarm_toast_added_success, Toast.LENGTH_SHORT).show();
             } else {

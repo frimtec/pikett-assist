@@ -33,12 +33,12 @@ class TestAlarmArrayAdapter extends ArrayAdapter<TestAlarm> {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.test_alarm_item, parent, false);
     }
 
-    TextView context = convertView.findViewById(R.id.test_alarm_item_context);
-    context.setText(testAlarm.getContext());
+    TextView textView = convertView.findViewById(R.id.test_alarm_item_context);
+    textView.setText(testAlarm.getContext());
 
     Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(getContext());
     if(!superviseTestContexts.contains(testAlarm.getContext())) {
-      context.setTextAppearance(R.style.deactivatedItem);
+      textView.setTextAppearance(R.style.deactivatedItem);
     }
     return convertView;
   }

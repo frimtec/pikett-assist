@@ -147,7 +147,7 @@
     <string name="send_log_button_send">Send</string>
     <string name="title_activity_test_alarm_details">Test alarm details</string>
     <string name="test_alarm_details_alarm_state_label">Alarm state:</string>
-    <string name="test_alarm_details_supervised_label">Supervised:</string>
+    <string name="test_alarm_details_supervised_label">Supervised</string>
     <string name="test_alarm_details_last_received_label">Last received:</string>
     <string name="test_alarm_details_message_label">Received message:</string>
     <string name="test_alarm_activated_toast">Test alarm activated.</string>

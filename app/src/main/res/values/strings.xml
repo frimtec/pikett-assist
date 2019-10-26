@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">PAssist</string>
-    <string name="channel_name">PAssist notifications</string>
-    <string name="channel_description">PAssist notifications</string>
+    <string name="channel_name_alarm">Alarms</string>
+    <string name="channel_description_alarm">Urgent alarms.</string>
+    <string name="channel_name_notification">Notifications</string>
+    <string name="channel_description_notification">Non urgent notifications like for example the on-call state.</string>
     <string name="title_home">Overview</string>
     <string name="title_shift_overview">Calendar</string>
     <string name="title_alert_log">Alert log</string>

@@ -1,6 +1,8 @@
 <resources>
-    <string name="channel_name" >PAssist Benachrichtigungen</string>
-    <string name="channel_description">PAssist Benachrichtigungen</string>
+    <string name="channel_name_alarm">Alarme</string>
+    <string name="channel_description_alarm">Dringende Alarme.</string>
+    <string name="channel_name_notification">Benachrichtigungen</string>
+    <string name="channel_description_notification">Nicht dringende Benachrichtigungen wie zum Beispiel der aktuelle Zustand des Pikettdienstes.</string>
     <string name="title_home">Übersicht</string>
     <string name="title_shift_overview">Kalender</string>
     <string name="title_alert_log">Aufgebote</string>

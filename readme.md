@@ -48,6 +48,9 @@ This ensures that you won't stay in a dead spot without recognize it during on-c
 ![Low signal state info](images/PAssist_13.png)
 ![None signal state info](images/PAssist_04.png)
 
+### Ringtone volume
+PAssist can control the ringtone volume during on-call duty with separate profiles for day and night. 
+
 ### Test alarms
 If the SMS alarming system in use sends daily test alarms to verify the alarming chain from end to end, PAssist can be
 configured to automatically receive and acknowledge them, without interrupting the user.
@@ -72,7 +75,7 @@ PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/a
 Build PAssist on your own and then install the APK via ADB to your android phone.
 
 ## Configuration 
-The configuration is split into five blocks:
+The configuration is split into several blocks:
 
 ![Settings](images/PAssist_10.png)
 
@@ -143,6 +146,17 @@ Defines the ringtone that is used to alert for on-call alarms.
 Defines the ringtone that is used to alert for missing test alarms.
 
 ![Overview](images/PAssist_15.png)
+
+### Day/night profile
+#### Profile start times
+Time when day/night profile starts.
+
+#### Ringtone volume
+Defines whether PAssist should control the ringtone volume during on-call duty or not.
+The desired ringtone volumes can be defined for the day and night profile separably.
+If activated, the ringtone volume is automatically restored to the former value, when on-call duty is finished.
+
+![Overview](images/PAssist_20.png)
 
 ## Supported languages
 Currently the following languages are supported in PAssist:

@@ -27,4 +27,9 @@
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_header_notifications" />
 
+    <header
+        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$DayNightProfilePreferenceFragment"
+        android:icon="@drawable/ic_half_moon_and_sun"
+        android:title="@string/pref_header_day_night_profile" />
+
 </preference-headers>

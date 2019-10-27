@@ -1,0 +1,43 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:icon="@drawable/ic_volume_up_black_24dp"
+        android:title="@string/pref_title_category_profile_start_times">
+        <com.github.frimtec.android.pikettassist.settings.TimePreference
+            android:defaultValue="@string/pref_default_day_start_time"
+            android:icon="@drawable/ic_day"
+            android:key="day_start_time"
+            android:title="@string/pref_title_day_start_time" />
+
+        <com.github.frimtec.android.pikettassist.settings.TimePreference
+            android:defaultValue="@string/pref_default_night_start_time"
+            android:icon="@drawable/ic_night"
+            android:key="night_start_time"
+            android:title="@string/pref_title_night_start_time" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:icon="@drawable/ic_volume_up_black_24dp"
+        android:title="@string/pref_title_category_ringtone_volume">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_volume_up_black_24dp"
+            android:key="manage_volume"
+            android:title="@string/pref_title_manage_volume" />
+
+        <SeekBarPreference
+            android:defaultValue="@integer/default_volume_day"
+            android:dependency="manage_volume"
+            android:icon="@drawable/ic_day"
+            android:key="on_call_day_volume"
+            android:max="@integer/volume_max"
+            android:title="@string/pref_title_volume_day" />
+
+        <SeekBarPreference
+            android:defaultValue="@integer/default_volume_night"
+            android:dependency="manage_volume"
+            android:icon="@drawable/ic_night"
+            android:key="on_call_night_volume"
+            android:max="@integer/volume_max"
+            android:title="@string/pref_title_volume_night" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -195,4 +195,14 @@
     <string name="increased">erhöht</string>
     <string name="notification_volume_changed_title">Klingeltonlautstärke</string>
     <string name="notification_volume_changed_text">Lautstärke geändert auf %s.</string>
+    <string name="pref_header_day_night_profile"><![CDATA[Tag-/Nachtprofil]]></string>
+    <string name="pref_title_day_start_time">Tag</string>
+    <string name="pref_default_day_start_time">07:00</string>
+    <string name="pref_title_night_start_time">Nacht</string>
+    <string name="pref_default_night_start_time">22:00</string>
+    <string name="pref_title_manage_volume">Im Pikettzustand steuern</string>
+    <string name="pref_title_category_profile_start_times">Startzeiten der Profile</string>
+    <string name="pref_title_category_ringtone_volume">Lautstärke des Klingeltons</string>
+    <string name="pref_title_volume_day">Lautstärke Tag</string>
+    <string name="pref_title_volume_night">Lautstärke Nacht</string>
 </resources>

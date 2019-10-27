@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="volume_max">7</integer>
+    <integer name="default_volume_day">7</integer>
+    <integer name="default_volume_night">1</integer>
+</resources>

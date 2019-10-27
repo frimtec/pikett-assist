@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_DAY_START_TIME;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_NIGHT_START_TIME;
 import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_SMS_CONFIRM_TEXT;
 import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES;
 import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_TEST_ALARM_CHECK_TIME;
@@ -165,7 +167,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         || AlarmingFragment.class.getName().equals(fragmentName)
         || TestAlarmFragment.class.getName().equals(fragmentName)
         || SignalStrengthPreferenceFragment.class.getName().equals(fragmentName)
-        || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+        || NotificationPreferenceFragment.class.getName().equals(fragmentName)
+        || DayNightProfilePreferenceFragment.class.getName().equals(fragmentName);
   }
 
   /**
@@ -276,6 +279,29 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
       super.onCreate(savedInstanceState);
       addPreferencesFromResource(R.xml.pref_notification);
       setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+      int id = item.getItemId();
+      if (id == android.R.id.home) {
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
+        return true;
+      }
+      return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+  public static class DayNightProfilePreferenceFragment extends PreferenceFragment {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      addPreferencesFromResource(R.xml.pref_day_night_profile);
+      setHasOptionsMenu(true);
+      bindPreferenceSummaryToValue(findPreference(PREF_KEY_DAY_START_TIME));
+      bindPreferenceSummaryToValue(findPreference(PREF_KEY_NIGHT_START_TIME));
     }
 
     @Override

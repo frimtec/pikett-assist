@@ -197,4 +197,14 @@
     <string name="increased">increased</string>
     <string name="notification_volume_changed_title">Ringtone volume</string>
     <string name="notification_volume_changed_text">Volume changed to %s.</string>
+    <string name="pref_header_day_night_profile"><![CDATA[Day/night profile]]></string>
+    <string name="pref_title_day_start_time">Day</string>
+    <string name="pref_default_day_start_time">07:00</string>
+    <string name="pref_title_night_start_time">Night</string>
+    <string name="pref_default_night_start_time">22:00</string>
+    <string name="pref_title_manage_volume">Control during on-call duty</string>
+    <string name="pref_title_category_profile_start_times">Profile start times</string>
+    <string name="pref_title_category_ringtone_volume">Ringtone volume</string>
+    <string name="pref_title_volume_day">Volume day</string>
+    <string name="pref_title_volume_night">Volume night</string>
 </resources>

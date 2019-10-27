@@ -30,6 +30,7 @@ import java.util.function.BiConsumer;
 import static android.app.Notification.CATEGORY_ALARM;
 import static android.app.Notification.CATEGORY_EVENT;
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
+import static android.app.NotificationManager.IMPORTANCE_LOW;
 import static android.app.NotificationManager.IMPORTANCE_MAX;
 
 
@@ -44,6 +45,7 @@ public class NotificationHelper {
 
   private static final String CHANNEL_ID_ALARM = "com.github.frimtec.android.pikettassist.alarm";
   private static final String CHANNEL_ID_NOTIFICATION = "com.github.frimtec.android.pikettassist.notification";
+  private static final String CHANNEL_ID_CHANGE_SYSTEM = "com.github.frimtec.android.pikettassist.changeSystem";
   private static final String CHANNEL_ID_LEGACY = "com.github.frimtec.android.pikettassist";
 
   public static void registerChannel(Context context) {
@@ -52,7 +54,8 @@ public class NotificationHelper {
       if (notificationManager != null) {
         createChannel(notificationManager, CHANNEL_ID_ALARM, context.getString(R.string.channel_name_alarm), context.getString(R.string.channel_description_alarm), IMPORTANCE_MAX);
         createChannel(notificationManager, CHANNEL_ID_NOTIFICATION, context.getString(R.string.channel_name_notification), context.getString(R.string.channel_description_notification), IMPORTANCE_DEFAULT);
-        if(notificationManager.getNotificationChannel(CHANNEL_ID_LEGACY) != null) {
+        createChannel(notificationManager, CHANNEL_ID_CHANGE_SYSTEM, context.getString(R.string.channel_name_change_system), context.getString(R.string.channel_description_change_system), IMPORTANCE_LOW);
+        if (notificationManager.getNotificationChannel(CHANNEL_ID_LEGACY) != null) {
           notificationManager.deleteNotificationChannel(CHANNEL_ID_LEGACY);
         }
       }
@@ -148,6 +151,50 @@ public class NotificationHelper {
 
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
+  }
+
+  public static void notifyVolumeChanged(Context context, int oldLevel, int newLevel) {
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+    );
+
+    String change = oldLevel > newLevel ? context.getString(R.string.reduced) : context.getString(R.string.increased);
+    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_CHANGE_SYSTEM)
+        .setContentTitle(context.getString(R.string.notification_volume_changed_title) + " " + change)
+        .setContentText(String.format(context.getString(R.string.notification_volume_changed_text), levelText(newLevel)))
+        .setSmallIcon(R.drawable.ic_volume_up_black_24dp)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setCategory(CATEGORY_EVENT)
+        .setOnlyAlertOnce(true)
+        .setContentIntent(notifyPendingIntent)
+        .setAutoCancel(true)
+        .build();
+
+    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+    notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
+  }
+
+  private static String levelText(int level) {
+    switch (level) {
+      case 0:
+        return "0%";
+      case 1:
+        return "15%";
+      case 2:
+        return "30%";
+      case 3:
+        return "45%";
+      case 4:
+        return "60%";
+      case 5:
+        return "75%";
+      case 6:
+        return "90%";
+      case 7:
+        return "100%";
+      default:
+        return level < 0 ? "0%" : "100%";
+    }
   }
 
   public static void cancelNotification(Context context, int id) {

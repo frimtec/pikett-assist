@@ -15,7 +15,10 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper.SignalLevel;
+import com.github.frimtec.android.pikettassist.helper.VolumeHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+
+import org.threeten.bp.LocalTime;
 
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 
@@ -64,6 +67,9 @@ public class SignalStrengthService extends IntentService {
   public void onDestroy() {
     super.onDestroy();
     if (SharedState.getPikettState(this) == OnOffState.ON) {
+      if (SharedState.getManageVolumeEnabled(this)) {
+        new VolumeHelper(this).setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
+      }
       this.alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );

@@ -4,6 +4,8 @@
     <string name="channel_description_alarm">Urgent alarms.</string>
     <string name="channel_name_notification">Notifications</string>
     <string name="channel_description_notification">Non urgent notifications like for example the on-call state.</string>
+    <string name="channel_name_change_system">System changes</string>
+    <string name="channel_description_change_system">Change of system settings.</string>
     <string name="title_home">Overview</string>
     <string name="title_shift_overview">Calendar</string>
     <string name="title_alert_log">Alert log</string>
@@ -191,4 +193,8 @@
     <string name="state_fragment_donation">Donation</string>
     <string name="state_fragment_donation_value">How about a donation?</string>
     <string name="puchase_acknowledged">The purchase is acknowledged. Many thanks for your donation.</string>
+    <string name="reduced">reduced</string>
+    <string name="increased">increased</string>
+    <string name="notification_volume_changed_title">Ringtone volume</string>
+    <string name="notification_volume_changed_text">Volume changed to %s.</string>
 </resources>

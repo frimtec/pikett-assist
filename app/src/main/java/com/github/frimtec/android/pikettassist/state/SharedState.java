@@ -13,6 +13,8 @@ import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 
+import org.threeten.bp.LocalTime;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,6 +46,8 @@ public final class SharedState {
   public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String CALENDAR_FILTER_ALL = "-1";
   public static final String PREF_KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state_manually_on";
+  private static final String PREF_KEY_DEFAULT_VOLUME = "default_volume";
+  public static final int DEFAULT_VALUE_NOT_SET = -1;
 
   private static final String LAST_ALARM_SMS_NUMBER = "last_alarm_sms_number";
 
@@ -186,6 +190,47 @@ public final class SharedState {
 
   public static void setLastAlarmSmsNumberWithSubscriptionId(Context context, String smsNumber, Integer subscriptionId) {
     setSharedPreferences(context, LAST_ALARM_SMS_NUMBER, smsNumber + ";" + (subscriptionId != null ? subscriptionId : ""));
+  }
+
+  public static boolean getManageVolumeEnabled(Context context) {
+    // TODO: 27.10.2019 to be implemented
+    return true;
+  }
+
+  public static int getDefaultVolume(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getInt(PREF_KEY_DEFAULT_VOLUME, DEFAULT_VALUE_NOT_SET);
+  }
+
+  public static void setDefaultVolume(Context context, int volume) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putInt(PREF_KEY_DEFAULT_VOLUME, volume);
+    editor.apply();
+  }
+
+  public static int getOnCallDayVolume(Context context) {
+    // TODO: 27.10.2019 to be implemented
+    return 7;
+  }
+
+  public static int getOnCallVolume(Context context, LocalTime currentTime) {
+    return currentTime.isAfter(getDayProfileStartTime(context)) && currentTime.isBefore(getDayProfileEndTime(context)) ? getOnCallDayVolume(context) : getOnCallNightVolume(context);
+  }
+
+  public static int getOnCallNightVolume(Context context) {
+    // TODO: 27.10.2019 to be implemented
+    return 1;
+  }
+
+  public static LocalTime getDayProfileStartTime(Context context) {
+    // TODO: 27.10.2019 to be implemented
+    return LocalTime.of(7, 0);
+  }
+
+  public static LocalTime getDayProfileEndTime(Context context) {
+    // TODO: 27.10.2019 to be implemented
+    return LocalTime.of(20, 0);
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {

@@ -3,6 +3,8 @@
     <string name="channel_description_alarm">Dringende Alarme.</string>
     <string name="channel_name_notification">Benachrichtigungen</string>
     <string name="channel_description_notification">Nicht dringende Benachrichtigungen wie zum Beispiel der aktuelle Zustand des Pikettdienstes.</string>
+    <string name="channel_name_change_system">Systemänderungen</string>
+    <string name="channel_description_change_system">Änderungen von Systemeinstellungen.</string>
     <string name="title_home">Übersicht</string>
     <string name="title_shift_overview">Kalender</string>
     <string name="title_alert_log">Aufgebote</string>
@@ -189,4 +191,8 @@
     <string name="state_fragment_donation">Spenden</string>
     <string name="state_fragment_donation_value">Wie wäre es\nmit einer Spende?</string>
     <string name="puchase_acknowledged">Der Kauf wurde bestätigt. Vielen Dank für die Spende.</string>
+    <string name="reduced">reduziert</string>
+    <string name="increased">erhöht</string>
+    <string name="notification_volume_changed_title">Klingeltonlautstärke</string>
+    <string name="notification_volume_changed_text">Lautstärke geändert auf %s.</string>
 </resources>

@@ -105,7 +105,7 @@ _WARNING_: Be careful, if the pattern is not well designed and triggers for a re
 The regular expression can define a group to extract the test context (for example the name of the system) out of the SMS.
 As an example the following regular expression could handle test alarms from two different systems 'Helios' and 'Lunar':
 
-`^Test alarm for system (Helios|Lunar)?.*`  
+`^Test alarm for system (Helios|Lunar).*`
 
 Test alarms of each group can be supervised individually.
  

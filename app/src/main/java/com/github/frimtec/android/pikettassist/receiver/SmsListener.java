@@ -51,7 +51,7 @@ public class SmsListener extends BroadcastReceiver {
         Set<Long> contactIds = ContactHelper.lookupContactIdByPhoneNumber(context, sms.getNumber());
         if (operationCenterContactId != SharedState.EMPTY_CONTACT && contactIds.contains(operationCenterContactId)) {
           Log.i(TAG, "SMS from pikett number");
-          Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context));
+          Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context), Pattern.DOTALL);
           Matcher matcher = testSmsPattern.matcher(sms.getText());
           if (matcher.matches()) {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;

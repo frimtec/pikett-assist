@@ -150,7 +150,7 @@ public final class SharedState {
 
   public static boolean getTestAlarmEnabled(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getBoolean(PREF_KEY_TEST_ALARM_ENABLED, true);
+    return preferences.getBoolean(PREF_KEY_TEST_ALARM_ENABLED, false);
   }
 
   public static String getAlarmRingTone(Context context) {

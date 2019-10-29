@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:icon="@drawable/ic_test_alarm"
         android:key="test_alarm_enabled"
         android:title="@string/pref_title_test_alarm_enabled" />

@@ -423,8 +423,6 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
               bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, alarmState.second);
               intent.putExtras(bundle);
               startActivity(intent);
-            } else {
-              switchFragment(MainActivity.Fragment.CALL_LOG);
             }
           }
         },

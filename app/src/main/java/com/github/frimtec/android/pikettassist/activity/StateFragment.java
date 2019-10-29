@@ -450,41 +450,43 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         })
     );
 
-    String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
-    for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
-      OnOffState testAlarmState = OnOffState.OFF;
-      Supplier<Button> testAlarmCloseButtonSupplier = null;
-      try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
-        try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
-          if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-            lastReceived = formatDateTime(cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null);
-            testAlarmState = OnOffState.valueOf(cursor.getString(2));
+    if (SharedState.getTestAlarmEnabled(getContext())) {
+      String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
+      for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
+        OnOffState testAlarmState = OnOffState.OFF;
+        Supplier<Button> testAlarmCloseButtonSupplier = null;
+        try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
+          try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
+            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+              lastReceived = formatDateTime(cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null);
+              testAlarmState = OnOffState.valueOf(cursor.getString(2));
 
-            if (testAlarmState != OnOffState.OFF) {
-              testAlarmCloseButtonSupplier = () -> {
-                Button button = new Button(getContext());
+              if (testAlarmState != OnOffState.OFF) {
+                testAlarmCloseButtonSupplier = () -> {
+                  Button button = new Button(getContext());
 
-                button.setText(getString(R.string.main_state_button_close_alert));
-                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
-                button.setOnClickListener(v -> {
-                  TestAlarmDao.updateAlarmState(testContext, OnOffState.OFF);
-                  refresh();
-                });
-                return button;
-              };
+                  button.setText(getString(R.string.main_state_button_close_alert));
+                  button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
+                  button.setOnClickListener(v -> {
+                    TestAlarmDao.updateAlarmState(testContext, OnOffState.OFF);
+                    refresh();
+                  });
+                  return button;
+                };
+              }
             }
           }
+          states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
+            @Override
+            public void onClickAction(Context context) {
+              Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
+              Bundle bundle = new Bundle();
+              bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
+              intent.putExtras(bundle);
+              startActivity(intent);
+            }
+          });
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
-          @Override
-          public void onClickAction(Context context) {
-            Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
-            intent.putExtras(bundle);
-            startActivity(intent);
-          }
-        });
       }
     }
 

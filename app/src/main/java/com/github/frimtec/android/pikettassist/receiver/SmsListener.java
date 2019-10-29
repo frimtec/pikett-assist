@@ -53,7 +53,7 @@ public class SmsListener extends BroadcastReceiver {
           Log.i(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context), Pattern.DOTALL);
           Matcher matcher = testSmsPattern.matcher(sms.getText());
-          if (matcher.matches()) {
+          if (SharedState.getTestAlarmEnabled(context) && matcher.matches()) {
             String id = matcher.groupCount() > 0 ? matcher.group(1) : null;
             id = id != null ? id : context.getString(R.string.test_alarm_context_general);
             Log.i(TAG, "TEST alarm with ID: " + id);

@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/test_alarm_details_image"
         android:text="@string/test_alarm_details_alarm_state_label"
+        android:textStyle="bold"
         android:textSize="16sp" />
 
     <TextView
@@ -63,6 +64,7 @@
         android:layout_below="@id/test_alarm_details_alarm_state_title"
         android:layout_marginTop="10dp"
         android:text="@string/test_alarm_details_last_received_label"
+        android:textStyle="bold"
         android:textSize="16sp" />
 
     <TextView
@@ -80,6 +82,7 @@
         android:layout_below="@id/test_alarm_details_last_received"
         android:layout_marginTop="10dp"
         android:text="@string/test_alarm_details_message_label"
+        android:textStyle="bold"
         android:textSize="16sp" />
 
     <TextView

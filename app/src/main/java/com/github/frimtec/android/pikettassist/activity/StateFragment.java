@@ -11,7 +11,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.CalendarContract;
+import android.provider.Settings;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -102,6 +104,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   private static final String TAG = "StateFragment";
 
   static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
+  public static final String SECURE_SMS_PROXY_PACKAGE_NAME = "com.github.frimtec.android.securesmsproxy";
 
   private final Random random = new Random(System.currentTimeMillis());
 
@@ -214,8 +217,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
     boolean allowed = phoneNumbers.isEmpty() || s2smp.isAllowed(phoneNumbers);
     boolean newVersion = installed && installation.getApiVersion().compareTo(installation.getAppVersion().get()) > 0;
+    PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+    boolean batteryOptimisationOn = !pm.isIgnoringBatteryOptimizations(SECURE_SMS_PROXY_PACKAGE_NAME);
     states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter),
-        installed ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? "S2SMP V" + installation.getAppVersion().get() : getString(R.string.state_fragment_phone_numbers_blocked))) : getString(R.string.state_fragment_sms_adapter_not_installed), null, installed ? (newVersion ? YELLOW : (allowed ? GREEN : RED)) : RED) {
+        installed ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? (batteryOptimisationOn ? getString(R.string.notification_battery_optimization_short_title) : "S2SMP V" + installation.getAppVersion().get()) : getString(R.string.state_fragment_phone_numbers_blocked))) : getString(R.string.state_fragment_sms_adapter_not_installed), null,
+        installed ? (newVersion ? YELLOW : (allowed ? (batteryOptimisationOn ? YELLOW : GREEN) : RED)) : RED) {
       @Override
       public void onClickAction(Context context) {
         if (!installed) {
@@ -255,6 +261,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
               }).create();
           alertDialog.show();
           ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+          return;
+        }
+        if (batteryOptimisationOn) {
+          NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2smp_text,
+              (dialogInterface, integer) -> startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
           return;
         }
         Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);

@@ -32,6 +32,7 @@ public final class SharedState {
   public static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
   public static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
   public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
+  public static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
   public static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   public static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
@@ -135,6 +136,11 @@ public final class SharedState {
     SharedPreferences.Editor editor = preferences.edit();
     editor.putBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, manuallyOn);
     editor.apply();
+  }
+
+  public static boolean getTestAlarmEnabled(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_TEST_ALARM_ENABLED, true);
   }
 
   public static String getAlarmRingTone(Context context) {

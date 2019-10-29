@@ -101,6 +101,9 @@ match the titles of your calendar events, which should be considered for your on
 ![Calendar settings](images/PAssist_12.png)
     
 ### Test alarm  
+#### Use test alarms
+Enable or disable the test alarm feature.
+
 #### Test alarm message pattern
 [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to identify SMS alarm messages as test alarms (case sensitive).<br> 
 _WARNING_: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!

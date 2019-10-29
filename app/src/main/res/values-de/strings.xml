@@ -1,6 +1,10 @@
 <resources>
-    <string name="channel_name" >PAssist Benachrichtigungen</string>
-    <string name="channel_description">PAssist Benachrichtigungen</string>
+    <string name="channel_name_alarm">Alarme</string>
+    <string name="channel_description_alarm">Dringende Alarme.</string>
+    <string name="channel_name_notification">Benachrichtigungen</string>
+    <string name="channel_description_notification">Nicht dringende Benachrichtigungen wie zum Beispiel der aktuelle Zustand des Pikettdienstes.</string>
+    <string name="channel_name_change_system">Systemänderungen</string>
+    <string name="channel_description_change_system">Änderungen von Systemeinstellungen.</string>
     <string name="title_home">Übersicht</string>
     <string name="title_shift_overview">Kalender</string>
     <string name="title_alert_log">Aufgebote</string>
@@ -29,7 +33,7 @@
     <string name="pref_default_test_alarm_message_pattern">--- UNDEFINIERT ---</string>
     <string name="pref_title_supervise_test_contexts">Überwachte Testkontexte</string>
     <string name="pref_title_test_alarm_check_time">Überwachungszeitpunkt</string>
-    <string name="pref_title_test_alarm_enabled">Testalarme verarbeiten</string>
+    <string name="pref_title_test_alarm_enabled">Testalarme verwenden</string>
     <string name="pref_default_test_alarm_check_time">12:00</string>
     <string name="pref_title_test_alarm_accept_time_window_minutes">Testalarm Zeitfenster (Minuten)</string>
     <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
@@ -100,7 +104,9 @@
     <string name="notification_missing_test_alert_text">Testkontexte: </string>
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Akku-Optimierung ist aktiv!</string>
+    <string name="notification_battery_optimization_short_title">Akku optimiert!</string>
     <string name="notification_battery_optimization_text"><![CDATA[Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b>Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"PAssist\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
+    <string name="notification_battery_optimization_s2smp_text"><![CDATA[Damit S2SMP zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b>Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"S2SMP\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
     <string name="notification_draw_overlays_title">Overlays anzeigen ist deaktiviert!</string>
     <string name="notification_draw_overlays_text">Um den Alarmdialog darzustellen, auch wenn PAssist nicht aktiv oder im Hintergrund ist, muss die Einstellung Overlays anzeigen aktiviert werden.</string>
     <string name="alert_action_close">Schliessen</string>
@@ -145,10 +151,10 @@
     <string name="send_log_message">PAssist wurde unerwarteterweise beendet. Bitte sende den Crash-Report via E-Mail an den Autor, um die Stabilität von PAssist zu erhöhen.</string>
     <string name="send_log_button_send">Senden</string>
     <string name="title_activity_test_alarm_details">Testalarm Details</string>
-    <string name="test_alarm_details_alarm_state_label">Alarmzustand:</string>
+    <string name="test_alarm_details_alarm_state_label">Alarmzustand</string>
     <string name="test_alarm_details_supervised_label">Überwachung</string>
-    <string name="test_alarm_details_last_received_label">Zuletzt empfangen:</string>
-    <string name="test_alarm_details_message_label">Empfangene Meldung:</string>
+    <string name="test_alarm_details_last_received_label">Zuletzt empfangen</string>
+    <string name="test_alarm_details_message_label">Empfangene Meldung</string>
     <string name="test_alarm_activated_toast">Testalarm aktiviert.</string>
     <string name="test_alarm_deactivated_toast">Testalarm deaktiviert.</string>
     <string name="test_alarm_message_empty">Keine</string>
@@ -187,4 +193,18 @@
     <string name="state_fragment_donation">Spenden</string>
     <string name="state_fragment_donation_value">Wie wäre es\nmit einer Spende?</string>
     <string name="puchase_acknowledged">Der Kauf wurde bestätigt. Vielen Dank für die Spende.</string>
+    <string name="reduced">reduziert</string>
+    <string name="increased">erhöht</string>
+    <string name="notification_volume_changed_title">Klingeltonlautstärke</string>
+    <string name="notification_volume_changed_text">Lautstärke geändert auf %s.</string>
+    <string name="pref_header_day_night_profile"><![CDATA[Tag-/Nachtprofil]]></string>
+    <string name="pref_title_day_start_time">Tag</string>
+    <string name="pref_default_day_start_time">07:00</string>
+    <string name="pref_title_night_start_time">Nacht</string>
+    <string name="pref_default_night_start_time">22:00</string>
+    <string name="pref_title_manage_volume">Im Pikettzustand steuern</string>
+    <string name="pref_title_category_profile_start_times">Startzeiten der Profile</string>
+    <string name="pref_title_category_ringtone_volume">Lautstärke des Klingeltons</string>
+    <string name="pref_title_volume_day">Lautstärke Tag</string>
+    <string name="pref_title_volume_night">Lautstärke Nacht</string>
 </resources>

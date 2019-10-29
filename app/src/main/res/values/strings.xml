@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name" translatable="false">PAssist</string>
-    <string name="channel_name">PAssist notifications</string>
-    <string name="channel_description">PAssist notifications</string>
+    <string name="channel_name_alarm">Alarms</string>
+    <string name="channel_description_alarm">Urgent alarms.</string>
+    <string name="channel_name_notification">Notifications</string>
+    <string name="channel_description_notification">Non urgent notifications like for example the on-call state.</string>
+    <string name="channel_name_change_system">System changes</string>
+    <string name="channel_description_change_system">Change of system settings.</string>
     <string name="title_home">Overview</string>
     <string name="title_shift_overview">Calendar</string>
     <string name="title_alert_log">Alert log</string>
@@ -30,7 +34,7 @@
     <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
     <string name="pref_title_supervise_test_contexts">Test contexts to supervise</string>
     <string name="pref_title_test_alarm_check_time">Check time</string>
-    <string name="pref_title_test_alarm_enabled">Handle test alarm messages</string>
+    <string name="pref_title_test_alarm_enabled">Use test alarms</string>
     <string name="pref_default_test_alarm_check_time">12:00</string>
     <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window (minutes)</string>
     <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
@@ -102,7 +106,9 @@
     <string name="notification_missing_test_alert_text">Test contexts: </string>
     <string name="notification_alert_confirm_button">Confirm</string>
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
+    <string name="notification_battery_optimization_short_title">Battery optimized!</string>
     <string name="notification_battery_optimization_text"><![CDATA[To work reliable, PAssist must run with battery optimization turned off.<br/><br/><b>Manual:</b>On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"PAssist\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
+    <string name="notification_battery_optimization_s2smp_text"><![CDATA[To work reliable, S2SMP must run with battery optimization turned off.<br/><br/><b>Manual:</b>On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"S2SMP\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
     <string name="notification_draw_overlays_title">Draw overlays is off!</string>
     <string name="notification_draw_overlays_text">To show an alter dialog even when the PAssist activity is not started or in background, the draw overlay setting must be switched on.</string>
     <string name="alert_action_close">Close</string>
@@ -147,10 +153,10 @@
     <string name="send_log_message">PAssist was crashed unexpectedly. To improve the stability of PAssist, please send the crash report to the author via e-mail.</string>
     <string name="send_log_button_send">Send</string>
     <string name="title_activity_test_alarm_details">Test alarm details</string>
-    <string name="test_alarm_details_alarm_state_label">Alarm state:</string>
+    <string name="test_alarm_details_alarm_state_label">Alarm state</string>
     <string name="test_alarm_details_supervised_label">Supervised</string>
-    <string name="test_alarm_details_last_received_label">Last received:</string>
-    <string name="test_alarm_details_message_label">Received message:</string>
+    <string name="test_alarm_details_last_received_label">Last received</string>
+    <string name="test_alarm_details_message_label">Received message</string>
     <string name="test_alarm_activated_toast">Test alarm activated.</string>
     <string name="test_alarm_deactivated_toast">Test alarm deactivated.</string>
     <string name="test_alarm_message_empty">Empty</string>
@@ -189,4 +195,18 @@
     <string name="state_fragment_donation">Donation</string>
     <string name="state_fragment_donation_value">How about a donation?</string>
     <string name="puchase_acknowledged">The purchase is acknowledged. Many thanks for your donation.</string>
+    <string name="reduced">reduced</string>
+    <string name="increased">increased</string>
+    <string name="notification_volume_changed_title">Ringtone volume</string>
+    <string name="notification_volume_changed_text">Volume changed to %s.</string>
+    <string name="pref_header_day_night_profile"><![CDATA[Day/night profile]]></string>
+    <string name="pref_title_day_start_time">Day</string>
+    <string name="pref_default_day_start_time">07:00</string>
+    <string name="pref_title_night_start_time">Night</string>
+    <string name="pref_default_night_start_time">22:00</string>
+    <string name="pref_title_manage_volume">Control during on-call duty</string>
+    <string name="pref_title_category_profile_start_times">Profile start times</string>
+    <string name="pref_title_category_ringtone_volume">Ringtone volume</string>
+    <string name="pref_title_volume_day">Volume day</string>
+    <string name="pref_title_volume_night">Volume night</string>
 </resources>

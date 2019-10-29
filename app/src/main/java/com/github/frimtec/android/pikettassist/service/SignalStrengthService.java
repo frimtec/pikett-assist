@@ -15,7 +15,10 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper.SignalLevel;
+import com.github.frimtec.android.pikettassist.helper.VolumeHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+
+import org.threeten.bp.LocalTime;
 
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 
@@ -26,6 +29,7 @@ public class SignalStrengthService extends IntentService {
 
   private AlarmManager alarmManager;
   private TelephonyManager telephonyManager;
+  private boolean pikettState = false;
 
   public SignalStrengthService() {
     super(TAG);
@@ -41,8 +45,9 @@ public class SignalStrengthService extends IntentService {
   @Override
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
+    this.pikettState = SharedState.getPikettState(this) == OnOffState.ON;
     SignalLevel level = new SignalStrengthHelper(this).getSignalStrength();
-    if (SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
+    if (this.pikettState && SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
       NotificationHelper.notifySignalLow(this, level);
       LowSignalAlarmActivity.trigger(this, this.alarmManager);
     }
@@ -63,7 +68,10 @@ public class SignalStrengthService extends IntentService {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (SharedState.getPikettState(this) == OnOffState.ON) {
+    if (this.pikettState) {
+      if (SharedState.getManageVolumeEnabled(this)) {
+        new VolumeHelper(this).setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
+      }
       this.alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)
       );

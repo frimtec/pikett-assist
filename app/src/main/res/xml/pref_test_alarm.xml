@@ -1,11 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:icon="@drawable/ic_test_alarm"
         android:key="test_alarm_enabled"
         android:title="@string/pref_title_test_alarm_enabled" />
 
     <EditTextPreference
+        android:dependency="test_alarm_enabled"
         android:defaultValue="@string/pref_default_test_alarm_message_pattern"
         android:icon="@drawable/ic_message_black_24dp"
         android:inputType="text"
@@ -17,18 +18,21 @@
         android:title="@string/pref_title_test_alarm_message_pattern" />
 
     <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference
+        android:dependency="test_alarm_enabled"
         android:icon="@drawable/ic_toc_black_24dp"
         android:key="supervise_test_contexts"
         android:summary="%s"
         android:title="@string/pref_title_supervise_test_contexts" />
 
     <com.github.frimtec.android.pikettassist.settings.TimePreference
+        android:dependency="test_alarm_enabled"
         android:defaultValue="@string/pref_default_test_alarm_check_time"
         android:icon="@drawable/ic_watch_later_black_24dp"
         android:key="test_alarm_check_time"
         android:title="@string/pref_title_test_alarm_check_time" />
 
     <EditTextPreference
+        android:dependency="test_alarm_enabled"
         android:defaultValue="@string/pref_default_test_alarm_accept_time_window_minutes"
         android:icon="@drawable/ic_time_window"
         android:inputType="number"
@@ -39,6 +43,7 @@
         android:title="@string/pref_title_test_alarm_accept_time_window_minutes" />
 
     <MultiSelectListPreference
+        android:dependency="test_alarm_enabled"
         android:defaultValue="@array/default_weekdays"
         android:entries="@array/weekdays"
         android:entryValues="@array/weekdays_values"

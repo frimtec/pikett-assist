@@ -11,7 +11,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.CalendarContract;
+import android.provider.Settings;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -102,6 +104,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   private static final String TAG = "StateFragment";
 
   static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
+  public static final String SECURE_SMS_PROXY_PACKAGE_NAME = "com.github.frimtec.android.securesmsproxy";
 
   private final Random random = new Random(System.currentTimeMillis());
 
@@ -214,8 +217,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
     boolean allowed = phoneNumbers.isEmpty() || s2smp.isAllowed(phoneNumbers);
     boolean newVersion = installed && installation.getApiVersion().compareTo(installation.getAppVersion().get()) > 0;
+    PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+    boolean batteryOptimisationOn = !pm.isIgnoringBatteryOptimizations(SECURE_SMS_PROXY_PACKAGE_NAME);
     states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter),
-        installed ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? "S2SMP V" + installation.getAppVersion().get() : getString(R.string.state_fragment_phone_numbers_blocked))) : getString(R.string.state_fragment_sms_adapter_not_installed), null, installed ? (newVersion ? YELLOW : (allowed ? GREEN : RED)) : RED) {
+        installed ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? (batteryOptimisationOn ? getString(R.string.notification_battery_optimization_short_title) : "S2SMP V" + installation.getAppVersion().get()) : getString(R.string.state_fragment_phone_numbers_blocked))) : getString(R.string.state_fragment_sms_adapter_not_installed), null,
+        installed ? (newVersion ? YELLOW : (allowed ? (batteryOptimisationOn ? YELLOW : GREEN) : RED)) : RED) {
       @Override
       public void onClickAction(Context context) {
         if (!installed) {
@@ -255,6 +261,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
               }).create();
           alertDialog.show();
           ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+          return;
+        }
+        if (batteryOptimisationOn) {
+          NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2smp_text,
+              (dialogInterface, integer) -> startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
           return;
         }
         Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
@@ -412,8 +423,6 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
               bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, alarmState.second);
               intent.putExtras(bundle);
               startActivity(intent);
-            } else {
-              switchFragment(MainActivity.Fragment.CALL_LOG);
             }
           }
         },
@@ -450,41 +459,43 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         })
     );
 
-    String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
-    for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
-      OnOffState testAlarmState = OnOffState.OFF;
-      Supplier<Button> testAlarmCloseButtonSupplier = null;
-      try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
-        try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
-          if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-            lastReceived = formatDateTime(cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null);
-            testAlarmState = OnOffState.valueOf(cursor.getString(2));
+    if (SharedState.getTestAlarmEnabled(getContext())) {
+      String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
+      for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
+        OnOffState testAlarmState = OnOffState.OFF;
+        Supplier<Button> testAlarmCloseButtonSupplier = null;
+        try (SQLiteDatabase db = PAssist.getReadableDatabase()) {
+          try (Cursor cursor = db.query(TABLE_TEST_ALERT_STATE, new String[]{TABLE_TEST_ALERT_STATE_COLUMN_ID, TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALERT_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
+            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+              lastReceived = formatDateTime(cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null);
+              testAlarmState = OnOffState.valueOf(cursor.getString(2));
 
-            if (testAlarmState != OnOffState.OFF) {
-              testAlarmCloseButtonSupplier = () -> {
-                Button button = new Button(getContext());
+              if (testAlarmState != OnOffState.OFF) {
+                testAlarmCloseButtonSupplier = () -> {
+                  Button button = new Button(getContext());
 
-                button.setText(getString(R.string.main_state_button_close_alert));
-                button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
-                button.setOnClickListener(v -> {
-                  TestAlarmDao.updateAlarmState(testContext, OnOffState.OFF);
-                  refresh();
-                });
-                return button;
-              };
+                  button.setText(getString(R.string.main_state_button_close_alert));
+                  button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
+                  button.setOnClickListener(v -> {
+                    TestAlarmDao.updateAlarmState(testContext, OnOffState.OFF);
+                    refresh();
+                  });
+                  return button;
+                };
+              }
             }
           }
+          states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
+            @Override
+            public void onClickAction(Context context) {
+              Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
+              Bundle bundle = new Bundle();
+              bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
+              intent.putExtras(bundle);
+              startActivity(intent);
+            }
+          });
         }
-        states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
-          @Override
-          public void onClickAction(Context context) {
-            Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
-            intent.putExtras(bundle);
-            startActivity(intent);
-          }
-        });
       }
     }
 

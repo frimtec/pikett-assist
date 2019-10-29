@@ -56,7 +56,7 @@ public class TestAlertService extends IntentService {
     Context context = getApplicationContext();
     this.pikettState = SharedState.getPikettState(context);
     Log.i(TAG, "Service cycle; pikett state: " + pikettState + "; initial: " + initial);
-    if (!initial && this.pikettState == OnOffState.ON) {
+    if (!initial && SharedState.getTestAlarmEnabled(context) && this.pikettState == OnOffState.ON) {
       ZonedDateTime now = ZonedDateTime.now();
       ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
       Set<String> missingTestAlarmContexts = SharedState.getSuperviseTestContexts(context).stream()

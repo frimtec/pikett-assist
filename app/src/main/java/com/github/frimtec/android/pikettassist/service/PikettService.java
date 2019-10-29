@@ -10,12 +10,17 @@ import com.github.frimtec.android.pikettassist.domain.PikettShift;
 import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.helper.VolumeHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
+import org.threeten.bp.LocalTime;
+
 import java.util.Arrays;
 import java.util.Optional;
+
+import static com.github.frimtec.android.pikettassist.state.SharedState.DEFAULT_VALUE_NOT_SET;
 
 public class PikettService extends IntentService {
 
@@ -50,12 +55,28 @@ public class PikettService extends IntentService {
     Log.i(TAG, "Next run in " + waitMs);
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+    boolean manageVolumeEnabled = SharedState.getManageVolumeEnabled(this);
+    VolumeHelper volumeHelper = manageVolumeEnabled ? new VolumeHelper(this) : null;
     if (SharedState.getPikettStateManuallyOn(this) || first.map(PikettShift::isNow).orElse(false)) {
       NotificationHelper.notifyShiftOn(this);
+      if (manageVolumeEnabled) {
+        int defaultVolume = SharedState.getDefaultVolume(this);
+        if (defaultVolume == DEFAULT_VALUE_NOT_SET) {
+          SharedState.setDefaultVolume(this, volumeHelper.getVolume());
+          volumeHelper.setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
+        }
+      }
       this.startService(new Intent(this, SignalStrengthService.class));
       this.startService(new Intent(this, TestAlertService.class));
     } else {
       NotificationHelper.cancelNotification(this, NotificationHelper.SHIFT_NOTIFICATION_ID);
+      if (manageVolumeEnabled) {
+        int defaultVolume = SharedState.getDefaultVolume(this);
+        if (defaultVolume != DEFAULT_VALUE_NOT_SET) {
+          volumeHelper.setVolume(defaultVolume);
+          SharedState.setDefaultVolume(this, DEFAULT_VALUE_NOT_SET);
+        }
+      }
     }
     alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
         PendingIntent.getService(this, 0, new Intent(this, PikettService.class), 0)

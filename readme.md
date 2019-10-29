@@ -171,4 +171,4 @@ Feedback, bug reports or feature requests are very welcome.
 You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub](https://github.com/frimtec/pikett-assist/issues).
 
 ## Credits
-* [bakito](https://github.com/bakito): For implementing dual SIM support.
+* [bakito](https://github.com/bakito): For implementing dual SIM support and excellent testing support.

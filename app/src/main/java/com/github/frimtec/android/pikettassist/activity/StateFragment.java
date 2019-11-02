@@ -16,6 +16,7 @@ import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
@@ -281,8 +282,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       @Override
       public void onCreateContextMenu(Context context, ContextMenu menu) {
         super.onCreateContextMenu(context, menu);
-        menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view);
-        menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms);
+        boolean present = StateFragment.this.s2smp.getInstallation().getAppVersion().isPresent();
+        menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view)
+            .setEnabled(present);
+        menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms)
+            .setEnabled(present && !TextUtils.isEmpty(SharedState.getSmsAdapterSecret(context)));
       }
 
       @Override

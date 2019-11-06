@@ -39,11 +39,13 @@ public class SmsListener extends BroadcastReceiver {
   @Override
   public void onReceive(Context context, Intent intent) {
     if ("com.github.frimtec.android.securesmsproxy.SMS_RECEIVED".equals(intent.getAction())) {
+      Log.d(TAG, "SMS received");
       List<Sms> receivedSms = SmsHelper.getSmsFromIntent(context, intent);
       receivedSms.stream()
           .filter(sms -> SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK.equals(sms.getNumber()))
           .forEach(sms -> Toast.makeText(context, context.getString(R.string.sms_listener_loopback_sms_received), Toast.LENGTH_SHORT).show());
       if (SharedState.getPikettState(context) == OnOffState.OFF) {
+        Log.d(TAG, "Drop SMS, not on-call");
         return;
       }
       long operationCenterContactId = SharedState.getAlarmOperationsCenterContact(context);

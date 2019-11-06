@@ -23,7 +23,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.SendLogActivity">
             <intent-filter>
-                <action android:name="android.permission.SEND_LOG" />
+                <action android:name="com.github.frimtec.android.pikettassist.SEND_LOG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -45,6 +45,14 @@
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/title_activity_about"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.LogcatActivity"
+            android:label="@string/title_activity_logcat"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

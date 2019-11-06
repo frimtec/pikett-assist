@@ -12,6 +12,7 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_donate">Spenden</string>
     <string name="title_activity_about">Über</string>
+    <string name="title_activity_logcat">Logcat</string>
 
     <string name="main_state_button_confirm_alert">Bestätigen</string>
     <string name="main_state_button_close_alert">Schliessen</string>
@@ -70,6 +71,7 @@
     <string name="subscription">Abonnement</string>
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_donate">Spenden</string>
+    <string name="menu_logcat">Logcat</string>
     <string name="menu_about">Über</string>
 
     <string name="preferences_calendar_all">Alle</string>

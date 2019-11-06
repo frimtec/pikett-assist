@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -181,7 +182,15 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.main_menu, menu);
+    if(isDeveloperMode()) {
+      menu.findItem(R.id.logcat).setVisible(true);
+    }
     return super.onCreateOptionsMenu(menu);
+  }
+
+  private boolean isDeveloperMode() {
+    return Settings.Secure.getInt(getApplicationContext().getContentResolver(),
+        Settings.Global.DEVELOPMENT_SETTINGS_ENABLED , 0) != 0;
   }
 
   @Override
@@ -192,6 +201,9 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
         return true;
       case R.id.donate:
         showDonationDialog();
+        return true;
+      case R.id.logcat:
+        startActivity(new Intent(this, LogcatActivity.class));
         return true;
       case R.id.about:
         Intent intent = new Intent(this, AboutActivity.class);

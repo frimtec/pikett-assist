@@ -183,6 +183,9 @@ The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 24 (A
 * [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) (java.time backport for SDK 24 and 25)
 * [Secure-SMS-Proxy API](https://github.com/frimtec/secure-sms-proxy)
 
+## Devices compatibility
+* https://github.com/frimtec/pikett-assist/wiki/Device-compatibility
+
 ## Feedback
 Feedback, bug reports or feature requests are very welcome.
 You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub](https://github.com/frimtec/pikett-assist/issues).

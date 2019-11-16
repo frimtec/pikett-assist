@@ -4,24 +4,33 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
+import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Instant;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
@@ -77,6 +86,29 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
       default:
         return super.onContextItemSelected(item);
     }
+  }
+
+  @Override
+  protected Optional<View.OnClickListener> addAction() {
+    return SharedState.getPikettState(getContext()) == OnOffState.OFF ? Optional.empty() :
+        Optional.of(view -> {
+          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+          builder.setTitle(getString(R.string.manually_created_alarm_reason));
+          EditText input = new EditText(getContext());
+          input.setInputType(InputType.TYPE_CLASS_TEXT);
+          input.setText(R.string.manually_created_alarm_reason_default);
+          input.requestFocus();
+          builder.setView(input);
+          builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+            dialog.dismiss();
+            String comment = input.getText().toString();
+            AlarmService alarmService = new AlarmService(getContext());
+            alarmService.newManuallyAlarm(Instant.now(), comment);
+            refresh();
+          });
+          builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+          builder.show();
+        });
   }
 
   private void showAlertDetails(Alert selectedAlert) {

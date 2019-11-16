@@ -34,7 +34,7 @@ final class AlertViewHelper {
   public static String getDurations(Context context, Alert alert) {
     String confirmText = "";
     if (alert.isConfirmed()) {
-      Duration confirmDuration = Duration.between(alert.getStartTime(), alert.getConfirmTime());
+      Duration confirmDuration = alert.getConfirmTime() != null ? Duration.between(alert.getStartTime(), alert.getConfirmTime()) : Duration.ofSeconds(0);
       confirmText = String.format(context.getString(R.string.alert_view_confirm_time), confirmDuration.getSeconds());
     }
     String durationText = "";

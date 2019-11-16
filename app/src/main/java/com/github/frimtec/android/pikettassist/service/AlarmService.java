@@ -76,6 +76,43 @@ public class AlarmService {
     }
   }
 
+  public void newManuallyAlarm(Instant startTime, String reason) {
+    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
+    try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
+      Long alertId;
+      long startTimeEpochMillis = startTime.toEpochMilli();
+      if (alarmState.first == AlarmState.OFF) {
+        Log.i(TAG, "Alarm state OFF -> ON");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TABLE_ALERT_COLUMN_START_TIME, startTimeEpochMillis);
+        contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_TRUE);
+        contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, startTimeEpochMillis);
+        alertId = db.insert(TABLE_ALERT, null, contentValues);
+      } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
+        Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_TRUE);
+        alertId = alarmState.second;
+        db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
+      } else {
+        Log.i(TAG, "Alarm state ON -> ON");
+        alertId = alarmState.second;
+      }
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_ALERT_ID, alertId);
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, startTimeEpochMillis);
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, String.format("%s: %s", context.getString(R.string.manually_created_alarm_reason_prefix), reason));
+      db.insert(TABLE_ALERT_CALL, null, contentValues);
+      NotificationHelper.notifyAlarm(
+          context,
+          new Intent(context, NotificationActionListener.class),
+          ACTION_CLOSE_ALARM,
+          context.getString(R.string.alert_action_close),
+          new Intent(context, MainActivity.class)
+      );
+    }
+  }
+
   public void confirmAlarm() {
     final Pair<String, Integer> smsNumberWithSubscriptionId = SharedState.getLastAlarmSmsNumberWithSubscriptionId(context);
     confirmAlarm(context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);

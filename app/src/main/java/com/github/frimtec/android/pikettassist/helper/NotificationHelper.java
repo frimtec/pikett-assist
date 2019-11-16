@@ -46,7 +46,6 @@ public class NotificationHelper {
   private static final String CHANNEL_ID_ALARM = "com.github.frimtec.android.pikettassist.alarm";
   private static final String CHANNEL_ID_NOTIFICATION = "com.github.frimtec.android.pikettassist.notification";
   private static final String CHANNEL_ID_CHANGE_SYSTEM = "com.github.frimtec.android.pikettassist.changeSystem";
-  private static final String CHANNEL_ID_LEGACY = "com.github.frimtec.android.pikettassist";
 
   public static void registerChannel(Context context) {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -55,9 +54,6 @@ public class NotificationHelper {
         createChannel(notificationManager, CHANNEL_ID_ALARM, context.getString(R.string.channel_name_alarm), context.getString(R.string.channel_description_alarm), IMPORTANCE_MAX);
         createChannel(notificationManager, CHANNEL_ID_NOTIFICATION, context.getString(R.string.channel_name_notification), context.getString(R.string.channel_description_notification), IMPORTANCE_DEFAULT);
         createChannel(notificationManager, CHANNEL_ID_CHANGE_SYSTEM, context.getString(R.string.channel_name_change_system), context.getString(R.string.channel_description_change_system), IMPORTANCE_LOW);
-        if (notificationManager.getNotificationChannel(CHANNEL_ID_LEGACY) != null) {
-          notificationManager.deleteNotificationChannel(CHANNEL_ID_LEGACY);
-        }
       }
     }
   }

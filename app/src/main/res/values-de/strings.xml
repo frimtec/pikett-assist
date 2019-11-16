@@ -209,4 +209,9 @@
     <string name="pref_title_category_ringtone_volume">Lautstärke des Klingeltons</string>
     <string name="pref_title_volume_day">Lautstärke Tag</string>
     <string name="pref_title_volume_night">Lautstärke Nacht</string>
+    <string name="menu_create_manually_alarm">Manuelles Aufgebot erstellen</string>
+    <string name="manually_created_alarm_reason">Grund für Aufgebot</string>
+    <string name="manually_created_alarm_reason_default">Telefonanruf</string>
+    <string name="manually_created_alarm_reason_prefix">Manuell erstellt</string>
+
 </resources>

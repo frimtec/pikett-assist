@@ -15,6 +15,7 @@ import android.os.PowerManager;
 import android.provider.CalendarContract;
 import android.provider.Settings;
 import android.text.Html;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -28,6 +29,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -419,6 +421,8 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
           }
         },
         new State(R.drawable.ic_siren, getString(R.string.state_fragment_alarm_state), alarmValue, alarmCloseButtonSupplier, alarmTrafficLight) {
+          private static final int MENU_CONTEXT_CREATE_ALARM_MANUALLY = 1;
+
           @Override
           public void onClickAction(Context context) {
             if (alarmState.second != null) {
@@ -429,6 +433,40 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
               startActivity(intent);
             }
           }
+
+          @Override
+          public void onCreateContextMenu(Context context, ContextMenu menu) {
+            if (SharedState.getPikettState(getContext()) == OnOffState.ON) {
+              menu.add(Menu.NONE, MENU_CONTEXT_CREATE_ALARM_MANUALLY, Menu.NONE, R.string.menu_create_manually_alarm);
+            }
+          }
+
+          @Override
+          public boolean onContextItemSelected(Context context, MenuItem item) {
+            switch (item.getItemId()) {
+              case MENU_CONTEXT_CREATE_ALARM_MANUALLY:
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.manually_created_alarm_reason));
+                EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setText(R.string.manually_created_alarm_reason_default);
+                input.requestFocus();
+                builder.setView(input);
+                builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+                  dialog.dismiss();
+                  String comment = input.getText().toString();
+                  AlarmService alarmService = new AlarmService(getContext());
+                  alarmService.newManuallyAlarm(Instant.now(), comment);
+                  refresh();
+                });
+                builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+                builder.show();
+                return true;
+              default:
+                return false;
+            }
+          }
+
         },
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, networkOperatorName != null ? String.format("%s %s", getString(R.string.state_fragment_signal_level), networkOperatorName) : getString(R.string.state_fragment_signal_level),
             superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight) {

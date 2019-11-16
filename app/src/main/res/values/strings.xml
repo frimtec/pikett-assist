@@ -211,4 +211,8 @@
     <string name="pref_title_category_ringtone_volume">Ringtone volume</string>
     <string name="pref_title_volume_day">Volume day</string>
     <string name="pref_title_volume_night">Volume night</string>
+    <string name="menu_create_manually_alarm">Create manually alert</string>
+    <string name="manually_created_alarm_reason">Enter a reason</string>
+    <string name="manually_created_alarm_reason_default">Phone call</string>
+    <string name="manually_created_alarm_reason_prefix">Manually created</string>
 </resources>

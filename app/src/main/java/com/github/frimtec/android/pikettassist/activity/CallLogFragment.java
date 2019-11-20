@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.helper.Feature;
 import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.AlarmService;
 import com.github.frimtec.android.pikettassist.state.PAssist;
@@ -90,25 +91,28 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
 
   @Override
   protected Optional<View.OnClickListener> addAction() {
-    return SharedState.getPikettState(getContext()) == OnOffState.OFF ? Optional.empty() :
-        Optional.of(view -> {
-          AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-          builder.setTitle(getString(R.string.manually_created_alarm_reason));
-          EditText input = new EditText(getContext());
-          input.setInputType(InputType.TYPE_CLASS_TEXT);
-          input.setText(R.string.manually_created_alarm_reason_default);
-          input.requestFocus();
-          builder.setView(input);
-          builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
-            dialog.dismiss();
-            String comment = input.getText().toString();
-            AlarmService alarmService = new AlarmService(getContext());
-            alarmService.newManuallyAlarm(Instant.now(), comment);
-            refresh();
-          });
-          builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
-          builder.show();
+    if (Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
+        SharedState.getPikettState(getContext()) == OnOffState.ON) {
+      return Optional.of(view -> {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.manually_created_alarm_reason));
+        EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(R.string.manually_created_alarm_reason_default);
+        input.requestFocus();
+        builder.setView(input);
+        builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+          dialog.dismiss();
+          String comment = input.getText().toString();
+          AlarmService alarmService = new AlarmService(getContext());
+          alarmService.newManuallyAlarm(Instant.now(), comment);
+          refresh();
         });
+        builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+        builder.show();
+      });
+    }
+    return Optional.empty();
   }
 
   private void showAlertDetails(Alert selectedAlert) {

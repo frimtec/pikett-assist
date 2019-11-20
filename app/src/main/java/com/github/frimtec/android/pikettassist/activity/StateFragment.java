@@ -436,7 +436,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
 
           @Override
           public void onCreateContextMenu(Context context, ContextMenu menu) {
-            if (SharedState.getPikettState(getContext()) == OnOffState.ON) {
+            if (pikettState == OnOffState.ON) {
               menu.add(Menu.NONE, MENU_CONTEXT_CREATE_ALARM_MANUALLY, Menu.NONE, R.string.menu_create_manually_alarm);
             }
           }

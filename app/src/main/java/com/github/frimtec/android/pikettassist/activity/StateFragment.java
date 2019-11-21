@@ -622,7 +622,6 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     if (donationFragment != null) {
       donationFragment.refreshUI();
     }
-    refresh();
   }
 
   private BillingState getBillingState(Purchase purchase) {

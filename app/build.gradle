@@ -70,7 +70,7 @@ dependencies {
     implementation 'in.shadowfax:proswipebutton:1.2.2'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
     implementation 'com.android.billingclient:billing:2.0.3'
-    implementation 'com.github.frimtec:secure-sms-proxy-api:1.3.2'
+    implementation 'com.github.frimtec:secure-sms-proxy-api:1.3.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

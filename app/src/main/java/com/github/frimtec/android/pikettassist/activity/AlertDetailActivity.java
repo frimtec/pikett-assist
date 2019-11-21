@@ -16,9 +16,10 @@ import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 import com.github.frimtec.android.pikettassist.state.PAssist;
 
-import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
-import java.util.LinkedList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
@@ -77,20 +78,12 @@ public class AlertDetailActivity extends AppCompatActivity {
          Cursor alertCursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + ", " + TABLE_ALERT_COLUMN_IS_CONFIRMED + " FROM " + TABLE_ALERT + " where " + TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
          Cursor callCursor = db.rawQuery("SELECT " + TABLE_ALERT_CALL_COLUMN_TIME + ", " + TABLE_ALERT_CALL_COLUMN_MESSAGE + " FROM " + TABLE_ALERT_CALL + " where " + TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=? order by " + TABLE_ALERT_CALL_COLUMN_TIME, new String[]{String.valueOf(id)})) {
       if (alertCursor != null && alertCursor.getCount() > 0 && alertCursor.moveToFirst()) {
-        LinkedList<AlertCall> calls = new LinkedList<>();
+        List<AlertCall> calls = new ArrayList<>();
         if (callCursor != null && callCursor.getCount() > 0 && callCursor.moveToFirst()) {
-          Instant timeOfLastCall = null;
           do {
             Instant time = Instant.ofEpochMilli(callCursor.getLong(0));
             String message = callCursor.getString(1);
-            if (timeOfLastCall != null && Duration.between(timeOfLastCall, time).getSeconds() <= 1) {
-              AlertCall alertCall = calls.removeLast();
-              alertCall = new AlertCall(alertCall.getTime(), alertCall.getMessage() + message);
-              calls.add(alertCall);
-            } else {
-              calls.add(new AlertCall(time, message));
-            }
-            timeOfLastCall = time;
+            calls.add(new AlertCall(time, message));
           } while (callCursor.moveToNext());
         }
         return new Alert(

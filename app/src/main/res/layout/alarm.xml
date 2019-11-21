@@ -34,6 +34,8 @@
         android:layout_below="@id/alarm_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         app:bg_color="@color/confirmButtonBackGreen"
         app:text_color="@color/confirmButtonTextGreen"
         app:arrow_color="@color/confirmButtonArrowGreen"

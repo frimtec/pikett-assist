@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.activity;
 
-import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.provider.CalendarContract;
 import android.provider.Settings;
@@ -35,6 +37,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.billingclient.api.Purchase;
 import com.github.frimtec.android.pikettassist.R;
@@ -236,22 +240,10 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       public void onClickAction(Context context) {
         if (!installed) {
           SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_text), Html.FROM_HTML_MODE_COMPACT));
-          AlertDialog alertDialog = new AlertDialog.Builder(context)
-              // set dialog message
-              .setTitle(R.string.permission_sms_title)
-              .setMessage(message)
-              .setCancelable(true)
-              .setPositiveButton(R.string.general_download, (dialog, which) -> {
-                Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
-                openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(openBrowserIntent);
-              }).setNegativeButton(R.string.general_cancel, (dialog, which) -> {
-              }).create();
-          alertDialog.show();
-          ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+          openDownloadDialog(context, message, R.string.permission_sms_title, installation);
           return;
         }
-        if(smsAdapterSmsPermission) {
+        if (smsAdapterSmsPermission) {
           if (!allowed) {
             Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
             StateFragment.this.s2smp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
@@ -259,19 +251,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
           }
           if (newVersion) {
             SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_update_text), Html.FROM_HTML_MODE_COMPACT));
-            AlertDialog alertDialog = new AlertDialog.Builder(context)
-                // set dialog message
-                .setTitle(R.string.permission_sms_update_title)
-                .setMessage(message)
-                .setCancelable(true)
-                .setPositiveButton(R.string.general_download, (dialog, which) -> {
-                  Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
-                  openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                  context.startActivity(openBrowserIntent);
-                }).setNegativeButton(R.string.general_cancel, (dialog, which) -> {
-                }).create();
-            alertDialog.show();
-            ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+            openDownloadDialog(context, message, R.string.permission_sms_update_title, installation);
             return;
           }
           if (batteryOptimisationOn) {
@@ -283,6 +263,60 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         Intent launchIntent = packageManager.getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
         if (launchIntent != null) {
           startActivity(launchIntent);
+        }
+      }
+
+      private void openDownloadDialog(Context context, SpannableString message, @StringRes int title, Installation installation) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+          // let the browser handle the stuff
+          AlertDialog alertDialog = new AlertDialog.Builder(context)
+              // set dialog message
+              .setTitle(title)
+              .setMessage(message)
+              .setCancelable(true)
+              .setPositiveButton(R.string.general_download, (dialog, which) -> {
+                Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
+                openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(openBrowserIntent);
+              })
+              .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+              }).create();
+          alertDialog.show();
+          ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+          if (!context.getPackageManager().canRequestPackageInstalls()) {
+            AlertDialog alertDialog = new AlertDialog.Builder(context)
+                // set dialog message
+                .setTitle(title)
+                .setMessage(message + "\n\n" + context.getString(R.string.permission_sms_text_unknown_source_request))
+                .setCancelable(true)
+                .setPositiveButton(getString(R.string.s2smp_settings), (dialog, which) -> {
+                  startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:com.github.frimtec.android.pikettassist")));
+                })
+                .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+                }).create();
+            alertDialog.show();
+          } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(context)
+                // set dialog message
+                .setTitle(title)
+                .setMessage(getString(R.string.s2smp_download_request))
+                .setCancelable(true)
+                .setPositiveButton(R.string.general_download, (dialog, which) -> {
+                  DownloadManager.Request request = new DownloadManager.Request(installation.getDownloadLink());
+                  request.setTitle("S2SMP version " + installation.getApiVersion());
+                  request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                  request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, String.format("s2smp-app-%s.apk", installation.getApiVersion()));
+                  DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                  if (manager != null) {
+                    manager.enqueue(request);
+                    Toast.makeText(context, R.string.s2smp_download_started, Toast.LENGTH_LONG).show();
+                  }
+                })
+                .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+                }).create();
+            alertDialog.show();
+          }
         }
       }
 

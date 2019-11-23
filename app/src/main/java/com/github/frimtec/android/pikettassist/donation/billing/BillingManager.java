@@ -94,7 +94,7 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
   public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
     if (billingResult.getResponseCode() == BillingResponseCode.OK) {
       Log.i(TAG, "onAcknowledgePurchaseResponse() - OK");
-      Toast.makeText(getContext(), R.string.puchase_acknowledged, Toast.LENGTH_LONG).show();
+      Toast.makeText(getContext(), R.string.purchase_acknowledged, Toast.LENGTH_LONG).show();
     } else {
       Log.e(TAG, "onAcknowledgePurchaseResponse() got unknown resultCode: " + billingResult.getResponseCode());
     }

@@ -109,8 +109,8 @@
     <string name="notification_alert_confirm_button">Confirm</string>
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
     <string name="notification_battery_optimization_short_title">Battery optimized!</string>
-    <string name="notification_battery_optimization_text"><![CDATA[To work reliable, PAssist must run with battery optimization turned off.<br/><br/><b>Manual:</b>On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"PAssist\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
-    <string name="notification_battery_optimization_s2smp_text"><![CDATA[To work reliable, S2SMP must run with battery optimization turned off.<br/><br/><b>Manual:</b>On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"S2SMP\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
+    <string name="notification_battery_optimization_text"><![CDATA[To work reliable, PAssist must run with battery optimization turned off.<br/><br/><b>Manual:</b> On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"PAssist\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
+    <string name="notification_battery_optimization_s2smp_text"><![CDATA[To work reliable, S2SMP must run with battery optimization turned off.<br/><br/><b>Manual:</b> On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"S2SMP\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
     <string name="notification_draw_overlays_title">Draw overlays is off!</string>
     <string name="notification_draw_overlays_text">To show an alter dialog even when the PAssist activity is not started or in background, the draw overlay setting must be switched on.</string>
     <string name="alert_action_close">Close</string>
@@ -182,6 +182,10 @@
         As SMS permissions are no more granted by Google, you must install one of the supported SMS adapters.
         Currently &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; is supported as SMS adapter.
     </string>
+    <string name="permission_sms_text_unknown_source_request">
+        To install S2SMP, PAssist requires the permission to install an application from unknown source.
+        After granting the permission, please repeat the procedure.
+    </string>
     <string name="permission_sms_update_title">SMS adapter update</string>
     <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; needs to be updated.</string>
     <string name="list_item_menu_send_test_sms">Send test SMS</string>
@@ -197,7 +201,7 @@
     <string name="about_sponsoring"><![CDATA[<h3>Sponsorship</h3>Thank you for your PAssist sponsorship:]]></string>
     <string name="state_fragment_donation">Donation</string>
     <string name="state_fragment_donation_value">How about a donation?</string>
-    <string name="puchase_acknowledged">The purchase is acknowledged. Many thanks for your donation.</string>
+    <string name="purchase_acknowledged">The purchase is acknowledged. Many thanks for your donation.</string>
     <string name="reduced">reduced</string>
     <string name="increased">increased</string>
     <string name="notification_volume_changed_title">Ringtone volume</string>
@@ -216,4 +220,7 @@
     <string name="manually_created_alarm_reason">Enter a reason</string>
     <string name="manually_created_alarm_reason_default">Phone call</string>
     <string name="manually_created_alarm_reason_prefix">Manually created</string>
+    <string name="s2smp_download_started">Download was started.</string>
+    <string name="s2smp_download_request">S2SMP can now be downloaded. As soon as the download is finished, you can install S2SMP with a click on the download notification.</string>
+    <string name="s2smp_settings">Settings</string>
 </resources>

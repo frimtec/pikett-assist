@@ -135,9 +135,9 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
 
   @Override
   public void onResume() {
-    super.onResume();
     // the configured subscription may have been changed
     this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
+    super.onResume();
   }
 
   @Override
@@ -154,13 +154,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
       if (SETTING_DRAW_OVERLAYS.isAllowed(getContext())) {
-        refresh();
         getContext().startService(new Intent(getContext(), PikettService.class));
       }
     } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
       Contact contact = ContactHelper.getContact(getContext(), data.getData());
       SharedState.setAlarmOperationsCenterContact(getContext(), contact);
-      refresh();
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }

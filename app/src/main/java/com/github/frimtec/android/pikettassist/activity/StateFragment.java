@@ -79,8 +79,11 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static android.Manifest.permission.RECEIVE_SMS;
+import static android.Manifest.permission.SEND_SMS;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
@@ -219,10 +222,16 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     boolean allowed = phoneNumbers.isEmpty() || s2smp.isAllowed(phoneNumbers);
     boolean newVersion = installed && installation.getApiVersion().compareTo(installation.getAppVersion().get()) > 0;
     PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+
     boolean batteryOptimisationOn = !pm.isIgnoringBatteryOptimizations(SECURE_SMS_PROXY_PACKAGE_NAME);
+
+    PackageManager packageManager = getContext().getPackageManager();
+    boolean smsAdapterSmsPermission = packageManager.checkPermission(RECEIVE_SMS, SECURE_SMS_PROXY_PACKAGE_NAME) == PERMISSION_GRANTED &&
+        packageManager.checkPermission(SEND_SMS, SECURE_SMS_PROXY_PACKAGE_NAME) == PERMISSION_GRANTED;
+
     states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter),
-        installed ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? (batteryOptimisationOn ? getString(R.string.notification_battery_optimization_short_title) : "S2SMP V" + installation.getAppVersion().get()) : getString(R.string.state_fragment_phone_numbers_blocked))) : getString(R.string.state_fragment_sms_adapter_not_installed), null,
-        installed ? (newVersion ? YELLOW : (allowed ? (batteryOptimisationOn ? YELLOW : GREEN) : RED)) : RED) {
+        (installed && smsAdapterSmsPermission) ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? (batteryOptimisationOn ? getString(R.string.notification_battery_optimization_short_title) : "S2SMP V" + installation.getAppVersion().get()) : getString(R.string.state_fragment_phone_numbers_blocked))) : (installed ? getString(R.string.state_fragment_sms_adapter_no_sms_permissions) : getString(R.string.state_fragment_sms_adapter_not_installed)), null,
+        (installed && smsAdapterSmsPermission) ? (newVersion ? YELLOW : (allowed ? (batteryOptimisationOn ? YELLOW : GREEN) : RED)) : RED) {
       @Override
       public void onClickAction(Context context) {
         if (!installed) {
@@ -242,34 +251,36 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
           ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
           return;
         }
-        if (!allowed) {
-          Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
-          StateFragment.this.s2smp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
-          return;
+        if(smsAdapterSmsPermission) {
+          if (!allowed) {
+            Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
+            StateFragment.this.s2smp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
+            return;
+          }
+          if (newVersion) {
+            SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_update_text), Html.FROM_HTML_MODE_COMPACT));
+            AlertDialog alertDialog = new AlertDialog.Builder(context)
+                // set dialog message
+                .setTitle(R.string.permission_sms_update_title)
+                .setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton(R.string.general_download, (dialog, which) -> {
+                  Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
+                  openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                  context.startActivity(openBrowserIntent);
+                }).setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+                }).create();
+            alertDialog.show();
+            ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+            return;
+          }
+          if (batteryOptimisationOn) {
+            NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2smp_text,
+                (dialogInterface, integer) -> startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
+            return;
+          }
         }
-        if (newVersion) {
-          SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_update_text), Html.FROM_HTML_MODE_COMPACT));
-          AlertDialog alertDialog = new AlertDialog.Builder(context)
-              // set dialog message
-              .setTitle(R.string.permission_sms_update_title)
-              .setMessage(message)
-              .setCancelable(true)
-              .setPositiveButton(R.string.general_download, (dialog, which) -> {
-                Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
-                openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(openBrowserIntent);
-              }).setNegativeButton(R.string.general_cancel, (dialog, which) -> {
-              }).create();
-          alertDialog.show();
-          ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-          return;
-        }
-        if (batteryOptimisationOn) {
-          NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2smp_text,
-              (dialogInterface, integer) -> startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
-          return;
-        }
-        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
+        Intent launchIntent = packageManager.getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
         if (launchIntent != null) {
           startActivity(launchIntent);
         }
@@ -293,7 +304,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       public boolean onContextItemSelected(Context context, MenuItem item) {
         switch (item.getItemId()) {
           case MENU_CONTEXT_VIEW:
-            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
+            Intent launchIntent = packageManager.getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
             if (launchIntent != null) {
               startActivity(launchIntent);
             }

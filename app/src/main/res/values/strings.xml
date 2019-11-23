@@ -168,7 +168,8 @@
     <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
     <string name="state_fragment_sms_adapter">SMS adapter</string>
     <string name="state_fragment_sms_adapter_not_installed">Not installed</string>
-    <string name="state_fragment_phone_numbers_blocked">Phone number blocked</string>
+    <string name="state_fragment_sms_adapter_no_sms_permissions">No SMS permission</string>
+    <string name="state_fragment_phone_numbers_blocked">Number blocked</string>
     <string name="state_fragment_loopback_sms_sent">Test-SMS sent…</string>
     <string name="sms_listener_loopback_sms_received">Test-SMS received!</string>
     <string name="state_fragment_s2smp_requires_update">Requires update</string>

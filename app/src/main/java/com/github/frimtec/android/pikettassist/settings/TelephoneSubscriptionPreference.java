@@ -14,7 +14,7 @@ import java.util.List;
 public class TelephoneSubscriptionPreference extends ListPreference {
 
   private static final String TAG = "TelephoneSubscriptionPreference";
-  private static final int MAX_SUPPORTED_SIMS = 3;
+  private static final int MAX_SUPPORTED_SIMS = 2;
 
   public TelephoneSubscriptionPreference(Context context, AttributeSet attrs) {
     super(context, attrs);

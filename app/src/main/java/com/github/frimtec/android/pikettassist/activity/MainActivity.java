@@ -172,9 +172,6 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
       String registrationText = getString(R.string.sms_adapter_registration) + ": " +
           registrationErrors[result.getReturnCode().ordinal()];
       Toast.makeText(this, registrationText, Toast.LENGTH_LONG).show();
-      if (result.getReturnCode().isSuccess()) {
-        refresh();
-      }
     }
   }
 

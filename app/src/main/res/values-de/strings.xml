@@ -107,8 +107,8 @@
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Akku-Optimierung ist aktiv!</string>
     <string name="notification_battery_optimization_short_title">Akku optimiert!</string>
-    <string name="notification_battery_optimization_text"><![CDATA[Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b>Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"PAssist\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
-    <string name="notification_battery_optimization_s2smp_text"><![CDATA[Damit S2SMP zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b>Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"S2SMP\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
+    <string name="notification_battery_optimization_text"><![CDATA[Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b> Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"PAssist\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
+    <string name="notification_battery_optimization_s2smp_text"><![CDATA[Damit S2SMP zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b> Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"S2SMP\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
     <string name="notification_draw_overlays_title">Overlays anzeigen ist deaktiviert!</string>
     <string name="notification_draw_overlays_text">Um den Alarmdialog darzustellen, auch wenn PAssist nicht aktiv oder im Hintergrund ist, muss die Einstellung Overlays anzeigen aktiviert werden.</string>
     <string name="alert_action_close">Schliessen</string>
@@ -147,6 +147,8 @@
     <string name="permission_contacts_text">PAssist liest den konfigurierten Kontakt der Alarmierungszentrale, um zu ermitteln, von welcher Telefonnummer die zu überwachenden SMS gesendet werden. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
     <string name="permission_calendar_title">Kalender</string>
     <string name="permission_calendar_text">PAssist liest den Kalender um die Zeitfenster zu ermitteln, in denen der Bereitschaftsdienst stattfindet. Nur bei aktivem Bereitschaftsdienst ist die Überwachungsfunktion von PAssist aktiv. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
+    <string name="permission_write_external_storage_title">Externen Speicher</string>
+    <string name="permission_write_external_storage_text">Um einen SMS-Adapter herunterzuladen zu können, sowie das Erstellen von Backups der Alarmhistorie ist es notwendig, dass PAssist auf den externen Speicher schreiben darf.</string>
     <string name="permission_location_title">Position</string>
     <string name="permission_location_text">Um die Telefonempfangsqualität während des Bereitschaftsdienstes zu überwachen, muss auf die Telefonzelleninformation zugegriffen werden. Diese Daten werden mit dem Recht Gerätestandort geschützt, da mit diesen Daten auch die grobe Position ermittelt werden könnte. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
     <string name="send_log_title">PAssist Crash-Report</string>
@@ -166,7 +168,8 @@
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
     <string name="state_fragment_sms_adapter">SMS Adapter</string>
     <string name="state_fragment_sms_adapter_not_installed">Nicht vorhanden</string>
-    <string name="state_fragment_phone_numbers_blocked">Telefonnummer blockiert</string>
+    <string name="state_fragment_sms_adapter_no_sms_permissions">Kein SMS-Recht</string>
+    <string name="state_fragment_phone_numbers_blocked">Nummer blockiert</string>
     <string name="state_fragment_loopback_sms_sent">Test-SMS gesendet…</string>
     <string name="sms_listener_loopback_sms_received">Test-SMS empfangen!</string>
     <string name="state_fragment_s2smp_requires_update">Benötigt Update</string>
@@ -178,6 +181,10 @@
         Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können.
         Da SMS Berechtigungen von Google nicht mehr gewährt werden, musst du einen der unterstützen SMS Adapter installieren.
         Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; als SMS-Adapter unterstützt.
+    </string>
+    <string name="permission_sms_text_unknown_source_request">
+        Um S2SMP zu installieren, braucht PAssist das Recht Applikationen aus unbekannten Quellen zu installieren.
+        Nach dem Erteilen des Rechtes, bitte den Vorgang wiederholen.
     </string>
     <string name="permission_sms_update_title">SMS-Adapter Update</string>
     <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; muss aktualisiert werden.</string>
@@ -194,7 +201,7 @@
     <string name="about_sponsoring"><![CDATA[<h3>Sponsoring</h3>Vielen Dank für dein PAssist Sponsoring:]]></string>
     <string name="state_fragment_donation">Spenden</string>
     <string name="state_fragment_donation_value">Wie wäre es\nmit einer Spende?</string>
-    <string name="puchase_acknowledged">Der Kauf wurde bestätigt. Vielen Dank für die Spende.</string>
+    <string name="purchase_acknowledged">Der Kauf wurde bestätigt. Vielen Dank für die Spende.</string>
     <string name="reduced">reduziert</string>
     <string name="increased">erhöht</string>
     <string name="notification_volume_changed_title">Klingeltonlautstärke</string>
@@ -213,5 +220,8 @@
     <string name="manually_created_alarm_reason">Grund für Aufgebot</string>
     <string name="manually_created_alarm_reason_default">Telefonanruf</string>
     <string name="manually_created_alarm_reason_prefix">Manuell erstellt</string>
+    <string name="s2smp_download_started">Download wurde gestartet.</string>
+    <string name="s2smp_download_request">S2SMP kann nun heruntergeladen werden. Sobald der Download abgeschlossen ist, kann S2SMP mit einem Klick auf die Download-Notifikation installiert werden.</string>
+    <string name="s2smp_settings">Einstellungen</string>
 
 </resources>

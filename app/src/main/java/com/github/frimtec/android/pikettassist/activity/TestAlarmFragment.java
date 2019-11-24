@@ -59,12 +59,6 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarm> {
   }
 
   @Override
-  public void onResume() {
-    super.onResume();
-    refresh();
-  }
-
-  @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     TestAlarm selectedItem = (TestAlarm) getListView().getItemAtPosition(info.position);

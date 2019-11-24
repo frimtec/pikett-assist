@@ -58,7 +58,6 @@ class OperationsCenterState extends State {
         return true;
       case MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID:
         actionSelectContact();
-        stateFragment.refresh();
         return true;
       case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
         NotificationHelper.areYouSure(stateFragment.getContext(), (dialog, which) -> {

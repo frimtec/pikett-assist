@@ -234,8 +234,8 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         packageManager.checkPermission(SEND_SMS, SECURE_SMS_PROXY_PACKAGE_NAME) == PERMISSION_GRANTED;
 
     states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter),
-        (installed && smsAdapterSmsPermission) ? (newVersion ? getString(R.string.state_fragment_s2smp_requires_update) : (allowed ? (batteryOptimisationOn ? getString(R.string.notification_battery_optimization_short_title) : "S2SMP V" + installation.getAppVersion().get()) : getString(R.string.state_fragment_phone_numbers_blocked))) : (installed ? getString(R.string.state_fragment_sms_adapter_no_sms_permissions) : getString(R.string.state_fragment_sms_adapter_not_installed)), null,
-        (installed && smsAdapterSmsPermission) ? (newVersion ? YELLOW : (allowed ? (batteryOptimisationOn ? YELLOW : GREEN) : RED)) : RED) {
+        getSmsAdapterValue(installation, installed, allowed, newVersion, batteryOptimisationOn, smsAdapterSmsPermission), null,
+        getSmsAdapterState(installed, allowed, newVersion, batteryOptimisationOn, smsAdapterSmsPermission)) {
       @Override
       public void onClickAction(Context context) {
         if (!installed) {
@@ -593,6 +593,32 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
           parent.showDonationDialog();
         }
       });
+    }
+  }
+
+  private State.TrafficLight getSmsAdapterState(boolean installed, boolean allowed, boolean newVersion, boolean batteryOptimisationOn, boolean smsAdapterSmsPermission) {
+    if (!installed || !smsAdapterSmsPermission || !allowed) {
+      return RED;
+    } else if (newVersion || batteryOptimisationOn) {
+      return YELLOW;
+    } else {
+      return GREEN;
+    }
+  }
+
+  private String getSmsAdapterValue(Installation installation, boolean installed, boolean allowed, boolean newVersion, boolean batteryOptimisationOn, boolean smsAdapterSmsPermission) {
+    if(!installed) {
+      return getString(R.string.state_fragment_sms_adapter_not_installed);
+    } else if(!smsAdapterSmsPermission) {
+      return getString(R.string.state_fragment_sms_adapter_no_sms_permissions);
+    } else if(!allowed) {
+      return getString(R.string.state_fragment_phone_numbers_blocked);
+    } else if(newVersion) {
+      return getString(R.string.state_fragment_s2smp_requires_update);
+    } else if(batteryOptimisationOn) {
+      return getString(R.string.notification_battery_optimization_short_title);
+    } else {
+      return "S2SMP V" + installation.getAppVersion().get();
     }
   }
 

@@ -183,7 +183,7 @@
         Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; als SMS-Adapter unterstützt.
     </string>
     <string name="permission_sms_text_unknown_source_request">
-        Um S2SMP zu installieren, braucht PAssist das Recht Applikationen aus unbekannten Quellen zu installieren.
+        Um &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; zu installieren, braucht PAssist das Recht Applikationen aus unbekannten Quellen zu installieren.
         Nach dem Erteilen des Rechtes, bitte den Vorgang wiederholen.
     </string>
     <string name="permission_sms_update_title">SMS-Adapter Update</string>
@@ -221,7 +221,7 @@
     <string name="manually_created_alarm_reason_default">Telefonanruf</string>
     <string name="manually_created_alarm_reason_prefix">Manuell erstellt</string>
     <string name="s2smp_download_started">Download wurde gestartet.</string>
-    <string name="s2smp_download_request">S2SMP kann nun heruntergeladen werden. Sobald der Download abgeschlossen ist, kann S2SMP mit einem Klick auf die Download-Notifikation installiert werden.</string>
+    <string name="s2smp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; kann nun heruntergeladen werden. Sobald der Download abgeschlossen ist, kann &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; mit einem Klick auf die Download-Notifikation installiert werden.</string>
     <string name="s2smp_settings">Einstellungen</string>
 
 </resources>

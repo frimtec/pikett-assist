@@ -185,7 +185,7 @@
         Currently &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; is supported as SMS adapter.
     </string>
     <string name="permission_sms_text_unknown_source_request">
-        To install S2SMP, PAssist requires the permission to install an application from unknown source.
+        To install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt;, PAssist requires the permission to install an application from unknown source.
         After granting the permission, please repeat the procedure.
     </string>
     <string name="permission_sms_update_title">SMS adapter update</string>
@@ -223,6 +223,6 @@
     <string name="manually_created_alarm_reason_default">Phone call</string>
     <string name="manually_created_alarm_reason_prefix">Manually created</string>
     <string name="s2smp_download_started">Download was started.</string>
-    <string name="s2smp_download_request">S2SMP can now be downloaded. As soon as the download is finished, you can install S2SMP with a click on the download notification.</string>
+    <string name="s2smp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; can now be downloaded. As soon as the download is finished, you can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; with a click on the download notification.</string>
     <string name="s2smp_settings">Settings</string>
 </resources>

@@ -239,8 +239,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       @Override
       public void onClickAction(Context context) {
         if (!installed) {
-          SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_text), Html.FROM_HTML_MODE_COMPACT));
-          openDownloadDialog(context, message, R.string.permission_sms_title, installation);
+          openDownloadDialog(context, R.string.permission_sms_text, R.string.permission_sms_title, installation);
           return;
         }
         if (smsAdapterSmsPermission) {
@@ -250,8 +249,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
             return;
           }
           if (newVersion) {
-            SpannableString message = new SpannableString(Html.fromHtml(context.getString(R.string.permission_sms_update_text), Html.FROM_HTML_MODE_COMPACT));
-            openDownloadDialog(context, message, R.string.permission_sms_update_title, installation);
+            openDownloadDialog(context, R.string.permission_sms_update_text, R.string.permission_sms_update_title, installation);
             return;
           }
           if (batteryOptimisationOn) {
@@ -266,13 +264,14 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         }
       }
 
-      private void openDownloadDialog(Context context, SpannableString message, @StringRes int title, Installation installation) {
+      private void openDownloadDialog(Context context, @StringRes int message, @StringRes int title, Installation installation) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
           // let the browser handle the stuff
+          SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message), Html.FROM_HTML_MODE_COMPACT));
           AlertDialog alertDialog = new AlertDialog.Builder(context)
               // set dialog message
               .setTitle(title)
-              .setMessage(message)
+              .setMessage(htmlMessage)
               .setCancelable(true)
               .setPositiveButton(R.string.general_download, (dialog, which) -> {
                 Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
@@ -285,10 +284,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
           ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
         } else {
           if (!context.getPackageManager().canRequestPackageInstalls()) {
+            SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message) + "<br><br>" + context.getString(R.string.permission_sms_text_unknown_source_request), Html.FROM_HTML_MODE_COMPACT));
             AlertDialog alertDialog = new AlertDialog.Builder(context)
                 // set dialog message
                 .setTitle(title)
-                .setMessage(message + "\n\n" + context.getString(R.string.permission_sms_text_unknown_source_request))
+                .setMessage(htmlMessage)
                 .setCancelable(true)
                 .setPositiveButton(getString(R.string.s2smp_settings), (dialog, which) -> {
                   startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:com.github.frimtec.android.pikettassist")));
@@ -296,11 +296,13 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
                 .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
                 }).create();
             alertDialog.show();
+            ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
           } else {
+            SpannableString htmlMessage = new SpannableString(Html.fromHtml(getString(R.string.s2smp_download_request), Html.FROM_HTML_MODE_COMPACT));
             AlertDialog alertDialog = new AlertDialog.Builder(context)
                 // set dialog message
                 .setTitle(title)
-                .setMessage(getString(R.string.s2smp_download_request))
+                .setMessage(htmlMessage)
                 .setCancelable(true)
                 .setPositiveButton(R.string.general_download, (dialog, which) -> {
                   DownloadManager.Request request = new DownloadManager.Request(installation.getDownloadLink());
@@ -316,6 +318,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
                 .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
                 }).create();
             alertDialog.show();
+            ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
           }
         }
       }
@@ -607,15 +610,15 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   }
 
   private String getSmsAdapterValue(Installation installation, boolean installed, boolean allowed, boolean newVersion, boolean batteryOptimisationOn, boolean smsAdapterSmsPermission) {
-    if(!installed) {
+    if (!installed) {
       return getString(R.string.state_fragment_sms_adapter_not_installed);
-    } else if(!smsAdapterSmsPermission) {
+    } else if (!smsAdapterSmsPermission) {
       return getString(R.string.state_fragment_sms_adapter_no_sms_permissions);
-    } else if(!allowed) {
+    } else if (!allowed) {
       return getString(R.string.state_fragment_phone_numbers_blocked);
-    } else if(newVersion) {
+    } else if (newVersion) {
       return getString(R.string.state_fragment_s2smp_requires_update);
-    } else if(batteryOptimisationOn) {
+    } else if (batteryOptimisationOn) {
       return getString(R.string.notification_battery_optimization_short_title);
     } else {
       return "S2SMP V" + installation.getAppVersion().get();

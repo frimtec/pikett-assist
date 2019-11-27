@@ -185,7 +185,7 @@
         Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; als SMS-Adapter unterstützt.
     </string>
     <string name="permission_sms_text_unknown_source_request">
-        Um &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; zu installieren, braucht PAssist das Recht Applikationen aus unbekannten Quellen zu installieren.
+        Um &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; zu installieren, braucht PAssist das Recht, Applikationen aus unbekannten Quellen zu installieren.
         Nach dem Erteilen des Rechtes, bitte den Vorgang wiederholen.
     </string>
     <string name="permission_sms_update_title">SMS-Adapter Update</string>

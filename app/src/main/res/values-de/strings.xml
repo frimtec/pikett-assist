@@ -73,6 +73,8 @@
     <string name="menu_donate">Spenden</string>
     <string name="menu_logcat">Logcat</string>
     <string name="menu_about">Über</string>
+    <string name="menu_logcat_refresh">Aktualisieren</string>
+    <string name="menu_logcat_clear">Leeren</string>
 
     <string name="preferences_calendar_all">Alle</string>
     <string name="preferences_alarm_ringtone_default">Standard Klingelton</string>

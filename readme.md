@@ -175,7 +175,7 @@ The use of PAssist is at your own risk. The author assumes no liability for malf
 Any warranty claims are excluded.
 
 ## Development
-PAssist is developed with [Android-Studio 3.5.1](https://developer.android.com/studio) with Java 8.
+PAssist is developed with [Android-Studio 3.5.3](https://developer.android.com/studio) with Java 8.
 The current Android target SDK is 29 (Android 10-Q) and the minimal SDK is 24 (Android 7.0-Nougat).
 
 ## Used libraries

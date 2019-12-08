@@ -124,6 +124,7 @@ public class NotificationHelper {
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
+        .setOngoing(true)
         .setContentIntent(notifyPendingIntent)
         .build();
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);

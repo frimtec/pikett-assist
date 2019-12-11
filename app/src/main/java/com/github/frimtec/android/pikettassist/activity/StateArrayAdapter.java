@@ -17,13 +17,27 @@ import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.GREEN;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
 
 class StateArrayAdapter extends ArrayAdapter<State> {
 
+  private final Map<State.TrafficLight, Bitmap> ledBitmaps = new EnumMap<>(State.TrafficLight.class);
+
   StateArrayAdapter(Context context, List<State> states) {
     super(context, 0, states);
+    ledBitmaps.put(OFF, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_grey));
+    ledBitmaps.put(GREEN, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green));
+    ledBitmaps.put(YELLOW, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_yellow));
+    ledBitmaps.put(RED, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_red));
   }
+
 
   @NonNull
   @Override
@@ -39,20 +53,24 @@ class StateArrayAdapter extends ArrayAdapter<State> {
 
     switch (state.getState()) {
       case GREEN:
-        Bitmap ledGreen = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green);
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledGreen);
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledGreen);
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(ledGreen);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledBitmaps.get(GREEN));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledBitmaps.get(GREEN));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(ledBitmaps.get(GREEN));
         break;
       case YELLOW:
-        Bitmap ledYellow = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_yellow);
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledYellow);
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledYellow);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledBitmaps.get(YELLOW));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledBitmaps.get(YELLOW));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(ledBitmaps.get(OFF));
         break;
       case RED:
-        Bitmap ledRed = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_red);
-        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledRed);
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledBitmaps.get(RED));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledBitmaps.get(OFF));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(ledBitmaps.get(OFF));
         break;
+      default:
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_1)).setImageBitmap(ledBitmaps.get(OFF));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_2)).setImageBitmap(ledBitmaps.get(OFF));
+        ((ImageView) convertView.findViewById(R.id.state_traffic_light_3)).setImageBitmap(ledBitmaps.get(OFF));
     }
 
     TextView titleView = convertView.findViewById(R.id.state_item_title);

@@ -41,19 +41,16 @@
         <ImageView
             android:id="@+id/state_traffic_light_1"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:srcCompat="@drawable/led_circle_grey" />
+            android:layout_height="30dp"/>
 
         <ImageView
             android:id="@+id/state_traffic_light_2"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:srcCompat="@drawable/led_circle_grey" />
+            android:layout_height="30dp"/>
 
         <ImageView
             android:id="@+id/state_traffic_light_3"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:srcCompat="@drawable/led_circle_grey" />
+            android:layout_height="30dp"/>
     </LinearLayout>
 </RelativeLayout>

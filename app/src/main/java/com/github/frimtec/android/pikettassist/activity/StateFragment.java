@@ -128,6 +128,10 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
 
   private SignalStrengthHelper signalStrengthHelper;
 
+  public StateFragment() {
+    super(FragmentName.STATE);
+  }
+
   public void setParent(MainActivity parent) {
     this.parent = parent;
   }

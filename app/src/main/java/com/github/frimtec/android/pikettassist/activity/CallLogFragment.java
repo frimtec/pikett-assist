@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.github.frimtec.android.pikettassist.activity.FragmentName.CALL_LOG;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_CONFIRM_TIME;
@@ -45,6 +46,10 @@ public class CallLogFragment extends AbstractListFragment<Alert> {
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
+
+  public CallLogFragment() {
+    super(CALL_LOG);
+  }
 
   @Override
   protected void configureListView(ListView listView) {

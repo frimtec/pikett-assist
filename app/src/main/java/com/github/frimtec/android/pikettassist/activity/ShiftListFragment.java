@@ -18,9 +18,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.frimtec.android.pikettassist.activity.FragmentName.SHIFTS;
 import static com.github.frimtec.android.pikettassist.helper.Feature.PERMISSION_CALENDAR_READ;
 
 public class ShiftListFragment extends AbstractListFragment<PikettShift> {
+
+  public ShiftListFragment() {
+    super(SHIFTS);
+  }
 
   @Override
   protected void configureListView(ListView listView) {

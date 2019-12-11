@@ -42,6 +42,7 @@ import static com.github.frimtec.android.pikettassist.activity.StateFragment.DIA
 
 public class MainActivity extends AppCompatActivity implements BillingProvider {
 
+  public static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
   private ShiftListFragment shiftListFragment;
@@ -53,22 +54,22 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   private BillingManager billingManager;
   private DonationFragment donationFragment;
 
-  private static final Map<Fragment, Integer> FRAGMENT_BUTTON_ID_MAP;
-  private static final Map<Integer, Fragment> BUTTON_ID_FRAGMENT_MAP;
+  private static final Map<FragmentName, Integer> FRAGMENT_BUTTON_ID_MAP;
+  private static final Map<Integer, FragmentName> BUTTON_ID_FRAGMENT_MAP;
 
   static {
-    FRAGMENT_BUTTON_ID_MAP = new EnumMap<>(Fragment.class);
-    FRAGMENT_BUTTON_ID_MAP.put(Fragment.STATE, R.id.navigation_home);
-    FRAGMENT_BUTTON_ID_MAP.put(Fragment.SHIFTS, R.id.navigation_shifts);
-    FRAGMENT_BUTTON_ID_MAP.put(Fragment.CALL_LOG, R.id.navigation_alert_log);
-    FRAGMENT_BUTTON_ID_MAP.put(Fragment.TEST_ALARMS, R.id.navigation_test_alarms);
+    FRAGMENT_BUTTON_ID_MAP = new EnumMap<>(FragmentName.class);
+    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.STATE, R.id.navigation_home);
+    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.SHIFTS, R.id.navigation_shifts);
+    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.CALL_LOG, R.id.navigation_alert_log);
+    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.TEST_ALARMS, R.id.navigation_test_alarms);
 
     BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
   }
 
   private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
-    Fragment fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
+    FragmentName fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
 
     if (fragment != null) {
       loadFragment(fragment);
@@ -77,14 +78,14 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
     return false;
   };
 
-  void switchFragment(Fragment fragment) {
+  void switchFragment(FragmentName fragment) {
     loadFragment(fragment);
     BottomNavigationView navigation = findViewById(R.id.navigation);
     //noinspection ConstantConditions
     navigation.setSelectedItemId(FRAGMENT_BUTTON_ID_MAP.get(fragment));
   }
 
-  private void loadFragment(Fragment fragment) {
+  private void loadFragment(FragmentName fragment) {
     switch (fragment) {
       case STATE:
         if (stateFragment == null) {
@@ -132,7 +133,12 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
     BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    loadFragment(Fragment.STATE);
+    loadFragment(FragmentName.STATE);
+    FragmentName savedFragmentName = FragmentName.STATE;
+    if(savedInstanceState != null){
+      savedFragmentName = FragmentName.valueOf(savedInstanceState.getString(ACTIVE_FRAGMENT_STATE, savedFragmentName.name()));
+    }
+    loadFragment(savedFragmentName);
 
     // Create and initialize BillingManager which talks to BillingLibrary
     billingManager = new BillingManager(this, stateFragment);
@@ -263,6 +269,12 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   }
 
   @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString(ACTIVE_FRAGMENT_STATE, this.activeFragment.getFragmentName().name());
+  }
+
+  @Override
   protected void onDestroy() {
     if (broadcastReceiver != null) {
       unregisterReceiver(broadcastReceiver);
@@ -272,13 +284,6 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
       billingManager.destroy();
     }
     super.onDestroy();
-  }
-
-  enum Fragment {
-    STATE,
-    SHIFTS,
-    CALL_LOG,
-    TEST_ALARMS
   }
 
   @Override

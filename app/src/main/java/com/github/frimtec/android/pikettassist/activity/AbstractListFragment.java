@@ -2,7 +2,6 @@ package com.github.frimtec.android.pikettassist.activity;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,16 @@ import java.util.Optional;
 
 abstract class AbstractListFragment<T> extends Fragment {
 
+  private final FragmentName fragmentName;
   private ListView listView;
+
+  AbstractListFragment(FragmentName fragmentName) {
+    this.fragmentName = fragmentName;
+  }
+
+  public FragmentName getFragmentName() {
+    return fragmentName;
+  }
 
   @Override
   public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,7 +75,7 @@ abstract class AbstractListFragment<T> extends Fragment {
     return listView;
   }
 
-  protected void switchFragment(MainActivity.Fragment fragment) {
+  protected void switchFragment(FragmentName fragment) {
     ((MainActivity)getActivity()).switchFragment(fragment);
   }
 }

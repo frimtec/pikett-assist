@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.github.frimtec.android.pikettassist.activity.FragmentName.TEST_ALARMS;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
@@ -42,6 +43,10 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarm> {
   private static final int MENU_CONTEXT_DELETE_ID = 2;
   private static final int MENU_CONTEXT_ACTIVATE_ID = 3;
   private static final int MENU_CONTEXT_DEACTIVATE_ID = 4;
+
+  public TestAlarmFragment() {
+    super(TEST_ALARMS);
+  }
 
   @Override
   protected void configureListView(ListView listView) {

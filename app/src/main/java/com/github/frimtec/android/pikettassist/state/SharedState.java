@@ -85,7 +85,8 @@ public final class SharedState {
   }
 
   public static String getCalendarEventPikettTitlePattern(Context context) {
-    return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, context.getString(R.string.pref_default_calendar_event_pikett_title_pattern));
+    return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, context.getString(R.string.pref_default_calendar_event_pikett_title_pattern))
+        .trim();
   }
 
   public static String getCalendarSelection(Context context) {
@@ -101,7 +102,8 @@ public final class SharedState {
   }
 
   public static String getSmsTestMessagePattern(Context context) {
-    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern));
+    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern))
+        .trim();
   }
 
   public static String getSmsConfirmText(Context context) {

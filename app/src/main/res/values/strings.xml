@@ -58,7 +58,7 @@
     <string name="registration_errors_successful">Successful</string>
     <string name="registration_errors_no_secret">Failed, no secret</string>
     <string name="registration_errors_rejected">Rejected</string>
-    <string name="registration_errors_missing_sms_permissions">Failed, S2SMP is missing SMS permissions</string>
+    <string name="registration_errors_missing_sms_permissions">Failed, S2MSP is missing SMS permissions</string>
     <string name="registration_errors_no_referrer">Failed, no referrer</string>
     <string name="registration_errors_no_extras">Failed, no extras</string>
     <string name="registration_errors_failed">Failed</string>
@@ -112,7 +112,7 @@
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
     <string name="notification_battery_optimization_short_title">Battery optimized!</string>
     <string name="notification_battery_optimization_text"><![CDATA[To work reliable, PAssist must run with battery optimization turned off.<br/><br/><b>Manual:</b> On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"PAssist\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
-    <string name="notification_battery_optimization_s2smp_text"><![CDATA[To work reliable, S2SMP must run with battery optimization turned off.<br/><br/><b>Manual:</b> On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"S2SMP\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
+    <string name="notification_battery_optimization_s2msp_text"><![CDATA[To work reliable, S2MSP must run with battery optimization turned off.<br/><br/><b>Manual:</b> On the next \"Battery optimization\" settings dialog, choose drop-down \"All apps\", search and  select \"S2MSP\", choose \"Don\'t optimize\" and then press \"Done\".]]></string>
     <string name="notification_draw_overlays_title">Draw overlays is off!</string>
     <string name="notification_draw_overlays_text">To show an alter dialog even when the PAssist activity is not started or in background, the draw overlay setting must be switched on.</string>
     <string name="alert_action_close">Close</string>
@@ -176,7 +176,7 @@
     <string name="state_fragment_phone_numbers_blocked">Number blocked</string>
     <string name="state_fragment_loopback_sms_sent">Test-SMS sent…</string>
     <string name="sms_listener_loopback_sms_received">Test-SMS received!</string>
-    <string name="state_fragment_s2smp_requires_update">Requires update</string>
+    <string name="state_fragment_s2msp_requires_update">Requires update</string>
 
     <string name="permission_sms_title">SMS adapter installation</string>
     <string name="permission_sms_text">
@@ -184,14 +184,14 @@
         The alarm will be automatically acknowledged after the users confirmation by a SMS reply to the operations center.
         The received alarm SMS are showed in the alert log tab.
         As SMS permissions are no more granted by Google, you must install one of the supported SMS adapters.
-        Currently &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; is supported as SMS adapter.
+        Currently &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; is supported as SMS adapter.
     </string>
     <string name="permission_sms_text_unknown_source_request">
-        To install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt;, PAssist requires the permission to install an application from unknown source.
+        To install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;, PAssist requires the permission to install an application from unknown source.
         After granting the permission, please repeat the procedure.
     </string>
     <string name="permission_sms_update_title">SMS adapter update</string>
-    <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; needs to be updated.</string>
+    <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; needs to be updated.</string>
     <string name="list_item_menu_send_test_sms">Send test SMS</string>
     <string name="sms_adapter_registration">Registration</string>
     <string name="button_buy">Buy</string>
@@ -224,7 +224,7 @@
     <string name="manually_created_alarm_reason">Enter a reason</string>
     <string name="manually_created_alarm_reason_default">Phone call</string>
     <string name="manually_created_alarm_reason_prefix">Manually created</string>
-    <string name="s2smp_download_started">Download was started.</string>
-    <string name="s2smp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; can now be downloaded. As soon as the download is finished, you can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; with a click on the download notification.</string>
-    <string name="s2smp_settings">Settings</string>
+    <string name="s2msp_download_started">Download was started.</string>
+    <string name="s2msp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; can now be downloaded. As soon as the download is finished, you can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; with a click on the download notification.</string>
+    <string name="s2msp_settings">Settings</string>
 </resources>

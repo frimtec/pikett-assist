@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   private CallLogFragment callLogFragment;
   private TestAlarmFragment testAlarmFragment;
   private AbstractListFragment activeFragment;
-  private SecureSmsProxyFacade s2smp;
+  private SecureSmsProxyFacade s2msp;
 
   private BillingManager billingManager;
   private DonationFragment donationFragment;
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.s2smp = SecureSmsProxyFacade.instance(this);
+    this.s2msp = SecureSmsProxyFacade.instance(this);
     registerReceiver();
     NotificationHelper.registerChannel(this);
 
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == 1000) {
-      RegistrationResult result = s2smp.getRegistrationResult(resultCode, data);
+      RegistrationResult result = s2msp.getRegistrationResult(resultCode, data);
       result.getSecret().ifPresent(secret -> SharedState.setSmsAdapterSecret(this, secret));
 
       String[] registrationErrors = getResources().getStringArray(R.array.registration_errors);

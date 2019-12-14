@@ -57,7 +57,7 @@
     <string name="registration_errors_successful">Erfolgreich</string>
     <string name="registration_errors_no_secret">Fehlgeschlagen, fehlendes Geheimnis</string>
     <string name="registration_errors_rejected">Abgelehnt</string>
-    <string name="registration_errors_missing_sms_permissions">Fehlgeschlagen, S2SMP hat keine SMS-Rechte</string>
+    <string name="registration_errors_missing_sms_permissions">Fehlgeschlagen, S2MSP hat keine SMS-Rechte</string>
     <string name="registration_errors_no_referrer">Fehlgeschlagen, kein Referrer</string>
     <string name="registration_errors_no_extras">Fehlgeschlagen, keine Parameter</string>
     <string name="registration_errors_failed">Fehlgeschlagen</string>
@@ -110,7 +110,7 @@
     <string name="notification_battery_optimization_title">Die Akku-Optimierung ist aktiv!</string>
     <string name="notification_battery_optimization_short_title">Akku optimiert!</string>
     <string name="notification_battery_optimization_text"><![CDATA[Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b> Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"PAssist\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
-    <string name="notification_battery_optimization_s2smp_text"><![CDATA[Damit S2SMP zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b> Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"S2SMP\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
+    <string name="notification_battery_optimization_s2msp_text"><![CDATA[Damit S2MSP zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b> Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"S2MSP\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
     <string name="notification_draw_overlays_title">Overlays anzeigen ist deaktiviert!</string>
     <string name="notification_draw_overlays_text">Um den Alarmdialog darzustellen, auch wenn PAssist nicht aktiv oder im Hintergrund ist, muss die Einstellung Overlays anzeigen aktiviert werden.</string>
     <string name="alert_action_close">Schliessen</string>
@@ -174,7 +174,7 @@
     <string name="state_fragment_phone_numbers_blocked">Nummer blockiert</string>
     <string name="state_fragment_loopback_sms_sent">Test-SMS gesendet…</string>
     <string name="sms_listener_loopback_sms_received">Test-SMS empfangen!</string>
-    <string name="state_fragment_s2smp_requires_update">Benötigt Update</string>
+    <string name="state_fragment_s2msp_requires_update">Benötigt Update</string>
 
     <string name="permission_sms_title">SMS-Adapter Installation</string>
     <string name="permission_sms_text">
@@ -182,14 +182,14 @@
         Zur Quittierung wird eine SMS an den Sender zurückgeschickt.
         Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können.
         Da SMS Berechtigungen von Google nicht mehr gewährt werden, musst du einen der unterstützen SMS Adapter installieren.
-        Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; als SMS-Adapter unterstützt.
+        Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; als SMS-Adapter unterstützt.
     </string>
     <string name="permission_sms_text_unknown_source_request">
-        Um &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; zu installieren, braucht PAssist das Recht, Applikationen aus unbekannten Quellen zu installieren.
+        Um &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; zu installieren, braucht PAssist das Recht, Applikationen aus unbekannten Quellen zu installieren.
         Nach dem Erteilen des Rechtes, bitte den Vorgang wiederholen.
     </string>
     <string name="permission_sms_update_title">SMS-Adapter Update</string>
-    <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; muss aktualisiert werden.</string>
+    <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; muss aktualisiert werden.</string>
     <string name="list_item_menu_send_test_sms">Sende Test SMS</string>
     <string name="sms_adapter_registration">Registrierung</string>
     <string name="button_buy">Kaufen</string>
@@ -222,8 +222,8 @@
     <string name="manually_created_alarm_reason">Grund für Aufgebot</string>
     <string name="manually_created_alarm_reason_default">Telefonanruf</string>
     <string name="manually_created_alarm_reason_prefix">Manuell erstellt</string>
-    <string name="s2smp_download_started">Download wurde gestartet.</string>
-    <string name="s2smp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; kann nun heruntergeladen werden. Sobald der Download abgeschlossen ist, kann &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2SMP&lt;/a&gt; mit einem Klick auf die Download-Notifikation installiert werden.</string>
-    <string name="s2smp_settings">Einstellungen</string>
+    <string name="s2msp_download_started">Download wurde gestartet.</string>
+    <string name="s2msp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; kann nun heruntergeladen werden. Sobald der Download abgeschlossen ist, kann &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit einem Klick auf die Download-Notifikation installiert werden.</string>
+    <string name="s2msp_settings">Einstellungen</string>
 
 </resources>

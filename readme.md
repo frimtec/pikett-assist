@@ -65,7 +65,7 @@ that are under supervision.
 
 
 ## Installation
-To allow PAssist to send and receive SMS an additional SMS-Adapter application like [secure-sms-adapter](https://github.com/frimtec/secure-sms-proxy/blob/master/README.md) is required. 
+
 ### Google&nbsp;Play
 PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist).
 
@@ -74,6 +74,13 @@ PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/a
 ### Self build
 Build PAssist on your own and then install the APK via ADB to your android phone.
 
+### SMS permissions
+In order to perform the functions of PAssist, PAssist needs to be able to receive and send SMS.
+As these SMS permissions are no more granted by Google, a compatible SMS adapter is required.
+
+Currently the only supported SMS adapter is [secure-sms-proxy](https://github.com/frimtec/secure-sms-proxy/blob/master/README.md).
+PAssist will guide you to install this SMS adapter.  
+ 
 ## Configuration 
 The configuration is split into several blocks:
 

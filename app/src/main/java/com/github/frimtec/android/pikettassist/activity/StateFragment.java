@@ -83,11 +83,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static android.Manifest.permission.RECEIVE_SMS;
-import static android.Manifest.permission.SEND_SMS;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
@@ -105,6 +102,7 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
+import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.S2MSP_PACKAGE_NAME;
 
 public class StateFragment extends AbstractListFragment<State> implements BillingManager.BillingUpdatesListener {
 
@@ -114,12 +112,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   private static final String TAG = "StateFragment";
 
   static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
-  public static final String SECURE_SMS_PROXY_PACKAGE_NAME = "com.github.frimtec.android.securesmsproxy";
 
   private final Random random = new Random(System.currentTimeMillis());
 
   private AlarmService alarmService;
-  private SecureSmsProxyFacade s2smp;
+  private SecureSmsProxyFacade s2msp;
   private MainActivity parent;
 
   private BillingState bronzeSponsor = NOT_LOADED;
@@ -140,7 +137,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     this.alarmService = new AlarmService(this.getContext());
-    this.s2smp = SecureSmsProxyFacade.instance(this.getContext());
+    this.s2msp = SecureSmsProxyFacade.instance(this.getContext());
     this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
   }
 
@@ -224,18 +221,17 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
   }
 
   private void regularStates(List<State> states) {
-    Installation installation = this.s2smp.getInstallation();
+    Installation installation = this.s2msp.getInstallation();
     boolean installed = installation.getAppVersion().isPresent();
     Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
-    boolean allowed = phoneNumbers.isEmpty() || s2smp.isAllowed(phoneNumbers);
+    boolean allowed = phoneNumbers.isEmpty() || s2msp.isAllowed(phoneNumbers);
     boolean newVersion = installed && installation.getApiVersion().compareTo(installation.getAppVersion().get()) > 0;
     PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
 
-    boolean batteryOptimisationOn = !pm.isIgnoringBatteryOptimizations(SECURE_SMS_PROXY_PACKAGE_NAME);
+    boolean batteryOptimisationOn = !pm.isIgnoringBatteryOptimizations(S2MSP_PACKAGE_NAME);
 
     PackageManager packageManager = getContext().getPackageManager();
-    boolean smsAdapterSmsPermission = packageManager.checkPermission(RECEIVE_SMS, SECURE_SMS_PROXY_PACKAGE_NAME) == PERMISSION_GRANTED &&
-        packageManager.checkPermission(SEND_SMS, SECURE_SMS_PROXY_PACKAGE_NAME) == PERMISSION_GRANTED;
+    boolean smsAdapterSmsPermission = s2msp.areSmsPermissionsGranted();
 
     states.add(new State(R.drawable.ic_message_black_24dp, getString(R.string.state_fragment_sms_adapter),
         getSmsAdapterValue(installation, installed, allowed, newVersion, batteryOptimisationOn, smsAdapterSmsPermission), null,
@@ -249,7 +245,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         if (smsAdapterSmsPermission) {
           if (!allowed) {
             Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
-            StateFragment.this.s2smp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
+            StateFragment.this.s2msp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
             return;
           }
           if (newVersion) {
@@ -257,12 +253,12 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
             return;
           }
           if (batteryOptimisationOn) {
-            NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2smp_text,
+            NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2msp_text,
                 (dialogInterface, integer) -> startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
             return;
           }
         }
-        Intent launchIntent = packageManager.getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
+        Intent launchIntent = packageManager.getLaunchIntentForPackage(S2MSP_PACKAGE_NAME);
         if (launchIntent != null) {
           startActivity(launchIntent);
         }
@@ -294,7 +290,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
                 .setTitle(title)
                 .setMessage(htmlMessage)
                 .setCancelable(true)
-                .setPositiveButton(getString(R.string.s2smp_settings), (dialog, which) -> {
+                .setPositiveButton(getString(R.string.s2msp_settings), (dialog, which) -> {
                   startActivity(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:com.github.frimtec.android.pikettassist")));
                 })
                 .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
@@ -302,7 +298,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
             alertDialog.show();
             ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
           } else {
-            SpannableString htmlMessage = new SpannableString(Html.fromHtml(getString(R.string.s2smp_download_request), Html.FROM_HTML_MODE_COMPACT));
+            SpannableString htmlMessage = new SpannableString(Html.fromHtml(getString(R.string.s2msp_download_request), Html.FROM_HTML_MODE_COMPACT));
             AlertDialog alertDialog = new AlertDialog.Builder(context)
                 // set dialog message
                 .setTitle(title)
@@ -310,13 +306,13 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
                 .setCancelable(true)
                 .setPositiveButton(R.string.general_download, (dialog, which) -> {
                   DownloadManager.Request request = new DownloadManager.Request(installation.getDownloadLink());
-                  request.setTitle("S2SMP version " + installation.getApiVersion());
+                  request.setTitle("S2MSP version " + installation.getApiVersion());
                   request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                  request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, String.format("s2smp-app-%s.apk", installation.getApiVersion()));
+                  request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, String.format("s2msp-app-%s.apk", installation.getApiVersion()));
                   DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
                   if (manager != null) {
                     manager.enqueue(request);
-                    Toast.makeText(context, R.string.s2smp_download_started, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.s2msp_download_started, Toast.LENGTH_LONG).show();
                   }
                 })
                 .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
@@ -334,7 +330,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       @Override
       public void onCreateContextMenu(Context context, ContextMenu menu) {
         super.onCreateContextMenu(context, menu);
-        boolean present = StateFragment.this.s2smp.getInstallation().getAppVersion().isPresent();
+        boolean present = StateFragment.this.s2msp.getInstallation().getAppVersion().isPresent();
         menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view)
             .setEnabled(present);
         menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms)
@@ -345,13 +341,13 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       public boolean onContextItemSelected(Context context, MenuItem item) {
         switch (item.getItemId()) {
           case MENU_CONTEXT_VIEW:
-            Intent launchIntent = packageManager.getLaunchIntentForPackage(SecureSmsProxyFacade.S2SMP_PACKAGE_NAME);
+            Intent launchIntent = packageManager.getLaunchIntentForPackage(S2MSP_PACKAGE_NAME);
             if (launchIntent != null) {
               startActivity(launchIntent);
             }
             return true;
           case SEND_TEST_SMS:
-            StateFragment.this.s2smp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), SharedState.getSmsAdapterSecret(context));
+            StateFragment.this.s2msp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), SharedState.getSmsAdapterSecret(context));
             Toast.makeText(context, R.string.state_fragment_loopback_sms_sent, Toast.LENGTH_SHORT).show();
             return true;
           default:
@@ -621,11 +617,11 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     } else if (!allowed) {
       return getString(R.string.state_fragment_phone_numbers_blocked);
     } else if (newVersion) {
-      return getString(R.string.state_fragment_s2smp_requires_update);
+      return getString(R.string.state_fragment_s2msp_requires_update);
     } else if (batteryOptimisationOn) {
       return getString(R.string.notification_battery_optimization_short_title);
     } else {
-      return "S2SMP V" + installation.getAppVersion().get();
+      return "S2MSP V" + installation.getAppVersion().get();
     }
   }
 

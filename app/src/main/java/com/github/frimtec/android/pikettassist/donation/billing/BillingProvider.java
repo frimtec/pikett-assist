@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.donation.billing;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface BillingProvider {
 
   enum BillingState {
@@ -16,4 +19,8 @@ public interface BillingProvider {
   BillingState getSilverSponsor();
 
   BillingState getGoldSponsor();
+
+  default List<BillingState> getAllProducts() {
+    return Arrays.asList(getBronzeSponsor(), getSilverSponsor(), getGoldSponsor());
+  }
 }

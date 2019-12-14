@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.activity;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -40,14 +41,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
-import com.android.billingclient.api.Purchase;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.donation.DonationFragment;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingConstants;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.helper.ContactHelper;
 import com.github.frimtec.android.pikettassist.helper.Feature;
@@ -81,7 +78,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -90,8 +86,6 @@ import static com.github.frimtec.android.pikettassist.activity.State.TrafficLigh
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.activity.State.TrafficLight.YELLOW;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.helper.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.helper.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
@@ -104,9 +98,12 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME;
 import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.S2MSP_PACKAGE_NAME;
 
-public class StateFragment extends AbstractListFragment<State> implements BillingManager.BillingUpdatesListener {
+public class StateFragment extends AbstractListFragment<State> {
 
-  public static final String DIALOG_TAG = "dialog";
+  interface BillingAccess {
+    List<BillingState> getProducts();
+    void showDonationDialog();
+  }
 
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
   private static final String TAG = "StateFragment";
@@ -117,11 +114,8 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
 
   private AlarmService alarmService;
   private SecureSmsProxyFacade s2msp;
-  private MainActivity parent;
-
-  private BillingState bronzeSponsor = NOT_LOADED;
-  private BillingState silverSponsor = NOT_LOADED;
-  private BillingState goldSponsor = NOT_LOADED;
+  private Activity activity;
+  private BillingAccess billingAccess;
 
   private SignalStrengthHelper signalStrengthHelper;
 
@@ -129,8 +123,9 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
     super(FragmentName.STATE);
   }
 
-  public void setParent(MainActivity parent) {
-    this.parent = parent;
+  public void setActivityFacade(Activity parent, BillingAccess billingAccess) {
+    this.activity = parent;
+    this.billingAccess = billingAccess;
   }
 
   @Override
@@ -245,7 +240,7 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
         if (smsAdapterSmsPermission) {
           if (!allowed) {
             Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
-            StateFragment.this.s2msp.register(StateFragment.this.parent, 1000, phoneNumbers, SmsListener.class);
+            StateFragment.this.s2msp.register(StateFragment.this.activity, 1000, phoneNumbers, SmsListener.class);
             return;
           }
           if (newVersion) {
@@ -587,13 +582,14 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       }
     }
 
-    if (Stream.of(this.bronzeSponsor, silverSponsor, goldSponsor).allMatch(billing -> billing != NOT_LOADED) &&
-        Stream.of(this.bronzeSponsor, silverSponsor, goldSponsor).noneMatch(billing -> billing == PURCHASED) &&
+    List<BillingState> products = billingAccess.getProducts();
+    if (products.stream().allMatch(billing -> billing != NOT_LOADED) &&
+        products.stream().noneMatch(billing -> billing == PURCHASED) &&
         randomizedOn()) {
       states.add(this.random.nextInt(states.size() + 1), new State(R.drawable.ic_monetization_on_black_24dp, getString(R.string.state_fragment_donation), getString(R.string.state_fragment_donation_value), null, YELLOW) {
         @Override
         public void onClickAction(Context context) {
-          parent.showDonationDialog();
+          billingAccess.showDonationDialog();
         }
       });
     }
@@ -660,64 +656,4 @@ public class StateFragment extends AbstractListFragment<State> implements Billin
       return super.onContextItemSelected(item);
     }
   }
-
-  @Override
-  public void onBillingClientSetupFinished() {
-    DonationFragment donationFragment = (DonationFragment) parent.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
-    if (donationFragment != null) {
-      donationFragment.onManagerReady(parent);
-    }
-  }
-
-  @Override
-  public void onPurchasesUpdated(List<Purchase> purchases) {
-    bronzeSponsor = NOT_PURCHASED;
-    silverSponsor = NOT_PURCHASED;
-    goldSponsor = NOT_PURCHASED;
-    for (Purchase purchase : purchases) {
-      BillingState state = getBillingState(purchase);
-      switch (purchase.getSku()) {
-        case BillingConstants.SKU_SPONSOR_BRONZE:
-          bronzeSponsor = state;
-          break;
-        case BillingConstants.SKU_SPONSOR_SILVER:
-          silverSponsor = state;
-          break;
-        case BillingConstants.SKU_SPONSOR_GOLD:
-          goldSponsor = state;
-          break;
-        default:
-          Log.e(TAG, "Has unknown product: " + purchase.getSku());
-      }
-    }
-    DonationFragment donationFragment = (DonationFragment) parent.getSupportFragmentManager().findFragmentByTag(DIALOG_TAG);
-    if (donationFragment != null) {
-      donationFragment.refreshUI();
-    }
-  }
-
-  private BillingState getBillingState(Purchase purchase) {
-    switch (purchase.getPurchaseState()) {
-      case Purchase.PurchaseState.PURCHASED:
-        return PURCHASED;
-      case Purchase.PurchaseState.PENDING:
-        return PENDING;
-      case Purchase.PurchaseState.UNSPECIFIED_STATE:
-      default:
-        return NOT_PURCHASED;
-    }
-  }
-
-  public BillingState getBronzeSponsor() {
-    return bronzeSponsor;
-  }
-
-  public BillingState getSilverSponsor() {
-    return silverSponsor;
-  }
-
-  public BillingState getGoldSponsor() {
-    return goldSponsor;
-  }
-
 }

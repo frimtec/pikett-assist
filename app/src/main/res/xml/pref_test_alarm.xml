@@ -17,14 +17,14 @@
         android:singleLineTitle="false"
         android:title="@string/pref_title_test_alarm_message_pattern" />
 
-    <com.github.frimtec.android.pikettassist.settings.TestContextMultiSelectListPreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.TestContextMultiSelectListPreference
         android:dependency="test_alarm_enabled"
         android:icon="@drawable/ic_toc_black_24dp"
         android:key="supervise_test_contexts"
         android:summary="%s"
         android:title="@string/pref_title_supervise_test_contexts" />
 
-    <com.github.frimtec.android.pikettassist.settings.TimePreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.TimePreference
         android:dependency="test_alarm_enabled"
         android:defaultValue="@string/pref_default_test_alarm_check_time"
         android:icon="@drawable/ic_watch_later_black_24dp"

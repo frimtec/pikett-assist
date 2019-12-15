@@ -2,13 +2,13 @@
     <PreferenceCategory
         android:icon="@drawable/ic_volume_up_black_24dp"
         android:title="@string/pref_title_category_profile_start_times">
-        <com.github.frimtec.android.pikettassist.settings.TimePreference
+        <com.github.frimtec.android.pikettassist.ui.preferences.TimePreference
             android:defaultValue="@string/pref_default_day_start_time"
             android:icon="@drawable/ic_day"
             android:key="day_start_time"
             android:title="@string/pref_title_day_start_time" />
 
-        <com.github.frimtec.android.pikettassist.settings.TimePreference
+        <com.github.frimtec.android.pikettassist.ui.preferences.TimePreference
             android:defaultValue="@string/pref_default_night_start_time"
             android:icon="@drawable/ic_night"
             android:key="night_start_time"

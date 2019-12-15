@@ -20,12 +20,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.github.frimtec.android.pikettassist.helper.CalendarEventHelper.hasPikettEventForNow;
+import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
+import static com.github.frimtec.android.pikettassist.utility.CalendarEventHelper.hasPikettEventForNow;
 
 public final class SharedState {
 
@@ -68,8 +69,8 @@ public final class SharedState {
     return getPikettStateManuallyOn(context) || hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
   }
 
-  public static Pair<AlarmState, Long> getAlarmState() {
-    try (SQLiteDatabase db = PAssist.getReadableDatabase();
+  public static Pair<AlarmState, Long> getAlarmState(DbFactory dbFactory) {
+    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
          Cursor cursor = db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_IS_CONFIRMED}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null)) {
       if (cursor.getCount() == 0) {
         return Pair.create(AlarmState.OFF, null);

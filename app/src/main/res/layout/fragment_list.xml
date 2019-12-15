@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.frimtec.android.pikettassist.activity.StateFragment">
+    tools:context="com.github.frimtec.android.pikettassist.ui.overview.StateFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/fragment_list_pull_to_request"

@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.github.frimtec.android.pikettassist.settings.ContactPreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.ContactPreference
         android:icon="@drawable/ic_phone_black_24dp"
         android:key="alarm_operations_center_contact"
         android:summary="%s"

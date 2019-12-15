@@ -7,10 +7,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
-import com.github.frimtec.android.pikettassist.helper.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.helper.Feature;
-import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.helper.VolumeHelper;
+import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
+import com.github.frimtec.android.pikettassist.utility.Feature;
+import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
+import com.github.frimtec.android.pikettassist.utility.VolumeHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Duration;
@@ -67,7 +67,7 @@ public class PikettService extends IntentService {
         }
       }
       this.startService(new Intent(this, SignalStrengthService.class));
-      this.startService(new Intent(this, TestAlertService.class));
+      this.startService(new Intent(this, TestAlarmService.class));
     } else {
       NotificationHelper.cancelNotification(this, NotificationHelper.SHIFT_NOTIFICATION_ID);
       if (manageVolumeEnabled) {

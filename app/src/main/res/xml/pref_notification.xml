@@ -1,12 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.github.frimtec.android.pikettassist.settings.AlarmRingtonePreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.AlarmRingtonePreference
         android:icon="@drawable/ic_ring_volume_black_24dp"
         android:key="alarm_ring_tone"
         android:summary="%s"
         android:title="@string/pref_title_alarm_ring_tone" />
 
-    <com.github.frimtec.android.pikettassist.settings.AlarmRingtonePreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.AlarmRingtonePreference
         android:icon="@drawable/ic_test_alarm"
         android:key="test_alarm_ring_tone"
         android:summary="%s"

@@ -22,15 +22,15 @@ public class DbHelper extends SQLiteOpenHelper {
   public static final String TABLE_ALERT_CALL_COLUMN_ALERT_ID = "alert_id";
   public static final String TABLE_ALERT_CALL_COLUMN_TIME = "time";
   public static final String TABLE_ALERT_CALL_COLUMN_MESSAGE = "message";
-  public static final String TABLE_TEST_ALERT_STATE = "t_test_alarm_state";
-  public static final String TABLE_TEST_ALERT_STATE_COLUMN_ID = "_id";
-  public static final String TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME = "last_received_time";
-  public static final String TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE = "message";
-  public static final String TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE = "alert_state";
+  public static final String TABLE_TEST_ALARM_STATE = "t_test_alarm_state";
+  public static final String TABLE_TEST_ALARM_STATE_COLUMN_ID = "_id";
+  public static final String TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME = "last_received_time";
+  public static final String TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE = "message";
+  public static final String TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE = "alert_state";
   public static final int BOOLEAN_TRUE = 1;
   public static final int BOOLEAN_FALSE = 0;
   private static final String TAG = "DbHelper";
-  private static final String DB_NAME = "PAssist.db";
+  private static final String DB_NAME = "PAssistApplication.db";
   private static final int DB_VERSION = 1;
 
   public DbHelper(@Nullable Context context) {
@@ -53,11 +53,11 @@ public class DbHelper extends SQLiteOpenHelper {
         "  " + TABLE_ALERT_CALL_COLUMN_TIME + " INTEGER NOT NULL," +
         "  " + TABLE_ALERT_CALL_COLUMN_MESSAGE + " TEXT NOT NULL" +
         ");");
-    db.execSQL("CREATE TABLE " + TABLE_TEST_ALERT_STATE + " (" +
-        "  " + TABLE_TEST_ALERT_STATE_COLUMN_ID + " TEXT PRIMARY KEY," +
-        "  " + TABLE_TEST_ALERT_STATE_COLUMN_LAST_RECEIVED_TIME + " INTEGER NOT NULL," +
-        "  " + TABLE_TEST_ALERT_STATE_COLUMN_MESSAGE + " TEXT NOT NULL," +
-        "  " + TABLE_TEST_ALERT_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL" +
+    db.execSQL("CREATE TABLE " + TABLE_TEST_ALARM_STATE + " (" +
+        "  " + TABLE_TEST_ALARM_STATE_COLUMN_ID + " TEXT PRIMARY KEY," +
+        "  " + TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME + " INTEGER NOT NULL," +
+        "  " + TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE + " TEXT NOT NULL," +
+        "  " + TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL" +
         ");");
   }
 

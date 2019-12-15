@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.github.frimtec.android.pikettassist.settings.CalendarListPreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.CalendarListPreference
         android:icon="@drawable/ic_date_range_black_24dp"
         android:key="calendar_selection"
         android:summary="%s"

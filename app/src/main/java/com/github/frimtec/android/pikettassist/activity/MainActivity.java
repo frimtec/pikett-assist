@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.activity;
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
@@ -38,9 +39,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.android.billingclient.api.BillingClient.BillingResponseCode;
-import static com.github.frimtec.android.pikettassist.activity.StateFragment.DIALOG_TAG;
+import static com.github.frimtec.android.pikettassist.activity.BillingAdapter.BILLING_DIALOG_TAG;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 
-public class MainActivity extends AppCompatActivity implements BillingProvider {
+public class MainActivity extends AppCompatActivity {
 
   public static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
   private BroadcastReceiver broadcastReceiver;
@@ -51,11 +53,13 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   private AbstractListFragment activeFragment;
   private SecureSmsProxyFacade s2msp;
 
-  private BillingManager billingManager;
   private DonationFragment donationFragment;
+  private BillingAdapter billingAdapter;
 
   private static final Map<FragmentName, Integer> FRAGMENT_BUTTON_ID_MAP;
-  private static final Map<Integer, FragmentName> BUTTON_ID_FRAGMENT_MAP;
+
+  @SuppressLint("UseSparseArrays")
+  private static final Map<Integer, FragmentName> BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
 
   static {
     FRAGMENT_BUTTON_ID_MAP = new EnumMap<>(FragmentName.class);
@@ -64,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
     FRAGMENT_BUTTON_ID_MAP.put(FragmentName.CALL_LOG, R.id.navigation_alert_log);
     FRAGMENT_BUTTON_ID_MAP.put(FragmentName.TEST_ALARMS, R.id.navigation_test_alarms);
 
-    BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
   }
 
@@ -90,7 +93,17 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
       case STATE:
         if (stateFragment == null) {
           stateFragment = new StateFragment();
-          stateFragment.setParent(this);
+          stateFragment.setActivityFacade(this, new StateFragment.BillingAccess() {
+            @Override
+            public List<BillingProvider.BillingState> getProducts() {
+              return MainActivity.this.billingAdapter.getAllProducts();
+            }
+
+            @Override
+            public void showDonationDialog() {
+              MainActivity.this.showDonationDialog();
+            }
+          });
         }
         activeFragment = stateFragment;
         break;
@@ -133,15 +146,13 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
     BottomNavigationView navigation = findViewById(R.id.navigation);
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-    loadFragment(FragmentName.STATE);
+    this.billingAdapter = new BillingAdapter(this);
+
     FragmentName savedFragmentName = FragmentName.STATE;
-    if(savedInstanceState != null){
+    if (savedInstanceState != null) {
       savedFragmentName = FragmentName.valueOf(savedInstanceState.getString(ACTIVE_FRAGMENT_STATE, savedFragmentName.name()));
     }
     loadFragment(savedFragmentName);
-
-    // Create and initialize BillingManager which talks to BillingLibrary
-    billingManager = new BillingManager(this, stateFragment);
 
     startService(new Intent(this, PikettService.class));
   }
@@ -155,8 +166,8 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   @Override
   protected void onResume() {
     super.onResume();
-    if (activeFragment == stateFragment && billingManager != null
-        && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
+    BillingManager billingManager = this.billingAdapter.getBillingManager();
+    if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
       billingManager.queryPurchases();
     }
   }
@@ -185,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.main_menu, menu);
-    if(isDeveloperMode()) {
+    if (isDeveloperMode()) {
       menu.findItem(R.id.logcat).setVisible(true);
     }
     return super.onCreateOptionsMenu(menu);
@@ -193,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
 
   private boolean isDeveloperMode() {
     return Settings.Global.getInt(getApplicationContext().getContentResolver(),
-        Settings.Global.DEVELOPMENT_SETTINGS_ENABLED , 0) != 0;
+        Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0;
   }
 
   @Override
@@ -212,13 +223,13 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
         Intent intent = new Intent(this, AboutActivity.class);
 
         List<Integer> sponsorMedals = new ArrayList<>();
-        if (getBronzeSponsor() == BillingState.PURCHASED) {
+        if (billingAdapter.getBronzeSponsor() == PURCHASED) {
           sponsorMedals.add(R.drawable.bronze_icon);
         }
-        if (getSilverSponsor() == BillingState.PURCHASED) {
+        if (billingAdapter.getSilverSponsor() == PURCHASED) {
           sponsorMedals.add(R.drawable.silver_icon);
         }
-        if (getGoldSponsor() == BillingState.PURCHASED) {
+        if (billingAdapter.getGoldSponsor() == PURCHASED) {
           sponsorMedals.add(R.drawable.gold_icon);
         }
 
@@ -234,15 +245,16 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
       donationFragment = new DonationFragment();
     }
     if (!isAcquireFragmentShown()) {
-      donationFragment.show(getSupportFragmentManager(), DIALOG_TAG);
-      if (getBillingManager() != null &&
-          getBillingManager().getBillingClientResponseCode() > BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
-        donationFragment.onManagerReady(this);
+      donationFragment.show(getSupportFragmentManager(), BILLING_DIALOG_TAG);
+
+      if (billingAdapter != null &&
+          this.billingAdapter.getBillingManager().getBillingClientResponseCode() > BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
+        donationFragment.onManagerReady(this.billingAdapter);
       }
     }
   }
 
-  public boolean isAcquireFragmentShown() {
+  private boolean isAcquireFragmentShown() {
     return donationFragment != null && donationFragment.isVisible();
   }
 
@@ -280,29 +292,9 @@ public class MainActivity extends AppCompatActivity implements BillingProvider {
       unregisterReceiver(broadcastReceiver);
       broadcastReceiver = null;
     }
-    if (billingManager != null) {
-      billingManager.destroy();
+    if (billingAdapter != null) {
+      billingAdapter.destroy();
     }
     super.onDestroy();
-  }
-
-  @Override
-  public BillingManager getBillingManager() {
-    return billingManager;
-  }
-
-  @Override
-  public BillingState getBronzeSponsor() {
-    return stateFragment.getBronzeSponsor();
-  }
-
-  @Override
-  public BillingState getSilverSponsor() {
-    return stateFragment.getSilverSponsor();
-  }
-
-  @Override
-  public BillingState getGoldSponsor() {
-    return stateFragment.getGoldSponsor();
   }
 }

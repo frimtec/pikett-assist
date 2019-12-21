@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".state.PAssist"
+        android:name=".PAssistApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,14 +23,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SendLogActivity">
+        <activity android:name=".ui.support.SendLogActivity">
             <intent-filter>
                 <action android:name="com.github.frimtec.android.pikettassist.SEND_LOG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask">
             <intent-filter>
@@ -39,49 +39,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AlertDetailActivity">
+        <activity android:name=".ui.alerts.AlertDetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
+                android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".ui.about.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
+                android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.LogcatActivity"
+            android:name=".ui.support.LogcatActivity"
             android:label="@string/title_activity_logcat"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
+                android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.TestAlarmDetailActivity"
+            android:name=".ui.testalarm.TestAlarmDetailActivity"
             android:label="@string/title_activity_test_alarm_details"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
+                android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".ui.preferences.PreferencesActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.github.frimtec.android.pikettassist.activity.MainActivity" />
+                android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity" />
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity" />
-        <activity android:name="com.github.frimtec.android.pikettassist.activity.MissingTestAlarmAlarmActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity" />
+        <activity android:name="com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity" />
 
         <receiver
-            android:name=".receiver.AutoStart"
+            android:name=".service.AutoStart"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -89,7 +89,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.SmsListener"
+            android:name=".service.SmsListener"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -97,7 +97,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.NotificationActionListener"
+            android:name=".service.NotificationActionListener"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.github.frimtec.android.pikettassist.*" />
@@ -105,7 +105,7 @@
         </receiver>
 
         <service android:name=".service.PikettService" />
-        <service android:name=".service.TestAlertService" />
+        <service android:name=".service.TestAlarmService" />
         <service android:name=".service.SignalStrengthService" />
     </application>
 

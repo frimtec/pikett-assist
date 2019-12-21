@@ -9,19 +9,18 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.activity.MainActivity;
-import com.github.frimtec.android.pikettassist.activity.PikettAlarmActivity;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
-import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.helper.SmsHelper;
-import com.github.frimtec.android.pikettassist.receiver.NotificationActionListener;
-import com.github.frimtec.android.pikettassist.state.PAssist;
+import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
+import com.github.frimtec.android.pikettassist.ui.MainActivity;
+import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
+import com.github.frimtec.android.pikettassist.utility.SmsHelper;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.threeten.bp.Instant;
 
-import static com.github.frimtec.android.pikettassist.helper.NotificationHelper.ACTION_CLOSE_ALARM;
+import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_FALSE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
@@ -34,21 +33,28 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
+import static com.github.frimtec.android.pikettassist.utility.NotificationHelper.ACTION_CLOSE_ALARM;
 
 public class AlarmService {
 
   private static final String TAG = "AlarmService";
 
   private final Context context;
+  private final DbFactory dbFactory;
 
   public AlarmService(Context context) {
+    this(context, DbFactory.instance());
+  }
+
+  AlarmService(Context context, DbFactory dbFactory) {
     this.context = context;
+    this.dbFactory = dbFactory;
   }
 
   public void newAlarm(Sms sms) {
-    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
+    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(this.dbFactory);
     SharedState.setLastAlarmSmsNumberWithSubscriptionId(context, sms.getNumber(), sms.getSubscriptionId());
-    try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
+    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
       Long alertId;
       if (alarmState.first == AlarmState.OFF) {
         Log.i(TAG, "Alarm state OFF -> ON");
@@ -56,14 +62,14 @@ public class AlarmService {
         contentValues.put(TABLE_ALERT_COLUMN_START_TIME, Instant.now().toEpochMilli());
         contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
         alertId = db.insert(TABLE_ALERT, null, contentValues);
-        PikettAlarmActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
+        AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
       } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
         Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
         ContentValues contentValues = new ContentValues();
         contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_FALSE);
         alertId = alarmState.second;
         db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
-        PikettAlarmActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
+        AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
       } else {
         Log.i(TAG, "Alarm state ON -> ON");
         alertId = alarmState.second;
@@ -77,8 +83,8 @@ public class AlarmService {
   }
 
   public void newManuallyAlarm(Instant startTime, String reason) {
-    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState();
-    try (SQLiteDatabase db = PAssist.getWritableDatabase()) {
+    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(this.dbFactory);
+    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
       Long alertId;
       long startTimeEpochMillis = startTime.toEpochMilli();
       if (alarmState.first == AlarmState.OFF) {
@@ -119,7 +125,7 @@ public class AlarmService {
   }
 
   public void confirmAlarm(Context context, String smsNumber, Integer subscriptionId) {
-    try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
+    try (SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE)) {
       try (Cursor cursor = writableDatabase.query(TABLE_ALERT,
           new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME},
           TABLE_ALERT_COLUMN_END_TIME + " IS NULL",
@@ -147,7 +153,7 @@ public class AlarmService {
   }
 
   public void closeAlarm() {
-    try (SQLiteDatabase writableDatabase = PAssist.getWritableDatabase()) {
+    try (SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE)) {
       ContentValues values = new ContentValues();
       values.put("end_time", Instant.now().toEpochMilli());
       int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);

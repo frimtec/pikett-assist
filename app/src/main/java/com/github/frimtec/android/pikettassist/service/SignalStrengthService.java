@@ -9,13 +9,14 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.activity.LowSignalAlarmActivity;
+import com.github.frimtec.android.pikettassist.state.DbFactory;
+import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
 import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.helper.NotificationHelper;
-import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper;
-import com.github.frimtec.android.pikettassist.helper.SignalStrengthHelper.SignalLevel;
-import com.github.frimtec.android.pikettassist.helper.VolumeHelper;
+import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
+import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper;
+import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper.SignalLevel;
+import com.github.frimtec.android.pikettassist.utility.VolumeHelper;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.LocalTime;
@@ -54,7 +55,7 @@ public class SignalStrengthService extends IntentService {
   }
 
   private boolean isAlarmStateOn() {
-    return SharedState.getAlarmState().first == AlarmState.ON;
+    return SharedState.getAlarmState(DbFactory.instance()).first == AlarmState.ON;
   }
 
   private boolean isCallStateIdle() {

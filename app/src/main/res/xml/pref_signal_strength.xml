@@ -15,7 +15,7 @@
         android:summary="%s"
         android:title="@string/pref_title_supervise_signal_strength_min_level" />
 
-    <com.github.frimtec.android.pikettassist.settings.TelephoneSubscriptionPreference
+    <com.github.frimtec.android.pikettassist.ui.preferences.TelephoneSubscriptionPreference
         android:defaultValue="@string/pref_default_supervise_signal_strength_subscription"
         android:dependency="supervise_signal_strength"
         android:icon="@drawable/ic_sim_card_black_24dp"

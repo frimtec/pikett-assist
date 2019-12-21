@@ -7,7 +7,7 @@
     android:paddingLeft="10dp"
     android:paddingTop="10dp"
     android:paddingRight="10dp"
-    tools:context=".activity.AboutActivity">
+    tools:context=".ui.about.AboutActivity">
 
     <ImageView
         android:id="@+id/test_alarm_details_image"

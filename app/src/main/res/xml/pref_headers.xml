@@ -3,32 +3,32 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment"
+        android:fragment="com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity$AlarmingFragment"
         android:icon="@drawable/ic_phone_in_talk_black_24dp"
         android:title="@string/pref_header_alarming" />
 
     <header
-        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$AlarmingFragment$CalendarFragment"
+        android:fragment="com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity$AlarmingFragment$CalendarFragment"
         android:icon="@drawable/ic_date_range_black_24dp"
         android:title="@string/pref_header_calendar" />
 
     <header
-        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$TestAlarmFragment"
+        android:fragment="com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity$TestAlarmFragment"
         android:icon="@drawable/ic_test_alarm"
         android:title="@string/pref_header_test_alarm" />
 
     <header
-        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$SignalStrengthPreferenceFragment"
+        android:fragment="com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity$SignalStrengthPreferenceFragment"
         android:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
         android:title="@string/pref_title_supervise_signal_strength" />
 
     <header
-        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity$NotificationPreferenceFragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_header_notifications" />
 
     <header
-        android:fragment="com.github.frimtec.android.pikettassist.activity.SettingsActivity$DayNightProfilePreferenceFragment"
+        android:fragment="com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity$DayNightProfilePreferenceFragment"
         android:icon="@drawable/ic_half_moon_and_sun"
         android:title="@string/pref_header_day_night_profile" />
 

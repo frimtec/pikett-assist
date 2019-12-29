@@ -2,8 +2,6 @@ package com.github.frimtec.android.pikettassist.ui.alerts;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -21,45 +19,34 @@ import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.service.AlarmService;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.service.AlertDao;
+import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
+import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.utility.Feature;
 import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 
 import org.threeten.bp.Instant;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_CONFIRM_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
 import static com.github.frimtec.android.pikettassist.ui.FragmentName.ALERT_LOG;
 
 public class AlertListFragment extends AbstractListFragment<Alert> {
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
-  private final DbFactory dbFactory;
+  private final AlertDao alertDao;
 
   public AlertListFragment() {
-    this(DbFactory.instance());
+    this(new AlertDao());
   }
 
   @SuppressLint("ValidFragment")
-  AlertListFragment(DbFactory dbFactory) {
+  AlertListFragment(AlertDao alertDao) {
     super(ALERT_LOG);
-    this.dbFactory = dbFactory;
+    this.alertDao = alertDao;
   }
 
   @Override
@@ -94,7 +81,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
         return true;
       case MENU_CONTEXT_DELETE_ID:
         NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
-          deleteAlert(selectedAlert);
+          this.alertDao.delete(selectedAlert);
           refresh();
           Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();
         }, (dialog, which) -> {
@@ -108,7 +95,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   @Override
   protected Optional<View.OnClickListener> addAction() {
     if (Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
-        SharedState.getPikettState(getContext()) == OnOffState.ON) {
+        CalendarEventHelper.getPikettState(getContext()) == OnOffState.ON) {
       return Optional.of(view -> {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.manually_created_alarm_reason));
@@ -120,8 +107,8 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
         builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
           dialog.dismiss();
           String comment = input.getText().toString();
-          AlarmService alarmService = new AlarmService(getContext());
-          alarmService.newManuallyAlarm(Instant.now(), comment);
+          AlertService alertService = new AlertService(getContext());
+          alertService.newManuallyAlert(Instant.now(), comment);
           refresh();
         });
         builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
@@ -139,29 +126,8 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
     startActivity(intent);
   }
 
-  private void deleteAlert(Alert selectedAlert) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
-      db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(selectedAlert.getId())});
-    }
-  }
-
   private List<Alert> loadAlertList() {
-    List<Alert> alertList = new ArrayList<>();
-    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor cursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_ID + ", " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + ", " + TABLE_ALERT_COLUMN_IS_CONFIRMED + " FROM " + TABLE_ALERT + " ORDER BY " + TABLE_ALERT_COLUMN_START_TIME + " DESC", null)) {
-      if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-        do {
-          long id = cursor.getLong(0);
-          alertList.add(new Alert(
-              id,
-              Instant.ofEpochMilli(cursor.getLong(1)),
-              cursor.getLong(2) > 0 ? Instant.ofEpochMilli(cursor.getLong(2)) : null,
-              cursor.getInt(4) == BOOLEAN_TRUE,
-              cursor.getLong(3) > 0 ? Instant.ofEpochMilli(cursor.getLong(3)) : null,
-              Collections.emptyList()));
-        } while (cursor.moveToNext());
-      }
-    }
+    List<Alert> alertList = this.alertDao.loadAll();
     if (alertList.isEmpty()) {
       Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
     }

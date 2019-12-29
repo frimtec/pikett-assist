@@ -9,15 +9,15 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.state.DbFactory;
-import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
-import com.github.frimtec.android.pikettassist.domain.AlarmState;
+import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
+import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper;
 import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper.SignalLevel;
 import com.github.frimtec.android.pikettassist.utility.VolumeHelper;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.LocalTime;
 
@@ -31,6 +31,7 @@ public class SignalStrengthService extends IntentService {
   private AlarmManager alarmManager;
   private TelephonyManager telephonyManager;
   private boolean pikettState = false;
+  private AlertDao alertDao;
 
   public SignalStrengthService() {
     super(TAG);
@@ -41,12 +42,13 @@ public class SignalStrengthService extends IntentService {
     super.onCreate();
     this.alarmManager = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
     this.telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+    this.alertDao = new AlertDao();
   }
 
   @Override
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
-    this.pikettState = SharedState.getPikettState(this) == OnOffState.ON;
+    this.pikettState = CalendarEventHelper.getPikettState(this) == OnOffState.ON;
     SignalLevel level = new SignalStrengthHelper(this).getSignalStrength();
     if (this.pikettState && SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
       NotificationHelper.notifySignalLow(this, level);
@@ -55,7 +57,7 @@ public class SignalStrengthService extends IntentService {
   }
 
   private boolean isAlarmStateOn() {
-    return SharedState.getAlarmState(DbFactory.instance()).first == AlarmState.ON;
+    return this.alertDao.getAlertState().first == AlertState.ON;
   }
 
   private boolean isCallStateIdle() {

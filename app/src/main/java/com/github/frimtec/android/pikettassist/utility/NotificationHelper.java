@@ -21,6 +21,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper.SignalLevel;
 
@@ -92,12 +93,12 @@ public class NotificationHelper {
     notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
   }
 
-  public static void notifyMissingTestAlarm(Context context, Intent notifyIntent, Set<String> testContexts) {
+  public static void notifyMissingTestAlarm(Context context, Intent notifyIntent, Set<TestAlarmContext> testAlarmContexts) {
     notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
     );
-    String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testContexts);
+    String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testAlarmContexts);
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_missing_test_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))

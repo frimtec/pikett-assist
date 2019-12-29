@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.Action;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 
 import java.util.Collections;
@@ -113,7 +114,7 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
   @Override
   protected void onStop() {
     super.onStop();
-    this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+    this.sendBroadcast(new Intent(Action.REFRESH.getId()));
     startService(new Intent(this, PikettService.class));
   }
 

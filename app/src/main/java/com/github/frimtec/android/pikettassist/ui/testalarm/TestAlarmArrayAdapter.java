@@ -11,33 +11,33 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.TestAlarm;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-class TestAlarmArrayAdapter extends ArrayAdapter<TestAlarm> {
+class TestAlarmArrayAdapter extends ArrayAdapter<TestAlarmContext> {
 
-  TestAlarmArrayAdapter(Context context, List<TestAlarm> testAlarms) {
-    super(context, 0, testAlarms);
+  TestAlarmArrayAdapter(Context context, List<TestAlarmContext> testAlarmContexts) {
+    super(context, 0, testAlarmContexts);
   }
 
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    TestAlarm testAlarm = getItem(position);
-    Objects.requireNonNull(testAlarm);
+    TestAlarmContext testAlarmContext = getItem(position);
+    Objects.requireNonNull(testAlarmContext);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.test_alarm_item, parent, false);
     }
 
     TextView textView = convertView.findViewById(R.id.test_alarm_item_context);
-    textView.setText(testAlarm.getContext());
+    textView.setText(testAlarmContext.getContext());
 
-    Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(getContext());
-    if(!superviseTestContexts.contains(testAlarm.getContext())) {
+    Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(getContext());
+    if(!supervisedTestAlarmContexts.contains(testAlarmContext)) {
       textView.setTextAppearance(R.style.deactivatedItem);
     }
     return convertView;

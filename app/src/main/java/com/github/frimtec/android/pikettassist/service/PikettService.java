@@ -6,12 +6,13 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.util.Log;
 
+import com.github.frimtec.android.pikettassist.domain.Action;
 import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.utility.Feature;
 import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 import com.github.frimtec.android.pikettassist.utility.VolumeHelper;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
@@ -34,7 +35,7 @@ public class PikettService extends IntentService {
   @Override
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
-    sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+    sendBroadcast(new Intent(Action.REFRESH.getId()));
   }
 
   @Override

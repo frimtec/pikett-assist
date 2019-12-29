@@ -5,19 +5,17 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
+import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 
 import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.temporal.ChronoField;
 import org.threeten.bp.temporal.ChronoUnit;
@@ -25,29 +23,24 @@ import org.threeten.bp.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME;
-
 public class TestAlarmService extends IntentService {
 
   private static final String TAG = "TestAlarmService";
 
   private static final String PARAM_INITIAL = "initial";
 
-  private final DbFactory dbFactory;
+  private final TestAlarmDao testAlarmDao;
   private OnOffState pikettState;
   private AlarmManager alarmManager;
 
   @SuppressWarnings("unused")
   public TestAlarmService() {
-    this(TAG, DbFactory.instance());
+    this(TAG, new TestAlarmDao());
   }
 
-  TestAlarmService(String name, DbFactory dbFactory) {
+  TestAlarmService(String name, TestAlarmDao testAlarmDao) {
     super(name);
-    this.dbFactory = dbFactory;
+    this.testAlarmDao = testAlarmDao;
   }
 
   @Override
@@ -60,40 +53,28 @@ public class TestAlarmService extends IntentService {
   public void onHandleIntent(Intent intent) {
     boolean initial = intent.getBooleanExtra(PARAM_INITIAL, true);
     Context context = getApplicationContext();
-    this.pikettState = SharedState.getPikettState(context);
+    this.pikettState = CalendarEventHelper.getPikettState(context);
     Log.i(TAG, "Service cycle; pikett state: " + pikettState + "; initial: " + initial);
     if (!initial && SharedState.getTestAlarmEnabled(context) && this.pikettState == OnOffState.ON) {
       ZonedDateTime now = ZonedDateTime.now();
       ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
-      Set<String> missingTestAlarmContexts = SharedState.getSuperviseTestContexts(context).stream()
-          .filter(tc -> !isTestMessageAvailable(tc, messageAcceptedTime.toInstant()))
+      Set<TestAlarmContext> missingTestAlarmContextContexts = SharedState.getSupervisedTestAlarms(context).stream()
+          .filter(tc -> !this.testAlarmDao.isTestAlarmReceived(tc, messageAcceptedTime.toInstant()))
           .collect(Collectors.toSet());
-      missingTestAlarmContexts.forEach(testContext -> {
+      missingTestAlarmContextContexts.forEach(testContext -> {
         Log.i(TAG, "Not received test messages: " + testContext);
-        new TestAlarmDao().updateAlarmState(testContext, OnOffState.ON);
+        new TestAlarmDao().updateAlertState(testContext, OnOffState.ON);
       });
 
-      if (!missingTestAlarmContexts.isEmpty()) {
+      if (!missingTestAlarmContextContexts.isEmpty()) {
         NotificationHelper.notifyMissingTestAlarm(
             context,
             new Intent(context, MainActivity.class),
-            missingTestAlarmContexts
+            missingTestAlarmContextContexts
         );
         MissingTestAlarmAlarmActivity.trigger(context, this.alarmManager);
       }
     }
-  }
-
-  private boolean isTestMessageAvailable(String testAlarmContext, Instant messageAcceptedTime) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY)) {
-      try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext}, null, null, null)) {
-        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-          return Instant.ofEpochMilli(cursor.getLong(0))
-              .isAfter(messageAcceptedTime);
-        }
-      }
-    }
-    return false;
   }
 
   @Override

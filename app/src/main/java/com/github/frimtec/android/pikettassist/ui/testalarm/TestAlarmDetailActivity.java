@@ -1,7 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Switch;
@@ -11,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Instant;
@@ -22,28 +21,21 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Set;
 
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE;
-
 public class TestAlarmDetailActivity extends AppCompatActivity {
 
   public static final String EXTRA_TEST_ALARM_CONTEXT = "testAlarmContext";
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMM yyyy HH:mm:ss";
 
-  private final DbFactory dbFactory;
+  private final TestAlarmDao testAlarmDao;
 
   @SuppressWarnings("unused")
   public TestAlarmDetailActivity() {
-    this(DbFactory.instance());
+    this(new TestAlarmDao());
   }
 
-  TestAlarmDetailActivity(DbFactory dbFactory) {
-    this.dbFactory = dbFactory;
+  TestAlarmDetailActivity(TestAlarmDao testAlarmDao) {
+    this.testAlarmDao = testAlarmDao;
   }
 
   @Override
@@ -57,37 +49,33 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
 
       TextView contextText = findViewById(R.id.test_alarm_details_context);
       contextText.setText(testAlarmContext);
+      TestAlarmContext testAlarm = new TestAlarmContext(testAlarmContext);
 
       TextView lastReceived = findViewById(R.id.test_alarm_details_last_received);
       TextView alarmState = findViewById(R.id.test_alarm_details_alarm_state);
       Switch supervisedSwitch = findViewById(R.id.test_alarm_enabling_switch);
-      supervisedSwitch.setChecked(SharedState.getSuperviseTestContexts(this).contains(testAlarmContext));
+      supervisedSwitch.setChecked(SharedState.getSupervisedTestAlarms(this).contains(testAlarm));
       supervisedSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        Set<String> superviseTestContexts = SharedState.getSuperviseTestContexts(this);
-        if(isChecked) {
-          superviseTestContexts.add(testAlarmContext);
+        Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(this);
+        if (isChecked) {
+          supervisedTestAlarmContexts.add(testAlarm);
         } else {
-          superviseTestContexts.remove(testAlarmContext);
+          supervisedTestAlarmContexts.remove(testAlarm);
         }
-        SharedState.setSuperviseTestContexts(this, superviseTestContexts);
+        SharedState.setSuperviseTestContexts(this, supervisedTestAlarmContexts);
       });
       TextView message = findViewById(R.id.test_alarm_details_message);
 
-      try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY)) {
-        try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext}, null, null, null)) {
-          if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-            Instant lastReceiveTime = cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null;
-            lastReceived.setText(formatDateTime(lastReceiveTime));
-            alarmState.setText(getOnOffText(OnOffState.valueOf(cursor.getString(2)) == OnOffState.ON));
-            message.setText(cursor.getString(3));
-          }
-        }
-      }
+      this.testAlarmDao.loadDetails(testAlarm).ifPresent(details -> {
+        lastReceived.setText(formatDateTime(details.getReceivedTime()));
+        alarmState.setText(getOnOffText(details.getAlertState()));
+        message.setText(details.getMessage());
+      });
     }
   }
 
-  private String getOnOffText(boolean on) {
-    return on ? getString(R.string.state_on) : getString(R.string.state_off);
+  private String getOnOffText(OnOffState state) {
+    return state == OnOffState.ON ? getString(R.string.state_on) : getString(R.string.state_off);
   }
 
   @Override

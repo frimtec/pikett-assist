@@ -1,7 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,38 +12,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
-
-import org.threeten.bp.Instant;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_CALL;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_CALL_COLUMN_ALERT_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_CALL_COLUMN_MESSAGE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_CALL_COLUMN_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_CONFIRM_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
+import com.github.frimtec.android.pikettassist.service.AlertDao;
 
 public class AlertDetailActivity extends AppCompatActivity {
 
   public static final String EXTRA_ALERT_ID = "alertId";
 
-  private final DbFactory dbFactory;
+  private final AlertDao alertDao;
 
   public AlertDetailActivity() {
-    this(DbFactory.instance());
+    this(new AlertDao());
   }
 
-  AlertDetailActivity(DbFactory dbFactory) {
-    this.dbFactory = dbFactory;
+  AlertDetailActivity(AlertDao alertDao) {
+    this.alertDao = alertDao;
   }
 
   @Override
@@ -55,8 +35,7 @@ public class AlertDetailActivity extends AppCompatActivity {
 
     Bundle b = getIntent().getExtras();
     if (b != null) {
-      long alertId = b.getLong(EXTRA_ALERT_ID);
-      Alert alert = loadAlert(alertId);
+      Alert alert = this.alertDao.load(b.getLong(EXTRA_ALERT_ID));
       ListView listView = findViewById(R.id.alert_call_list);
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 
@@ -83,31 +62,4 @@ public class AlertDetailActivity extends AppCompatActivity {
     }
     return super.onOptionsItemSelected(item);
   }
-
-  private Alert loadAlert(long id) {
-    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor alertCursor = db.rawQuery("SELECT " + TABLE_ALERT_COLUMN_START_TIME + ", " + TABLE_ALERT_COLUMN_CONFIRM_TIME + ", " + TABLE_ALERT_COLUMN_END_TIME + ", " + TABLE_ALERT_COLUMN_IS_CONFIRMED + " FROM " + TABLE_ALERT + " where " + TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)});
-         Cursor callCursor = db.rawQuery("SELECT " + TABLE_ALERT_CALL_COLUMN_TIME + ", " + TABLE_ALERT_CALL_COLUMN_MESSAGE + " FROM " + TABLE_ALERT_CALL + " where " + TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=? order by " + TABLE_ALERT_CALL_COLUMN_TIME, new String[]{String.valueOf(id)})) {
-      if (alertCursor != null && alertCursor.getCount() > 0 && alertCursor.moveToFirst()) {
-        List<AlertCall> calls = new ArrayList<>();
-        if (callCursor != null && callCursor.getCount() > 0 && callCursor.moveToFirst()) {
-          do {
-            Instant time = Instant.ofEpochMilli(callCursor.getLong(0));
-            String message = callCursor.getString(1);
-            calls.add(new AlertCall(time, message));
-          } while (callCursor.moveToNext());
-        }
-        return new Alert(
-            id,
-            Instant.ofEpochMilli(alertCursor.getLong(0)),
-            alertCursor.getLong(1) > 0 ? Instant.ofEpochMilli(alertCursor.getLong(1)) : null,
-            alertCursor.getInt(3) == BOOLEAN_TRUE,
-            alertCursor.getLong(2) > 0 ? Instant.ofEpochMilli(alertCursor.getLong(2)) : null,
-            calls);
-      } else {
-        throw new IllegalStateException("No alert found with id: " + id);
-      }
-    }
-  }
-
 }

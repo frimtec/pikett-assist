@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.service.AlarmService;
+import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
@@ -22,7 +22,7 @@ public class AlertActivity extends AbstractAlarmActivity {
 
   private static final String TAG = "AlertActivity";
 
-  private AlarmService alarmService;
+  private AlertService alertService;
 
   public AlertActivity() {
     super(TAG, R.string.notification_alert_title, Pair.create(400, 200), SwipeButtonStyle.RED);
@@ -31,10 +31,10 @@ public class AlertActivity extends AbstractAlarmActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.alarmService = new AlarmService(this);
+    this.alertService = new AlertService(this);
     String smsNumber = getIntent().getStringExtra(EXTRA_SMS_NUMBER);
     String subscriptionId = getIntent().getStringExtra(EXTRA_SUBSCRIPTION_ID);
-    setSwipeAction(() -> alarmService.confirmAlarm(this, smsNumber, subscriptionId != null ? Integer.valueOf(subscriptionId) : null));
+    setSwipeAction(() -> alertService.confirmAlert(this, smsNumber, subscriptionId != null ? Integer.valueOf(subscriptionId) : null));
     setRingtone(RingtoneManager.getRingtone(this, getAlarmTone(this)));
   }
 

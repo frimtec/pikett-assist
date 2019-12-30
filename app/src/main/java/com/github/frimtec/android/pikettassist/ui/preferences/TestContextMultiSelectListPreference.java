@@ -1,49 +1,33 @@
 package com.github.frimtec.android.pikettassist.ui.preferences;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.MultiSelectListPreference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ID;
 
 public class TestContextMultiSelectListPreference extends MultiSelectListPreference {
 
   public TestContextMultiSelectListPreference(Context context, AttributeSet attrs) {
-    this(context, attrs, DbFactory.instance());
+    this(context, attrs, new TestAlarmDao());
   }
 
-  TestContextMultiSelectListPreference(Context context, AttributeSet attrs, DbFactory dbFactory) {
+  TestContextMultiSelectListPreference(Context context, AttributeSet attrs, TestAlarmDao testAlarmDao) {
     super(context, attrs);
-
-    List<CharSequence> validEntries = new ArrayList<>();
-    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, null, null, null, null, null)) {
-      if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-        do {
-          String id = cursor.getString(0);
-          validEntries.add(id);
-        } while (cursor.moveToNext());
-      }
-    }
-    Set<String> persistedEntries = SharedState.getSuperviseTestContexts(context);
-    Set<String> filteredEntries = persistedEntries.stream().filter(validEntries::contains).collect(Collectors.toSet());
+    Set<TestAlarmContext> testAlarmContexts = testAlarmDao.loadAllContexts();
+    Set<TestAlarmContext> persistedEntries = SharedState.getSupervisedTestAlarms(context);
+    Set<TestAlarmContext> filteredEntries = persistedEntries.stream().filter(testAlarmContexts::contains).collect(Collectors.toSet());
     if (!filteredEntries.containsAll(persistedEntries)) {
       SharedState.setSuperviseTestContexts(context, filteredEntries);
     }
+    Set<CharSequence> validEntries = testAlarmContexts.stream().map(TestAlarmContext::getContext).collect(Collectors.toSet());
     setEntries(validEntries.toArray(new CharSequence[]{}));
     setEntryValues(validEntries.toArray(new CharSequence[]{}));
     setOnPreferenceChangeListener((preference, newValue) -> {

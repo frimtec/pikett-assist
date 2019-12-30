@@ -20,22 +20,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.Action;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
-import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
-import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
-import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
-import com.github.frimtec.android.pikettassist.ui.support.LogcatActivity;
-import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
-import com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity;
-import com.github.frimtec.android.pikettassist.ui.shifts.ShiftListFragment;
-import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
+import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
+import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
+import com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity;
+import com.github.frimtec.android.pikettassist.ui.shifts.ShiftListFragment;
+import com.github.frimtec.android.pikettassist.ui.support.LogcatActivity;
+import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
+import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
+import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.android.billingclient.api.BillingClient.BillingResponseCode;
-import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -271,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
-            SharedState.getPikettState(context) == OnOffState.ON) {
+            CalendarEventHelper.getPikettState(context) == OnOffState.ON) {
           try {
             // wait for change
             Thread.sleep(2000);
@@ -283,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         refresh();
       }
     };
-    IntentFilter filter = new IntentFilter("com.github.frimtec.android.pikettassist.refresh");
+    IntentFilter filter = new IntentFilter(Action.REFRESH.getId());
     filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
     registerReceiver(broadcastReceiver, filter);
   }

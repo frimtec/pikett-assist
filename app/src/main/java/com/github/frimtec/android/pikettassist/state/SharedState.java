@@ -2,31 +2,20 @@ package com.github.frimtec.android.pikettassist.state;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.AlarmState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
-
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_TRUE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
-import static com.github.frimtec.android.pikettassist.utility.CalendarEventHelper.hasPikettEventForNow;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public final class SharedState {
 
@@ -65,29 +54,8 @@ public final class SharedState {
   private SharedState() {
   }
 
-  public static OnOffState getPikettState(Context context) {
-    return getPikettStateManuallyOn(context) || hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
-  }
-
-  public static Pair<AlarmState, Long> getAlarmState(DbFactory dbFactory) {
-    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor cursor = db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_IS_CONFIRMED}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null)) {
-      if (cursor.getCount() == 0) {
-        return Pair.create(AlarmState.OFF, null);
-      } else if (cursor.getCount() > 0)
-        if (cursor.getCount() > 1) {
-          Log.e(TAG, "More then one open case selected");
-        }
-      cursor.moveToFirst();
-      long id = cursor.getLong(0);
-      boolean confirmed = cursor.getInt(1) == BOOLEAN_TRUE;
-      return Pair.create(confirmed ? AlarmState.ON_CONFIRMED : AlarmState.ON, id);
-    }
-  }
-
   public static String getCalendarEventPikettTitlePattern(Context context) {
-    return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, context.getString(R.string.pref_default_calendar_event_pikett_title_pattern))
-        .trim();
+    return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, context.getString(R.string.pref_default_calendar_event_pikett_title_pattern)).trim();
   }
 
   public static String getCalendarSelection(Context context) {
@@ -103,8 +71,7 @@ public final class SharedState {
   }
 
   public static String getSmsTestMessagePattern(Context context) {
-    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern))
-        .trim();
+    return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern)).trim();
   }
 
   public static String getSmsConfirmText(Context context) {
@@ -133,10 +100,7 @@ public final class SharedState {
   }
 
   public static void setSuperviseSignalStrength(Context context, boolean supervise) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    SharedPreferences.Editor editor = preferences.edit();
-    editor.putBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, supervise);
-    editor.apply();
+    setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, supervise));
   }
 
   public static boolean getPikettStateManuallyOn(Context context) {
@@ -145,10 +109,7 @@ public final class SharedState {
   }
 
   public static void setPikettStateManuallyOn(Context context, boolean manuallyOn) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    SharedPreferences.Editor editor = preferences.edit();
-    editor.putBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, manuallyOn);
-    editor.apply();
+    setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, manuallyOn));
   }
 
   public static boolean getTestAlarmEnabled(Context context) {
@@ -166,9 +127,11 @@ public final class SharedState {
     return preferences.getString(PREF_KEY_TEST_ALARM_RING_TONE, "");
   }
 
-  public static Set<String> getSuperviseTestContexts(Context context) {
+  public static Set<TestAlarmContext> getSupervisedTestAlarms(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return new HashSet<>(preferences.getStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, Collections.emptySet()));
+    return preferences.getStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, Collections.emptySet()).stream()
+        .map(TestAlarmContext::new)
+        .collect(Collectors.toSet());
   }
 
   public static String getTestAlarmCheckTime(Context context) {
@@ -184,11 +147,10 @@ public final class SharedState {
     return Integer.parseInt(getSharedPreferences(context, PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES, context.getString(R.string.pref_default_test_alarm_accept_time_window_minutes)));
   }
 
-  public static void setSuperviseTestContexts(Context context, Set<String> values) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    SharedPreferences.Editor editor = preferences.edit();
-    editor.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, new HashSet<>(values));
-    editor.apply();
+  public static void setSuperviseTestContexts(Context context, Set<TestAlarmContext> values) {
+    setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, values.stream()
+        .map(TestAlarmContext::getContext)
+        .collect(Collectors.toSet())));
   }
 
   public static Pair<String, Integer> getLastAlarmSmsNumberWithSubscriptionId(Context context) {
@@ -212,10 +174,7 @@ public final class SharedState {
   }
 
   public static void setDefaultVolume(Context context, int volume) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    SharedPreferences.Editor editor = preferences.edit();
-    editor.putInt(PREF_KEY_DEFAULT_VOLUME, volume);
-    editor.apply();
+    setSharedPreferences(context, setter -> setter.putInt(PREF_KEY_DEFAULT_VOLUME, volume));
   }
 
   public static int getOnCallDayVolume(Context context) {
@@ -241,9 +200,13 @@ public final class SharedState {
   }
 
   private static void setSharedPreferences(Context context, String key, String value) {
+    setSharedPreferences(context, setter -> setter.putString(key, value));
+  }
+
+  private static void setSharedPreferences(Context context, Consumer<SharedPreferences.Editor> setter) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     SharedPreferences.Editor editor = preferences.edit();
-    editor.putString(key, value);
+    setter.accept(editor);
     editor.apply();
   }
 

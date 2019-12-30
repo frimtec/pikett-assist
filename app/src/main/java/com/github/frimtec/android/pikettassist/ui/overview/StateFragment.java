@@ -4,13 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,21 +40,24 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.AlarmState;
+import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
-import com.github.frimtec.android.pikettassist.service.AlarmService;
+import com.github.frimtec.android.pikettassist.service.AlertDao;
+import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.SharedState;
-import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.FragmentName;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertDetailActivity;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmDetailActivity;
+import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
 import com.github.frimtec.android.pikettassist.utility.ContactHelper;
 import com.github.frimtec.android.pikettassist.utility.Feature;
 import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
@@ -88,14 +88,6 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_END_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
@@ -108,7 +100,9 @@ import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.
 public class StateFragment extends AbstractListFragment<State> {
 
   public interface BillingAccess {
+
     List<BillingState> getProducts();
+
     void showDonationDialog();
   }
 
@@ -119,22 +113,24 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private final Random random = new Random(System.currentTimeMillis());
 
-  private AlarmService alarmService;
+  private AlertService alertService;
   private SecureSmsProxyFacade s2msp;
   private Activity activity;
   private BillingAccess billingAccess;
 
   private SignalStrengthHelper signalStrengthHelper;
-  private final DbFactory dbFactory;
+  private final AlertDao alertDao;
+  private final TestAlarmDao testAlarmDao;
 
   public StateFragment() {
-    this(DbFactory.instance());
+    this(new AlertDao(), new TestAlarmDao());
   }
 
   @SuppressLint("ValidFragment")
-  StateFragment(DbFactory dbFactory) {
+  StateFragment(AlertDao alertDao, TestAlarmDao testAlarmDao) {
     super(FragmentName.STATE);
-    this.dbFactory = dbFactory;
+    this.alertDao = alertDao;
+    this.testAlarmDao = testAlarmDao;
   }
 
   public void setActivityFacade(Activity parent, BillingAccess billingAccess) {
@@ -145,7 +141,7 @@ public class StateFragment extends AbstractListFragment<State> {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.alarmService = new AlarmService(this.getContext());
+    this.alertService = new AlertService(this.getContext());
     this.s2msp = SecureSmsProxyFacade.instance(this.getContext());
     this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
   }
@@ -365,14 +361,14 @@ public class StateFragment extends AbstractListFragment<State> {
       }
     });
 
-    OnOffState pikettState = SharedState.getPikettState(getContext());
-    Pair<AlarmState, Long> alarmState = SharedState.getAlarmState(this.dbFactory);
+    OnOffState pikettState = CalendarEventHelper.getPikettState(getContext());
+    Pair<AlertState, Long> alarmState = this.alertDao.getAlertState();
     State.TrafficLight alarmTrafficLight;
     String alarmValue;
-    if (alarmState.first == AlarmState.ON) {
+    if (alarmState.first == AlertState.ON) {
       alarmTrafficLight = RED;
       alarmValue = getString(R.string.alarm_state_on);
-    } else if (alarmState.first == AlarmState.ON_CONFIRMED) {
+    } else if (alarmState.first == AlertState.ON_CONFIRMED) {
       alarmTrafficLight = YELLOW;
       alarmValue = getString(R.string.alarm_state_on_confirmed);
     } else {
@@ -398,25 +394,17 @@ public class StateFragment extends AbstractListFragment<State> {
     }
 
     Supplier<Button> alarmCloseButtonSupplier = null;
-    if (alarmState.first != AlarmState.OFF) {
+    if (alarmState.first != AlertState.OFF) {
       alarmCloseButtonSupplier = () -> {
         Button button = new Button(getContext());
-        boolean unconfirmed = alarmState.first == AlarmState.ON;
+        boolean unconfirmed = alarmState.first == AlertState.ON;
         button.setText(unconfirmed ? getString(R.string.main_state_button_confirm_alert) : getString(R.string.main_state_button_close_alert));
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
         button.setOnClickListener(v -> {
           if (unconfirmed) {
-            alarmService.confirmAlarm();
+            this.alertService.confirmAlert();
           } else {
-            try (SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE)) {
-              ContentValues values = new ContentValues();
-              values.put("end_time", Instant.now().toEpochMilli());
-              int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " is null", null);
-              if (update != 1) {
-                Log.e(TAG, "One open case expected, but got " + update);
-              }
-            }
-            NotificationHelper.cancelNotification(getContext(), NotificationHelper.ALERT_NOTIFICATION_ID);
+            this.alertService.closeAlert();
           }
           refresh();
         });
@@ -498,30 +486,27 @@ public class StateFragment extends AbstractListFragment<State> {
 
           @Override
           public boolean onContextItemSelected(Context context, MenuItem item) {
-            switch (item.getItemId()) {
-              case MENU_CONTEXT_CREATE_ALARM_MANUALLY:
-                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-                builder.setTitle(getString(R.string.manually_created_alarm_reason));
-                EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setText(R.string.manually_created_alarm_reason_default);
-                input.requestFocus();
-                builder.setView(input);
-                builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
-                  dialog.dismiss();
-                  String comment = input.getText().toString();
-                  AlarmService alarmService = new AlarmService(getContext());
-                  alarmService.newManuallyAlarm(Instant.now(), comment);
-                  refresh();
-                });
-                builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
-                builder.show();
-                return true;
-              default:
-                return false;
+            if (item.getItemId() == MENU_CONTEXT_CREATE_ALARM_MANUALLY) {
+              AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+              builder.setTitle(getString(R.string.manually_created_alarm_reason));
+              EditText input = new EditText(getContext());
+              input.setInputType(InputType.TYPE_CLASS_TEXT);
+              input.setText(R.string.manually_created_alarm_reason_default);
+              input.requestFocus();
+              builder.setView(input);
+              builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+                dialog.dismiss();
+                String comment = input.getText().toString();
+                AlertService alertService = new AlertService(getContext());
+                alertService.newManuallyAlert(Instant.now(), comment);
+                refresh();
+              });
+              builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+              builder.show();
+              return true;
             }
+            return false;
           }
-
         },
         new State(R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp, networkOperatorName != null ? String.format("%s %s", getString(R.string.state_fragment_signal_level), networkOperatorName) : getString(R.string.state_fragment_signal_level),
             superviseSignalStrength ? (pikettState == OnOffState.ON ? signalStrength : getString(R.string.state_fragment_signal_level_supervise_enabled)) : getString(R.string.state_fragment_signal_level_supervise_disabled), null, signalStrengthTrafficLight) {
@@ -558,41 +543,37 @@ public class StateFragment extends AbstractListFragment<State> {
 
     if (SharedState.getTestAlarmEnabled(getContext())) {
       String lastReceived = getString(R.string.state_fragment_test_alarm_never_received);
-      for (String testContext : SharedState.getSuperviseTestContexts(getContext())) {
+      for (TestAlarmContext testAlarmContext : SharedState.getSupervisedTestAlarms(getContext())) {
         OnOffState testAlarmState = OnOffState.OFF;
         Supplier<Button> testAlarmCloseButtonSupplier = null;
-        try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY)) {
-          try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testContext}, null, null, null)) {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-              lastReceived = formatDateTime(cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null);
-              testAlarmState = OnOffState.valueOf(cursor.getString(2));
-
-              if (testAlarmState != OnOffState.OFF) {
-                testAlarmCloseButtonSupplier = () -> {
-                  Button button = new Button(getContext());
-
-                  button.setText(getString(R.string.main_state_button_close_alert));
-                  button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
-                  button.setOnClickListener(v -> {
-                    new TestAlarmDao().updateAlarmState(testContext, OnOffState.OFF);
-                    refresh();
-                  });
-                  return button;
-                };
-              }
-            }
-          }
-          states.add(new State(R.drawable.ic_test_alarm, testContext, lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
-            @Override
-            public void onClickAction(Context context) {
-              Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
-              Bundle bundle = new Bundle();
-              bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testContext);
-              intent.putExtras(bundle);
-              startActivity(intent);
-            }
-          });
+        Optional<TestAlarm> testAlarmDetails = this.testAlarmDao.loadDetails(testAlarmContext);
+        if (testAlarmDetails.isPresent()) {
+          TestAlarm details = testAlarmDetails.get();
+          lastReceived = formatDateTime(details.getReceivedTime());
+          testAlarmState = details.getAlertState();
         }
+        if (testAlarmState != OnOffState.OFF) {
+          testAlarmCloseButtonSupplier = () -> {
+            Button button = new Button(getContext());
+            button.setText(getString(R.string.main_state_button_close_alert));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10.0F);
+            button.setOnClickListener(v -> {
+              new TestAlarmDao().updateAlertState(testAlarmContext, OnOffState.OFF);
+              refresh();
+            });
+            return button;
+          };
+        }
+        states.add(new State(R.drawable.ic_test_alarm, testAlarmContext.getContext(), lastReceived, testAlarmCloseButtonSupplier, pikettState == OnOffState.ON ? (testAlarmState == OnOffState.ON ? RED : GREEN) : OFF) {
+          @Override
+          public void onClickAction(Context context) {
+            Intent intent = new Intent(getContext(), TestAlarmDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testAlarmContext.getContext());
+            intent.putExtras(bundle);
+            startActivity(intent);
+          }
+        });
       }
     }
 

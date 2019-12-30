@@ -21,10 +21,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.Action;
 import com.github.frimtec.android.pikettassist.utility.VibrateHelper;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
@@ -212,7 +214,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
       wakeLock.release();
     }
 
-    this.sendBroadcast(new Intent("com.github.frimtec.android.pikettassist.refresh"));
+    this.sendBroadcast(new Intent(Action.REFRESH.getId()));
   }
 
   protected static void trigger(

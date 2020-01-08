@@ -7,13 +7,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.Action;
+import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
+import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.ContactHelper;
-import com.github.frimtec.android.pikettassist.utility.SmsHelper;
+import com.github.frimtec.android.pikettassist.service.system.SmsService;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.github.frimtec.android.pikettassist.utility.SmsHelper.confirmSms;
 
 public class SmsListener extends BroadcastReceiver {
 
@@ -42,19 +40,22 @@ public class SmsListener extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
+    ContactDao contactDao = new ContactDao(context);
+    ShiftService shiftService = new ShiftService(context);
     if (Action.SMS_RECEIVED.getId().equals(intent.getAction())) {
+      SmsService smsService = new SmsService(context);
       Log.d(TAG, "SMS received");
-      List<Sms> receivedSms = SmsHelper.getSmsFromIntent(context, intent);
+      List<Sms> receivedSms = smsService.getSmsFromReceivedIntent(intent);
       receivedSms.stream()
           .filter(sms -> SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK.equals(sms.getNumber()))
           .forEach(sms -> Toast.makeText(context, context.getString(R.string.sms_listener_loopback_sms_received), Toast.LENGTH_SHORT).show());
-      if (CalendarEventHelper.getPikettState(context) == OnOffState.OFF) {
+      if (shiftService.getState() == OnOffState.OFF) {
         Log.d(TAG, "Drop SMS, not on-call");
         return;
       }
       long operationCenterContactId = SharedState.getAlarmOperationsCenterContact(context);
       for (Sms sms : receivedSms) {
-        Set<Long> contactIds = ContactHelper.lookupContactIdByPhoneNumber(context, sms.getNumber());
+        Set<Long> contactIds = contactDao.lookupContactIdByPhoneNumber(sms.getNumber());
         if (operationCenterContactId != SharedState.EMPTY_CONTACT && contactIds.contains(operationCenterContactId)) {
           Log.i(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context), Pattern.DOTALL);
@@ -62,7 +63,7 @@ public class SmsListener extends BroadcastReceiver {
           if (SharedState.getTestAlarmEnabled(context) && matcher.matches()) {
             TestAlarmContext testAlarmContext = new TestAlarmContext(matcher.groupCount() > 0 ? matcher.group(1) : context.getString(R.string.test_alarm_context_general));
             Log.i(TAG, "TEST alarm with context: " + testAlarmContext.getContext());
-            confirmSms(context, SharedState.getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
+            smsService.sendSms(SharedState.getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
             if (this.testAlarmDao.updateReceivedTestAlert(testAlarmContext, Instant.now(), sms.getText())) {
               Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(context);
               supervisedTestAlarmContexts.add(testAlarmContext);

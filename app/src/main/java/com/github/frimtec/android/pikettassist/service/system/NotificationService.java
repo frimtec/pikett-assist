@@ -1,20 +1,14 @@
-package com.github.frimtec.android.pikettassist.utility;
+package com.github.frimtec.android.pikettassist.service.system;
 
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -22,11 +16,10 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
-import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper.SignalLevel;
 
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 import static android.app.Notification.CATEGORY_ALARM;
 import static android.app.Notification.CATEGORY_EVENT;
@@ -35,7 +28,7 @@ import static android.app.NotificationManager.IMPORTANCE_LOW;
 import static android.app.NotificationManager.IMPORTANCE_MAX;
 
 
-public class NotificationHelper {
+public class NotificationService {
 
   public static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
@@ -48,7 +41,13 @@ public class NotificationHelper {
   private static final String CHANNEL_ID_NOTIFICATION = "com.github.frimtec.android.pikettassist.notification";
   private static final String CHANNEL_ID_CHANGE_SYSTEM = "com.github.frimtec.android.pikettassist.changeSystem";
 
-  public static void registerChannel(Context context) {
+  private final Context context;
+
+  public NotificationService(Context context) {
+    this.context = context;
+  }
+
+  public void registerChannel() {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
       NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
       if (notificationManager != null) {
@@ -60,13 +59,13 @@ public class NotificationHelper {
   }
 
   @RequiresApi(api = Build.VERSION_CODES.O)
-  private static void createChannel(NotificationManager notificationManager, String channelId, String name, String description, int importance) {
+  private void createChannel(NotificationManager notificationManager, String channelId, String name, String description, int importance) {
     NotificationChannel channel = new NotificationChannel(channelId, name, importance);
     channel.setDescription(description);
     notificationManager.createNotificationChannel(channel);
   }
 
-  public static void notifyAlarm(Context context, Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
+  public void notifyAlarm(Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
     actionIntent.setAction(action);
     PendingIntent confirmPendingIntent =
         PendingIntent.getBroadcast(context, 0, actionIntent, 0);
@@ -93,7 +92,7 @@ public class NotificationHelper {
     notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
   }
 
-  public static void notifyMissingTestAlarm(Context context, Intent notifyIntent, Set<TestAlarmContext> testAlarmContexts) {
+  public void notifyMissingTestAlarm(Intent notifyIntent, Set<TestAlarmContext> testAlarmContexts) {
     notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -114,7 +113,7 @@ public class NotificationHelper {
     notificationManagerCompat.notify(MISSING_TEST_ALARM_NOTIFICATION_ID, notification);
   }
 
-  public static void notifyShiftOn(Context context) {
+  public void notifyShiftOn() {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );
@@ -132,7 +131,7 @@ public class NotificationHelper {
     notificationManagerCompat.notify(SHIFT_NOTIFICATION_ID, notification);
   }
 
-  public static void notifySignalLow(Context context, SignalLevel level) {
+  public void notifySignalLow(SignalLevel level) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );
@@ -151,7 +150,7 @@ public class NotificationHelper {
     notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
   }
 
-  public static void notifyVolumeChanged(Context context, int oldLevel, int newLevel) {
+  public void notifyVolumeChanged(int oldLevel, int newLevel) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );
@@ -195,38 +194,9 @@ public class NotificationHelper {
     }
   }
 
-  public static void cancelNotification(Context context, int id) {
+  public void cancelNotification(int id) {
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.cancel(id);
   }
 
-  public static void infoDialog(Context context, int titleResourceId, int textResourceId, BiConsumer<DialogInterface, Integer> action) {
-    SpannableString message = new SpannableString(Html.fromHtml(context.getString(textResourceId), Html.FROM_HTML_MODE_COMPACT));
-    AlertDialog alertDialog = new AlertDialog.Builder(context)
-        // set dialog message
-        .setTitle(titleResourceId)
-        .setMessage(message)
-        .setCancelable(true)
-        .setPositiveButton("OK", action::accept).create();
-    alertDialog.show();
-    ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-  }
-
-  public static void requirePermissions(Context context, int titleResourceId, int textResourceId, BiConsumer<DialogInterface, Integer> action) {
-    AlertDialog alertDialog = new AlertDialog.Builder(context)
-        .setTitle(context.getString(R.string.permission_required) + " " + context.getString(titleResourceId))
-        .setMessage(textResourceId)
-        .setCancelable(true)
-        .setPositiveButton("OK", action::accept)
-        .create();
-    alertDialog.show();
-  }
-
-  public static void areYouSure(Context context, DialogInterface.OnClickListener onYes, DialogInterface.OnClickListener onNo) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setMessage(R.string.general_are_you_sure)
-        .setPositiveButton(R.string.general_yes, onYes)
-        .setNegativeButton(R.string.general_no, onNo)
-        .show();
-  }
 }

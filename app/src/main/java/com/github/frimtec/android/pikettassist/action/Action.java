@@ -1,4 +1,4 @@
-package com.github.frimtec.android.pikettassist.domain;
+package com.github.frimtec.android.pikettassist.action;
 
 public enum Action {
   REFRESH("com.github.frimtec.android.pikettassist.refresh"),

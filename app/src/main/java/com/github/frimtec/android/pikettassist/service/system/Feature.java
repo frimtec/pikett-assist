@@ -1,4 +1,4 @@
-package com.github.frimtec.android.pikettassist.utility;
+package com.github.frimtec.android.pikettassist.service.system;
 
 import android.Manifest;
 import android.app.Fragment;
@@ -12,6 +12,7 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,8 +23,8 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.github.frimtec.android.pikettassist.utility.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
-import static com.github.frimtec.android.pikettassist.utility.Feature.RequestCodes.PERMISSION_CHANGED_REQUEST_CODE;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.PERMISSION_CHANGED_REQUEST_CODE;
 
 public enum Feature {
   PERMISSION_CONTACTS_READ(true, true, R.string.permission_contacts_title, context -> allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions()), (context, fragment) -> {
@@ -42,7 +43,7 @@ public enum Feature {
     requestPermissions(fragment, PermissionSets.NON_CRITICAL.getPermissions());
   }),
   SETTING_DRAW_OVERLAYS(false, false, R.string.notification_draw_overlays_title, Settings::canDrawOverlays, (context, fragment) -> {
-    NotificationHelper.infoDialog(context, R.string.notification_draw_overlays_title, R.string.notification_draw_overlays_text, (dialogInterface, integer) -> {
+    DialogHelper.infoDialog(context, R.string.notification_draw_overlays_title, R.string.notification_draw_overlays_text, (dialogInterface, integer) -> {
       Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
       fragment.startActivityForResult(intent, FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
     });
@@ -51,7 +52,7 @@ public enum Feature {
     PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
     return pm.isIgnoringBatteryOptimizations(context.getPackageName());
   }, (context, fragment) -> {
-    NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_text,
+    DialogHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_text,
         (dialogInterface, integer) -> fragment.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
   });
 
@@ -95,7 +96,7 @@ public enum Feature {
   }
 
   private static void requestPermissionsWithExplanation(Context context, Fragment fragment, String[] permissions, int titleResourceId, int textResourceId) {
-    NotificationHelper.requirePermissions(context, titleResourceId, textResourceId, (dialogInterface, integer) -> requestPermissions(fragment, permissions));
+    DialogHelper.requirePermissions(context, titleResourceId, textResourceId, (dialogInterface, integer) -> requestPermissions(fragment, permissions));
   }
 
   private static void requestPermissions(Fragment fragment, String[] permissions) {

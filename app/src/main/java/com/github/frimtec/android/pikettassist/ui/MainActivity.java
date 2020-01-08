@@ -20,14 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.Action;
+import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
@@ -36,8 +38,6 @@ import com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivit
 import com.github.frimtec.android.pikettassist.ui.shifts.ShiftListFragment;
 import com.github.frimtec.android.pikettassist.ui.support.LogcatActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     this.s2msp = SecureSmsProxyFacade.instance(this);
     registerReceiver();
-    NotificationHelper.registerChannel(this);
+    new NotificationService(this).registerChannel();
 
     setContentView(R.layout.activity_main);
 
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
       @Override
       public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
-            CalendarEventHelper.getPikettState(context) == OnOffState.ON) {
+            new ShiftService(context).getState() == OnOffState.ON) {
           try {
             // wait for change
             Thread.sleep(2000);

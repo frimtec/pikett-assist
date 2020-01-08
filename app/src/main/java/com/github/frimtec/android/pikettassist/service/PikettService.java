@@ -6,13 +6,13 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.domain.Action;
-import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.state.SharedState;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.Feature;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
-import com.github.frimtec.android.pikettassist.utility.VolumeHelper;
+import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
+import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
@@ -28,8 +28,16 @@ public class PikettService extends IntentService {
   private static final String TAG = "PikettService";
   private static final Duration MAX_SLEEP = Duration.ofHours(24);
 
+  private ShiftDao shiftDao;
+
   public PikettService() {
     super(TAG);
+  }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    this.shiftDao = new ShiftDao(this);
   }
 
   @Override
@@ -48,8 +56,8 @@ public class PikettService extends IntentService {
       Log.w(TAG, "Not all required permissions are granted. Services is stopped.");
       return;
     }
-    Instant now = PikettShift.now();
-    Optional<PikettShift> first = CalendarEventHelper.getPikettShifts(this, SharedState.getCalendarEventPikettTitlePattern(this), SharedState.getCalendarSelection(this))
+    Instant now = Shift.now();
+    Optional<Shift> first = this.shiftDao.getShifts(SharedState.getCalendarEventPikettTitlePattern(this), SharedState.getCalendarSelection(this))
         .stream().filter(shift -> !shift.isOver(now)).findFirst();
     Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime(true) : shift.getStartTime(true)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
     long waitMs = Math.min(Duration.between(now, nextRun).toMillis(), MAX_SLEEP.toMillis());
@@ -57,24 +65,25 @@ public class PikettService extends IntentService {
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
     boolean manageVolumeEnabled = SharedState.getManageVolumeEnabled(this);
-    VolumeHelper volumeHelper = manageVolumeEnabled ? new VolumeHelper(this) : null;
-    if (SharedState.getPikettStateManuallyOn(this) || first.map(PikettShift::isNow).orElse(false)) {
-      NotificationHelper.notifyShiftOn(this);
+    VolumeService volumeService = manageVolumeEnabled ? new VolumeService(this) : null;
+    NotificationService notificationService = new NotificationService(this);
+    if (SharedState.getPikettStateManuallyOn(this) || first.map(Shift::isNow).orElse(false)) {
+      notificationService.notifyShiftOn();
       if (manageVolumeEnabled) {
         int defaultVolume = SharedState.getDefaultVolume(this);
         if (defaultVolume == DEFAULT_VALUE_NOT_SET) {
-          SharedState.setDefaultVolume(this, volumeHelper.getVolume());
-          volumeHelper.setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
+          SharedState.setDefaultVolume(this, volumeService.getVolume());
+          volumeService.setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
         }
       }
       this.startService(new Intent(this, SignalStrengthService.class));
       this.startService(new Intent(this, TestAlarmService.class));
     } else {
-      NotificationHelper.cancelNotification(this, NotificationHelper.SHIFT_NOTIFICATION_ID);
+      notificationService.cancelNotification(NotificationService.SHIFT_NOTIFICATION_ID);
       if (manageVolumeEnabled) {
         int defaultVolume = SharedState.getDefaultVolume(this);
         if (defaultVolume != DEFAULT_VALUE_NOT_SET) {
-          volumeHelper.setVolume(defaultVolume);
+          volumeService.setVolume(defaultVolume);
           SharedState.setDefaultVolume(this, DEFAULT_VALUE_NOT_SET);
         }
       }

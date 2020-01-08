@@ -1,13 +1,12 @@
-package com.github.frimtec.android.pikettassist.utility;
+package com.github.frimtec.android.pikettassist.service.dao;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.provider.CalendarContract;
 
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.domain.PikettShift;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.domain.Shift;
 
 import org.threeten.bp.Instant;
 
@@ -17,26 +16,16 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
-import static com.github.frimtec.android.pikettassist.state.SharedState.getCalendarEventPikettTitlePattern;
-import static com.github.frimtec.android.pikettassist.state.SharedState.getPikettStateManuallyOn;
 
-public final class CalendarEventHelper {
+public final class ShiftDao {
 
-  private CalendarEventHelper() {
+  private final ContentResolver contentResolver;
+
+  public ShiftDao(Context context) {
+    this.contentResolver = context.getContentResolver();
   }
 
-
-  public static OnOffState getPikettState(Context context) {
-    return getPikettStateManuallyOn(context) || hasPikettEventForNow(context, getCalendarEventPikettTitlePattern(context), SharedState.getCalendarSelection(context)) ? OnOffState.ON : OnOffState.OFF;
-  }
-
-
-  public static boolean hasPikettEventForNow(Context context, String eventTitleFilterPattern, String calendarSelection) {
-    return getPikettShifts(context, eventTitleFilterPattern, calendarSelection).stream()
-        .anyMatch(PikettShift::isNow);
-  }
-
-  public static List<PikettShift> getPikettShifts(Context context, String eventTitleFilterPattern, String calendarSelection) {
+  public List<Shift> getShifts(String eventTitleFilterPattern, String calendarSelection) {
     String[] projection = new String[]{
         CalendarContract.Events._ID,
         CalendarContract.Events.TITLE,
@@ -55,8 +44,8 @@ public final class CalendarEventHelper {
       selection = selection + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?)";
       args = new String[]{calendarSelection};
     }
-    List<PikettShift> events = new LinkedList<>();
-    try (Cursor cursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
+    List<Shift> events = new LinkedList<>();
+    try (Cursor cursor = this.contentResolver.query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);
@@ -66,7 +55,7 @@ public final class CalendarEventHelper {
 
           Pattern pattern = Pattern.compile(eventTitleFilterPattern, Pattern.CASE_INSENSITIVE);
           if (pattern.matcher(nonNullString(eventTitle)).matches()) {
-            events.add(new PikettShift(id, eventTitle, eventStartTime, eventEndTime));
+            events.add(new Shift(id, eventTitle, eventStartTime, eventEndTime));
           }
         } while (cursor.moveToNext());
       }

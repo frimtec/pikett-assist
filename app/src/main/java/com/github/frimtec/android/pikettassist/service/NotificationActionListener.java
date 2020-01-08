@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.domain.Action;
+import com.github.frimtec.android.pikettassist.action.Action;
 
-import static com.github.frimtec.android.pikettassist.utility.NotificationHelper.ACTION_CLOSE_ALARM;
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.ACTION_CLOSE_ALARM;
 
 public class NotificationActionListener extends BroadcastReceiver {
 

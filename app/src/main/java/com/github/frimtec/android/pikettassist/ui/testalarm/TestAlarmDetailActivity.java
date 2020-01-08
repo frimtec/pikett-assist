@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Instant;

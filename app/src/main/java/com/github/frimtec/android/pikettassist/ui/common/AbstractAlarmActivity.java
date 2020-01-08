@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.media.Ringtone;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.os.Vibrator;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Window;
@@ -21,8 +20,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.Action;
-import com.github.frimtec.android.pikettassist.utility.VibrateHelper;
+import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.service.system.VibrateService;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
@@ -58,7 +57,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   };
 
   private PowerManager.WakeLock wakeLock;
-  private Vibrator vibrate;
+  private VibrateService vibrateService;
 
   public AbstractAlarmActivity(
       String tag,
@@ -92,6 +91,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     Log.v(tag, "onCreate");
     super.onCreate(savedInstanceState);
+    this.vibrateService = new VibrateService(this);
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
     Objects.requireNonNull(pm);
     wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, tag + ":alarm");
@@ -171,7 +171,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
         }
       }, 1000, 1000);
     }
-    vibrate = VibrateHelper.vibrate(this, vibrationPattern.first, vibrationPattern.second);
+    this.vibrateService.vibrate(vibrationPattern.first, vibrationPattern.second);
   }
 
   @Override
@@ -203,7 +203,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
       }
       ringtone.stop();
     }
-    vibrate.cancel();
+    this.vibrateService.cancel();
   }
 
   @Override

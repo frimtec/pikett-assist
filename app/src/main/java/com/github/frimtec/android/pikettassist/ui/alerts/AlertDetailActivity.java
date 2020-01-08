@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
-import com.github.frimtec.android.pikettassist.service.AlertDao;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 
 public class AlertDetailActivity extends AppCompatActivity {
 

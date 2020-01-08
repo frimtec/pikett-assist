@@ -3,7 +3,7 @@ package com.github.frimtec.android.pikettassist.domain;
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 
-public class PikettShift {
+public class Shift {
 
   static final Duration TIME_TOLERANCE = Duration.ofMinutes(5);
 
@@ -12,7 +12,7 @@ public class PikettShift {
   private final Instant startTime;
   private final Instant endTime;
 
-  public PikettShift(long id, String title, Instant startTime, Instant endTime) {
+  public Shift(long id, String title, Instant startTime, Instant endTime) {
     this.id = id;
     this.title = title;
     this.startTime = startTime;

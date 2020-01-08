@@ -9,11 +9,11 @@ import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.ZonedDateTime;
@@ -30,8 +30,9 @@ public class TestAlarmService extends IntentService {
   private static final String PARAM_INITIAL = "initial";
 
   private final TestAlarmDao testAlarmDao;
-  private OnOffState pikettState;
+  private OnOffState shiftState;
   private AlarmManager alarmManager;
+  private ShiftService shiftService;
 
   @SuppressWarnings("unused")
   public TestAlarmService() {
@@ -47,15 +48,16 @@ public class TestAlarmService extends IntentService {
   public void onCreate() {
     super.onCreate();
     this.alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+    this.shiftService = new ShiftService(this);
   }
 
   @Override
   public void onHandleIntent(Intent intent) {
     boolean initial = intent.getBooleanExtra(PARAM_INITIAL, true);
     Context context = getApplicationContext();
-    this.pikettState = CalendarEventHelper.getPikettState(context);
-    Log.i(TAG, "Service cycle; pikett state: " + pikettState + "; initial: " + initial);
-    if (!initial && SharedState.getTestAlarmEnabled(context) && this.pikettState == OnOffState.ON) {
+    this.shiftState = this.shiftService.getState();
+    Log.i(TAG, "Service cycle; shift state: " + shiftState + "; initial: " + initial);
+    if (!initial && SharedState.getTestAlarmEnabled(context) && this.shiftState == OnOffState.ON) {
       ZonedDateTime now = ZonedDateTime.now();
       ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
       Set<TestAlarmContext> missingTestAlarmContextContexts = SharedState.getSupervisedTestAlarms(context).stream()
@@ -67,8 +69,7 @@ public class TestAlarmService extends IntentService {
       });
 
       if (!missingTestAlarmContextContexts.isEmpty()) {
-        NotificationHelper.notifyMissingTestAlarm(
-            context,
+        new NotificationService(context).notifyMissingTestAlarm(
             new Intent(context, MainActivity.class),
             missingTestAlarmContextContexts
         );
@@ -80,7 +81,7 @@ public class TestAlarmService extends IntentService {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    if (this.pikettState == OnOffState.OFF) {
+    if (this.shiftState == OnOffState.OFF) {
       Log.i(TAG, "End service");
       return;
     }

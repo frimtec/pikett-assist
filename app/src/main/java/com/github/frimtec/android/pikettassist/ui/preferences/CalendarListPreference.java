@@ -13,7 +13,7 @@ import com.github.frimtec.android.pikettassist.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.frimtec.android.pikettassist.utility.Feature.PERMISSION_CALENDAR_READ;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public class CalendarListPreference extends ListPreference {

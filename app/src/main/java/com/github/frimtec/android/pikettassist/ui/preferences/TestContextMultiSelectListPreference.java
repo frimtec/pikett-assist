@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import java.util.Set;

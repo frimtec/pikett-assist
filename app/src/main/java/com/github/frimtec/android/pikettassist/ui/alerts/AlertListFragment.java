@@ -19,12 +19,12 @@ import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.service.AlertDao;
 import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.service.ShiftService;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
+import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.Feature;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
+import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import org.threeten.bp.Instant;
 
@@ -80,7 +80,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
         showAlertDetails(selectedAlert);
         return true;
       case MENU_CONTEXT_DELETE_ID:
-        NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
+        DialogHelper.areYouSure(getContext(), (dialog, which) -> {
           this.alertDao.delete(selectedAlert);
           refresh();
           Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();
@@ -95,7 +95,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   @Override
   protected Optional<View.OnClickListener> addAction() {
     if (Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
-        CalendarEventHelper.getPikettState(getContext()) == OnOffState.ON) {
+        new ShiftService(getContext()).getState() == OnOffState.ON) {
       return Optional.of(view -> {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getString(R.string.manually_created_alarm_reason));

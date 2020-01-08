@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.utility.Feature;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
+import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 
 public class AutoStart extends BroadcastReceiver {
 
@@ -17,7 +17,7 @@ public class AutoStart extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
       Log.i(TAG, "Received: BOOT_COMPLETED");
-      NotificationHelper.registerChannel(context);
+      new NotificationService(context).registerChannel();
       if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O || Feature.SETTING_BATTERY_OPTIMIZATION_OFF.isAllowed(context)) {
         Log.i(TAG, "Start PikettService in background");
         context.startService(new Intent(context, PikettService.class));

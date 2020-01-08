@@ -5,21 +5,24 @@ import android.content.Intent;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
-import com.github.frimtec.android.pikettassist.utility.SmsHelper;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.service.system.SmsService;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.threeten.bp.Instant;
 
-import static com.github.frimtec.android.pikettassist.utility.NotificationHelper.ACTION_CLOSE_ALARM;
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.ACTION_CLOSE_ALARM;
 
 public class AlertService {
 
   private final Context context;
   private final AlertDao alertDao;
+  private final SmsService smsService;
+  private final NotificationService notificationService;
 
   public AlertService(Context context) {
     this(context, new AlertDao());
@@ -28,6 +31,8 @@ public class AlertService {
   AlertService(Context context, AlertDao alertDao) {
     this.context = context;
     this.alertDao = alertDao;
+    this.smsService = new SmsService(context);
+    this.notificationService = new NotificationService(context);
   }
 
   public void newAlert(Sms sms) {
@@ -39,8 +44,7 @@ public class AlertService {
 
   public void newManuallyAlert(Instant startTime, String reason) {
     this.alertDao.insertOrUpdateAlert(startTime, String.format("%s: %s", context.getString(R.string.manually_created_alarm_reason_prefix), reason), true);
-    NotificationHelper.notifyAlarm(
-        context,
+    notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,
         context.getString(R.string.alert_action_close),
@@ -49,15 +53,14 @@ public class AlertService {
   }
 
   public void confirmAlert() {
-    final Pair<String, Integer> smsNumberWithSubscriptionId = SharedState.getLastAlarmSmsNumberWithSubscriptionId(context);
-    confirmAlert(context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);
+    Pair<String, Integer> smsNumberWithSubscriptionId = SharedState.getLastAlarmSmsNumberWithSubscriptionId(context);
+    confirmAlert(this.context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);
   }
 
   public void confirmAlert(Context context, String smsNumber, Integer subscriptionId) {
     this.alertDao.confirmOpenAlert();
-    SmsHelper.confirmSms(context, SharedState.getSmsConfirmText(context), smsNumber, subscriptionId);
-    NotificationHelper.notifyAlarm(
-        context,
+    this.smsService.sendSms(SharedState.getSmsConfirmText(context), smsNumber, subscriptionId);
+    notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,
         context.getString(R.string.alert_action_close),
@@ -67,6 +70,6 @@ public class AlertService {
 
   public void closeAlert() {
     this.alertDao.closeOpenAlert();
-    NotificationHelper.cancelNotification(context, NotificationHelper.ALERT_NOTIFICATION_ID);
+    notificationService.cancelNotification(NotificationService.ALERT_NOTIFICATION_ID);
   }
 }

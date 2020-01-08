@@ -46,23 +46,22 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
-import com.github.frimtec.android.pikettassist.service.AlertDao;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
-import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
+import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
-import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
+import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
+import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
+import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.FragmentName;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertDetailActivity;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
+import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmDetailActivity;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.ContactHelper;
-import com.github.frimtec.android.pikettassist.utility.Feature;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
-import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper;
-import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper.SignalLevel;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
@@ -86,15 +85,16 @@ import java.util.function.Supplier;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static com.github.frimtec.android.pikettassist.domain.Contact.unknown;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
-import static com.github.frimtec.android.pikettassist.utility.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
-import static com.github.frimtec.android.pikettassist.utility.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
-import static com.github.frimtec.android.pikettassist.utility.Feature.SETTING_DRAW_OVERLAYS;
 import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.S2MSP_PACKAGE_NAME;
 
 public class StateFragment extends AbstractListFragment<State> {
@@ -118,9 +118,10 @@ public class StateFragment extends AbstractListFragment<State> {
   private Activity activity;
   private BillingAccess billingAccess;
 
-  private SignalStrengthHelper signalStrengthHelper;
+  private SignalStrengthService signalStrengthService;
   private final AlertDao alertDao;
   private final TestAlarmDao testAlarmDao;
+  private ContactDao contactDao;
 
   public StateFragment() {
     this(new AlertDao(), new TestAlarmDao());
@@ -141,15 +142,16 @@ public class StateFragment extends AbstractListFragment<State> {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.alertService = new AlertService(this.getContext());
-    this.s2msp = SecureSmsProxyFacade.instance(this.getContext());
-    this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
+    this.alertService = new AlertService(getContext());
+    this.s2msp = SecureSmsProxyFacade.instance(getContext());
+    this.signalStrengthService = new SignalStrengthService(getContext());
+    this.contactDao = new ContactDao(getContext());
   }
 
   @Override
   public void onResume() {
     // the configured subscription may have been changed
-    this.signalStrengthHelper = new SignalStrengthHelper(this.getContext());
+    this.signalStrengthService = new SignalStrengthService(this.getContext());
     super.onResume();
   }
 
@@ -170,7 +172,7 @@ public class StateFragment extends AbstractListFragment<State> {
         getContext().startService(new Intent(getContext(), PikettService.class));
       }
     } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
-      Contact contact = ContactHelper.getContact(getContext(), data.getData());
+      Contact contact = this.contactDao.getContact(data.getData()).orElse(unknownContact());
       SharedState.setAlarmOperationsCenterContact(getContext(), contact);
     } else {
       super.onActivityResult(requestCode, resultCode, data);
@@ -228,7 +230,7 @@ public class StateFragment extends AbstractListFragment<State> {
   private void regularStates(List<State> states) {
     Installation installation = this.s2msp.getInstallation();
     boolean installed = installation.getAppVersion().isPresent();
-    Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
+    Set<String> phoneNumbers = this.contactDao.getPhoneNumbers(SharedState.getAlarmOperationsCenterContact(getContext()));
     boolean allowed = phoneNumbers.isEmpty() || s2msp.isAllowed(phoneNumbers);
     boolean newVersion = installed && installation.getApiVersion().compareTo(installation.getAppVersion().get()) > 0;
     PowerManager pm = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
@@ -249,7 +251,7 @@ public class StateFragment extends AbstractListFragment<State> {
         }
         if (smsAdapterSmsPermission) {
           if (!allowed) {
-            Set<String> phoneNumbers = ContactHelper.getPhoneNumbers(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()));
+            Set<String> phoneNumbers = StateFragment.this.contactDao.getPhoneNumbers(SharedState.getAlarmOperationsCenterContact(getContext()));
             StateFragment.this.s2msp.register(StateFragment.this.activity, 1000, phoneNumbers, SmsListener.class);
             return;
           }
@@ -258,7 +260,7 @@ public class StateFragment extends AbstractListFragment<State> {
             return;
           }
           if (batteryOptimisationOn) {
-            NotificationHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2msp_text,
+            DialogHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2msp_text,
                 (dialogInterface, integer) -> startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
             return;
           }
@@ -361,7 +363,7 @@ public class StateFragment extends AbstractListFragment<State> {
       }
     });
 
-    OnOffState pikettState = CalendarEventHelper.getPikettState(getContext());
+    OnOffState pikettState = new ShiftService(getContext()).getState();
     Pair<AlertState, Long> alarmState = this.alertDao.getAlertState();
     State.TrafficLight alarmTrafficLight;
     String alarmValue;
@@ -377,9 +379,9 @@ public class StateFragment extends AbstractListFragment<State> {
     }
 
     boolean superviseSignalStrength = SharedState.getSuperviseSignalStrength(getContext());
-    SignalLevel level = this.signalStrengthHelper.getSignalStrength();
+    SignalLevel level = this.signalStrengthService.getSignalStrength();
     String signalStrength = level.toString(getContext());
-    String networkOperatorName = this.signalStrengthHelper.getNetworkOperatorName();
+    String networkOperatorName = this.signalStrengthService.getNetworkOperatorName();
     State.TrafficLight signalStrengthTrafficLight;
     if (!superviseSignalStrength) {
       signalStrengthTrafficLight = YELLOW;
@@ -414,7 +416,7 @@ public class StateFragment extends AbstractListFragment<State> {
 
     boolean pikettStateManuallyOn = SharedState.getPikettStateManuallyOn(getContext());
     states.addAll(Arrays.asList(
-        new OperationsCenterState(this, ContactHelper.getContact(getContext(), SharedState.getAlarmOperationsCenterContact(getContext()))),
+        new OperationsCenterState(this, StateFragment.this.contactDao.getContact(SharedState.getAlarmOperationsCenterContact(getContext())).orElse(unknownContact())),
         new State(
             R.drawable.ic_eye,
             getString(R.string.state_fragment_pikett_state),
@@ -439,13 +441,13 @@ public class StateFragment extends AbstractListFragment<State> {
             switch (item.getItemId()) {
               case MENU_CONTEXT_SET_MANUALLY_ON:
                 SharedState.setPikettStateManuallyOn(context, true);
-                context.startService(new Intent(context, SignalStrengthService.class));
+                context.startService(new Intent(context, com.github.frimtec.android.pikettassist.service.SignalStrengthService.class));
                 context.startService(new Intent(context, PikettService.class));
                 StateFragment.this.refresh();
                 return true;
               case MENU_CONTEXT_RESET:
                 SharedState.setPikettStateManuallyOn(context, false);
-                context.startService(new Intent(context, SignalStrengthService.class));
+                context.startService(new Intent(context, com.github.frimtec.android.pikettassist.service.SignalStrengthService.class));
                 context.startService(new Intent(context, PikettService.class));
                 StateFragment.this.refresh();
                 return true;
@@ -650,5 +652,9 @@ public class StateFragment extends AbstractListFragment<State> {
     } else {
       return super.onContextItemSelected(item);
     }
+  }
+
+  private Contact unknownContact() {
+    return unknown(getContext().getString(R.string.contact_helper_unknown_contact));
   }
 }

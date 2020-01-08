@@ -9,9 +9,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
+import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Instant;
@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
-import static com.github.frimtec.android.pikettassist.utility.Feature.PERMISSION_CALENDAR_READ;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
 
-public class ShiftListFragment extends AbstractListFragment<PikettShift> {
+public class ShiftListFragment extends AbstractListFragment<Shift> {
 
   public ShiftListFragment() {
     super(SHIFTS);
@@ -32,7 +32,7 @@ public class ShiftListFragment extends AbstractListFragment<PikettShift> {
   protected void configureListView(ListView listView) {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {
-      PikettShift selectedShift = (PikettShift) listView.getItemAtPosition(position);
+      Shift selectedShift = (Shift) listView.getItemAtPosition(position);
       long eventId = selectedShift.getId();
       Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
       Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
@@ -41,14 +41,14 @@ public class ShiftListFragment extends AbstractListFragment<PikettShift> {
   }
 
   @Override
-  protected ArrayAdapter<PikettShift> createAdapter() {
-    List<PikettShift> shifts;
+  protected ArrayAdapter<Shift> createAdapter() {
+    List<Shift> shifts;
     if (!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
       Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {
-      Instant now = PikettShift.now();
-      shifts = CalendarEventHelper.getPikettShifts(getContext(), SharedState.getCalendarEventPikettTitlePattern(getContext()), SharedState.getCalendarSelection(getContext()))
+      Instant now = Shift.now();
+      shifts = new ShiftDao(getContext()).getShifts(SharedState.getCalendarEventPikettTitlePattern(getContext()), SharedState.getCalendarSelection(getContext()))
           .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
       if (shifts.isEmpty()) {
         Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();

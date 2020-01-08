@@ -16,7 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.Action;
+import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 
 import java.util.Collections;

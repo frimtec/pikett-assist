@@ -18,10 +18,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.service.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
+import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -88,7 +88,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
         showTestAlarmDetails(selectedItem);
         return true;
       case MENU_CONTEXT_DELETE_ID:
-        NotificationHelper.areYouSure(getContext(), (dialog, which) -> {
+        DialogHelper.areYouSure(getContext(), (dialog, which) -> {
           deleteTestAlarm(selectedItem);
           refresh();
           Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();

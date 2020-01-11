@@ -1,4 +1,4 @@
-package com.github.frimtec.android.pikettassist.utility;
+package com.github.frimtec.android.pikettassist.service.system;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,16 +18,16 @@ import com.github.frimtec.android.pikettassist.state.SharedState;
 import java.util.List;
 import java.util.Objects;
 
-public class SignalStrengthHelper {
+public class SignalStrengthService {
 
-  private static final String TAG = "SignalStrengthHelper";
+  private static final String TAG = "SignalStrengthService";
   private final TelephonyManager telephonyManager;
 
-  public SignalStrengthHelper(Context context) {
+  public SignalStrengthService(Context context) {
     this(context, SharedState.getSuperviseSignalStrengthSubscription(context));
   }
 
-  public SignalStrengthHelper(Context context, int subscriptionId) {
+  public SignalStrengthService(Context context, int subscriptionId) {
     TelephonyManager mainTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     Objects.requireNonNull(mainTelephonyManager);
     TelephonyManager subscriptionTelephonyManager = mainTelephonyManager.createForSubscriptionId(subscriptionId);

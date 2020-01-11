@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper;
+import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,8 @@ public class TelephoneSubscriptionPreference extends ListPreference {
     List<CharSequence> entriesValues = new ArrayList<>();
 
     for (int i = 0; i < MAX_SUPPORTED_SIMS; i++) {
-      SignalStrengthHelper signalStrengthHelper = new SignalStrengthHelper(context, i);
-      String networkOperatorName = signalStrengthHelper.getNetworkOperatorName();
+      SignalStrengthService signalStrengthService = new SignalStrengthService(context, i);
+      String networkOperatorName = signalStrengthService.getNetworkOperatorName();
       if (networkOperatorName != null) {
         entriesValues.add(String.valueOf(i));
         entries.add(String.format("%s %d: %s", context.getString(R.string.subscription), i, networkOperatorName));

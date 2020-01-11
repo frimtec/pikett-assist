@@ -1,19 +1,20 @@
-package com.github.frimtec.android.pikettassist.utility;
+package com.github.frimtec.android.pikettassist.service.system;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
 
-public class VolumeHelper {
+public class VolumeService {
 
-  private static final String TAG = "VolumeHelper";
+  private static final String TAG = "VolumeService";
 
   private static final int MAX_LEVEL = 7;
   private static final int MIN_LEVEL = 0;
+
   private final AudioManager audioManager;
   private final Context context;
 
-  public VolumeHelper(Context context) {
+  public VolumeService(Context context) {
     this.audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     this.context = context;
   }
@@ -27,7 +28,7 @@ public class VolumeHelper {
     int currentLevel = audioManager.getStreamVolume(AudioManager.STREAM_RING);
     if (currentLevel != desiredLevel) {
       this.audioManager.setStreamVolume(AudioManager.STREAM_RING, desiredLevel, 0);
-      NotificationHelper.notifyVolumeChanged(context, currentLevel, desiredLevel);
+      new NotificationService(context).notifyVolumeChanged(currentLevel, desiredLevel);
       Log.i(TAG, String.format("Change volume from %d to %d.", currentLevel, desiredLevel));
     }
   }

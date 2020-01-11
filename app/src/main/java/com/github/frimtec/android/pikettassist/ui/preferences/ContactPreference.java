@@ -9,15 +9,20 @@ import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
-import com.github.frimtec.android.pikettassist.utility.ContactHelper;
+import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
-import static com.github.frimtec.android.pikettassist.utility.Feature.PERMISSION_CONTACTS_READ;
+import static com.github.frimtec.android.pikettassist.domain.Contact.unknown;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CONTACTS_READ;
 
 public class ContactPreference extends RingtonePreference {
 
+
+  private final ContactDao contactDao;
+
   public ContactPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.contactDao = new ContactDao(context);
   }
 
   @Override
@@ -32,7 +37,7 @@ public class ContactPreference extends RingtonePreference {
     if (super.onActivityResult(requestCode, resultCode, data)) {
       if (data != null) {
         Uri contactUri = data.getData();
-        Contact contact = ContactHelper.getContact(getContext(), contactUri);
+        Contact contact = this.contactDao.getContact(contactUri).orElse(unknownContact());
         persistString(String.valueOf(contact.getId()));
         setSummary(contact.getName());
         return true;
@@ -53,12 +58,14 @@ public class ContactPreference extends RingtonePreference {
   private String getValue(String preferenceValue) {
     if (!preferenceValue.isEmpty()) {
       if(PERMISSION_CONTACTS_READ.isAllowed(getContext())) {
-        return ContactHelper.getContact(getContext(), Long.parseLong(preferenceValue)).getName();
+        return this.contactDao.getContact(Long.parseLong(preferenceValue)).orElse(unknownContact()).getName();
       }
       return preferenceValue;
     }
     return getContext().getString(R.string.contact_preference_empty_selection);
   }
 
-
+  private Contact unknownContact() {
+    return unknown(getContext().getString(R.string.contact_helper_unknown_contact));
+  }
 }

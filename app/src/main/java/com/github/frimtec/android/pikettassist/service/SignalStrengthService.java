@@ -11,13 +11,12 @@ import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
+import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
-import com.github.frimtec.android.pikettassist.utility.CalendarEventHelper;
-import com.github.frimtec.android.pikettassist.utility.NotificationHelper;
-import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper;
-import com.github.frimtec.android.pikettassist.utility.SignalStrengthHelper.SignalLevel;
-import com.github.frimtec.android.pikettassist.utility.VolumeHelper;
 
 import org.threeten.bp.LocalTime;
 
@@ -32,6 +31,7 @@ public class SignalStrengthService extends IntentService {
   private TelephonyManager telephonyManager;
   private boolean pikettState = false;
   private AlertDao alertDao;
+  private ShiftService shiftService;
 
   public SignalStrengthService() {
     super(TAG);
@@ -43,15 +43,16 @@ public class SignalStrengthService extends IntentService {
     this.alarmManager = (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
     this.telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
     this.alertDao = new AlertDao();
+    this.shiftService = new ShiftService(this);
   }
 
   @Override
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
-    this.pikettState = CalendarEventHelper.getPikettState(this) == OnOffState.ON;
-    SignalLevel level = new SignalStrengthHelper(this).getSignalStrength();
+    this.pikettState = this.shiftService.getState() == OnOffState.ON;
+    SignalLevel level = new com.github.frimtec.android.pikettassist.service.system.SignalStrengthService(this).getSignalStrength();
     if (this.pikettState && SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
-      NotificationHelper.notifySignalLow(this, level);
+      new NotificationService(this).notifySignalLow(level);
       LowSignalAlarmActivity.trigger(this, this.alarmManager);
     }
   }
@@ -73,7 +74,7 @@ public class SignalStrengthService extends IntentService {
     super.onDestroy();
     if (this.pikettState) {
       if (SharedState.getManageVolumeEnabled(this)) {
-        new VolumeHelper(this).setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
+        new VolumeService(this).setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
       }
       this.alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + CHECK_INTERVAL_MS,
           PendingIntent.getService(this, 0, new Intent(this, SignalStrengthService.class), 0)

@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.PikettShift;
+import com.github.frimtec.android.pikettassist.domain.Shift;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
@@ -20,18 +20,18 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-class ShiftArrayAdapter extends ArrayAdapter<PikettShift> {
+class ShiftArrayAdapter extends ArrayAdapter<Shift> {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
 
-  ShiftArrayAdapter(Context context, List<PikettShift> shifts) {
+  ShiftArrayAdapter(Context context, List<Shift> shifts) {
     super(context, 0, shifts);
   }
 
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    PikettShift shift = getItem(position);
+    Shift shift = getItem(position);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
     }

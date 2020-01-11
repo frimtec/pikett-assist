@@ -1,4 +1,4 @@
-package com.github.frimtec.android.pikettassist.service;
+package com.github.frimtec.android.pikettassist.service.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;

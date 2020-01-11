@@ -22,7 +22,6 @@ class UiManager implements RowViewHolder.OnButtonClickListener {
   }
 
   final RowViewHolder onCreateViewHolder(ViewGroup parent, @ArticleAdapter.RowTypeDef int viewType) {
-    // Selecting a flat layout for header rows
     if (viewType == ArticleAdapter.TYPE_HEADER) {
       View item = LayoutInflater.from(parent.getContext())
           .inflate(R.layout.sku_details_row_header, parent, false);

@@ -1,7 +1,7 @@
 package com.github.frimtec.android.pikettassist.action;
 
 public enum Action {
-  REFRESH("com.github.frimtec.android.pikettassist.refresh"),
+  REFRESH("com.github.frimtec.android.pikettassist.REFRESH"),
   SMS_RECEIVED("com.github.frimtec.android.securesmsproxy.SMS_RECEIVED");
 
   private final String id;

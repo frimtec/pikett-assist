@@ -1,13 +1,12 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.Ringtone;
 import android.os.Bundle;
-import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Window;
@@ -21,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.service.system.AlarmService;
+import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.VibrateService;
 
 import org.threeten.bp.Duration;
@@ -56,7 +57,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   private Runnable swipeAction = () -> {
   };
 
-  private PowerManager.WakeLock wakeLock;
+  private WakeLock wakeLock;
   private VibrateService vibrateService;
 
   public AbstractAlarmActivity(
@@ -92,10 +93,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     Log.v(tag, "onCreate");
     super.onCreate(savedInstanceState);
     this.vibrateService = new VibrateService(this);
-    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    Objects.requireNonNull(pm);
-    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, tag + ":alarm");
-    Objects.requireNonNull(wakeLock);
+    this.wakeLock = new PowerService(this).newWakeLock("alarmActivity");
     if (!wakeLock.isHeld()) {
       wakeLock.acquire(0);
     }
@@ -219,13 +217,13 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
 
   protected static void trigger(
       Class<? extends AbstractAlarmActivity> activityClass,
-      Context context, AlarmManager alarmManager,
+      Context context,
+      AlarmService alarmService,
       List<Pair<String, String>> extras) {
     Intent alarmIntent = new Intent(context, activityClass);
     extras.forEach(extra -> alarmIntent.putExtra(extra.first, extra.second));
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
         1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-    Objects.requireNonNull(alarmManager);
-    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Instant.now().toEpochMilli() + 5, pendingIntent);
+    alarmService.setAlarmAbsolute(Instant.now().toEpochMilli() + 5, pendingIntent);
   }
 }

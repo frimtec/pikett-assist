@@ -3,6 +3,7 @@ package com.github.frimtec.android.pikettassist.donation;
 import android.view.ViewGroup;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.annotation.Retention;
@@ -16,44 +17,46 @@ public class ArticleAdapter extends RecyclerView.Adapter<RowViewHolder> implemen
    */
   @Retention(SOURCE)
   @IntDef({TYPE_HEADER, TYPE_NORMAL})
-  public @interface RowTypeDef {}
-  public static final int TYPE_HEADER = 0;
-  public static final int TYPE_NORMAL = 1;
+  @interface RowTypeDef {}
+  static final int TYPE_HEADER = 0;
+  static final int TYPE_NORMAL = 1;
 
-  private UiManager mUiManager;
-  private List<SkuRowData> mListData;
+  private UiManager uiManager;
+  private List<SkuRowData> listData;
 
   void setUiManager(UiManager uiManager) {
-    mUiManager = uiManager;
+    this.uiManager = uiManager;
   }
 
   void updateData(List<SkuRowData> data) {
-    mListData = data;
+    listData = data;
     notifyDataSetChanged();
   }
 
   @Override
-  public @RowTypeDef int getItemViewType(int position) {
-    return mListData == null ? TYPE_HEADER : mListData.get(position).getRowType();
+  @RowTypeDef
+  public int getItemViewType(int position) {
+    return listData == null ? TYPE_HEADER : listData.get(position).getRowType();
   }
 
   @Override
-  public RowViewHolder onCreateViewHolder(ViewGroup parent, @RowTypeDef int viewType) {
-    return mUiManager.onCreateViewHolder(parent, viewType);
+  @NonNull
+  public RowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, @RowTypeDef int viewType) {
+    return uiManager.onCreateViewHolder(parent, viewType);
   }
 
   @Override
-  public void onBindViewHolder(RowViewHolder holder, int position) {
-    mUiManager.onBindViewHolder(getData(position), holder);
+  public void onBindViewHolder(@NonNull RowViewHolder holder, int position) {
+    uiManager.onBindViewHolder(getData(position), holder);
   }
 
   @Override
   public int getItemCount() {
-    return mListData == null ? 0 : mListData.size();
+    return listData == null ? 0 : listData.size();
   }
 
   @Override
   public SkuRowData getData(int position) {
-    return mListData == null ? null : mListData.get(position);
+    return listData == null ? null : listData.get(position);
   }
 }

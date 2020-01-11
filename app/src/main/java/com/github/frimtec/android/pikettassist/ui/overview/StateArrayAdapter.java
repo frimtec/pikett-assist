@@ -20,6 +20,7 @@ import com.github.frimtec.android.pikettassist.R;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
@@ -42,9 +43,8 @@ class StateArrayAdapter extends ArrayAdapter<State> {
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    // Get the data item for this position
     State state = getItem(position);
-    // Check if an existing view is being reused, otherwise inflate the view
+    Objects.requireNonNull(state);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.state_item, parent, false);
     }

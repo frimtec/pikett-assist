@@ -11,12 +11,12 @@ import com.github.frimtec.android.pikettassist.R;
 
 final class RowViewHolder extends RecyclerView.ViewHolder {
 
-  TextView title, price;
-  Button button;
-  ImageView skuIcon;
+  final TextView title;
+  final TextView price;
+  final Button button;
+  final ImageView skuIcon;
 
   public interface OnButtonClickListener {
-
     void onButtonClicked(int position);
   }
 

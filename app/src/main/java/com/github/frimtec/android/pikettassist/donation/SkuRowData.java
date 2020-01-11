@@ -7,22 +7,22 @@ public class SkuRowData {
 
   private final SkuDetails details;
   private final String title;
-  private @RowTypeDef
-  int type;
+  @RowTypeDef
+  private int type;
 
-  public SkuRowData(SkuDetails details, @RowTypeDef int rowType) {
+  SkuRowData(SkuDetails details) {
     this.details = details;
     this.title = details.getDescription();
-    this.type = rowType;
+    this.type = ArticleAdapter.TYPE_NORMAL;
   }
 
-  public SkuRowData(String title) {
+  SkuRowData(String title) {
     this.details = null;
     this.title = title;
     this.type = ArticleAdapter.TYPE_HEADER;
   }
 
-  public SkuDetails getSkuDetails() {
+  SkuDetails getSkuDetails() {
     return details;
   }
 
@@ -30,11 +30,11 @@ public class SkuRowData {
     return title;
   }
 
-  public String getPrice() {
+  String getPrice() {
     return details.getPrice();
   }
 
-  public @RowTypeDef
+  @RowTypeDef
   int getRowType() {
     return type;
   }

@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.donation;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -94,14 +95,11 @@ public class DonationFragment extends DialogFragment {
     errorTextView.setVisibility(View.VISIBLE);
     int billingResponseCode = billingProvider.getBillingManager().getBillingClientResponseCode();
 
-    switch (billingResponseCode) {
-      case BillingClient.BillingResponseCode.BILLING_UNAVAILABLE:
-        errorTextView.setText(getText(R.string.error_billing_unavailable));
-        break;
-      default:
-        errorTextView.setText(getText(R.string.error_billing_default));
+    if (billingResponseCode == BillingClient.BillingResponseCode.BILLING_UNAVAILABLE) {
+      errorTextView.setText(getText(R.string.error_billing_unavailable));
+    } else {
+      errorTextView.setText(getText(R.string.error_billing_default));
     }
-
   }
 
   private void querySkuDetails() {
@@ -128,14 +126,17 @@ public class DonationFragment extends DialogFragment {
             // Then fill all the other rows
 
             skuDetailsList.stream().sorted(Comparator.comparing(SkuDetails::getOriginalPriceAmountMicros).reversed()).forEach(skuDetails ->
-                inList.add(new SkuRowData(skuDetails, ArticleAdapter.TYPE_NORMAL)));
+                inList.add(new SkuRowData(skuDetails)));
             if (inList.size() == 0) {
               displayAnErrorIfNeeded();
             } else {
               if (recyclerView.getAdapter() == null) {
                 recyclerView.setAdapter(adapter);
-                Resources res = getContext().getResources();
-                recyclerView.addItemDecoration(new CardsWithHeadersDecoration(adapter, (int) res.getDimension(R.dimen.header_gap), (int) res.getDimension(R.dimen.row_gap)));
+                Context context = getContext();
+                if (context != null) {
+                  Resources res = getContext().getResources();
+                  recyclerView.addItemDecoration(new CardsWithHeadersDecoration(adapter, (int) res.getDimension(R.dimen.header_gap), (int) res.getDimension(R.dimen.row_gap)));
+                }
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
               }
               adapter.updateData(inList);

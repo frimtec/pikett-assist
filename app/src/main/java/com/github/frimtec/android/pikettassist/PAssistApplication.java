@@ -41,8 +41,7 @@ public class PAssistApplication extends Application {
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");
   }
 
-
-  public void handleUncaughtException(Thread thread, Throwable e) {
+  private void handleUncaughtException(Thread thread, Throwable e) {
     Log.e(TAG, "Unhandled exception occurred", e);
     Intent intent = new Intent();
     intent.setAction(ACTION_SEND_LOG);

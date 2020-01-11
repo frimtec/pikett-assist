@@ -1,6 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -10,6 +9,7 @@ import android.util.Pair;
 import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
@@ -37,8 +37,8 @@ public class MissingTestAlarmAlarmActivity extends AbstractAlarmActivity {
     return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
   }
 
-  public static void trigger(Context context, AlarmManager alarmManager) {
-    AbstractAlarmActivity.trigger(MissingTestAlarmAlarmActivity.class, context, alarmManager, Collections.emptyList());
+  public static void trigger(Context context, AlarmService alarmService) {
+    AbstractAlarmActivity.trigger(MissingTestAlarmAlarmActivity.class, context, alarmService, Collections.emptyList());
   }
 
 }

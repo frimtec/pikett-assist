@@ -26,7 +26,7 @@ public class TelephoneSubscriptionPreference extends ListPreference {
       String networkOperatorName = signalStrengthService.getNetworkOperatorName();
       if (networkOperatorName != null) {
         entriesValues.add(String.valueOf(i));
-        entries.add(String.format("%s %d: %s", context.getString(R.string.subscription), i, networkOperatorName));
+        entries.add(String.format("%s %s: %s", context.getString(R.string.subscription), String.valueOf(i + 1), networkOperatorName));
       } else {
         Log.d(TAG, "No phone manager for subscriptionId " + i);
       }

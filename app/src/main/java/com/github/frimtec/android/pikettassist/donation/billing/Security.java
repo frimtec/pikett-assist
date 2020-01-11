@@ -30,8 +30,9 @@ final class Security {
    * @throws IOException if encoding algorithm is not supported or key specification
    * is invalid
    */
-  static boolean verifyPurchase(String base64PublicKey, String signedData,
-                                       String signature) throws IOException {
+  static boolean verifyPurchase(@SuppressWarnings("SameParameterValue") String base64PublicKey,
+                                String signedData,
+                                String signature) throws IOException {
     if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey)
         || TextUtils.isEmpty(signature)) {
       BillingHelper.logWarn(TAG, "Purchase verification failed: missing data.");

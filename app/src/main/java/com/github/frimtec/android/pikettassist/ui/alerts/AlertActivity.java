@@ -1,7 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -10,6 +8,7 @@ import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
@@ -50,7 +49,7 @@ public class AlertActivity extends AbstractAlarmActivity {
     AbstractAlarmActivity.trigger(
         AlertActivity.class,
         context,
-        (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE),
+        new AlarmService(context),
         Arrays.asList(Pair.create(EXTRA_SMS_NUMBER, smsNumber), Pair.create(EXTRA_SUBSCRIPTION_ID, subscriptionId != null ? String.valueOf(subscriptionId) : null))
     );
   }

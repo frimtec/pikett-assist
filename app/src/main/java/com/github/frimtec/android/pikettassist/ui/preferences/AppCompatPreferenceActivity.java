@@ -8,10 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
@@ -38,11 +37,8 @@ abstract class AppCompatPreferenceActivity extends PreferenceActivity {
     return getDelegate().getSupportActionBar();
   }
 
-  public void setSupportActionBar(@Nullable Toolbar toolbar) {
-    getDelegate().setSupportActionBar(toolbar);
-  }
-
   @Override
+  @NonNull
   public MenuInflater getMenuInflater() {
     return getDelegate().getMenuInflater();
   }
@@ -80,7 +76,7 @@ abstract class AppCompatPreferenceActivity extends PreferenceActivity {
   }
 
   @Override
-  public void onConfigurationChanged(Configuration newConfig) {
+  public void onConfigurationChanged(@NonNull Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     getDelegate().onConfigurationChanged(newConfig);
   }

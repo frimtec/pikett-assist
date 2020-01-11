@@ -1,18 +1,17 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.domain.Shift;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
+import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
@@ -29,6 +28,7 @@ public class PikettService extends IntentService {
   private static final Duration MAX_SLEEP = Duration.ofHours(24);
 
   private ShiftDao shiftDao;
+  private AlarmService alarmService;
 
   public PikettService() {
     super(TAG);
@@ -38,6 +38,7 @@ public class PikettService extends IntentService {
   public void onCreate() {
     super.onCreate();
     this.shiftDao = new ShiftDao(this);
+    this.alarmService = new AlarmService(this);
   }
 
   @Override
@@ -62,8 +63,6 @@ public class PikettService extends IntentService {
     Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime(true) : shift.getStartTime(true)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
     long waitMs = Math.min(Duration.between(now, nextRun).toMillis(), MAX_SLEEP.toMillis());
     Log.i(TAG, "Next run in " + waitMs);
-    AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-
     boolean manageVolumeEnabled = SharedState.getManageVolumeEnabled(this);
     VolumeService volumeService = manageVolumeEnabled ? new VolumeService(this) : null;
     NotificationService notificationService = new NotificationService(this);
@@ -88,8 +87,6 @@ public class PikettService extends IntentService {
         }
       }
     }
-    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
-        PendingIntent.getService(this, 0, new Intent(this, PikettService.class), 0)
-    );
+    this.alarmService.setAlarmRelative(waitMs, new Intent(this, PikettService.class));
   }
 }

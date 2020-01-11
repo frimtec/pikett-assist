@@ -15,7 +15,7 @@ import com.github.frimtec.android.pikettassist.state.SharedState;
 import static com.github.frimtec.android.pikettassist.domain.Contact.unknown;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CONTACTS_READ;
 
-public class ContactPreference extends RingtonePreference {
+class ContactPreference extends RingtonePreference {
 
 
   private final ContactDao contactDao;

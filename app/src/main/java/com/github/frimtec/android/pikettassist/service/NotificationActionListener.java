@@ -17,13 +17,11 @@ public class NotificationActionListener extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
     if (action != null) {
-      switch (action) {
-        case ACTION_CLOSE_ALARM:
-          new AlertService(context).closeAlert();
-          context.sendBroadcast(new Intent(Action.REFRESH.getId()));
-          break;
-        default:
-          Log.e(TAG, "Unknown action: " + action);
+      if (ACTION_CLOSE_ALARM.equals(action)) {
+        new AlertService(context).closeAlert();
+        context.sendBroadcast(new Intent(Action.REFRESH.getId()));
+      } else {
+        Log.e(TAG, "Unknown action: " + action);
       }
     }
   }

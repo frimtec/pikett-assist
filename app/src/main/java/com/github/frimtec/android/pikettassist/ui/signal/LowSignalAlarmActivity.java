@@ -1,13 +1,13 @@
 package com.github.frimtec.android.pikettassist.ui.signal;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
+import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
 import org.threeten.bp.Duration;
 
@@ -27,8 +27,8 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
     }, Duration.ofSeconds(1));
   }
 
-  public static void trigger(Context context, AlarmManager alarmManager) {
-    AbstractAlarmActivity.trigger(LowSignalAlarmActivity.class, context, alarmManager, Collections.emptyList());
+  public static void trigger(Context context, AlarmService alarmService) {
+    AbstractAlarmActivity.trigger(LowSignalAlarmActivity.class, context, alarmService, Collections.emptyList());
   }
 
 }

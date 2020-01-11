@@ -20,23 +20,23 @@ import java.util.stream.Collectors;
 public final class SharedState {
 
   public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
-  public static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
-  public static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
+  private static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
+  private static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
   public static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
   public static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
   public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
-  public static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
+  private static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
   public static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
-  public static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
-  public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
-  public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL = "supervise_signal_strength_min_level";
-  public static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION = "supervise_signal_strength_subscription";
-  public static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
-  public static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
-  public static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
+  private static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
+  private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
+  private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL = "supervise_signal_strength_min_level";
+  private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION = "supervise_signal_strength_subscription";
+  private static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
+  private static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
+  private static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String CALENDAR_FILTER_ALL = "-1";
-  public static final String PREF_KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state_manually_on";
+  private static final String PREF_KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state_manually_on";
   private static final String PREF_KEY_DEFAULT_VOLUME = "default_volume";
   private static final String PREF_KEY_MANAGE_VOLUME = "manage_volume";
   private static final String PREF_KEY_ON_CALL_DAY_VOLUME = "on_call_day_volume";
@@ -48,8 +48,6 @@ public final class SharedState {
   private static final String LAST_ALARM_SMS_NUMBER = "last_alarm_sms_number";
 
   public static final long EMPTY_CONTACT = -1;
-
-  private static final String TAG = "SharedState";
 
   private SharedState() {
   }
@@ -177,7 +175,7 @@ public final class SharedState {
     setSharedPreferences(context, setter -> setter.putInt(PREF_KEY_DEFAULT_VOLUME, volume));
   }
 
-  public static int getOnCallDayVolume(Context context) {
+  private static int getOnCallDayVolume(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getInt(PREF_KEY_ON_CALL_DAY_VOLUME, R.integer.default_volume_day);
   }
@@ -186,16 +184,16 @@ public final class SharedState {
     return currentTime.isAfter(getDayProfileStartTime(context)) && currentTime.isBefore(getNightProfileStartTime(context)) ? getOnCallDayVolume(context) : getOnCallNightVolume(context);
   }
 
-  public static int getOnCallNightVolume(Context context) {
+  private static int getOnCallNightVolume(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getInt(PREF_KEY_ON_CALL_NIGHT_VOLUME, R.integer.default_volume_night);
   }
 
-  public static LocalTime getDayProfileStartTime(Context context) {
+  private static LocalTime getDayProfileStartTime(Context context) {
     return LocalTime.parse(getSharedPreferences(context, PREF_KEY_DAY_START_TIME, context.getString(R.string.pref_default_day_start_time)), DateTimeFormatter.ISO_TIME);
   }
 
-  public static LocalTime getNightProfileStartTime(Context context) {
+  private static LocalTime getNightProfileStartTime(Context context) {
     return LocalTime.parse(getSharedPreferences(context, PREF_KEY_NIGHT_START_TIME, context.getString(R.string.pref_default_night_start_time)), DateTimeFormatter.ISO_TIME);
   }
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.PowerManager;
 import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
@@ -49,8 +48,7 @@ public enum Feature {
     });
   }),
   SETTING_BATTERY_OPTIMIZATION_OFF(false, false, R.string.notification_battery_optimization_title, context -> {
-    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-    return pm.isIgnoringBatteryOptimizations(context.getPackageName());
+    return new PowerService(context).isIgnoringBatteryOptimizations(context.getPackageName());
   }, (context, fragment) -> {
     DialogHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_text,
         (dialogInterface, integer) -> fragment.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
@@ -104,8 +102,7 @@ public enum Feature {
   }
 
   public static final class RequestCodes {
-
-    public final static int PERMISSION_CHANGED_REQUEST_CODE = 1;
+    public static final int PERMISSION_CHANGED_REQUEST_CODE = 1;
     public static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
   }
 

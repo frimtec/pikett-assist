@@ -16,11 +16,8 @@ import java.util.stream.Collectors;
 public class TestContextMultiSelectListPreference extends MultiSelectListPreference {
 
   public TestContextMultiSelectListPreference(Context context, AttributeSet attrs) {
-    this(context, attrs, new TestAlarmDao());
-  }
-
-  TestContextMultiSelectListPreference(Context context, AttributeSet attrs, TestAlarmDao testAlarmDao) {
     super(context, attrs);
+    TestAlarmDao testAlarmDao = new TestAlarmDao();
     Set<TestAlarmContext> testAlarmContexts = testAlarmDao.loadAllContexts();
     Set<TestAlarmContext> persistedEntries = SharedState.getSupervisedTestAlarms(context);
     Set<TestAlarmContext> filteredEntries = persistedEntries.stream().filter(testAlarmContexts::contains).collect(Collectors.toSet());
@@ -33,6 +30,7 @@ public class TestContextMultiSelectListPreference extends MultiSelectListPrefere
     setOnPreferenceChangeListener((preference, newValue) -> {
       String summary = newValue.toString();
       if (Set.class.isAssignableFrom(newValue.getClass())) {
+        //noinspection unchecked
         summary = toSummary((Set) newValue);
       }
       TestContextMultiSelectListPreference.this.setSummary(summary);

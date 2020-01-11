@@ -110,7 +110,7 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
     executeServiceRequest(purchaseFlowRequest);
   }
 
-  public Context getContext() {
+  private Context getContext() {
     return activity;
   }
 

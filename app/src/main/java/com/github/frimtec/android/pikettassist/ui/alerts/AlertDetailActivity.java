@@ -20,6 +20,7 @@ public class AlertDetailActivity extends AppCompatActivity {
 
   private final AlertDao alertDao;
 
+  @SuppressWarnings("unused")
   public AlertDetailActivity() {
     this(new AlertDao());
   }

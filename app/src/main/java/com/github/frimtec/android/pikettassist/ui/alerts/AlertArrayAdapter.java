@@ -14,6 +14,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 
 import java.util.List;
+import java.util.Objects;
 
 class AlertArrayAdapter extends ArrayAdapter<Alert> {
 
@@ -25,6 +26,7 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     Alert alert = getItem(position);
+    Objects.requireNonNull(alert);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_log_item, parent, false);
     }

@@ -51,10 +51,11 @@ import java.util.Map;
 import static com.android.billingclient.api.BillingClient.BillingResponseCode;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
+import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REGISTER_SMS_ADAPTER_REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity {
 
-  public static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
+  private static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
   private BroadcastReceiver broadcastReceiver;
   private StateFragment stateFragment;
   private ShiftListFragment shiftListFragment;
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == 1000) {
+    if (requestCode == REGISTER_SMS_ADAPTER_REQUEST_CODE) {
       RegistrationResult result = s2msp.getRegistrationResult(resultCode, data);
       result.getSecret().ifPresent(secret -> SharedState.setSmsAdapterSecret(this, secret));
 
@@ -250,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  void showDonationDialog() {
+  private void showDonationDialog() {
     if (donationFragment == null) {
       donationFragment = new DonationFragment();
     }

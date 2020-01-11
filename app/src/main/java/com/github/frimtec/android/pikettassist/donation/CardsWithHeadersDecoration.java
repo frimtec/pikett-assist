@@ -3,37 +3,41 @@ package com.github.frimtec.android.pikettassist.donation;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CardsWithHeadersDecoration extends RecyclerView.ItemDecoration {
+class CardsWithHeadersDecoration extends RecyclerView.ItemDecoration {
 
-  private final RowDataProvider mRowDataProvider;
-  private final int mHeaderGap, mRowGap;
+  private final RowDataProvider rowDataProvider;
+  private final int headerGap;
+  private final int rowGap;
 
-  public CardsWithHeadersDecoration(RowDataProvider rowDataProvider, int headerGap,
-                                    int rowGap) {
-    this.mRowDataProvider = rowDataProvider;
-    this.mHeaderGap = headerGap;
-    this.mRowGap = rowGap;
+  CardsWithHeadersDecoration(RowDataProvider rowDataProvider, int headerGap, int rowGap) {
+    this.rowDataProvider = rowDataProvider;
+    this.headerGap = headerGap;
+    this.rowGap = rowGap;
   }
 
   @Override
-  public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                             RecyclerView.State state) {
+  public void getItemOffsets(
+      @NonNull Rect outRect,
+      @NonNull View view,
+      RecyclerView parent,
+      @NonNull RecyclerView.State state) {
 
-    final int position = parent.getChildAdapterPosition(view);
-    final SkuRowData data = mRowDataProvider.getData(position);
+    int position = parent.getChildAdapterPosition(view);
+    SkuRowData data = rowDataProvider.getData(position);
 
-    // We should add a space on top of every header card
     if (data.getRowType() == ArticleAdapter.TYPE_HEADER) {
-      outRect.top = mHeaderGap;
+      outRect.top = headerGap;
     }
-
-    // Adding a space under the last item
-    if (position == parent.getAdapter().getItemCount() - 1) {
-      outRect.bottom = mHeaderGap;
-    } else {
-      outRect.bottom = mRowGap;
+    RecyclerView.Adapter adapter = parent.getAdapter();
+    if (adapter != null) {
+      if (position == adapter.getItemCount() - 1) {
+        outRect.bottom = headerGap;
+      } else {
+        outRect.bottom = rowGap;
+      }
     }
   }
 }

@@ -21,13 +21,13 @@ class OperationsCenterState extends State {
   private static final int MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID = 2;
   private static final int MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID = 3;
 
-  private final StateFragment stateFragment;
+  private final StateContext stateContext;
   private final Contact operationCenter;
 
-  OperationsCenterState(StateFragment stateFragment, Contact operationCenter) {
-    super(R.drawable.ic_phone_black_24dp, stateFragment.getString(R.string.state_fragment_operations_center), operationCenter.getName(), null, operationCenter.isValid() ? TrafficLight.GREEN : TrafficLight.RED);
-    this.stateFragment = stateFragment;
-    this.operationCenter = operationCenter;
+  OperationsCenterState(StateContext stateContext) {
+    super(R.drawable.ic_phone_black_24dp, stateContext.getString(R.string.state_fragment_operations_center), stateContext.getOperationCenter().getName(), null, stateContext.getOperationCenter().isValid() ? TrafficLight.GREEN : TrafficLight.RED);
+    this.stateContext = stateContext;
+    this.operationCenter = stateContext.getOperationCenter();
   }
 
   @Override
@@ -59,9 +59,9 @@ class OperationsCenterState extends State {
         actionSelectContact();
         return true;
       case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
-        DialogHelper.areYouSure(stateFragment.getContext(), (dialog, which) -> {
+        DialogHelper.areYouSure(stateContext.getContext(), (dialog, which) -> {
           SharedState.setAlarmOperationsCenterContact(context, Contact.unknown(context.getString(R.string.contact_helper_unknown_contact)));
-          stateFragment.refresh();
+          stateContext.refreshFragment();
         }, (dialog, which) -> {
         });
         return true;
@@ -73,13 +73,13 @@ class OperationsCenterState extends State {
   private void actionSelectContact() {
     Intent intent = new Intent(Intent.ACTION_PICK);
     intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-    stateFragment.startActivityForResult(intent, REQUEST_CODE_SELECT_PHONE_NUMBER);
+    stateContext.startActivityForResultAction(intent, REQUEST_CODE_SELECT_PHONE_NUMBER);
   }
 
   private void actionViewContact(long alarmOperationsCenterContact) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
     intent.setData(uri);
-    stateFragment.startActivity(intent);
+    stateContext.getContext().startActivity(intent);
   }
 }

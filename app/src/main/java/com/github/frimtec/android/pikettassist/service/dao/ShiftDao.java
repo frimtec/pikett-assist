@@ -1,27 +1,35 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Shift;
 
 import org.threeten.bp.Instant;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
 
 public final class ShiftDao {
 
+  private static final String TAG = "ShiftDao";
+
+  private final Context context;
   private final ContentResolver contentResolver;
 
   public ShiftDao(Context context) {
+    this.context = context;
     this.contentResolver = context.getContentResolver();
   }
 
@@ -44,8 +52,12 @@ public final class ShiftDao {
       selection = selection + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?)";
       args = new String[]{calendarSelection};
     }
+    if(!PERMISSION_CALENDAR_READ.isAllowed(context)) {
+      Log.e(TAG, "No permissions to read calendar");
+      return Collections.emptyList();
+    }
     List<Shift> events = new LinkedList<>();
-    try (Cursor cursor = this.contentResolver.query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
+    try (@SuppressLint("MissingPermission") Cursor cursor = this.contentResolver.query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);

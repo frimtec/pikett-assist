@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import com.github.frimtec.android.pikettassist.R;
 
-public class AlarmRingtonePreference extends RingtonePreference {
+class AlarmRingtonePreference extends RingtonePreference {
 
   public AlarmRingtonePreference(Context context, AttributeSet attrs) {
     super(context, attrs);

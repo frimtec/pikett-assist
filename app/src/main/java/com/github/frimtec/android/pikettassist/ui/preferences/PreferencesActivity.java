@@ -57,6 +57,7 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
   };
 
   private static final Preference.OnPreferenceChangeListener sBindPreferenceSummaryToWeekdaysListener = (preference, value) -> {
+    //noinspection unchecked
     preference.setSummary(weekDaysValues(preference, (Set) value));
     return true;
   };

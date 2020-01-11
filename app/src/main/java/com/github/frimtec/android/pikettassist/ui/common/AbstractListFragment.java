@@ -22,7 +22,7 @@ public abstract class AbstractListFragment<T> extends Fragment {
   private final FragmentName fragmentName;
   private ListView listView;
 
-  public AbstractListFragment(FragmentName fragmentName) {
+  protected AbstractListFragment(FragmentName fragmentName) {
     this.fragmentName = fragmentName;
   }
 

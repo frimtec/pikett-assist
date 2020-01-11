@@ -10,7 +10,7 @@ import android.widget.TimePicker;
 
 import com.github.frimtec.android.pikettassist.R;
 
-public class TimePreference extends DialogPreference {
+class TimePreference extends DialogPreference {
 
   private int lastHour = 0;
   private int lastMinute = 0;

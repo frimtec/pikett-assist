@@ -17,8 +17,10 @@ import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 class AlertCallArrayAdapter extends ArrayAdapter<AlertCall> {
 
@@ -31,24 +33,22 @@ class AlertCallArrayAdapter extends ArrayAdapter<AlertCall> {
   @NonNull
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    // Get the data item for this position
     AlertCall alertCall = getItem(position);
-    // Check if an existing view is being reused, otherwise inflate the view
+    Objects.requireNonNull(alertCall);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_call_item, parent, false);
     }
     // Lookup view for data population
     TextView receivedTime = convertView.findViewById(R.id.alert_cal_item_received_time);
-    receivedTime.setText(formatDateTime(alertCall.getTime(), DATE_TIME_FORMAT));
+    receivedTime.setText(formatDateTime(alertCall.getTime()));
     TextView message = convertView.findViewById(R.id.alert_cal_item_message);
     message.setText(alertCall.getMessage());
     // Populate the data into the template view using the data object
     return convertView;
   }
 
-  private String formatDateTime(Instant time, String format) {
-    return time != null ?
-        LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format, Locale.getDefault())) : "";
+  private String formatDateTime(Instant time) {
+    return time != null ? LocalDateTime.ofInstant(time, ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT, Locale.getDefault())) : "";
   }
 
 }

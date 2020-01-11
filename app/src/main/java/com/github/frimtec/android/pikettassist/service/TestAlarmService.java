@@ -1,8 +1,6 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -10,8 +8,9 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
 
@@ -31,7 +30,7 @@ public class TestAlarmService extends IntentService {
 
   private final TestAlarmDao testAlarmDao;
   private OnOffState shiftState;
-  private AlarmManager alarmManager;
+  private AlarmService alarmService;
   private ShiftService shiftService;
 
   @SuppressWarnings("unused")
@@ -47,7 +46,7 @@ public class TestAlarmService extends IntentService {
   @Override
   public void onCreate() {
     super.onCreate();
-    this.alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+    this.alarmService = new AlarmService(this);
     this.shiftService = new ShiftService(this);
   }
 
@@ -73,7 +72,7 @@ public class TestAlarmService extends IntentService {
             new Intent(context, MainActivity.class),
             missingTestAlarmContextContexts
         );
-        MissingTestAlarmAlarmActivity.trigger(context, this.alarmManager);
+        MissingTestAlarmAlarmActivity.trigger(context, this.alarmService);
       }
     }
   }
@@ -104,9 +103,7 @@ public class TestAlarmService extends IntentService {
     }
     long waitMs = Duration.between(now, nextRun).toMillis();
     Log.i(TAG, "Next run at " + nextRun + "; wait ms: " + waitMs);
-    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waitMs,
-        PendingIntent.getService(this, 0, intent, 0)
-    );
+    alarmService.setAlarmRelative(waitMs, intent);
   }
 
   private ZonedDateTime getTodaysCheckTime(ZonedDateTime now) {

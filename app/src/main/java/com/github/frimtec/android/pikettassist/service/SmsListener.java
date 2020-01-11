@@ -30,6 +30,7 @@ public class SmsListener extends BroadcastReceiver {
 
   private final TestAlarmDao testAlarmDao;
 
+  @SuppressWarnings("unused")
   public SmsListener() {
     this(new TestAlarmDao());
   }

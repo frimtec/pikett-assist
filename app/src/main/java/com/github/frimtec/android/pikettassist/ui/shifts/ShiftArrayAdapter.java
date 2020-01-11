@@ -19,6 +19,7 @@ import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 class ShiftArrayAdapter extends ArrayAdapter<Shift> {
 
@@ -32,6 +33,7 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
   @Override
   public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
     Shift shift = getItem(position);
+    Objects.requireNonNull(shift);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
     }

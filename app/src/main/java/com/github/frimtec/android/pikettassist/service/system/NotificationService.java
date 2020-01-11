@@ -32,8 +32,9 @@ public class NotificationService {
 
   public static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
-  public static final int SIGNAL_NOTIFICATION_ID = 3;
-  public static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
+
+  private static final int SIGNAL_NOTIFICATION_ID = 3;
+  private static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
 
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
 
@@ -150,7 +151,7 @@ public class NotificationService {
     notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
   }
 
-  public void notifyVolumeChanged(int oldLevel, int newLevel) {
+  void notifyVolumeChanged(int oldLevel, int newLevel) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
     );

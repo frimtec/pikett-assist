@@ -5,7 +5,6 @@ import java.util.List;
 
 public final class BillingConstants {
 
-  // SKUs for our products (non-consumable)
   public static final String SKU_SPONSOR_BRONZE = "sponsor_bronze";
   public static final String SKU_SPONSOR_SILVER = "sponsor_silver";
   public static final String SKU_SPONSOR_GOLD = "sponsor_gold";

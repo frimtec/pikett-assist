@@ -78,6 +78,7 @@ class TimePreference extends DialogPreference {
       }
     } else {
       time = defaultValue.toString();
+      persistString(time);
     }
 
     lastHour = getHour(time);

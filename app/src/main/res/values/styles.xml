@@ -36,10 +36,6 @@
 
     <dimen name="header_gap">8dp</dimen>
     <dimen name="row_gap">1px</dimen>
-    <dimen name="button_width">152dp</dimen>
-    <dimen name="button_height">48dp</dimen>
-    <dimen name="title_margin">8dp</dimen>
-    <dimen name="image_margin">32dp</dimen>
 
     <dimen name="sku_details_row_height">120dp</dimen>
     <dimen name="sku_details_row_padding">24dp</dimen>

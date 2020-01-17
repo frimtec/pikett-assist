@@ -11,7 +11,6 @@
     <string name="title_alert_log">Alert log</string>
     <string name="title_test_alarms">Test alarms</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_donate">Donate</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_logcat">Logcat</string>
 
@@ -25,7 +24,6 @@
     <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (Help: Regular-Expression ignoring case)</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
 
-    <string name="pref_header_alarming">Alarming</string>
     <string name="pref_title_alarm_operations_center_contact">Operations center</string>
     <string name="pref_title_sms_confirm_text">Confirmation response</string>
     <string name="pref_default_sms_confirm_text">OK</string>
@@ -63,7 +61,6 @@
     <string name="registration_errors_no_extras">Failed, no extras</string>
     <string name="registration_errors_failed">Failed</string>
 
-    <string name="pref_header_notifications">Notifications</string>
     <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>
     <string name="pref_title_test_alarm_ring_tone">Missing test alarm ringtone</string>
     <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
@@ -81,9 +78,6 @@
 
     <string name="preferences_calendar_all">All</string>
     <string name="preferences_alarm_ringtone_default">Default ringtone</string>
-    <string name="preferences_test_context_empty_selection">Empty selection</string>
-    <string name="preferences_time_set">OK</string>
-    <string name="preferences_time_cancel">Cancel</string>
     <string name="alert_view_confirm_time">Time to confirm: %d seconds</string>
     <string name="alert_view_duration">Duration: %.1f minutes</string>
     <string name="alert_view_state_title">State</string>

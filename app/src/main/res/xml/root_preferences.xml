@@ -1,0 +1,89 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.github.frimtec.android.pikettassist.ui.settings.ContactPreference
+        app:icon="@drawable/ic_phone_black_24dp"
+        app:key="alarm_operations_center_contact"
+        app:title="@string/pref_title_alarm_operations_center_contact">
+    </com.github.frimtec.android.pikettassist.ui.settings.ContactPreference>
+
+    <EditTextPreference
+        app:defaultValue="@string/pref_default_sms_confirm_text"
+        app:icon="@drawable/ic_message_black_24dp"
+        app:key="sms_confirm_text"
+        app:singleLine="true"
+        app:title="@string/pref_title_sms_confirm_text"
+        app:useSimpleSummaryProvider="true" />
+
+    <RingtonePreference
+        android:dialogTitle="@string/pref_title_alarm_ring_tone"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:key="alarm_ring_tone"
+        android:persistent="true"
+        android:ringtoneType="ringtone"
+        android:showDefault="false"
+        android:showSilent="true"
+        android:title="@string/pref_title_alarm_ring_tone"
+        app:pref_showAdd="true"
+        app:pref_summaryHasRingtone="%s" />
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_date_range_black_24dp"
+        app:title="@string/pref_header_calendar">
+
+        <ListPreference
+            app:key="calendar_selection"
+            app:summary="%s"
+            app:title="@string/pref_title_calendar_selection" />
+
+        <EditTextPreference
+            app:defaultValue="@string/pref_default_calendar_event_pikett_title_pattern"
+            app:key="calendar_event_pikett_title_pattern"
+            app:singleLine="true"
+            app:singleLineTitle="false"
+            app:title="@string/pref_title_calendar_event_pikett_title_pattern"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
+        app:title="@string/pref_title_supervise_signal_strength">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="supervise_signal_strength"
+            app:title="@string/pref_title_supervise_signal_strength" />
+
+        <ListPreference
+            app:defaultValue="@string/pref_default_supervise_signal_strength_min_level"
+            app:dependency="supervise_signal_strength"
+            app:entries="@array/signal_strength"
+            app:entryValues="@array/signal_strength_values"
+            app:key="supervise_signal_strength_min_level"
+            app:summary="%s"
+            app:title="@string/pref_title_supervise_signal_strength_min_level" />
+
+        <ListPreference
+            app:defaultValue="@string/pref_default_supervise_signal_strength_subscription"
+            app:dependency="supervise_signal_strength"
+            app:key="supervise_signal_strength_subscription"
+            app:summary="%s"
+            app:title="@string/pref_title_supervise_signal_strength_subscription" />
+
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            app:fragment="com.github.frimtec.android.pikettassist.ui.settings.TestAlarmFragment"
+            app:icon="@drawable/ic_test_alarm"
+            app:key="test_alarm_group"
+            app:title="@string/pref_header_test_alarm" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            app:fragment="com.github.frimtec.android.pikettassist.ui.settings.DayNightProfileFragment"
+            app:icon="@drawable/ic_half_moon_and_sun"
+            app:key="day_night_profile_group"
+            app:title="@string/pref_header_day_night_profile" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -69,16 +69,16 @@
                 android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.preferences.PreferencesActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.frimtec.android.pikettassist.ui.MainActivity" />
         </activity>
-        <activity android:name="com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity" />
-        <activity android:name="com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity" />
-        <activity android:name="com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity" />
+        <activity android:name=".ui.alerts.AlertActivity" />
+        <activity android:name=".ui.signal.LowSignalAlarmActivity" />
+        <activity android:name=".ui.testalarm.MissingTestAlarmAlarmActivity" />
 
         <receiver
             android:name=".service.AutoStart"

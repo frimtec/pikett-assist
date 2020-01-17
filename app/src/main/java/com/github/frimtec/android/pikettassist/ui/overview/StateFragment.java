@@ -29,7 +29,6 @@ import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
-import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.FragmentName;
@@ -62,7 +61,6 @@ import static com.github.frimtec.android.pikettassist.service.system.Feature.SET
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
-import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.S2MSP_PACKAGE_NAME;
 
 public class StateFragment extends AbstractListFragment<State> {
 
@@ -196,7 +194,6 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   private void regularStates(List<State> states) {
-    PowerService powerService = new PowerService(getContext());
     Installation smsAdapterInstallation = this.s2msp.getInstallation();
     Set<String> operationsCenterPhoneNumbers = this.contactDao.getPhoneNumbers(SharedState.getAlarmOperationsCenterContact(getContext()));
     StateContext stateContext = new StateContext(
@@ -212,7 +209,6 @@ public class StateFragment extends AbstractListFragment<State> {
         !smsAdapterInstallation.getAppVersion().isPresent(),
         smsAdapterInstallation.getAppVersion().isPresent() && smsAdapterInstallation.getApiVersion().compareTo(smsAdapterInstallation.getAppVersion().get()) > 0,
         s2msp.areSmsPermissionsGranted(),
-        !powerService.isIgnoringBatteryOptimizations(S2MSP_PACKAGE_NAME),
         new ShiftService(getContext()).getState(),
         this.alertDao.getAlertState(),
         SharedState.getPikettStateManuallyOn(getContext()),

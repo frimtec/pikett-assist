@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.state.SharedState;
-import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -35,7 +34,6 @@ import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.
 class SmsAdapterState extends State {
 
   private final StateContext stateContext;
-  private final boolean batteryOptimisationOn;
   private final boolean smsAdapterSmsPermission;
   private final PackageManager packageManager;
 
@@ -43,26 +41,25 @@ class SmsAdapterState extends State {
     super(
         R.drawable.ic_message_black_24dp,
         stateContext.getString(R.string.state_fragment_sms_adapter),
-        getSmsAdapterValue(stateContext, stateContext.isSmsAdapterBatteryOptimisationOn(), stateContext.isSmsAdapterPermissionsGranted()),
+        getSmsAdapterValue(stateContext, stateContext.isSmsAdapterPermissionsGranted()),
         null,
-        getSmsAdapterState(stateContext, stateContext.isSmsAdapterBatteryOptimisationOn(), stateContext.isSmsAdapterPermissionsGranted()));
+        getSmsAdapterState(stateContext, stateContext.isSmsAdapterPermissionsGranted()));
     this.stateContext = stateContext;
-    this.batteryOptimisationOn = stateContext.isSmsAdapterBatteryOptimisationOn();
     this.smsAdapterSmsPermission = stateContext.isSmsAdapterPermissionsGranted();
     this.packageManager = stateContext.getContext().getPackageManager();
   }
 
-  private static State.TrafficLight getSmsAdapterState(StateContext stateContext, boolean batteryOptimisationOn, boolean smsAdapterSmsPermission) {
+  private static State.TrafficLight getSmsAdapterState(StateContext stateContext, boolean smsAdapterSmsPermission) {
     if (stateContext.isSmsAdapterMissing() || !smsAdapterSmsPermission || stateContext.isOperationsCenterPhoneNumbersBlocked()) {
       return RED;
-    } else if (stateContext.isSmsAdapterVersionOutdated() || batteryOptimisationOn) {
+    } else if (stateContext.isSmsAdapterVersionOutdated()) {
       return YELLOW;
     } else {
       return GREEN;
     }
   }
 
-  private static String getSmsAdapterValue(StateContext stateContext, boolean batteryOptimisationOn, boolean smsAdapterSmsPermission) {
+  private static String getSmsAdapterValue(StateContext stateContext, boolean smsAdapterSmsPermission) {
     if (stateContext.isSmsAdapterMissing()) {
       return stateContext.getString(R.string.state_fragment_sms_adapter_not_installed);
     } else if (!smsAdapterSmsPermission) {
@@ -71,8 +68,6 @@ class SmsAdapterState extends State {
       return stateContext.getString(R.string.state_fragment_phone_numbers_blocked);
     } else if (stateContext.isSmsAdapterVersionOutdated()) {
       return stateContext.getString(R.string.state_fragment_s2msp_requires_update);
-    } else if (batteryOptimisationOn) {
-      return stateContext.getString(R.string.notification_battery_optimization_short_title);
     } else {
       return "S2MSP V" + stateContext.getSmsAdapterInstallation().getAppVersion().orElse("?.?");
     }
@@ -91,11 +86,6 @@ class SmsAdapterState extends State {
       }
       if (stateContext.isSmsAdapterVersionOutdated()) {
         openDownloadDialog(context, R.string.permission_sms_update_text, R.string.permission_sms_update_title, stateContext.getSmsAdapterInstallation());
-        return;
-      }
-      if (batteryOptimisationOn) {
-        DialogHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_s2msp_text,
-            (dialogInterface, integer) -> stateContext.getContext().startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
         return;
       }
     }

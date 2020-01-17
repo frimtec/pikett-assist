@@ -35,7 +35,6 @@ class StateContext {
   private final boolean smsAdapterMissing;
   private final boolean smsAdapterVersionOutdated;
   private final boolean smsAdapterPermissionsGranted;
-  private final boolean smsAdapterBatteryOptimisationOn;
 
   private final SignalLevel signalStrengthLevel;
   private final boolean superviseSignalStrength;
@@ -56,7 +55,6 @@ class StateContext {
       boolean smsAdapterMissing,
       boolean smsAdapterVersionOutdated,
       boolean smsAdapterPermissionsGranted,
-      boolean smsAdapterBatteryOptimisationOn,
       OnOffState pikettState,
       Pair<AlertState, Long> alarmState,
       boolean pikettStateManuallyOn,
@@ -77,7 +75,6 @@ class StateContext {
     this.smsAdapterMissing = smsAdapterMissing;
     this.smsAdapterVersionOutdated = smsAdapterVersionOutdated;
     this.smsAdapterPermissionsGranted = smsAdapterPermissionsGranted;
-    this.smsAdapterBatteryOptimisationOn = smsAdapterBatteryOptimisationOn;
     this.pikettState = pikettState;
     this.alarmState = alarmState;
     this.pikettStateManuallyOn = pikettStateManuallyOn;
@@ -135,10 +132,6 @@ class StateContext {
 
   boolean isSmsAdapterPermissionsGranted() {
     return smsAdapterPermissionsGranted;
-  }
-
-  boolean isSmsAdapterBatteryOptimisationOn() {
-    return smsAdapterBatteryOptimisationOn;
   }
 
   OnOffState getPikettState() {

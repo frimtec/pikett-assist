@@ -10,7 +10,6 @@
     <string name="title_alert_log">Aufgebote</string>
     <string name="title_test_alarms">Testalarme</string>
     <string name="title_activity_settings">Einstellungen</string>
-    <string name="title_activity_donate">Spenden</string>
     <string name="title_activity_about">Über</string>
     <string name="title_activity_logcat">Logcat</string>
 
@@ -24,7 +23,6 @@
     <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter (Hilfe: Regular-Expression ohne Gross-/ Kleinschreibung)</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
 
-    <string name="pref_header_alarming">Alarmierung</string>
     <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
     <string name="pref_title_sms_confirm_text">Bestätigungsantwort</string>
     <string name="pref_default_sms_confirm_text">OK</string>
@@ -62,7 +60,6 @@
     <string name="registration_errors_no_extras">Fehlgeschlagen, keine Parameter</string>
     <string name="registration_errors_failed">Fehlgeschlagen</string>
 
-    <string name="pref_header_notifications">Benachrichtigungen</string>
     <string name="pref_title_alarm_ring_tone">Pikettalarm Klingelton</string>
     <string name="pref_title_test_alarm_ring_tone">Fehlender Testalarm Klingelton</string>
     <string name="pref_title_supervise_signal_strength">Signalstärke überwachen</string>
@@ -78,9 +75,6 @@
 
     <string name="preferences_calendar_all">Alle</string>
     <string name="preferences_alarm_ringtone_default">Standard Klingelton</string>
-    <string name="preferences_test_context_empty_selection">Leere Auswahl</string>
-    <string name="preferences_time_set">Ok</string>
-    <string name="preferences_time_cancel">Abbruch</string>
     <string name="alert_view_confirm_time">Zeit zur Bestätigung: %d Sekunden</string>
     <string name="alert_view_duration">Dauer: %.1f Minuten</string>
 

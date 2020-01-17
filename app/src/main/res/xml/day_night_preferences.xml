@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright 2018 The app Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_access_time_black_24dp"
+        app:title="@string/pref_title_category_profile_start_times">
+        <TimePickerPreference
+            app:defaultValue="@string/pref_default_day_start_time"
+            app:icon="@drawable/ic_day"
+            app:key="day_start_time"
+            app:title="@string/pref_title_day_start_time" />
+
+        <TimePickerPreference
+            app:defaultValue="@string/pref_default_night_start_time"
+            app:icon="@drawable/ic_night"
+            app:key="night_start_time"
+            app:title="@string/pref_title_night_start_time" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_volume_up_black_24dp"
+        app:title="@string/pref_title_category_ringtone_volume">
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="manage_volume"
+            app:title="@string/pref_title_manage_volume" />
+
+        <SeekBarPreference
+            app:defaultValue="@integer/default_volume_day"
+            app:dependency="manage_volume"
+            app:icon="@drawable/ic_day"
+            app:key="on_call_day_volume"
+            android:max="@integer/volume_max"
+            app:title="@string/pref_title_volume_day" />
+
+        <SeekBarPreference
+            app:defaultValue="@integer/default_volume_night"
+            app:dependency="manage_volume"
+            app:icon="@drawable/ic_night"
+            app:key="on_call_night_volume"
+            android:max="@integer/volume_max"
+            app:title="@string/pref_title_volume_night" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

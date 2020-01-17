@@ -28,13 +28,13 @@ import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
-import com.github.frimtec.android.pikettassist.ui.preferences.PreferencesActivity;
+import com.github.frimtec.android.pikettassist.ui.settings.SettingsActivity;
 import com.github.frimtec.android.pikettassist.ui.shifts.ShiftListFragment;
 import com.github.frimtec.android.pikettassist.ui.support.LogcatActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.settings:
-        startActivity(new Intent(this, PreferencesActivity.class));
+        startActivity(new Intent(this, SettingsActivity.class));
         return true;
       case R.id.donate:
         showDonationDialog();

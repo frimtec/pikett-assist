@@ -1,0 +1,81 @@
+<!--
+  ~ Copyright 2018 The app Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreference
+        app:defaultValue="false"
+        app:icon="@drawable/ic_test_alarm"
+        app:key="test_alarm_enabled"
+        app:title="@string/pref_title_test_alarm_enabled" />
+
+    <EditTextPreference
+        app:defaultValue="@string/pref_default_test_alarm_message_pattern"
+        app:icon="@drawable/ic_message_black_24dp"
+        app:dependency="test_alarm_enabled"
+        app:key="test_alarm_message_pattern"
+        app:singleLine="true"
+        app:singleLineTitle="false"
+        app:title="@string/pref_title_test_alarm_message_pattern"
+        app:useSimpleSummaryProvider="true" />
+
+    <MultiSelectListPreference
+        app:dependency="test_alarm_enabled"
+        app:icon="@drawable/ic_toc_black_24dp"
+        app:key="supervise_test_contexts"
+        app:title="@string/pref_title_supervise_test_contexts" />
+
+    <TimePickerPreference
+        app:dependency="test_alarm_enabled"
+        app:defaultValue="@string/pref_default_test_alarm_check_time"
+        app:icon="@drawable/ic_watch_later_black_24dp"
+        app:key="test_alarm_check_time"
+        app:title="@string/pref_title_test_alarm_check_time" />
+
+    <EditTextPreference
+        android:inputType="number"
+        app:icon="@drawable/ic_time_window"
+        app:defaultValue="@string/pref_default_test_alarm_accept_time_window_minutes"
+        app:dependency="test_alarm_enabled"
+        app:key="test_alarm_accept_time_window_minutes"
+        app:singleLine="true"
+        app:title="@string/pref_title_test_alarm_accept_time_window_minutes"
+        app:useSimpleSummaryProvider="true" />
+
+    <MultiSelectListPreference
+        app:icon="@drawable/ic_date_range_black_24dp"
+        app:defaultValue="@array/default_weekdays"
+        app:dependency="test_alarm_enabled"
+        app:entries="@array/weekdays"
+        app:entryValues="@array/weekdays_values"
+        app:key="test_alarm_check_weekdays"
+        app:title="@string/pref_title_test_alarm_check_weekdays" />
+
+    <RingtonePreference
+        android:dialogTitle="@string/pref_title_alarm_ring_tone"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:key="test_alarm_ring_tone"
+        android:persistent="true"
+        android:ringtoneType="ringtone"
+        android:showDefault="false"
+        android:showSilent="true"
+        android:title="@string/pref_title_test_alarm_ring_tone"
+        app:dependency="test_alarm_enabled"
+        app:pref_showAdd="true"
+        app:pref_summaryHasRingtone="%s" />
+
+</PreferenceScreen>

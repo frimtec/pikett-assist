@@ -1,8 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
       default:
         throw new IllegalStateException("Unknown fragment: " + fragment);
     }
-    FragmentManager fm = getFragmentManager();
+    FragmentManager fm = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fm.beginTransaction();
     fragmentTransaction.replace(R.id.frame_layout, activeFragment);
     fragmentTransaction.commit();

@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +8,7 @@ import android.os.Build;
 import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;

@@ -33,7 +33,7 @@
 
         <ListPreference
             app:key="calendar_selection"
-            app:summary="%s"
+            app:useSimpleSummaryProvider="true"
             app:title="@string/pref_title_calendar_selection" />
 
         <EditTextPreference
@@ -61,7 +61,7 @@
             app:entries="@array/signal_strength"
             app:entryValues="@array/signal_strength_values"
             app:key="supervise_signal_strength_min_level"
-            app:summary="%s"
+            app:useSimpleSummaryProvider="true"
             app:title="@string/pref_title_supervise_signal_strength_min_level" />
 
         <SwitchPreference
@@ -74,7 +74,7 @@
             app:defaultValue="@string/pref_default_supervise_signal_strength_subscription"
             app:dependency="supervise_signal_strength"
             app:key="supervise_signal_strength_subscription"
-            app:summary="%s"
+            app:useSimpleSummaryProvider="true"
             app:title="@string/pref_title_supervise_signal_strength_subscription" />
 
     </PreferenceCategory>

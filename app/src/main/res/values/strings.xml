@@ -219,4 +219,5 @@
     <string name="s2msp_download_started">Download was started.</string>
     <string name="s2msp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; can now be downloaded. As soon as the download is finished, you can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; with a click on the download notification.</string>
     <string name="s2msp_settings">Settings</string>
+    <string name="pref_title_notify_low_signal">Alert with notification</string>
 </resources>

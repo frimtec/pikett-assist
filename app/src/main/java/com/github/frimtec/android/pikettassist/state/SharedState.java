@@ -30,6 +30,7 @@ public final class SharedState {
   public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   private static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
+  private static final String PREF_KEY_NOTIFY_LOW_SIGNAL = "notify_low_signal";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL = "supervise_signal_strength_min_level";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION = "supervise_signal_strength_subscription";
   private static final String PREF_KEY_ALARM_RING_TONE = "alarm_ring_tone";
@@ -99,6 +100,11 @@ public final class SharedState {
 
   public static void setSuperviseSignalStrength(Context context, boolean supervise) {
     setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, supervise));
+  }
+
+  public static boolean getNotifyLowSignal(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_NOTIFY_LOW_SIGNAL, true);
   }
 
   public static boolean getPikettStateManuallyOn(Context context) {

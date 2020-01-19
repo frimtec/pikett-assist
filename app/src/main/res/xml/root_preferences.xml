@@ -64,6 +64,12 @@
             app:summary="%s"
             app:title="@string/pref_title_supervise_signal_strength_min_level" />
 
+        <SwitchPreference
+            app:defaultValue="true"
+            app:dependency="supervise_signal_strength"
+            app:key="notify_low_signal"
+            app:title="@string/pref_title_notify_low_signal" />
+
         <ListPreference
             app:defaultValue="@string/pref_default_supervise_signal_strength_subscription"
             app:dependency="supervise_signal_strength"

@@ -109,6 +109,10 @@ Defines whether the signal strength is supervised or not.
 #### Minimal signal strength
 Defines the lowest accepted signal strength level.
 
+#### Alert with notification
+Defines whether an alert for low signal strength creates a notification or not.
+The phone also shows a low signal strength through a vibration pattern, regardless of this setting.   
+
 #### Supervised subscription (for Dual SIM only)
 For dual SIM phones you can select the subscription for which the signal strength is supervised.
 

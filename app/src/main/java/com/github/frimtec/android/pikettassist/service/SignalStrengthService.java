@@ -50,7 +50,9 @@ public class SignalStrengthService extends IntentService {
     this.pikettState = this.shiftService.getState() == OnOffState.ON;
     SignalLevel level = new com.github.frimtec.android.pikettassist.service.system.SignalStrengthService(this).getSignalStrength();
     if (this.pikettState && SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
-      new NotificationService(this).notifySignalLow(level);
+      if (SharedState.getNotifyLowSignal(this)) {
+        new NotificationService(this).notifySignalLow(level);
+      }
       LowSignalAlarmActivity.trigger(this, this.alarmService);
     }
   }

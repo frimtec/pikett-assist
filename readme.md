@@ -82,11 +82,9 @@ Currently the only supported SMS adapter is [secure-sms-proxy](https://github.co
 PAssist will guide you to install this SMS adapter.  
  
 ## Configuration 
-The configuration is split into several blocks:
-
 ![Settings](images/PAssist_10.png)
 
-### Alarming
+### Main settings
 
 #### Operations center
 Defines the contact of your operations center sending alarms via SMS.
@@ -94,20 +92,27 @@ The SMS received from any phone number of this contact are supervised by PAssist
 
 #### Confirmation response
 Defines the text to send back as alarm acknowledgement to your operations center.
-   
-![Alarming settings](images/PAssist_11.png)
-    
-### Calendar  
+       
+#### Alarm ringtone
+Defines the ringtone that is used to alert for on-call alarms.
+
 #### Calendar filter
 Defines one specific or all of your calenders, that should be used to look for on-call events. 
 
 #### Event filter
 Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to 
 match the titles of your calendar events, which should be considered for your on-call duties.
-
-![Calendar settings](images/PAssist_12.png)
     
-### Test alarm  
+#### Supervise signal strength
+Defines whether the signal strength is supervised or not.
+
+#### Minimal signal strength
+Defines the lowest accepted signal strength level.
+
+#### Supervised subscription (for Dual SIM only)
+For dual SIM phones you can select the subscription for which the signal strength is supervised.
+
+### Test alarm settings 
 #### Use test alarms
 Enable or disable the test alarm feature.
 
@@ -134,30 +139,12 @@ Defines the time window in which the test alarm must have been received before t
 #### Check days
 Defines the weekdays on which the test alarms are checked.
 
-![Test alarm settings](images/PAssist_14.png)
-
-### Supervise signal strength
-#### Supervise signal strength
-Defines whether the signal strength is supervised or not.
-
-#### Minimal signal strength
-Defines the lowest accepted signal strength level.
-
-#### Supervised subscription (for Dual SIM only)
-For dual SIM phones you can select the subscription for which the signal strength is supervised.
-
-![Overview](images/PAssist_19.png)
-
-### Notifications
-#### Alarm ringtone
-Defines the ringtone that is used to alert for on-call alarms.
-
 #### Missing test alarm ringtone
 Defines the ringtone that is used to alert for missing test alarms.
 
-![Overview](images/PAssist_15.png)
+![Test alarm settings](images/PAssist_14.png)
 
-### Day/night profile
+### Day/night profile settings
 #### Profile start times
 Time when day/night profile starts.
 

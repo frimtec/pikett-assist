@@ -111,8 +111,8 @@
     <string name="state_fragment_operations_center">Op. center</string>
     <string name="state_fragment_pikett_state">On-call state</string>
     <string name="state_fragment_alarm_state">Alarm state</string>
-    <string name="state_fragment_signal_level_supervise_enabled">Enabled</string>
-    <string name="state_fragment_signal_level_supervise_disabled">Disabled</string>
+    <string name="general_enabled">Enabled</string>
+    <string name="general_disabled">Disabled</string>
     <string name="state_on">On</string>
     <string name="state_manually_on">On (manually)</string>
     <string name="state_off">Off</string>

@@ -112,7 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private static String enabledOrDisabled(Context context, boolean flag) {
-      return context.getResources().getString(flag ? R.string.state_fragment_signal_level_supervise_enabled : R.string.state_fragment_signal_level_supervise_disabled);
+      return context.getResources().getString(flag ? R.string.general_enabled : R.string.general_disabled);
     }
   }
 }

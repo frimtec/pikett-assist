@@ -26,7 +26,7 @@ class SignalStrengthState extends State {
     super(
         R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp,
         stateContext.getNetworkOperatorName() != null ? String.format("%s %s", stateContext.getString(R.string.state_fragment_signal_level), stateContext.getNetworkOperatorName()) : stateContext.getString(R.string.state_fragment_signal_level),
-        stateContext.isSuperviseSignalStrength() ? (stateContext.getPikettState() == OnOffState.ON ? getSignalStrength(stateContext) : stateContext.getString(R.string.state_fragment_signal_level_supervise_enabled)) : stateContext.getString(R.string.state_fragment_signal_level_supervise_disabled),
+        stateContext.isSuperviseSignalStrength() ? (stateContext.getPikettState() == OnOffState.ON ? getSignalStrength(stateContext) : stateContext.getString(R.string.general_enabled)) : stateContext.getString(R.string.general_disabled),
         null,
         getSignalStrengthTrafficLight(stateContext)
     );

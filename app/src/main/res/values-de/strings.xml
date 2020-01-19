@@ -109,8 +109,8 @@
     <string name="state_fragment_operations_center">Zentrale</string>
     <string name="state_fragment_pikett_state">Pikettzustand</string>
     <string name="state_fragment_alarm_state">Alarmzustand</string>
-    <string name="state_fragment_signal_level_supervise_enabled">Aktiviert</string>
-    <string name="state_fragment_signal_level_supervise_disabled">Deaktiviert</string>
+    <string name="general_enabled">Aktiviert</string>
+    <string name="general_disabled">Deaktiviert</string>
     <string name="state_on">Ein</string>
     <string name="state_manually_on">Ein (manuell)</string>
     <string name="state_off">Aus</string>

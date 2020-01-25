@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
+import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
@@ -39,6 +41,7 @@ import com.github.frimtec.android.pikettassist.ui.shifts.ShiftListFragment;
 import com.github.frimtec.android.pikettassist.ui.support.LogcatActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -54,6 +57,8 @@ import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_
 import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REGISTER_SMS_ADAPTER_REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG = "MainActivity";
 
   private static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
   private BroadcastReceiver broadcastReceiver;
@@ -148,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     this.s2msp = SecureSmsProxyFacade.instance(this);
     registerReceiver();
+
     new NotificationService(this).registerChannel();
 
     setContentView(R.layout.activity_main);
@@ -162,10 +169,22 @@ public class MainActivity extends AppCompatActivity {
     FragmentName savedFragmentName = FragmentName.STATE;
     if (savedInstanceState != null) {
       savedFragmentName = FragmentName.valueOf(savedInstanceState.getString(ACTIVE_FRAGMENT_STATE, savedFragmentName.name()));
+    } else {
+      // register on new app start only, not on orientation change
+      registerOnSmsAdapter();
     }
     loadFragment(savedFragmentName);
 
     startService(new Intent(this, PikettService.class));
+  }
+
+  private void registerOnSmsAdapter() {
+    Installation installation = this.s2msp.getInstallation();
+    if (installation.getAppVersion().orElse("0").compareTo("1.3.5") >= 0) {
+      this.s2msp.register(this, REGISTER_SMS_ADAPTER_REQUEST_CODE, SmsListener.class);
+    } else {
+      Log.w(TAG, "Silent registration not supported by S2MSP Version: " + installation.getAppVersion().orElse("N/A"));
+    }
   }
 
   private void refresh() {
@@ -193,13 +212,20 @@ public class MainActivity extends AppCompatActivity {
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == REGISTER_SMS_ADAPTER_REQUEST_CODE) {
+      Log.d(TAG, "SMS adapter register result received.");
       RegistrationResult result = s2msp.getRegistrationResult(resultCode, data);
-      result.getSecret().ifPresent(secret -> SharedState.setSmsAdapterSecret(this, secret));
-
-      String[] registrationErrors = getResources().getStringArray(R.array.registration_errors);
-      String registrationText = getString(R.string.sms_adapter_registration) + ": " +
-          registrationErrors[result.getReturnCode().ordinal()];
-      Toast.makeText(this, registrationText, Toast.LENGTH_LONG).show();
+      result.getSecret().ifPresent(secret -> {
+        if (!secret.equals(SharedState.getSmsAdapterSecret(this))) {
+          Log.i(TAG, "SMS adapter secret changed.");
+          SharedState.setSmsAdapterSecret(this, secret);
+        }
+      });
+      if (!result.getReturnCode().isSuccess()) {
+        String[] registrationErrors = getResources().getStringArray(R.array.registration_errors);
+        String registrationText = getString(R.string.sms_adapter_registration) + ": " +
+            registrationErrors[result.getReturnCode().ordinal()];
+        Toast.makeText(this, registrationText, Toast.LENGTH_LONG).show();
+      }
     }
   }
 

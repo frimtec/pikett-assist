@@ -185,7 +185,7 @@
     <string name="permission_sms_update_title">SMS adapter update</string>
     <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; needs to be updated.</string>
     <string name="list_item_menu_send_test_sms">Send test SMS</string>
-    <string name="sms_adapter_registration">Registration</string>
+    <string name="sms_adapter_registration">S2MSP registration</string>
     <string name="button_buy">Buy</string>
     <string name="button_own">Bought</string>
     <string name="button_pending">Pending</string>

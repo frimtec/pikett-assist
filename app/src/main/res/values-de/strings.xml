@@ -183,7 +183,7 @@
     <string name="permission_sms_update_title">SMS-Adapter Update</string>
     <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; muss aktualisiert werden.</string>
     <string name="list_item_menu_send_test_sms">Sende Test SMS</string>
-    <string name="sms_adapter_registration">Registrierung</string>
+    <string name="sms_adapter_registration">S2MSP Registrierung</string>
     <string name="button_buy">Kaufen</string>
     <string name="button_own">Gekauft</string>
     <string name="button_pending">Pendent</string>

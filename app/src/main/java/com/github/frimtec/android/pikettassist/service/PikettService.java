@@ -75,7 +75,7 @@ public class PikettService extends IntentService {
           volumeService.setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
         }
       }
-      this.startService(new Intent(this, SignalStrengthService.class));
+      this.startService(new Intent(this, LowSignalService.class));
       this.startService(new Intent(this, TestAlarmService.class));
     } else {
       notificationService.cancelNotification(NotificationService.SHIFT_NOTIFICATION_ID);

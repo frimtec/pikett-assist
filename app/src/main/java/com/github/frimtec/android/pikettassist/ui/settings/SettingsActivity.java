@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.settings;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.SeekBarPreference;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -54,6 +57,20 @@ public class SettingsActivity extends AppCompatActivity {
         alarmRingTone.setSummaryProvider(
             (Preference.SummaryProvider<RingtonePreference>) preference ->
                 preference.getRingtone() == null ? preference.getContext().getResources().getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
+      }
+
+      SeekBarPreference lowSignalFilterTime = findPreference("low_signal_filter");
+      if (lowSignalFilterTime != null) {
+        lowSignalFilterTime.setOnPreferenceChangeListener((preference, newValue) -> {
+          ((SeekBarPreference) preference).setValue((int) newValue);
+          return true;
+        });
+        lowSignalFilterTime.setSummaryProvider(
+            (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
+              int value = preference.getValue();
+              Resources resources = preference.getContext().getResources();
+              return value == 0 ? resources.getString(R.string.state_off) : (value * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR) + " " + resources.getString(R.string.general_seconds);
+            });
       }
 
       Preference testAlarmGroup = findPreference("test_alarm_group");

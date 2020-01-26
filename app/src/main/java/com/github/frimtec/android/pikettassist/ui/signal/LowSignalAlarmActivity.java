@@ -13,7 +13,7 @@ import org.threeten.bp.Duration;
 
 import java.util.Collections;
 
-import static com.github.frimtec.android.pikettassist.service.SignalStrengthService.isLowSignal;
+import static com.github.frimtec.android.pikettassist.service.LowSignalService.isLowSignal;
 
 public class LowSignalAlarmActivity extends AbstractAlarmActivity {
 

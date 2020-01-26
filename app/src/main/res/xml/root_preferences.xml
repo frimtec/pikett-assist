@@ -64,6 +64,13 @@
             app:useSimpleSummaryProvider="true"
             app:title="@string/pref_title_supervise_signal_strength_min_level" />
 
+        <SeekBarPreference
+            app:defaultValue="@integer/default_low_signal_filter"
+            app:dependency="supervise_signal_strength"
+            app:key="low_signal_filter"
+            android:max="@integer/low_signal_filter_max"
+            app:title="@string/pref_title_low_signal_filter"/>
+
         <SwitchPreference
             app:defaultValue="true"
             app:dependency="supervise_signal_strength"

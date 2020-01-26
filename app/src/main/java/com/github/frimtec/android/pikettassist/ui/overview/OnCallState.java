@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.service.LowSignalService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
@@ -48,13 +49,13 @@ class OnCallState extends State {
     switch (item.getItemId()) {
       case MENU_CONTEXT_SET_MANUALLY_ON:
         SharedState.setPikettStateManuallyOn(context, true);
-        context.startService(new Intent(context, com.github.frimtec.android.pikettassist.service.SignalStrengthService.class));
+        context.startService(new Intent(context, LowSignalService.class));
         context.startService(new Intent(context, PikettService.class));
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_RESET:
         SharedState.setPikettStateManuallyOn(context, false);
-        context.startService(new Intent(context, com.github.frimtec.android.pikettassist.service.SignalStrengthService.class));
+        context.startService(new Intent(context, LowSignalService.class));
         context.startService(new Intent(context, PikettService.class));
         stateContext.refreshFragment();
         return true;

@@ -109,6 +109,13 @@ Defines whether the signal strength is supervised or not.
 #### Minimal signal strength
 Defines the lowest accepted signal strength level.
 
+#### Signal filter
+Defines the amount of seconds for which the signal strength must be lower than the minimal expected level before a low signal alarm is raced.
+With filtering you can reduce false alarms.
+The filter can be set between 0 (filtering off) and 10 minutes, with a default of 30 seconds.
+Be aware: With higher values, it takes longer until you are notified of a dead spot.
+Even with filtering enabled, the airplane mode is detected immediately. 
+
 #### Alert with notification
 Defines whether an alert for low signal strength creates a notification or not.
 The phone also shows a low signal strength through a vibration pattern, regardless of this setting.   

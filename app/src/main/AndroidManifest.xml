@@ -106,7 +106,7 @@
 
         <service android:name=".service.PikettService" />
         <service android:name=".service.TestAlarmService" />
-        <service android:name=".service.SignalStrengthService" />
+        <service android:name=".service.LowSignalService" />
     </application>
 
 </manifest>

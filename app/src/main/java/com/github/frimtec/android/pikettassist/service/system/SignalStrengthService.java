@@ -3,6 +3,7 @@ package com.github.frimtec.android.pikettassist.service.system;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.provider.Settings.Global;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
@@ -22,6 +23,7 @@ public class SignalStrengthService {
 
   private static final String TAG = "SignalStrengthService";
   private final TelephonyManager telephonyManager;
+  private final Context context;
 
   public SignalStrengthService(Context context) {
     this(context, SharedState.getSuperviseSignalStrengthSubscription(context));
@@ -32,9 +34,13 @@ public class SignalStrengthService {
     Objects.requireNonNull(mainTelephonyManager);
     TelephonyManager subscriptionTelephonyManager = mainTelephonyManager.createForSubscriptionId(subscriptionId);
     this.telephonyManager = subscriptionTelephonyManager != null ? subscriptionTelephonyManager : mainTelephonyManager;
+    this.context = context;
   }
 
   public SignalLevel getSignalStrength() {
+    if (isAirplaneModeOn(this.context)) {
+      return SignalLevel.OFF;
+    }
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
       @SuppressLint("MissingPermission") List<CellInfo> cellInfos = this.telephonyManager.getAllCellInfo();
       CellSignalStrength signalStrength = null;
@@ -56,6 +62,10 @@ public class SignalStrengthService {
       SignalStrength signalStrength = this.telephonyManager.getSignalStrength();
       return SignalLevel.from(signalStrength != null ? signalStrength.getLevel() : null);
     }
+  }
+
+  private static boolean isAirplaneModeOn(Context context) {
+    return Global.getInt(context.getContentResolver(), Global.AIRPLANE_MODE_ON, 0) != 0;
   }
 
   /**

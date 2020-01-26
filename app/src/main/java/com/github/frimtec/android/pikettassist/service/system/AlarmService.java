@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmService {
@@ -19,7 +20,7 @@ public class AlarmService {
 
   public void setAlarmRelative(long triggerInMillis, Intent intent) {
     setAlarmAbsolute(System.currentTimeMillis() + triggerInMillis,
-        PendingIntent.getService(context, 0, intent, 0)
+        PendingIntent.getService(context, 0, intent, FLAG_UPDATE_CURRENT)
     );
   }
 

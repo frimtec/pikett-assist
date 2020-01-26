@@ -26,9 +26,9 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.service.LowSignalService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
-import com.github.frimtec.android.pikettassist.service.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
@@ -301,13 +301,7 @@ public class MainActivity extends AppCompatActivity {
       public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
             new ShiftService(context).getState() == OnOffState.ON) {
-          try {
-            // wait for change
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            throw new RuntimeException("Unexpected interrupt");
-          }
-          context.startService(new Intent(context, SignalStrengthService.class));
+          context.startService(new Intent(context, LowSignalService.class));
         }
         refresh();
       }

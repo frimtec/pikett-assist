@@ -11,19 +11,23 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
 
+import org.threeten.bp.Duration;
 import org.threeten.bp.LocalTime;
 
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
+import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 
-public class SignalStrengthService extends IntentService {
+public class LowSignalService extends IntentService {
 
-  private static final String TAG = "SignalStrengthService";
+  private static final String TAG = "LowSignalService";
   private static final int CHECK_INTERVAL_MS = 60 * 1000;
+  public static final String EXTRA_FILTER_STATE = "FILTER_STATE";
 
   private AlarmService alarmService;
   private TelephonyManager telephonyManager;
@@ -31,7 +35,9 @@ public class SignalStrengthService extends IntentService {
   private AlertDao alertDao;
   private ShiftService shiftService;
 
-  public SignalStrengthService() {
+  private int currentFilterState = 0;
+
+  public LowSignalService() {
     super(TAG);
   }
 
@@ -47,13 +53,31 @@ public class SignalStrengthService extends IntentService {
   @Override
   public void onHandleIntent(Intent intent) {
     Log.i(TAG, "Service cycle");
+    this.currentFilterState = intent.getIntExtra(EXTRA_FILTER_STATE, 0);
     this.pikettState = this.shiftService.getState() == OnOffState.ON;
-    SignalLevel level = new com.github.frimtec.android.pikettassist.service.system.SignalStrengthService(this).getSignalStrength();
+    SignalStrengthService signalStrengthService = new SignalStrengthService(this);
+    SignalLevel level = signalStrengthService.getSignalStrength();
     if (this.pikettState && SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
+      int lowSignalFilter = SharedState.getLowSignalFilter(this);
+      if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
+        if (this.currentFilterState < lowSignalFilter) {
+          Log.d(TAG, "Filter round: " + this.currentFilterState);
+          this.currentFilterState += 1;
+          return;
+        } else {
+          this.currentFilterState = lowSignalFilter + 1;
+          Log.d(TAG, "Filter triggered, alarm raced");
+        }
+      }
       if (SharedState.getNotifyLowSignal(this)) {
         new NotificationService(this).notifySignalLow(level);
       }
       LowSignalAlarmActivity.trigger(this, this.alarmService);
+    } else {
+      if (this.currentFilterState > 0) {
+        Log.d(TAG, "Filter stopped, signal ok");
+        this.currentFilterState = 0;
+      }
     }
   }
 
@@ -76,9 +100,17 @@ public class SignalStrengthService extends IntentService {
       if (SharedState.getManageVolumeEnabled(this)) {
         new VolumeService(this).setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
       }
-      this.alarmService.setAlarmRelative(CHECK_INTERVAL_MS, new Intent(this, SignalStrengthService.class));
+      Intent intent = new Intent(this, LowSignalService.class);
+      long nextRunInMillis = CHECK_INTERVAL_MS;
+      if (this.currentFilterState > 0) {
+        intent.putExtra(EXTRA_FILTER_STATE, this.currentFilterState);
+        if (this.currentFilterState <= SharedState.getLowSignalFilter(this)) {
+          nextRunInMillis = Duration.ofSeconds(PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR).toMillis();
+        }
+      }
+      this.alarmService.setAlarmRelative(nextRunInMillis, intent);
     } else {
-      Log.i(TAG, "SignalStrengthService stopped as pikett state is OFF");
+      Log.i(TAG, "LowSignalService stopped as pikett state is OFF");
     }
   }
 }

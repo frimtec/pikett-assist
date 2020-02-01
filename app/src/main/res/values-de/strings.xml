@@ -225,7 +225,7 @@
     <string name="shift_header_next_label_no_entry">Kein Termin im Kalender!</string>
     <string name="shift_header_next_label_starts">Schicht beginnt in:</string>
     <string name="shift_header_next_label_ends">Schicht endet in:</string>
-    <string name="units_days">Tage</string>
+    <string name="units_days">Tagen</string>
     <string name="units_day">Tag</string>
     <string name="units_hours">Stunden</string>
     <string name="units_hour">Stunde</string>

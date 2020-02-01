@@ -13,10 +13,12 @@ import androidx.annotation.Nullable;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 
+import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -40,9 +42,11 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
     TextView startTimeView = convertView.findViewById(R.id.shift_item_start_time);
     TextView endTimeView = convertView.findViewById(R.id.shift_item_end_time);
     TextView titleView = convertView.findViewById(R.id.shift_item_title);
+    TextView durationView = convertView.findViewById(R.id.shift_item_duration);
     startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
     endTimeView.setText(formatDateTime(shift.getEndTime(false)));
     titleView.setText(shift.getTitle());
+    durationView.setText(String.valueOf(Duration.between(shift.getStartTime(false), shift.getEndTime(false)).toDays()));
     return convertView;
   }
 

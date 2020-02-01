@@ -222,4 +222,16 @@
     <string name="pref_title_notify_low_signal">Alert with notification</string>
     <string name="pref_title_low_signal_filter">Signal filter</string>
     <string name="general_seconds">seconds</string>
+    <string name="shift_header_column_title_entry">Calendar entry</string>
+    <string name="shift_header_column_title_duration">Duration in days</string>
+    <string name="shift_header_next_label_no_entry">No entry in calendar!</string>
+    <string name="shift_header_next_label_starts">Shift starts in:</string>
+    <string name="shift_header_next_label_ends">Shift ends in:</string>
+    <string name="units_days">days</string>
+    <string name="units_day">day</string>
+    <string name="units_hours">hours</string>
+    <string name="units_hour">hour</string>
+    <string name="units_minutes">minutes</string>
+    <string name="units_minute">minute</string>
+    <string name="units_and">and</string>
 </resources>

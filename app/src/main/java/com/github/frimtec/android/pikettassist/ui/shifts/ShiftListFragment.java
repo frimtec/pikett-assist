@@ -1,28 +1,39 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
-import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
+import com.github.frimtec.android.pikettassist.ui.common.DurationFormatter;
 
+import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
+import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 
 public class ShiftListFragment extends AbstractListFragment<Shift> {
+
+  private View headerView;
 
   public ShiftListFragment() {
     super(SHIFTS);
@@ -33,28 +44,89 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
     listView.setClickable(true);
     listView.setOnItemClickListener((parent, view1, position, id) -> {
       Shift selectedShift = (Shift) listView.getItemAtPosition(position);
-      long eventId = selectedShift.getId();
-      Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
-      Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
-      startActivity(intent);
+      if (selectedShift != null) {
+        long eventId = selectedShift.getId();
+        Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        startActivity(intent);
+      }
     });
+    this.headerView = getLayoutInflater().inflate(R.layout.shift_header, listView, false);
+    listView.addHeaderView(this.headerView);
   }
 
   @Override
   protected ArrayAdapter<Shift> createAdapter() {
     List<Shift> shifts;
+    Instant now = Shift.now();
     if (!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
       Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {
-      Instant now = Shift.now();
       shifts = new ShiftDao(getContext()).getShifts(SharedState.getCalendarEventPikettTitlePattern(getContext()), SharedState.getCalendarSelection(getContext()))
           .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
       if (shifts.isEmpty()) {
         Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
       }
     }
+    updateHeader(now, shifts);
     return new ShiftArrayAdapter(getContext(), shifts);
   }
 
+  private void updateHeader(Instant now, List<Shift> shifts) {
+    TextView nextLabel = headerView.findViewById(R.id.shift_header_next_label);
+    TextView nextValue = headerView.findViewById(R.id.shift_header_next_value);
+    String label;
+    String value;
+    if (shifts.isEmpty()) {
+      label = getString(R.string.shift_header_next_label_no_entry);
+      value = "";
+    } else {
+      Shift shift = shifts.get(0);
+      Duration duration;
+      if (now.isBefore(shift.getStartTime(false))) {
+        label = getString(R.string.shift_header_next_label_starts);
+        duration = Duration.between(now, shift.getStartTime(false));
+      } else {
+        label = getString(R.string.shift_header_next_label_ends);
+        duration = Duration.between(now, shift.getEndTime(false));
+      }
+      value = toDurationString(duration, new ResourcesUnitNameProvider(getContext()));
+    }
+    nextLabel.setText(label);
+    nextValue.setText(value);
+  }
+
+  private static class ResourcesUnitNameProvider implements DurationFormatter.UnitNameProvider {
+
+    private final Context context;
+
+    ResourcesUnitNameProvider(Context context) {
+      this.context = context;
+    }
+
+    @Override
+    public String getDay(boolean plural) {
+      return plural ? getString(R.string.units_days) : getString(R.string.units_day);
+    }
+
+    @Override
+    public String getHour(boolean plural) {
+      return plural ? getString(R.string.units_hours) : getString(R.string.units_hour);
+    }
+
+    @Override
+    public String getMinute(boolean plural) {
+      return plural ? getString(R.string.units_minutes) : getString(R.string.units_minute);
+    }
+
+    @Override
+    public String getAnd() {
+      return getString(R.string.units_and);
+    }
+
+    private String getString(@StringRes int resId) {
+      return context.getString(resId);
+    }
+  }
 }

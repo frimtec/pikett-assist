@@ -220,5 +220,17 @@
     <string name="pref_title_notify_low_signal">Warnung mit Notifikation</string>
     <string name="pref_title_low_signal_filter">Signalfilter</string>
     <string name="general_seconds">Sekunden</string>
+    <string name="shift_header_column_title_entry">Kalendereintrag</string>
+    <string name="shift_header_column_title_duration">Dauer in Tagen</string>
+    <string name="shift_header_next_label_no_entry">Kein Termin im Kalender!</string>
+    <string name="shift_header_next_label_starts">Schicht beginnt in:</string>
+    <string name="shift_header_next_label_ends">Schicht endet in:</string>
+    <string name="units_days">Tage</string>
+    <string name="units_day">Tag</string>
+    <string name="units_hours">Stunden</string>
+    <string name="units_hour">Stunde</string>
+    <string name="units_minutes">Minuten</string>
+    <string name="units_minute">Minute</string>
+    <string name="units_and">und</string>
 
 </resources>

@@ -12,7 +12,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.FragmentName;
-import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Optional;
@@ -75,9 +74,5 @@ public abstract class AbstractListFragment<T> extends Fragment {
 
   protected ListView getListView() {
     return listView;
-  }
-
-  protected void switchFragment(FragmentName fragment) {
-    ((MainActivity)getActivity()).switchFragment(fragment);
   }
 }

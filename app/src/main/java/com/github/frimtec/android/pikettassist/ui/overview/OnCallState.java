@@ -28,7 +28,7 @@ class OnCallState extends State {
     super(
         R.drawable.ic_eye,
         stateContext.getString(R.string.state_fragment_pikett_state),
-        stateContext.getString(stateContext.getPikettState() == OnOffState.ON ? (stateContext.isPikettStateManuallyOn() ? R.string.state_manually_on : R.string.state_on) : R.string.state_off),
+        String.format("%s %s", stateContext.getString(stateContext.getPikettState() == OnOffState.ON ? (stateContext.isPikettStateManuallyOn() ? R.string.state_manually_on : (R.string.state_on)) : R.string.state_off), stateContext.getPikettStateDuration()),
         null,
         stateContext.getPikettState() == OnOffState.ON ? (stateContext.isPikettStateManuallyOn() ? TrafficLight.YELLOW : TrafficLight.GREEN) : TrafficLight.OFF
     );

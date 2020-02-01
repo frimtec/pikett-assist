@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
@@ -59,6 +60,8 @@ import static com.github.frimtec.android.pikettassist.donation.billing.BillingPr
 import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
@@ -196,6 +199,10 @@ public class StateFragment extends AbstractListFragment<State> {
   private void regularStates(List<State> states) {
     Installation smsAdapterInstallation = this.s2msp.getInstallation();
     Set<String> operationsCenterPhoneNumbers = this.contactDao.getPhoneNumbers(SharedState.getAlarmOperationsCenterContact(getContext()));
+    ShiftService shiftService = new ShiftService(getContext());
+    boolean pikettStateManuallyOn = SharedState.getPikettStateManuallyOn(getContext());
+    OnOffState pikettState = shiftService.getState();
+    Instant now = Shift.now();
     StateContext stateContext = new StateContext(
         getContext(),
         this::startActivityForResult,
@@ -209,9 +216,10 @@ public class StateFragment extends AbstractListFragment<State> {
         !smsAdapterInstallation.getAppVersion().isPresent(),
         smsAdapterInstallation.getAppVersion().isPresent() && smsAdapterInstallation.getApiVersion().compareTo(smsAdapterInstallation.getAppVersion().get()) > 0,
         s2msp.areSmsPermissionsGranted(),
-        new ShiftService(getContext()).getState(),
+        pikettState,
+        shiftService.findCurrentOrNextShift(now).map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now)).orElse(""),
         this.alertDao.getAlertState(),
-        SharedState.getPikettStateManuallyOn(getContext()),
+        pikettStateManuallyOn,
         !(operationsCenterPhoneNumbers.isEmpty() || s2msp.isAllowed(operationsCenterPhoneNumbers)),
         this.signalStrengthService.getSignalStrength(),
         SharedState.getSuperviseSignalStrength(getContext()),
@@ -244,6 +252,11 @@ public class StateFragment extends AbstractListFragment<State> {
         states.add(this.random.nextInt(states.size() + 1), donationState);
       }
     }
+  }
+
+  private String toDuration(boolean pikettStateManuallyOn, OnOffState pikettState, Shift currentOrNextShift, Instant now) {
+    return pikettStateManuallyOn ? "" : String.format("(%s)",
+        toDurationString(Duration.between(now, pikettState == OnOffState.ON ? currentOrNextShift.getEndTime(true) : currentOrNextShift.getStartTime(true)), siFormatter()));
   }
 
   private boolean randomizedOn() {

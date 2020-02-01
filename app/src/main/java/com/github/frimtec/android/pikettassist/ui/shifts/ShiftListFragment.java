@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -11,14 +10,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.StringRes;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
-import com.github.frimtec.android.pikettassist.ui.common.DurationFormatter;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
@@ -29,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
 import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 
 public class ShiftListFragment extends AbstractListFragment<Shift> {
@@ -91,42 +88,10 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
         label = getString(R.string.shift_header_next_label_ends);
         duration = Duration.between(now, shift.getEndTime(false));
       }
-      value = toDurationString(duration, new ResourcesUnitNameProvider(getContext()));
+      value = toDurationString(duration, translatedFormatter(getContext()));
     }
     nextLabel.setText(label);
     nextValue.setText(value);
   }
 
-  private static class ResourcesUnitNameProvider implements DurationFormatter.UnitNameProvider {
-
-    private final Context context;
-
-    ResourcesUnitNameProvider(Context context) {
-      this.context = context;
-    }
-
-    @Override
-    public String getDay(boolean plural) {
-      return plural ? getString(R.string.units_days) : getString(R.string.units_day);
-    }
-
-    @Override
-    public String getHour(boolean plural) {
-      return plural ? getString(R.string.units_hours) : getString(R.string.units_hour);
-    }
-
-    @Override
-    public String getMinute(boolean plural) {
-      return plural ? getString(R.string.units_minutes) : getString(R.string.units_minute);
-    }
-
-    @Override
-    public String getAnd() {
-      return getString(R.string.units_and);
-    }
-
-    private String getString(@StringRes int resId) {
-      return context.getString(resId);
-    }
-  }
 }

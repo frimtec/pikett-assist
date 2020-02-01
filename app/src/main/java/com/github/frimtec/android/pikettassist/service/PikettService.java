@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.domain.Shift;
-import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
@@ -27,7 +26,7 @@ public class PikettService extends IntentService {
   private static final String TAG = "PikettService";
   private static final Duration MAX_SLEEP = Duration.ofHours(24);
 
-  private ShiftDao shiftDao;
+  private ShiftService shiftService;
   private AlarmService alarmService;
 
   public PikettService() {
@@ -37,7 +36,7 @@ public class PikettService extends IntentService {
   @Override
   public void onCreate() {
     super.onCreate();
-    this.shiftDao = new ShiftDao(this);
+    this.shiftService = new ShiftService(this);
     this.alarmService = new AlarmService(this);
   }
 
@@ -58,8 +57,7 @@ public class PikettService extends IntentService {
       return;
     }
     Instant now = Shift.now();
-    Optional<Shift> first = this.shiftDao.getShifts(SharedState.getCalendarEventPikettTitlePattern(this), SharedState.getCalendarSelection(this))
-        .stream().filter(shift -> !shift.isOver(now)).findFirst();
+    Optional<Shift> first = this.shiftService.findCurrentOrNextShift(now);
     Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime(true) : shift.getStartTime(true)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
     long waitMs = Math.min(Duration.between(now, nextRun).toMillis(), MAX_SLEEP.toMillis());
     Log.i(TAG, "Next run in " + waitMs);

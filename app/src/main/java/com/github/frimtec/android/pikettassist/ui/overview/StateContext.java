@@ -27,6 +27,7 @@ class StateContext {
   private final Runnable showDonationDialogAction;
 
   private final OnOffState pikettState;
+  private final String pikettStateDuration;
   private final Pair<AlertState, Long> alarmState;
   private final boolean pikettStateManuallyOn;
   private final boolean operationsCenterPhoneNumbersBlocked;
@@ -56,6 +57,7 @@ class StateContext {
       boolean smsAdapterVersionOutdated,
       boolean smsAdapterPermissionsGranted,
       OnOffState pikettState,
+      String pikettStateDuration,
       Pair<AlertState, Long> alarmState,
       boolean pikettStateManuallyOn,
       boolean operationsCenterPhoneNumbersBlocked,
@@ -76,6 +78,7 @@ class StateContext {
     this.smsAdapterVersionOutdated = smsAdapterVersionOutdated;
     this.smsAdapterPermissionsGranted = smsAdapterPermissionsGranted;
     this.pikettState = pikettState;
+    this.pikettStateDuration = pikettStateDuration;
     this.alarmState = alarmState;
     this.pikettStateManuallyOn = pikettStateManuallyOn;
     this.operationsCenterPhoneNumbersBlocked = operationsCenterPhoneNumbersBlocked;
@@ -136,6 +139,10 @@ class StateContext {
 
   OnOffState getPikettState() {
     return pikettState;
+  }
+
+  public String getPikettStateDuration() {
+    return pikettStateDuration;
   }
 
   Pair<AlertState, Long> getAlarmState() {

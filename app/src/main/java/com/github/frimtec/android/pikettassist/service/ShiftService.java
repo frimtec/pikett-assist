@@ -7,6 +7,10 @@ import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 
+import org.threeten.bp.Instant;
+
+import java.util.Optional;
+
 import static com.github.frimtec.android.pikettassist.state.SharedState.getCalendarEventPikettTitlePattern;
 import static com.github.frimtec.android.pikettassist.state.SharedState.getPikettStateManuallyOn;
 
@@ -23,6 +27,11 @@ public class ShiftService {
   public OnOffState getState() {
     return getPikettStateManuallyOn(this.context) ||
         hasShiftEventForNow(getCalendarEventPikettTitlePattern(this.context), SharedState.getCalendarSelection(this.context)) ? OnOffState.ON : OnOffState.OFF;
+  }
+
+  public Optional<Shift> findCurrentOrNextShift(Instant now) {
+    return this.shiftDao.getShifts(SharedState.getCalendarEventPikettTitlePattern(this.context), SharedState.getCalendarSelection(this.context))
+        .stream().filter(shift -> !shift.isOver(now)).findFirst();
   }
 
   private boolean hasShiftEventForNow(String eventTitleFilterPattern, String calendarSelection) {

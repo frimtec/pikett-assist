@@ -26,6 +26,7 @@ import java.util.Objects;
 class ShiftArrayAdapter extends ArrayAdapter<Shift> {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
+  private static final float HOURS_PER_DAY = 24;
 
   ShiftArrayAdapter(Context context, List<Shift> shifts) {
     super(context, 0, shifts);
@@ -46,8 +47,13 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
     startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
     endTimeView.setText(formatDateTime(shift.getEndTime(false)));
     titleView.setText(shift.getTitle());
-    durationView.setText(String.valueOf(Duration.between(shift.getStartTime(false), shift.getEndTime(false)).toDays()));
+    durationView.setText(String.valueOf(roundToDays(Duration.between(shift.getStartTime(false), shift.getEndTime(false)))));
     return convertView;
+  }
+
+  static int roundToDays(Duration duration) {
+    float hours = duration.toHours();
+    return Math.round(hours / HOURS_PER_DAY);
   }
 
   private String formatDateTime(Instant time) {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,8 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
     TextView endTimeView = convertView.findViewById(R.id.shift_item_end_time);
     TextView titleView = convertView.findViewById(R.id.shift_item_title);
     TextView durationView = convertView.findViewById(R.id.shift_item_duration);
+    ImageView playIcon = convertView.findViewById(R.id.shift_item_image_play);
+    playIcon.setVisibility(shift.isNow() ? View.VISIBLE : View.INVISIBLE);
     startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
     endTimeView.setText(formatDateTime(shift.getEndTime(false)));
     titleView.setText(shift.getTitle());

@@ -15,6 +15,7 @@ import com.android.billingclient.api.BillingClient.SkuType;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.Purchase.PurchasesResult;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -26,11 +27,15 @@ import com.github.frimtec.android.pikettassist.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurchaseResponseListener {
 
   private static final String TAG = "BillingManager";
+
+  private static final Set<String> BLACKLIST = Collections.emptySet();
 
   /**
    * A reference to BillingClient
@@ -136,6 +141,15 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
   }
 
   private void handlePurchase(Purchase purchase) {
+    if(BLACKLIST.contains(purchase.getOrderId())){
+      Log.i(TAG, "Got a blacklist purchase: " + purchase.getOrderId() + ", will be consumed.");
+      billingClient.consumeAsync(ConsumeParams.newBuilder()
+          .setPurchaseToken(purchase.getPurchaseToken())
+          .build(), (billingResult, s) -> {
+        Log.i(TAG, "Consume respond: " + billingResult + "; " + s);
+      });
+      return;
+    }
     if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
       Log.w(TAG, "Got a purchase: " + purchase + "; but signature is bad. Skipping...");
       return;

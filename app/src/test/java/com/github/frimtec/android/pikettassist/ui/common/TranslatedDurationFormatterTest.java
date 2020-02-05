@@ -96,4 +96,14 @@ class TranslatedDurationFormatterTest {
   void toDurationStringMinutes0() {
     assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(0).plusSeconds(0), unitNameProvider)).isEqualTo("0 minutes");
   }
+
+  @Test
+  void toDurationStringMinusMinute() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(0).plusSeconds(-31), unitNameProvider)).isEqualTo("-1 minute");
+  }
+
+  @Test
+  void toDurationStringMinusMinutes() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(-1).plusSeconds(-31), unitNameProvider)).isEqualTo("-2 minutes");
+  }
 }

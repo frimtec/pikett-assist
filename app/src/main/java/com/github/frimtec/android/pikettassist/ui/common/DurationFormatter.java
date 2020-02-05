@@ -39,11 +39,11 @@ public class DurationFormatter {
     long days = Math.round((float) hours / HOURS_PER_DAY);
 
     if (days >= UNIT_CHANGE_LIMIT) {
-      return format(days, unitNameProvider.getSeparator(), unitNameProvider.getDay(days != 1));
+      return format(days, unitNameProvider.getSeparator(), unitNameProvider.getDay(Math.abs(days) != 1));
     } else if (hours >= UNIT_CHANGE_LIMIT) {
-      return format(hours, unitNameProvider.getSeparator(), unitNameProvider.getHour(hours != 1));
+      return format(hours, unitNameProvider.getSeparator(), unitNameProvider.getHour(Math.abs(hours) != 1));
     } else {
-      return format(minutes, unitNameProvider.getSeparator(), unitNameProvider.getMinute(minutes != 1));
+      return format(minutes, unitNameProvider.getSeparator(), unitNameProvider.getMinute(Math.abs(minutes) != 1));
     }
   }
 

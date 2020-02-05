@@ -21,7 +21,7 @@
 
     <string name="pref_header_calendar">Calendar</string>
     <string name="pref_title_calendar_selection">Calendar filter</string>
-    <string name="pref_title_calendar_event_pikett_title_pattern">Event filter (Help: Regular-Expression ignoring case)</string>
+    <string name="pref_title_calendar_event_pikett_title_pattern">Event filter</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
 
     <string name="pref_title_alarm_operations_center_contact">Operations center</string>
@@ -29,7 +29,7 @@
     <string name="pref_default_sms_confirm_text">OK</string>
 
     <string name="pref_header_test_alarm">Test alarm</string>
-    <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern (Help: Regular-Expression with a maximum of one group to select the test context)</string>
+    <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern</string>
     <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
     <string name="pref_title_supervise_test_contexts">Test contexts to supervise</string>
     <string name="pref_title_test_alarm_check_time">Check time</string>
@@ -233,4 +233,9 @@
     <string name="units_hour">hour</string>
     <string name="units_minutes">minutes</string>
     <string name="units_minute">minute</string>
+    <string name="error_regexp_pattern">Syntax error in regexp pattern!</string>
+    <string name="error_regexp_groups">Maximum of %d group(s) allowed in regexp pattern!</string>
+    <string name="pref_message_test_alarm_message_pattern">Enter a valid regexp (use optionally a single group to select the test context)</string>
+    <string name="pref_message_calendar_event_pikett_title_pattern">Enter a valid regexp (case will be ignored)</string>
+    <string name="button_regexp_help">RegExp help?</string>
 </resources>

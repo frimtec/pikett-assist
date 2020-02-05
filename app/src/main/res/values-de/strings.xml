@@ -20,7 +20,7 @@
 
     <string name="pref_header_calendar">Kalender</string>
     <string name="pref_title_calendar_selection">Kalenderauswahl</string>
-    <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter (Hilfe: Regular-Expression ohne Gross-/ Kleinschreibung)</string>
+    <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
 
     <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
@@ -28,7 +28,7 @@
     <string name="pref_default_sms_confirm_text">OK</string>
 
     <string name="pref_header_test_alarm">Testalarm</string>
-    <string name="pref_title_test_alarm_message_pattern">Testalarm Meldungsmuster (Hilfe: Regular-Expression mit maximaler einer Gruppe als Testkontext)</string>
+    <string name="pref_title_test_alarm_message_pattern">Testalarm Meldungsmuster</string>
     <string name="pref_default_test_alarm_message_pattern">--- UNDEFINIERT ---</string>
     <string name="pref_title_supervise_test_contexts">Überwachte Testkontexte</string>
     <string name="pref_title_test_alarm_check_time">Überwachungszeitpunkt</string>
@@ -231,5 +231,10 @@
     <string name="units_hour">Stunde</string>
     <string name="units_minutes">Minuten</string>
     <string name="units_minute">Minute</string>
+    <string name="error_regexp_pattern">Syntaxfehler in der RegExp!</string>
+    <string name="error_regexp_groups">Maximal %d Gruppe(n) erlaubt in der RegExp!</string>
+    <string name="pref_message_test_alarm_message_pattern">Gültige RegExp eingeben (mit einer optionalen Gruppe, kann der Testkontext ausgewählt werden)</string>
+    <string name="pref_message_calendar_event_pikett_title_pattern">Gültige RegExp eingeben (Gross-/ Kleinschreibung wird ignoriert)</string>
+    <string name="button_regexp_help">RegExp Hilfe?</string>
 
 </resources>

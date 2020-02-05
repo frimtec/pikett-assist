@@ -23,7 +23,7 @@
         app:key="test_alarm_enabled"
         app:title="@string/pref_title_test_alarm_enabled" />
 
-    <EditTextPreference
+    <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
         app:defaultValue="@string/pref_default_test_alarm_message_pattern"
         app:icon="@drawable/ic_message_black_24dp"
         app:dependency="test_alarm_enabled"
@@ -31,7 +31,10 @@
         app:singleLine="true"
         app:singleLineTitle="false"
         app:title="@string/pref_title_test_alarm_message_pattern"
-        app:useSimpleSummaryProvider="true" />
+        app:dialogMessage="@string/pref_message_test_alarm_message_pattern"
+        app:useSimpleSummaryProvider="true"
+        app:max_groups="1"
+        />
 
     <MultiSelectListPreference
         app:dependency="test_alarm_enabled"

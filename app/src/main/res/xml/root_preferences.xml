@@ -36,13 +36,16 @@
             app:useSimpleSummaryProvider="true"
             app:title="@string/pref_title_calendar_selection" />
 
-        <EditTextPreference
+        <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
             app:defaultValue="@string/pref_default_calendar_event_pikett_title_pattern"
             app:key="calendar_event_pikett_title_pattern"
             app:singleLine="true"
             app:singleLineTitle="false"
             app:title="@string/pref_title_calendar_event_pikett_title_pattern"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            app:max_groups="0"
+            app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern"
+            />
 
     </PreferenceCategory>
 

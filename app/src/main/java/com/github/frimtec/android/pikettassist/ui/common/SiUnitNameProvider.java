@@ -33,9 +33,4 @@ final class SiUnitNameProvider implements UnitNameProvider {
     return "";
   }
 
-  @Override
-  public String getAnd() {
-    return "";
-  }
-
 }

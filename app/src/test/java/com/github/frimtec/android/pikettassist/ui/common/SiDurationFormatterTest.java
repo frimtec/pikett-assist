@@ -14,62 +14,32 @@ class SiDurationFormatterTest {
   private static final UnitNameProvider UNIT_NAME_PROVIDER = siFormatter();
 
   @Test
-  void toDurationStringDaysOnlyRoundUp() {
-    assertThat(toDurationString(Duration.ofDays(2).plusHours(12), UNIT_NAME_PROVIDER)).isEqualTo("3d");
-  }
-
-  @Test
-  void toDurationStringDaysOnlyRoundDown() {
-    assertThat(toDurationString(Duration.ofDays(2).plusHours(11), UNIT_NAME_PROVIDER)).isEqualTo("2d");
-  }
-
-  @Test
-  void toDurationStringDaysOnly() {
+  void toDurationStringDays() {
     assertThat(toDurationString(Duration.ofDays(2).plusHours(2).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("2d");
   }
 
   @Test
-  void toDurationStringDaysAndHours() {
-    assertThat(toDurationString(Duration.ofDays(1).plusHours(2).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("1d 2h");
+  void toDurationStringDay() {
+    assertThat(toDurationString(Duration.ofDays(1).plusHours(2).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("1d");
   }
 
   @Test
-  void toDurationStringOneDay() {
-    assertThat(toDurationString(Duration.ofDays(1).plusHours(0).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("1d");
-  }
-
-  @Test
-  void toDurationStringHoursOnlyRoundUp() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(2).plusMinutes(30), UNIT_NAME_PROVIDER)).isEqualTo("3h");
-  }
-
-  @Test
-  void toDurationStringHoursOnlyRoundDown() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(2).plusMinutes(29), UNIT_NAME_PROVIDER)).isEqualTo("2h");
-  }
-
-  @Test
-  void toDurationStringHoursOnly() {
+  void toDurationStringHours() {
     assertThat(toDurationString(Duration.ofDays(0).plusHours(2).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("2h");
   }
 
   @Test
-  void toDurationStringHoursAndMinutes() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("1h 2m");
+  void toDurationStringHour() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("1h");
   }
 
   @Test
-  void toDurationStringOneHour() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(0), UNIT_NAME_PROVIDER)).isEqualTo("1h");
-  }
-
-  @Test
-  void toDurationStringMinutesOnly() {
+  void toDurationStringMinutes() {
     assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(2), UNIT_NAME_PROVIDER)).isEqualTo("2m");
   }
 
   @Test
-  void toDurationStringOneMinute() {
+  void toDurationStringMinute() {
     assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(1), UNIT_NAME_PROVIDER)).isEqualTo("1m");
   }
 

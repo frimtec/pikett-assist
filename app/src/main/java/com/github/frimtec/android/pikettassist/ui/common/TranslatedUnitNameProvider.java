@@ -34,11 +34,6 @@ final class TranslatedUnitNameProvider implements DurationFormatter.UnitNameProv
     return " ";
   }
 
-  @Override
-  public String getAnd() {
-    return getString(R.string.units_and);
-  }
-
   private String getString(@StringRes int resId) {
     return context.getString(resId);
   }

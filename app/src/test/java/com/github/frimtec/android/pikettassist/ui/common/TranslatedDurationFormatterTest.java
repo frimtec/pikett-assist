@@ -29,71 +29,71 @@ class TranslatedDurationFormatterTest {
     when(context.getString(R.string.units_hour)).thenReturn("hour");
     when(context.getString(R.string.units_minutes)).thenReturn("minutes");
     when(context.getString(R.string.units_minute)).thenReturn("minute");
-    when(context.getString(R.string.units_and)).thenReturn("and");
+  }
+
+
+  @Test
+  void toDurationStringDays3() {
+    assertThat(toDurationString(Duration.ofDays(2).plusHours(11).plusMinutes(29). plusSeconds(30), unitNameProvider)).isEqualTo("3 days");
   }
 
   @Test
-  void toDurationStringDaysOnlyRoundUp() {
-    assertThat(toDurationString(Duration.ofDays(2).plusHours(12), unitNameProvider)).isEqualTo("3 days");
+  void toDurationStringDays2() {
+    assertThat(toDurationString(Duration.ofDays(2).plusHours(11).plusMinutes(29). plusSeconds(29), unitNameProvider)).isEqualTo("2 days");
   }
 
   @Test
-  void toDurationStringDaysOnlyRoundDown() {
-    assertThat(toDurationString(Duration.ofDays(2).plusHours(11), unitNameProvider)).isEqualTo("2 days");
+  void toDurationStringDays1() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(11).plusMinutes(29).plusSeconds(30), unitNameProvider)).isEqualTo("1 day");
   }
 
   @Test
-  void toDurationStringDaysOnly() {
-    assertThat(toDurationString(Duration.ofDays(2).plusHours(2).plusMinutes(2), unitNameProvider)).isEqualTo("2 days");
+  void toDurationStringHours11() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(11).plusMinutes(29).plusSeconds(29), unitNameProvider)).isEqualTo("11 hours");
   }
 
   @Test
-  void toDurationStringDaysAndHours() {
-    assertThat(toDurationString(Duration.ofDays(1).plusHours(2).plusMinutes(2), unitNameProvider)).isEqualTo("1 day and 2 hours");
+  void toDurationStringHours2() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(29).plusSeconds(30), unitNameProvider)).isEqualTo("2 hours");
   }
 
   @Test
-  void toDurationStringOneDay() {
-    assertThat(toDurationString(Duration.ofDays(1).plusHours(0).plusMinutes(2), unitNameProvider)).isEqualTo("1 day");
+  void toDurationStringHours1() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(29).plusSeconds(29), unitNameProvider)).isEqualTo("1 hour");
   }
 
   @Test
-  void toDurationStringHoursOnlyRoundUp() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(2).plusMinutes(30), unitNameProvider)).isEqualTo("3 hours");
+  void toDurationStringHours1Up() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(29).plusSeconds(30), unitNameProvider)).isEqualTo("1 hour");
   }
 
   @Test
-  void toDurationStringHoursOnlyRoundDown() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(2).plusMinutes(29), unitNameProvider)).isEqualTo("2 hours");
+  void toDurationStringMinutes29() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(29).plusSeconds(29), unitNameProvider)).isEqualTo("29 minutes");
   }
 
   @Test
-  void toDurationStringHoursOnly() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(2).plusMinutes(2), unitNameProvider)).isEqualTo("2 hours");
-  }
-
-  @Test
-  void toDurationStringHoursAndMinutes() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(2), unitNameProvider)).isEqualTo("1 hour and 2 minutes");
-  }
-
-  @Test
-  void toDurationStringOneHour() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(1).plusMinutes(0), unitNameProvider)).isEqualTo("1 hour");
-  }
-
-  @Test
-  void toDurationStringMinutesOnly() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(2), unitNameProvider)).isEqualTo("2 minutes");
+  void toDurationStringMinutes2() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(1).plusSeconds(30), unitNameProvider)).isEqualTo("2 minutes");
   }
 
   @Test
   void toDurationStringOneMinute() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(1), unitNameProvider)).isEqualTo("1 minute");
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(1).plusSeconds(29), unitNameProvider)).isEqualTo("1 minute");
   }
 
   @Test
-  void toDurationStringZeroMinutes() {
-    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(0), unitNameProvider)).isEqualTo("0 minutes");
+  void toDurationStringOneMinuteUp() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(0).plusSeconds(30), unitNameProvider)).isEqualTo("1 minute");
+  }
+
+  @Test
+  void toDurationStringMinutes0Down() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(0).plusSeconds(29), unitNameProvider)).isEqualTo("0 minutes");
+  }
+
+  @Test
+  void toDurationStringMinutes0() {
+    assertThat(toDurationString(Duration.ofDays(0).plusHours(0).plusMinutes(0).plusSeconds(0), unitNameProvider)).isEqualTo("0 minutes");
   }
 }

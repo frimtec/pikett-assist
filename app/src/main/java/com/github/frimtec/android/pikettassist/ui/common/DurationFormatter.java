@@ -10,6 +10,9 @@ public class DurationFormatter {
 
   private static final int HOURS_PER_DAY = 24;
   private static final int MINUTES_PER_HOUR = 60;
+  private static final int SECONDS_PER_MINUTE = 60;
+
+  private static final int UNIT_CHANGE_LIMIT = 1;
 
   public interface UnitNameProvider {
 
@@ -21,8 +24,6 @@ public class DurationFormatter {
 
     String getSeparator();
 
-    String getAnd();
-
     static UnitNameProvider siFormatter() {
       return SiUnitNameProvider.getInstance();
     }
@@ -33,34 +34,20 @@ public class DurationFormatter {
   }
 
   public static String toDurationString(Duration duration, UnitNameProvider unitNameProvider) {
-    long days = duration.toDays();
-    long hours = duration.toHours();
-    long minutes = duration.toMinutes();
-    if (days >= 2) {
-      return String.format(Locale.getDefault(), "%d%s%s",
-          days + (hours - HOURS_PER_DAY * days >= (HOURS_PER_DAY / 2) ? 1 : 0), unitNameProvider.getSeparator(), unitNameProvider.getDay(true));
-    } else if (days > 0 && (hours - HOURS_PER_DAY * days) != 0) {
-      return String.format(Locale.getDefault(), "%d%s%s%s%s %d%s%s",
-          days, unitNameProvider.getSeparator(), unitNameProvider.getDay(false), unitNameProvider.getSeparator(), unitNameProvider.getAnd(), (hours - HOURS_PER_DAY * days), unitNameProvider.getSeparator(), unitNameProvider.getHour(true));
-    } else if (days > 0) {
-      return String.format(Locale.getDefault(), "%d%s%s",
-          days, unitNameProvider.getSeparator(), unitNameProvider.getDay(false));
-    } else if (hours >= 2) {
-      return String.format(Locale.getDefault(), "%d%s%s",
-          hours + (minutes - MINUTES_PER_HOUR * hours >= (MINUTES_PER_HOUR / 2) ? 1 : 0), unitNameProvider.getSeparator(), unitNameProvider.getHour(true));
-    } else if (hours > 0 && (minutes - MINUTES_PER_HOUR * hours) != 0) {
-      return String.format(Locale.getDefault(), "%d%s%s%s%s %d%s%s",
-          hours, unitNameProvider.getSeparator(), unitNameProvider.getHour(false), unitNameProvider.getSeparator(), unitNameProvider.getAnd(), (minutes - MINUTES_PER_HOUR * hours), unitNameProvider.getSeparator(), unitNameProvider.getMinute(true));
-    } else if (hours > 0) {
-      return String.format(Locale.getDefault(), "%d%s%s",
-          hours, unitNameProvider.getSeparator(), unitNameProvider.getHour(false));
-    } else if (minutes != 1) {
-      return String.format(Locale.getDefault(), "%d%s%s",
-          minutes, unitNameProvider.getSeparator(), unitNameProvider.getMinute(true));
-    } else {
-      return String.format(Locale.getDefault(), "%d%s%s",
-          minutes, unitNameProvider.getSeparator(), unitNameProvider.getMinute(false));
-    }
+    long minutes = Math.round((float) duration.getSeconds() / SECONDS_PER_MINUTE);
+    long hours = Math.round((float) minutes / MINUTES_PER_HOUR);
+    long days = Math.round((float) hours / HOURS_PER_DAY);
 
+    if (days >= UNIT_CHANGE_LIMIT) {
+      return format(days, unitNameProvider.getSeparator(), unitNameProvider.getDay(days != 1));
+    } else if (hours >= UNIT_CHANGE_LIMIT) {
+      return format(hours, unitNameProvider.getSeparator(), unitNameProvider.getHour(hours != 1));
+    } else {
+      return format(minutes, unitNameProvider.getSeparator(), unitNameProvider.getMinute(minutes != 1));
+    }
+  }
+
+  private static String format(long value, String separator, String unit) {
+    return String.format(Locale.getDefault(), "%d%s%s", value, separator, unit);
   }
 }

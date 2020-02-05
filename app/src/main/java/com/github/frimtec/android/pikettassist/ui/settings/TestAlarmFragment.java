@@ -11,6 +11,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
 
@@ -22,6 +23,15 @@ public class TestAlarmFragment extends PreferenceFragmentCompat {
   @Override
   public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
     setPreferencesFromResource(R.xml.test_alarm_preferences, rootKey);
+
+    EditTextPreference testAlarmAcceptTimeWindowMinutes = findPreference("test_alarm_accept_time_window_minutes");
+    if (testAlarmAcceptTimeWindowMinutes != null) {
+      testAlarmAcceptTimeWindowMinutes.setSummaryProvider(
+          (Preference.SummaryProvider<EditTextPreference>) preference -> {
+            String value = preference.getText();
+            return value + " " + getString("1".equals(value) ? R.string.units_minute : R.string.units_minutes);
+          });
+    }
 
     MultiSelectListPreference countingPreference = findPreference("test_alarm_check_weekdays");
     if (countingPreference != null) {

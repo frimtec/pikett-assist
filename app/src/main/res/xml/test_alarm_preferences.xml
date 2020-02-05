@@ -53,8 +53,7 @@
         app:dependency="test_alarm_enabled"
         app:key="test_alarm_accept_time_window_minutes"
         app:singleLine="true"
-        app:title="@string/pref_title_test_alarm_accept_time_window_minutes"
-        app:useSimpleSummaryProvider="true" />
+        app:title="@string/pref_title_test_alarm_accept_time_window_minutes" />
 
     <MultiSelectListPreference
         app:icon="@drawable/ic_date_range_black_24dp"

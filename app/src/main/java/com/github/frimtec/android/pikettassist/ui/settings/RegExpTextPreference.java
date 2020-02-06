@@ -14,6 +14,9 @@ import android.widget.EditText;
 import com.github.frimtec.android.pikettassist.R;
 import com.takisoft.preferencex.EditTextPreference;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -103,13 +106,22 @@ public class RegExpTextPreference extends EditTextPreference {
     if (viewGroup != null) {
       Button helpButton = new Button(context);
       helpButton.setText(R.string.button_regexp_help);
+
       helpButton.setOnClickListener(v -> {
-        String url = "https://en.wikipedia.org/wiki/Regular_expression";
+        String url = "https://regex101.com/?regex=" + encoded(editText.getText().toString());
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         context.startActivity(i);
       });
       viewGroup.addView(helpButton);
+    }
+  }
+
+  private String encoded(String text) {
+    try {
+      return URLEncoder.encode(text, StandardCharsets.UTF_8.name());
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("Cannot encode text", e);
     }
   }
 }

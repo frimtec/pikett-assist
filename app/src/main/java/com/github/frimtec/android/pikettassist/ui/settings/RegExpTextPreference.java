@@ -78,17 +78,21 @@ public class RegExpTextPreference extends EditTextPreference {
 
       @Override
       public void afterTextChanged(Editable s) {
+        boolean hasError = false;
         try {
           Pattern pattern = Pattern.compile(s.toString());
           if (maxGroups > NO_GROUP_COUNT_CHECK) {
             Matcher matcher = pattern.matcher("");
             if (matcher.groupCount() > maxGroups) {
               editText.setError(String.format(context.getString(R.string.error_regexp_groups), RegExpTextPreference.this.maxGroups));
+              hasError = true;
             }
           }
         } catch (PatternSyntaxException e) {
           editText.setError(context.getString(R.string.error_regexp_pattern));
+          hasError = true;
         }
+        editText.getRootView().findViewById(android.R.id.button1).setEnabled(!hasError);
       }
     });
   }

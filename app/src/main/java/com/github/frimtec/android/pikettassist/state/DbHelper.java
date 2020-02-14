@@ -17,16 +17,23 @@ public class DbHelper extends SQLiteOpenHelper {
   public static final String TABLE_ALERT_COLUMN_CONFIRM_TIME = "confirm_time";
   public static final String TABLE_ALERT_COLUMN_IS_CONFIRMED = "is_confirmed";
   public static final String TABLE_ALERT_COLUMN_END_TIME = "end_time";
+
   public static final String TABLE_ALERT_CALL = "t_alert_call";
   public static final String TABLE_ALERT_CALL_COLUMN_ID = "_id";
   public static final String TABLE_ALERT_CALL_COLUMN_ALERT_ID = "alert_id";
   public static final String TABLE_ALERT_CALL_COLUMN_TIME = "time";
   public static final String TABLE_ALERT_CALL_COLUMN_MESSAGE = "message";
+
   public static final String TABLE_TEST_ALARM_STATE = "t_test_alarm_state";
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_ID = "_id";
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME = "last_received_time";
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE = "message";
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE = "alert_state";
+
+  public static final String TABLE_KEY_VALUE = "t_key_value";
+  public static final String TABLE_KEY_VALUE_COLUMN_ID = "_id";
+  public static final String TABLE_KEY_VALUE_COLUMN_VALUE = "value";
+
   public static final int BOOLEAN_TRUE = 1;
   public static final int BOOLEAN_FALSE = 0;
   private static final String TAG = "DbHelper";
@@ -64,8 +71,11 @@ public class DbHelper extends SQLiteOpenHelper {
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     Log.i(TAG, String.format("Upgrade DB from %d to %d", oldVersion, newVersion));
-//    if (oldVersion < 2) {
-//       migrate to version 2 - do not change reference schema
-//    }
+    if (oldVersion < 2) {
+      db.execSQL("CREATE TABLE " + TABLE_KEY_VALUE + " (" +
+          "  " + TABLE_KEY_VALUE_COLUMN_ID + " TEXT PRIMARY KEY," +
+          "  " + TABLE_KEY_VALUE_COLUMN_VALUE + " TEXT" +
+          ");");
+    }
   }
 }

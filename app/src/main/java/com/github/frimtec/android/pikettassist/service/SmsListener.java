@@ -8,12 +8,12 @@ import android.widget.Toast;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.service.system.SmsService;
+import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
@@ -41,7 +41,6 @@ public class SmsListener extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    ContactDao contactDao = new ContactDao(context);
     ShiftService shiftService = new ShiftService(context);
     if (Action.SMS_RECEIVED.getId().equals(intent.getAction())) {
       SmsService smsService = new SmsService(context);
@@ -54,10 +53,10 @@ public class SmsListener extends BroadcastReceiver {
         Log.d(TAG, "Drop SMS, not on-call");
         return;
       }
-      long operationCenterContactId = SharedState.getAlarmOperationsCenterContact(context);
+      OperationsCenterContactService operationsCenterContactService = new OperationsCenterContactService(context);
+      Contact operationsCenterContact = operationsCenterContactService.getOperationsCenterContact();
       for (Sms sms : receivedSms) {
-        Set<Long> contactIds = contactDao.lookupContactIdByPhoneNumber(sms.getNumber());
-        if (operationCenterContactId != SharedState.EMPTY_CONTACT && contactIds.contains(operationCenterContactId)) {
+        if (operationsCenterContactService.isContactsPhoneNumber(operationsCenterContact, sms.getNumber())) {
           Log.i(TAG, "SMS from pikett number");
           Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context), Pattern.DOTALL);
           Matcher matcher = testSmsPattern.matcher(sms.getText());

@@ -23,11 +23,11 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
-import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
@@ -54,7 +54,6 @@ import java.util.Random;
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
-import static com.github.frimtec.android.pikettassist.domain.Contact.unknown;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
@@ -91,7 +90,7 @@ public class StateFragment extends AbstractListFragment<State> {
   private SignalStrengthService signalStrengthService;
   private final AlertDao alertDao;
   private final TestAlarmDao testAlarmDao;
-  private ContactDao contactDao;
+  private OperationsCenterContactService operationsCenterContactService;
 
   public StateFragment() {
     this(new AlertDao(), new TestAlarmDao());
@@ -115,7 +114,7 @@ public class StateFragment extends AbstractListFragment<State> {
     this.alertService = new AlertService(getContext());
     this.s2msp = SecureSmsProxyFacade.instance(getContext());
     this.signalStrengthService = new SignalStrengthService(getContext());
-    this.contactDao = new ContactDao(getContext());
+    this.operationsCenterContactService = new OperationsCenterContactService(getContext());
   }
 
   @Override
@@ -142,8 +141,8 @@ public class StateFragment extends AbstractListFragment<State> {
         getContext().startService(new Intent(getContext(), PikettService.class));
       }
     } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
-      Contact contact = this.contactDao.getContact(data.getData()).orElse(unknownContact());
-      SharedState.setAlarmOperationsCenterContact(getContext(), contact);
+      Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
+      SharedState.setOperationsCenterContactReference(getContext(), contact.getReference());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
@@ -198,7 +197,8 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private void regularStates(List<State> states) {
     Installation smsAdapterInstallation = this.s2msp.getInstallation();
-    Set<String> operationsCenterPhoneNumbers = this.contactDao.getPhoneNumbers(SharedState.getAlarmOperationsCenterContact(getContext()));
+    Contact operationsCenterContact = this.operationsCenterContactService.getOperationsCenterContact();
+    Set<String> operationsCenterPhoneNumbers = this.operationsCenterContactService.getPhoneNumbers(operationsCenterContact);
     ShiftService shiftService = new ShiftService(getContext());
     boolean pikettStateManuallyOn = SharedState.getPikettStateManuallyOn(getContext());
     OnOffState pikettState = shiftService.getState();
@@ -224,7 +224,7 @@ public class StateFragment extends AbstractListFragment<State> {
         this.signalStrengthService.getSignalStrength(),
         SharedState.getSuperviseSignalStrength(getContext()),
         this.signalStrengthService.getNetworkOperatorName(),
-        StateFragment.this.contactDao.getContact(SharedState.getAlarmOperationsCenterContact(getContext())).orElse(unknownContact())
+        operationsCenterContact
     );
     states.add(new SmsAdapterState(stateContext));
     states.addAll(Arrays.asList(
@@ -294,9 +294,4 @@ public class StateFragment extends AbstractListFragment<State> {
       return super.onContextItemSelected(item);
     }
   }
-
-  private Contact unknownContact() {
-    return unknown(getContext().getString(R.string.contact_helper_unknown_contact));
-  }
-
 }

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 
 import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactReference;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,27 +24,29 @@ public class ContactDao {
 
   public Optional<Contact> getContact(long id) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-        new String[]{ContactsContract.Contacts.DISPLAY_NAME_PRIMARY},
+        new String[]{ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY},
         ContactsContract.Contacts._ID + " = ?",
         new String[]{String.valueOf(id)}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
-        return Optional.of(new Contact(id, true, cursor.getString(0)));
+        ContactReference reference = new ContactReference(id, cursor.getString(0));
+        return Optional.of(new Contact(reference, true, cursor.getString(1)));
       }
     }
     return Optional.empty();
   }
 
   public Optional<Contact> getContact(Uri contactUri) {
-    String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
+    String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
     try (Cursor cursor = this.contentResolver.query(contactUri, projection, null, null, null)) {
       if (cursor != null && cursor.moveToFirst()) {
-        return Optional.of(new Contact(cursor.getLong(0), true, cursor.getString(1)));
+        ContactReference reference = new ContactReference(cursor.getLong(0), cursor.getString(1));
+        return Optional.of(new Contact(reference, true, cursor.getString(2)));
       }
     }
     return Optional.empty();
   }
 
-  public Set<Long> lookupContactIdByPhoneNumber(String phoneNumber) {
+  public Set<Long> lookupContactIdsByPhoneNumber(String phoneNumber) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
         ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
@@ -59,11 +62,11 @@ public class ContactDao {
     }
   }
 
-  public Set<String> getPhoneNumbers(long contactId) {
+  public Set<String> getPhoneNumbers(Contact contact) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-        new String[]{String.valueOf(contactId)}, null)) {
+        new String[]{String.valueOf(contact.getReference().getId())}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         Set<String> phoneNumbers = new HashSet<>();
         do {

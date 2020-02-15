@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.state.SharedState;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
@@ -32,9 +33,8 @@ class OperationsCenterState extends State {
 
   @Override
   public void onClickAction(Context context) {
-    long alarmOperationsCenterContact = SharedState.getAlarmOperationsCenterContact(context);
     if (operationCenter.isValid()) {
-      actionViewContact(alarmOperationsCenterContact);
+      actionViewContact();
     } else {
       actionSelectContact();
     }
@@ -53,14 +53,14 @@ class OperationsCenterState extends State {
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID:
-        actionViewContact(operationCenter.getId());
+        actionViewContact();
         return true;
       case MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID:
         actionSelectContact();
         return true;
       case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
         DialogHelper.areYouSure(stateContext.getContext(), (dialog, which) -> {
-          SharedState.setAlarmOperationsCenterContact(context, Contact.unknown(context.getString(R.string.contact_helper_unknown_contact)));
+          SharedState.setOperationsCenterContactReference(context, ContactReference.NO_SELECTION);
           stateContext.refreshFragment();
         }, (dialog, which) -> {
         });
@@ -76,9 +76,9 @@ class OperationsCenterState extends State {
     stateContext.startActivityForResultAction(intent, REQUEST_CODE_SELECT_PHONE_NUMBER);
   }
 
-  private void actionViewContact(long alarmOperationsCenterContact) {
+  private void actionViewContact() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(alarmOperationsCenterContact));
+    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(this.operationCenter.getReference().getId()));
     intent.setData(uri);
     stateContext.getContext().startActivity(intent);
   }

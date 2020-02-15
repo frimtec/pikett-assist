@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
 import org.threeten.bp.LocalTime;
@@ -50,8 +50,6 @@ public final class SharedState {
 
   private static final String LAST_ALARM_SMS_NUMBER = "last_alarm_sms_number";
 
-  public static final long EMPTY_CONTACT = -1;
-
   private SharedState() {
   }
 
@@ -63,12 +61,12 @@ public final class SharedState {
     return getSharedPreferences(context, PREF_KEY_CALENDAR_SELECTION, CALENDAR_FILTER_ALL);
   }
 
-  public static long getAlarmOperationsCenterContact(Context context) {
-    return Long.parseLong(getSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, String.valueOf(EMPTY_CONTACT)));
+  public static ContactReference getOperationsCenterContactReference(Context context) {
+    return ContactReference.fromSerializedString(getSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, ContactReference.NO_SELECTION.getSerializedString()));
   }
 
-  public static void setAlarmOperationsCenterContact(Context context, Contact contact) {
-    setSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, String.valueOf(contact.getId()));
+  public static void setOperationsCenterContactReference(Context context, ContactReference contactReference) {
+    setSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, contactReference.getSerializedString());
   }
 
   public static String getSmsTestMessagePattern(Context context) {

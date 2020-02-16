@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
@@ -15,6 +16,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ContactDao {
+
+  private static final String TAG = "ContactDao";
 
   private final ContentResolver contentResolver;
 
@@ -64,13 +67,18 @@ public class ContactDao {
 
   public Set<String> getPhoneNumbers(Contact contact) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-        new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER},
+        new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
         new String[]{String.valueOf(contact.getReference().getId())}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         Set<String> phoneNumbers = new HashSet<>();
         do {
-          phoneNumbers.add(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)));
+          String normalizedNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
+          if (normalizedNumber != null) {
+            phoneNumbers.add(normalizedNumber);
+          } else {
+            Log.w(TAG, "Skipping phone number as normalized number is null for number: " + cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+          }
         } while (cursor.moveToNext());
         return phoneNumbers;
       }

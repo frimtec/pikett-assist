@@ -224,7 +224,8 @@ public class StateFragment extends AbstractListFragment<State> {
         this.signalStrengthService.getSignalStrength(),
         SharedState.getSuperviseSignalStrength(getContext()),
         this.signalStrengthService.getNetworkOperatorName(),
-        operationsCenterContact
+        operationsCenterContact,
+        operationsCenterPhoneNumbers
     );
     states.add(new SmsAdapterState(stateContext));
     states.addAll(Arrays.asList(

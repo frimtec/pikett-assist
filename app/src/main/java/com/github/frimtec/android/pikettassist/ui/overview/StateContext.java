@@ -12,6 +12,9 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 class StateContext {
@@ -42,6 +45,7 @@ class StateContext {
   private final String networkOperatorName;
 
   private final Contact operationCenter;
+  private final Set<String> operationsCenterPhoneNumbers;
 
   StateContext(
       Context context,
@@ -64,7 +68,8 @@ class StateContext {
       SignalLevel signalStrengthLevel,
       boolean superviseSignalStrength,
       String networkOperatorName,
-      Contact operationCenter) {
+      Contact operationCenter,
+      Set<String> operationsCenterPhoneNumbers) {
     this.context = context;
     this.startActivityForResultAction = startActivityForResultAction;
     this.fragmentRefreshAction = fragmentRefreshAction;
@@ -86,6 +91,7 @@ class StateContext {
     this.superviseSignalStrength = superviseSignalStrength;
     this.networkOperatorName = networkOperatorName;
     this.operationCenter = operationCenter;
+    this.operationsCenterPhoneNumbers = new HashSet<>(operationsCenterPhoneNumbers);
   }
 
   Context getContext() {
@@ -175,5 +181,9 @@ class StateContext {
 
   Contact getOperationCenter() {
     return operationCenter;
+  }
+
+  public Set<String> getOperationsCenterPhoneNumbers() {
+    return Collections.unmodifiableSet(operationsCenterPhoneNumbers);
   }
 }

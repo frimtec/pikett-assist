@@ -26,9 +26,22 @@ class OperationsCenterState extends State {
   private final Contact operationCenter;
 
   OperationsCenterState(StateContext stateContext) {
-    super(R.drawable.ic_phone_black_24dp, stateContext.getString(R.string.state_fragment_operations_center), stateContext.getOperationCenter().getName(), null, stateContext.getOperationCenter().isValid() ? TrafficLight.GREEN : TrafficLight.RED);
+    super(R.drawable.ic_phone_black_24dp,
+        stateContext.getString(R.string.state_fragment_operations_center),
+        getValue(stateContext),
+        null,
+        stateContext.getOperationCenter().isValid() && !stateContext.getOperationsCenterPhoneNumbers().isEmpty() ? TrafficLight.GREEN : TrafficLight.RED);
     this.stateContext = stateContext;
     this.operationCenter = stateContext.getOperationCenter();
+  }
+
+  private static String getValue(StateContext stateContext) {
+    Contact operationCenter = stateContext.getOperationCenter();
+    String value = operationCenter.getName();
+    if(operationCenter.isValid() && stateContext.getOperationsCenterPhoneNumbers().isEmpty()) {
+      value = value + "\n" + stateContext.getString(R.string.state_fragment_operations_center_no_number);
+    }
+    return value;
   }
 
   @Override

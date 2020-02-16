@@ -237,5 +237,5 @@
     <string name="pref_message_calendar_event_pikett_title_pattern">Gültige RegExp eingeben (Gross-/ Kleinschreibung wird ignoriert)</string>
     <string name="button_regexp_help">RegExp Hilfe?</string>
     <string name="contact_name_no_access">Keine Kontaktleseberechtigung</string>
-
+    <string name="state_fragment_operations_center_no_number">Keine gültige Nummer!</string>
 </resources>

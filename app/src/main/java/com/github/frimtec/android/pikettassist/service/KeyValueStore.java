@@ -2,8 +2,6 @@ package com.github.frimtec.android.pikettassist.service;
 
 import androidx.annotation.NonNull;
 
-import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,22 +16,11 @@ public class KeyValueStore {
     void update(String key, String value);
   }
 
-  private static final KeyValueStore INSTANCE = new KeyValueStore();
-
   private final KeyValueBacked backend;
 
   private final ConcurrentHashMap<String, String> keyValues = new ConcurrentHashMap<>();
 
-
-  public static KeyValueStore getInstance() {
-    return INSTANCE;
-  }
-
-  private KeyValueStore() {
-    this(new KeyValueDao());
-  }
-
-  KeyValueStore(KeyValueBacked backend) {
+  public KeyValueStore(KeyValueBacked backend) {
     this.backend = backend;
     this.keyValues.putAll(backend.load());
   }

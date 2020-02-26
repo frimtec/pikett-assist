@@ -38,7 +38,7 @@ public class DbHelper extends SQLiteOpenHelper {
   public static final int BOOLEAN_FALSE = 0;
   private static final String TAG = "DbHelper";
   private static final String DB_NAME = "PAssist.db";
-  private static final int DB_VERSION = 1;
+  private static final int DB_VERSION = 2;
 
   public DbHelper(@Nullable Context context) {
     super(context, DB_NAME, null, DB_VERSION);

@@ -9,6 +9,9 @@ import android.os.Build;
 import android.os.Process;
 import android.util.Log;
 
+import com.github.frimtec.android.pikettassist.service.KeyValueStore;
+import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
+import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.DbHelper;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
@@ -23,6 +26,7 @@ public class PAssistApplication extends Application {
   private static final String TAG = "PAssistApplication";
 
   private static DbHelper openHelper;
+  private static KeyValueStore keyValueStore;
 
   public static SQLiteDatabase getWritableDatabase() {
     return openHelper.getWritableDatabase();
@@ -32,6 +36,10 @@ public class PAssistApplication extends Application {
     return openHelper.getReadableDatabase();
   }
 
+  public static KeyValueStore getKeyValueStore() {
+    return keyValueStore;
+  }
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -39,6 +47,7 @@ public class PAssistApplication extends Application {
     Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
     openHelper = new DbHelper(this);
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");
+    keyValueStore = new KeyValueStore(new KeyValueDao(DbFactory.instance()));
   }
 
   private void handleUncaughtException(Thread thread, Throwable e) {

@@ -10,7 +10,7 @@ import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
 
@@ -56,10 +56,10 @@ public class TestAlarmService extends IntentService {
     Context context = getApplicationContext();
     this.shiftState = this.shiftService.getState();
     Log.i(TAG, "Service cycle; shift state: " + shiftState + "; initial: " + initial);
-    if (!initial && SharedState.getTestAlarmEnabled(context) && this.shiftState == OnOffState.ON) {
+    if (!initial && ApplicationPreferences.getTestAlarmEnabled(context) && this.shiftState == OnOffState.ON) {
       ZonedDateTime now = ZonedDateTime.now();
-      ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(SharedState.getTestAlarmAcceptTimeWindowMinutes(context));
-      Set<TestAlarmContext> missingTestAlarmContextContexts = SharedState.getSupervisedTestAlarms(context).stream()
+      ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(ApplicationPreferences.getTestAlarmAcceptTimeWindowMinutes(context));
+      Set<TestAlarmContext> missingTestAlarmContextContexts = ApplicationPreferences.getSupervisedTestAlarms(context).stream()
           .filter(tc -> !this.testAlarmDao.isTestAlarmReceived(tc, messageAcceptedTime.toInstant()))
           .collect(Collectors.toSet());
       missingTestAlarmContextContexts.forEach(testContext -> {
@@ -84,7 +84,7 @@ public class TestAlarmService extends IntentService {
       Log.i(TAG, "End service");
       return;
     }
-    Set<Integer> testAlarmCheckWeekdays = SharedState.getTestAlarmCheckWeekdays(getApplicationContext()).stream()
+    Set<Integer> testAlarmCheckWeekdays = ApplicationPreferences.getTestAlarmCheckWeekdays(getApplicationContext()).stream()
         .map(Integer::valueOf)
         .collect(Collectors.toSet());
     if (testAlarmCheckWeekdays.isEmpty()) {
@@ -107,7 +107,7 @@ public class TestAlarmService extends IntentService {
   }
 
   private ZonedDateTime getTodaysCheckTime(ZonedDateTime now) {
-    String[] testAlarmCheckTime = SharedState.getTestAlarmCheckTime(getApplicationContext()).split(":");
+    String[] testAlarmCheckTime = ApplicationPreferences.getTestAlarmCheckTime(getApplicationContext()).split(":");
     return now.truncatedTo(ChronoUnit.MINUTES)
         .with(ChronoField.HOUR_OF_DAY, Integer.parseInt(testAlarmCheckTime[0]))
         .with(ChronoField.MINUTE_OF_HOUR, Integer.parseInt(testAlarmCheckTime[1]));

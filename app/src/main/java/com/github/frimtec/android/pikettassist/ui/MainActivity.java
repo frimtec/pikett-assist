@@ -31,7 +31,7 @@ import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
@@ -96,13 +96,6 @@ public class MainActivity extends AppCompatActivity {
     }
     return false;
   };
-
-  public void switchFragment(FragmentName fragment) {
-    loadFragment(fragment);
-    BottomNavigationView navigation = findViewById(R.id.navigation);
-    //noinspection ConstantConditions
-    navigation.setSelectedItemId(FRAGMENT_BUTTON_ID_MAP.get(fragment));
-  }
 
   private void loadFragment(FragmentName fragment) {
     switch (fragment) {
@@ -215,9 +208,9 @@ public class MainActivity extends AppCompatActivity {
       Log.d(TAG, "SMS adapter register result received.");
       RegistrationResult result = s2msp.getRegistrationResult(resultCode, data);
       result.getSecret().ifPresent(secret -> {
-        if (!secret.equals(SharedState.getSmsAdapterSecret(this))) {
+        if (!secret.equals(ApplicationState.getSmsAdapterSecret())) {
           Log.i(TAG, "SMS adapter secret changed.");
-          SharedState.setSmsAdapterSecret(this, secret);
+          ApplicationState.setSmsAdapterSecret(secret);
         }
       });
       if (!result.getReturnCode().isSuccess()) {

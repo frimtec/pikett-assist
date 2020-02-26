@@ -2,15 +2,19 @@ package com.github.frimtec.android.pikettassist;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Process;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.service.KeyValueStore;
 import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.DbHelper;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -40,6 +44,8 @@ public class PAssistApplication extends Application {
     return keyValueStore;
   }
 
+  private static final String PREF_SMS_ADAPTER_SECRET = "sms_adapter_secret";
+
   @Override
   public void onCreate() {
     super.onCreate();
@@ -48,6 +54,22 @@ public class PAssistApplication extends Application {
     openHelper = new DbHelper(this);
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");
     keyValueStore = new KeyValueStore(new KeyValueDao(DbFactory.instance()));
+
+    migrationToReleaseElephant();
+  }
+
+  private void migrationToReleaseElephant() {
+    if (TextUtils.isEmpty(ApplicationState.getSmsAdapterSecret())) {
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+      String secretToMigrate = preferences.getString(PREF_SMS_ADAPTER_SECRET, "");
+      if (!TextUtils.isEmpty(secretToMigrate)) {
+        Log.i(TAG, "Migrating SMS secret");
+        ApplicationState.setSmsAdapterSecret(secretToMigrate);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(PREF_SMS_ADAPTER_SECRET);
+        editor.apply();
+      }
+    }
   }
 
   private void handleUncaughtException(Thread thread, Throwable e) {

@@ -3,7 +3,6 @@ package com.github.frimtec.android.pikettassist.state;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
@@ -17,18 +16,17 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public final class SharedState {
+public final class ApplicationPreferences {
 
-  public static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
+  private static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   private static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
   private static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
-  public static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
-  public static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
-  public static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
+  private static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
+  private static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
+  private static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   private static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
-  public static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
-  public static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
-  private static final String PREF_KEY_SMS_ADAPTER_SECRET = "sms_adapter_secret";
+  private static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
+  private static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   private static final String PREF_KEY_NOTIFY_LOW_SIGNAL = "notify_low_signal";
   private static final String PREF_KEY_LOW_SIGNAL_FILTER = "low_signal_filter";
@@ -39,18 +37,13 @@ public final class SharedState {
   private static final String PREF_KEY_TEST_ALARM_RING_TONE = "test_alarm_ring_tone";
   private static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String CALENDAR_FILTER_ALL = "-1";
-  private static final String PREF_KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state_manually_on";
-  private static final String PREF_KEY_DEFAULT_VOLUME = "default_volume";
   private static final String PREF_KEY_MANAGE_VOLUME = "manage_volume";
   private static final String PREF_KEY_ON_CALL_DAY_VOLUME = "on_call_day_volume";
   private static final String PREF_KEY_ON_CALL_NIGHT_VOLUME = "on_call_night_volume";
-  public static final String PREF_KEY_DAY_START_TIME = "day_start_time";
-  public static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
-  public static final int DEFAULT_VALUE_NOT_SET = -1;
+  private static final String PREF_KEY_DAY_START_TIME = "day_start_time";
+  private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
 
-  private static final String LAST_ALARM_SMS_NUMBER = "last_alarm_sms_number";
-
-  private SharedState() {
+  private ApplicationPreferences() {
   }
 
   public static String getCalendarEventPikettTitlePattern(Context context) {
@@ -66,7 +59,7 @@ public final class SharedState {
   }
 
   public static void setOperationsCenterContactReference(Context context, ContactReference contactReference) {
-    setSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, contactReference.getSerializedString());
+    setSharedPreferences(context, setter -> setter.putString(PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, contactReference.getSerializedString()));
   }
 
   public static String getSmsTestMessagePattern(Context context) {
@@ -77,25 +70,17 @@ public final class SharedState {
     return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, context.getString(R.string.pref_default_sms_confirm_text));
   }
 
-  public static String getSmsAdapterSecret(Context context) {
-    return getSharedPreferences(context, PREF_KEY_SMS_ADAPTER_SECRET, "");
-  }
-
-  public static void setSmsAdapterSecret(Context context, String secret) {
-    setSharedPreferences(context, PREF_KEY_SMS_ADAPTER_SECRET, secret);
-  }
-
   public static boolean getSuperviseSignalStrength(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, true);
   }
 
   public static int getSuperviseSignalStrengthMinLevel(Context context) {
-    return Integer.valueOf(getSharedPreferences(context, PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL, context.getString(R.string.pref_default_supervise_signal_strength_min_level)));
+    return Integer.parseInt(getSharedPreferences(context, PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL, context.getString(R.string.pref_default_supervise_signal_strength_min_level)));
   }
 
   public static int getSuperviseSignalStrengthSubscription(Context context) {
-    return Integer.valueOf(getSharedPreferences(context, PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION, context.getString(R.string.pref_default_supervise_signal_strength_subscription)));
+    return Integer.parseInt(getSharedPreferences(context, PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION, context.getString(R.string.pref_default_supervise_signal_strength_subscription)));
   }
 
   public static void setSuperviseSignalStrength(Context context, boolean supervise) {
@@ -110,15 +95,6 @@ public final class SharedState {
   public static int getLowSignalFilter(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getInt(PREF_KEY_LOW_SIGNAL_FILTER, R.integer.default_low_signal_filter);
-  }
-
-  public static boolean getPikettStateManuallyOn(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, false);
-  }
-
-  public static void setPikettStateManuallyOn(Context context, boolean manuallyOn) {
-    setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_PIKETT_STATE_MANUALLY_ON, manuallyOn));
   }
 
   public static boolean getTestAlarmEnabled(Context context) {
@@ -162,28 +138,9 @@ public final class SharedState {
         .collect(Collectors.toSet())));
   }
 
-  public static Pair<String, Integer> getLastAlarmSmsNumberWithSubscriptionId(Context context) {
-    String sharedPreferences = getSharedPreferences(context, LAST_ALARM_SMS_NUMBER, ";");
-    String[] split = sharedPreferences.split(";");
-    return Pair.create(split[0], split.length > 1 && !split[1].isEmpty() ? Integer.valueOf(split[1]) : null);
-  }
-
-  public static void setLastAlarmSmsNumberWithSubscriptionId(Context context, String smsNumber, Integer subscriptionId) {
-    setSharedPreferences(context, LAST_ALARM_SMS_NUMBER, smsNumber + ";" + (subscriptionId != null ? subscriptionId : ""));
-  }
-
   public static boolean getManageVolumeEnabled(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getBoolean(PREF_KEY_MANAGE_VOLUME, false);
-  }
-
-  public static int getDefaultVolume(Context context) {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getInt(PREF_KEY_DEFAULT_VOLUME, DEFAULT_VALUE_NOT_SET);
-  }
-
-  public static void setDefaultVolume(Context context, int volume) {
-    setSharedPreferences(context, setter -> setter.putInt(PREF_KEY_DEFAULT_VOLUME, volume));
   }
 
   private static int getOnCallDayVolume(Context context) {
@@ -206,10 +163,6 @@ public final class SharedState {
 
   private static LocalTime getNightProfileStartTime(Context context) {
     return LocalTime.parse(getSharedPreferences(context, PREF_KEY_NIGHT_START_TIME, context.getString(R.string.pref_default_night_start_time)), DateTimeFormatter.ISO_TIME);
-  }
-
-  private static void setSharedPreferences(Context context, String key, String value) {
-    setSharedPreferences(context, setter -> setter.putString(key, value));
   }
 
   private static void setSharedPreferences(Context context, Consumer<SharedPreferences.Editor> setter) {

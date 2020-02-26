@@ -11,7 +11,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDateTime;
@@ -54,15 +54,15 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
       TextView lastReceived = findViewById(R.id.test_alarm_details_last_received);
       TextView alarmState = findViewById(R.id.test_alarm_details_alarm_state);
       Switch supervisedSwitch = findViewById(R.id.test_alarm_enabling_switch);
-      supervisedSwitch.setChecked(SharedState.getSupervisedTestAlarms(this).contains(testAlarm));
+      supervisedSwitch.setChecked(ApplicationPreferences.getSupervisedTestAlarms(this).contains(testAlarm));
       supervisedSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(this);
+        Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(this);
         if (isChecked) {
           supervisedTestAlarmContexts.add(testAlarm);
         } else {
           supervisedTestAlarmContexts.remove(testAlarm);
         }
-        SharedState.setSuperviseTestContexts(this, supervisedTestAlarmContexts);
+        ApplicationPreferences.setSuperviseTestContexts(this, supervisedTestAlarmContexts);
       });
       TextView message = findViewById(R.id.test_alarm_details_message);
 

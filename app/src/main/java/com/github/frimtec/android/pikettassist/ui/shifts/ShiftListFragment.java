@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 
 import org.threeten.bp.Duration;
@@ -60,7 +60,7 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
       Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {
-      shifts = new ShiftDao(getContext()).getShifts(SharedState.getCalendarEventPikettTitlePattern(getContext()), SharedState.getCalendarSelection(getContext()))
+      shifts = new ShiftDao(getContext()).getShifts(ApplicationPreferences.getCalendarEventPikettTitlePattern(getContext()), ApplicationPreferences.getCalendarSelection(getContext()))
           .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
       if (shifts.isEmpty()) {
         Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();

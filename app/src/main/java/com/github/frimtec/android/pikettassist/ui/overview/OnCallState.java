@@ -13,7 +13,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.LowSignalService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
 
 import java.util.Calendar;
 
@@ -37,7 +37,7 @@ class OnCallState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    if (SharedState.getPikettStateManuallyOn(stateContext.getContext())) {
+    if (ApplicationState.getPikettStateManuallyOn()) {
       menu.add(Menu.NONE, MENU_CONTEXT_RESET, Menu.NONE, R.string.list_item_menu_reset);
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_SET_MANUALLY_ON, Menu.NONE, R.string.list_item_menu_set_manually_on);
@@ -48,13 +48,13 @@ class OnCallState extends State {
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
       case MENU_CONTEXT_SET_MANUALLY_ON:
-        SharedState.setPikettStateManuallyOn(context, true);
+        ApplicationState.setPikettStateManuallyOn(true);
         context.startService(new Intent(context, LowSignalService.class));
         context.startService(new Intent(context, PikettService.class));
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_RESET:
-        SharedState.setPikettStateManuallyOn(context, false);
+        ApplicationState.setPikettStateManuallyOn(false);
         context.startService(new Intent(context, LowSignalService.class));
         context.startService(new Intent(context, PikettService.class));
         stateContext.refreshFragment();

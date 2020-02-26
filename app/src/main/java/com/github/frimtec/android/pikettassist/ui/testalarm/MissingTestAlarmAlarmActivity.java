@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
 import java.util.Collections;
@@ -30,7 +30,7 @@ public class MissingTestAlarmAlarmActivity extends AbstractAlarmActivity {
   }
 
   private Uri getAlarmTone(Context context) {
-    String alarmRingTone = SharedState.getTestAlarmRingTone(context);
+    String alarmRingTone = ApplicationPreferences.getTestAlarmRingTone(context);
     if (!alarmRingTone.isEmpty()) {
       return Uri.parse(alarmRingTone);
     }

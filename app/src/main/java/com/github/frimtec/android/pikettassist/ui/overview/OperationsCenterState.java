@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REQUEST_CODE_SELECT_PHONE_NUMBER;
@@ -73,7 +73,7 @@ class OperationsCenterState extends State {
         return true;
       case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
         DialogHelper.areYouSure(stateContext.getContext(), (dialog, which) -> {
-          SharedState.setOperationsCenterContactReference(context, ContactReference.NO_SELECTION);
+          ApplicationPreferences.setOperationsCenterContactReference(context, ContactReference.NO_SELECTION);
           stateContext.refreshFragment();
         }, (dialog, which) -> {
         });

@@ -14,14 +14,14 @@ import com.github.frimtec.android.pikettassist.service.system.NotificationServic
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.LocalTime;
 
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
-import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 
 public class LowSignalService extends IntentService {
 
@@ -57,8 +57,8 @@ public class LowSignalService extends IntentService {
     this.pikettState = this.shiftService.getState() == OnOffState.ON;
     SignalStrengthService signalStrengthService = new SignalStrengthService(this);
     SignalLevel level = signalStrengthService.getSignalStrength();
-    if (this.pikettState && SharedState.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
-      int lowSignalFilter = SharedState.getLowSignalFilter(this);
+    if (this.pikettState && ApplicationPreferences.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
+      int lowSignalFilter = ApplicationPreferences.getLowSignalFilter(this);
       if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
         if (this.currentFilterState < lowSignalFilter) {
           Log.d(TAG, "Filter round: " + this.currentFilterState);
@@ -69,7 +69,7 @@ public class LowSignalService extends IntentService {
           Log.d(TAG, "Filter triggered, alarm raced");
         }
       }
-      if (SharedState.getNotifyLowSignal(this)) {
+      if (ApplicationPreferences.getNotifyLowSignal(this)) {
         new NotificationService(this).notifySignalLow(level);
       }
       LowSignalAlarmActivity.trigger(this, this.alarmService);
@@ -90,21 +90,21 @@ public class LowSignalService extends IntentService {
   }
 
   public static boolean isLowSignal(Context context, SignalLevel level) {
-    return level.ordinal() <= SharedState.getSuperviseSignalStrengthMinLevel(context);
+    return level.ordinal() <= ApplicationPreferences.getSuperviseSignalStrengthMinLevel(context);
   }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
     if (this.pikettState) {
-      if (SharedState.getManageVolumeEnabled(this)) {
-        new VolumeService(this).setVolume(SharedState.getOnCallVolume(this, LocalTime.now()));
+      if (ApplicationPreferences.getManageVolumeEnabled(this)) {
+        new VolumeService(this).setVolume(ApplicationPreferences.getOnCallVolume(this, LocalTime.now()));
       }
       Intent intent = new Intent(this, LowSignalService.class);
       long nextRunInMillis = CHECK_INTERVAL_MS;
       if (this.currentFilterState > 0) {
         intent.putExtra(EXTRA_FILTER_STATE, this.currentFilterState);
-        if (this.currentFilterState <= SharedState.getLowSignalFilter(this)) {
+        if (this.currentFilterState <= ApplicationPreferences.getLowSignalFilter(this)) {
           nextRunInMillis = Duration.ofSeconds(PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR).toMillis();
         }
       }

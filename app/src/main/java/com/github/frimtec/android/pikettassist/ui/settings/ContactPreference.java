@@ -12,7 +12,7 @@ import androidx.preference.Preference;
 
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.takisoft.preferencex.PreferenceActivityResultListener;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
@@ -54,7 +54,7 @@ public class ContactPreference extends Preference implements PreferenceActivityR
     if (requestCode == CONTACT_SELECTED && data != null) {
       Uri contactUri = data.getData();
       Contact contact = this.operationsCenterContactService.getContactFromUri(contactUri);
-      SharedState.setOperationsCenterContactReference(getContext(), contact.getReference());
+      ApplicationPreferences.setOperationsCenterContactReference(getContext(), contact.getReference());
       notifyChanged();
     }
   }

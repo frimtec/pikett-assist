@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +36,7 @@ class TestAlarmArrayAdapter extends ArrayAdapter<TestAlarmContext> {
     TextView textView = convertView.findViewById(R.id.test_alarm_item_context);
     textView.setText(testAlarmContext.getContext());
 
-    Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(getContext());
+    Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
     if(!supervisedTestAlarmContexts.contains(testAlarmContext)) {
       textView.setTextAppearance(R.style.deactivatedItem);
     }

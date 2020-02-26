@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
@@ -22,13 +22,13 @@ public final class SmsService {
 
   public List<Sms> getSmsFromReceivedIntent(Intent intent) {
     SecureSmsProxyFacade s2msp = SecureSmsProxyFacade.instance(this.context);
-    return s2msp.extractReceivedSms(intent, SharedState.getSmsAdapterSecret(this.context));
+    return s2msp.extractReceivedSms(intent, ApplicationState.getSmsAdapterSecret());
   }
 
   public void sendSms(String confirmText, String number, Integer subscriptionId) {
     SecureSmsProxyFacade s2msp = SecureSmsProxyFacade.instance(this.context);
     Log.d(TAG, "Send SMS to SIM with subscription: " + subscriptionId);
     Sms sms = new Sms(number, confirmText, subscriptionId);
-    s2msp.sendSms(sms, SharedState.getSmsAdapterSecret(this.context));
+    s2msp.sendSms(sms, ApplicationState.getSmsAdapterSecret());
   }
 }

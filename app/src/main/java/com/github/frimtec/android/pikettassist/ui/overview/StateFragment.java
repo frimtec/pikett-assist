@@ -31,7 +31,8 @@ import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.FragmentName;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
@@ -142,7 +143,7 @@ public class StateFragment extends AbstractListFragment<State> {
       }
     } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
       Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
-      SharedState.setOperationsCenterContactReference(getContext(), contact.getReference());
+      ApplicationPreferences.setOperationsCenterContactReference(getContext(), contact.getReference());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
@@ -200,7 +201,7 @@ public class StateFragment extends AbstractListFragment<State> {
     Contact operationsCenterContact = this.operationsCenterContactService.getOperationsCenterContact();
     Set<String> operationsCenterPhoneNumbers = this.operationsCenterContactService.getPhoneNumbers(operationsCenterContact);
     ShiftService shiftService = new ShiftService(getContext());
-    boolean pikettStateManuallyOn = SharedState.getPikettStateManuallyOn(getContext());
+    boolean pikettStateManuallyOn = ApplicationState.getPikettStateManuallyOn();
     OnOffState pikettState = shiftService.getState();
     Instant now = Shift.now();
     StateContext stateContext = new StateContext(
@@ -208,7 +209,7 @@ public class StateFragment extends AbstractListFragment<State> {
         this::startActivityForResult,
         this::refresh,
         () -> this.s2msp.register(activity, REGISTER_SMS_ADAPTER_REQUEST_CODE, operationsCenterPhoneNumbers, SmsListener.class),
-        () -> this.s2msp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), SharedState.getSmsAdapterSecret(getContext())),
+        () -> this.s2msp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), ApplicationState.getSmsAdapterSecret()),
         () -> this.alertService.confirmAlert(),
         () -> this.alertService.closeAlert(),
         () -> this.billingAccess.showDonationDialog(),
@@ -222,7 +223,7 @@ public class StateFragment extends AbstractListFragment<State> {
         pikettStateManuallyOn,
         !(operationsCenterPhoneNumbers.isEmpty() || s2msp.isAllowed(operationsCenterPhoneNumbers)),
         this.signalStrengthService.getSignalStrength(),
-        SharedState.getSuperviseSignalStrength(getContext()),
+        ApplicationPreferences.getSuperviseSignalStrength(getContext()),
         this.signalStrengthService.getNetworkOperatorName(),
         operationsCenterContact,
         operationsCenterPhoneNumbers
@@ -235,8 +236,8 @@ public class StateFragment extends AbstractListFragment<State> {
         new SignalStrengthState(stateContext)
     ));
 
-    if (SharedState.getTestAlarmEnabled(getContext())) {
-      SharedState.getSupervisedTestAlarms(getContext())
+    if (ApplicationPreferences.getTestAlarmEnabled(getContext())) {
+      ApplicationPreferences.getSupervisedTestAlarms(getContext())
           .forEach(testAlarmContext -> states.add(new TestAlarmState(
               this.testAlarmDao.loadDetails(testAlarmContext)
                   .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.getReceivedTime()), details.getAlertState()))

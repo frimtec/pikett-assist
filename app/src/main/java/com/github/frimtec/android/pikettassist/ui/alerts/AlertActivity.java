@@ -9,7 +9,7 @@ import android.util.Pair;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public class AlertActivity extends AbstractAlarmActivity {
   }
 
   private Uri getAlarmTone(Context context) {
-    String alarmRingTone = SharedState.getAlarmRingTone(context);
+    String alarmRingTone = ApplicationPreferences.getAlarmRingTone(context);
     if (!alarmRingTone.isEmpty()) {
       return Uri.parse(alarmRingTone);
     }

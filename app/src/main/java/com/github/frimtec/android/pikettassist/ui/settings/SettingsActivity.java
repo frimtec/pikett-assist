@@ -15,15 +15,15 @@ import androidx.preference.SeekBarPreference;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
-import static com.github.frimtec.android.pikettassist.state.SharedState.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -77,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
       if (testAlarmGroup != null) {
         testAlarmGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
-                enabledOrDisabled(preference.getContext(), SharedState.getTestAlarmEnabled(preference.getContext()))
+                enabledOrDisabled(preference.getContext(), ApplicationPreferences.getTestAlarmEnabled(preference.getContext()))
         );
       }
 
@@ -85,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
       if (dayNightProfileGroup != null) {
         dayNightProfileGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
-                enabledOrDisabled(preference.getContext(), SharedState.getManageVolumeEnabled(preference.getContext()))
+                enabledOrDisabled(preference.getContext(), ApplicationPreferences.getManageVolumeEnabled(preference.getContext()))
         );
 
         ListPreference calendarSelection = findPreference("calendar_selection");

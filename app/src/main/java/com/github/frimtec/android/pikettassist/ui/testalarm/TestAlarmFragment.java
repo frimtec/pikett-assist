@@ -19,7 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
@@ -70,7 +70,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     TestAlarmContext selectedItem = (TestAlarmContext) getListView().getItemAtPosition(info.position);
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
-    if (SharedState.getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
+    if (ApplicationPreferences.getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
       menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE_ID, Menu.NONE, R.string.list_item_menu_deactivate);
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE_ID, Menu.NONE, R.string.list_item_menu_activate);
@@ -96,16 +96,16 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
         });
         return true;
       case MENU_CONTEXT_ACTIVATE_ID:
-        Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(getContext());
+        Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
         supervisedTestAlarmContexts.add(selectedItem);
-        SharedState.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+        ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
         refresh();
         Toast.makeText(getContext(), R.string.test_alarm_activated_toast, Toast.LENGTH_SHORT).show();
         return true;
       case MENU_CONTEXT_DEACTIVATE_ID:
-        supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(getContext());
+        supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
         supervisedTestAlarmContexts.remove(selectedItem);
-        SharedState.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+        ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
         refresh();
         Toast.makeText(getContext(), R.string.test_alarm_deactivated_toast, Toast.LENGTH_SHORT).show();
         return true;
@@ -127,9 +127,9 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
         dialog.dismiss();
         TestAlarmContext newTestAlarmContext = new TestAlarmContext(input.getText().toString());
         if (this.testAlarmDao.createNewContext(newTestAlarmContext, getString(R.string.test_alarm_message_empty))) {
-          Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(getContext());
+          Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
           supervisedTestAlarmContexts.add(newTestAlarmContext);
-          SharedState.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+          ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
           refresh();
           Toast.makeText(getContext(), R.string.test_alarm_toast_added_success, Toast.LENGTH_SHORT).show();
         } else {
@@ -151,9 +151,9 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
 
   private void deleteTestAlarm(TestAlarmContext selectedTestAlarmContext) {
     this.testAlarmDao.delete(selectedTestAlarmContext);
-    Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(getContext());
+    Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
     supervisedTestAlarmContexts.remove(selectedTestAlarmContext);
-    SharedState.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+    ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
   }
 
   private List<TestAlarmContext> loadTestAlarmList() {

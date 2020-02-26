@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
-import static com.github.frimtec.android.pikettassist.state.SharedState.CALENDAR_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
 
 public final class ShiftDao {
 

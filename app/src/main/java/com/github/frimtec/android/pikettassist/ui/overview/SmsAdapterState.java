@@ -22,7 +22,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -164,7 +164,7 @@ class SmsAdapterState extends State {
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view)
         .setEnabled(present);
     menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms)
-        .setEnabled(present && !TextUtils.isEmpty(SharedState.getSmsAdapterSecret(context)));
+        .setEnabled(present && !TextUtils.isEmpty(ApplicationState.getSmsAdapterSecret()));
   }
 
   @Override

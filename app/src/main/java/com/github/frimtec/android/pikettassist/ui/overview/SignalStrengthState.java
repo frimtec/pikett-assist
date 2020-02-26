@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
@@ -44,7 +44,7 @@ class SignalStrengthState extends State {
       return OFF;
     } else if (stateContext.getSignalStrengthLevel().ordinal() <= SignalLevel.NONE.ordinal()) {
       return RED;
-    } else if (stateContext.getSignalStrengthLevel().ordinal() <= SharedState.getSuperviseSignalStrengthMinLevel(stateContext.getContext())) {
+    } else if (stateContext.getSignalStrengthLevel().ordinal() <= ApplicationPreferences.getSuperviseSignalStrengthMinLevel(stateContext.getContext())) {
       return YELLOW;
     } else {
       return GREEN;
@@ -53,7 +53,7 @@ class SignalStrengthState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    if (SharedState.getSuperviseSignalStrength(context)) {
+    if (ApplicationPreferences.getSuperviseSignalStrength(context)) {
       menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE, Menu.NONE, R.string.list_item_menu_deactivate);
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE, Menu.NONE, R.string.list_item_menu_activate);
@@ -64,11 +64,11 @@ class SignalStrengthState extends State {
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
       case MENU_CONTEXT_DEACTIVATE:
-        SharedState.setSuperviseSignalStrength(context, false);
+        ApplicationPreferences.setSuperviseSignalStrength(context, false);
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_ACTIVATE:
-        SharedState.setSuperviseSignalStrength(context, true);
+        ApplicationPreferences.setSuperviseSignalStrength(context, true);
         stateContext.refreshFragment();
         return true;
       default:

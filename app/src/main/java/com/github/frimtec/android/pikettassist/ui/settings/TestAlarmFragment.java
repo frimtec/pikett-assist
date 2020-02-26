@@ -10,7 +10,7 @@ import androidx.preference.Preference;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
@@ -51,10 +51,10 @@ public class TestAlarmFragment extends PreferenceFragmentCompat {
     if (superviseTestContexts != null) {
       TestAlarmDao testAlarmDao = new TestAlarmDao();
       Set<TestAlarmContext> testAlarmContexts = testAlarmDao.loadAllContexts();
-      Set<TestAlarmContext> persistedEntries = SharedState.getSupervisedTestAlarms(getContext());
+      Set<TestAlarmContext> persistedEntries = ApplicationPreferences.getSupervisedTestAlarms(getContext());
       Set<TestAlarmContext> filteredEntries = persistedEntries.stream().filter(testAlarmContexts::contains).collect(Collectors.toSet());
       if (!filteredEntries.containsAll(persistedEntries)) {
-        SharedState.setSuperviseTestContexts(getContext(), filteredEntries);
+        ApplicationPreferences.setSuperviseTestContexts(getContext(), filteredEntries);
       }
       Set<CharSequence> validEntries = testAlarmContexts.stream().map(TestAlarmContext::getContext).collect(Collectors.toSet());
       superviseTestContexts.setEntries(validEntries.toArray(new CharSequence[]{}));

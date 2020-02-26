@@ -11,7 +11,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public class OperationsCenterContactService {
     if (!hasReadContactPermission()) {
       return invalidContact(R.string.contact_name_no_access);
     }
-    ContactReference contactReference = SharedState.getOperationsCenterContactReference(this.context);
+    ContactReference contactReference = ApplicationPreferences.getOperationsCenterContactReference(this.context);
     if (!contactReference.isComplete()) {
       contactReference = migrateToFullReference(contactReference);
     }
@@ -46,7 +46,7 @@ public class OperationsCenterContactService {
         .orElseGet(() -> invalidContact(R.string.contact_helper_unknown_contact));
     if (contact.isValid()) {
       if (!contact.getReference().equals(contactReference)) {
-        SharedState.setOperationsCenterContactReference(context, contact.getReference());
+        ApplicationPreferences.setOperationsCenterContactReference(context, contact.getReference());
         Log.w(TAG, "Alarm operations center contact reference changed and updated.");
       }
     } else {
@@ -77,7 +77,7 @@ public class OperationsCenterContactService {
     ContactReference migratedReference = this.contactDao.getContact(contactReference.getId())
         .map(Contact::getReference)
         .orElse(NO_SELECTION);
-    SharedState.setOperationsCenterContactReference(this.context, migratedReference);
+    ApplicationPreferences.setOperationsCenterContactReference(this.context, migratedReference);
     if (migratedReference != NO_SELECTION) {
       Log.i(TAG, "Operations center contact migrated from id to reference.");
     } else {

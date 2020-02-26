@@ -6,7 +6,7 @@ import android.util.Pair;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
 import org.threeten.bp.Duration;
@@ -23,7 +23,7 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
     super(TAG, R.string.notification_low_signal_title, Pair.create(100, 500), SwipeButtonStyle.GREEN);
     setEndCondition(() -> {
       SignalStrengthService.SignalLevel level = new SignalStrengthService(LowSignalAlarmActivity.this).getSignalStrength();
-      return !isLowSignal(this, level) || !SharedState.getSuperviseSignalStrength(getApplicationContext());
+      return !isLowSignal(this, level) || !ApplicationPreferences.getSuperviseSignalStrength(getApplicationContext());
     }, Duration.ofSeconds(1));
   }
 

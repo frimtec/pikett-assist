@@ -13,7 +13,7 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.SmsService;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
@@ -58,16 +58,16 @@ public class SmsListener extends BroadcastReceiver {
       for (Sms sms : receivedSms) {
         if (operationsCenterContactService.isContactsPhoneNumber(operationsCenterContact, sms.getNumber())) {
           Log.i(TAG, "SMS from pikett number");
-          Pattern testSmsPattern = Pattern.compile(SharedState.getSmsTestMessagePattern(context), Pattern.DOTALL);
+          Pattern testSmsPattern = Pattern.compile(ApplicationPreferences.getSmsTestMessagePattern(context), Pattern.DOTALL);
           Matcher matcher = testSmsPattern.matcher(sms.getText());
-          if (SharedState.getTestAlarmEnabled(context) && matcher.matches()) {
+          if (ApplicationPreferences.getTestAlarmEnabled(context) && matcher.matches()) {
             TestAlarmContext testAlarmContext = new TestAlarmContext(matcher.groupCount() > 0 ? matcher.group(1) : context.getString(R.string.test_alarm_context_general));
             Log.i(TAG, "TEST alarm with context: " + testAlarmContext.getContext());
-            smsService.sendSms(SharedState.getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
+            smsService.sendSms(ApplicationPreferences.getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
             if (this.testAlarmDao.updateReceivedTestAlert(testAlarmContext, Instant.now(), sms.getText())) {
-              Set<TestAlarmContext> supervisedTestAlarmContexts = SharedState.getSupervisedTestAlarms(context);
+              Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(context);
               supervisedTestAlarmContexts.add(testAlarmContext);
-              SharedState.setSuperviseTestContexts(context, supervisedTestAlarmContexts);
+              ApplicationPreferences.setSuperviseTestContexts(context, supervisedTestAlarmContexts);
             }
           } else {
             Log.i(TAG, "New alert");

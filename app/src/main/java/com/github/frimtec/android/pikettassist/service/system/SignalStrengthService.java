@@ -14,7 +14,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.state.SharedState;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class SignalStrengthService {
   private final Context context;
 
   public SignalStrengthService(Context context) {
-    this(context, SharedState.getSuperviseSignalStrengthSubscription(context));
+    this(context, ApplicationPreferences.getSuperviseSignalStrengthSubscription(context));
   }
 
   public SignalStrengthService(Context context, int subscriptionId) {

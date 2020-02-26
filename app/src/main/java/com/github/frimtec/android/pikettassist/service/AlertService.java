@@ -6,11 +6,12 @@ import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
-import com.github.frimtec.android.pikettassist.state.SharedState;
-import com.github.frimtec.android.pikettassist.ui.MainActivity;
-import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SmsService;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.state.ApplicationState;
+import com.github.frimtec.android.pikettassist.ui.MainActivity;
+import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.threeten.bp.Instant;
@@ -36,7 +37,7 @@ public class AlertService {
   }
 
   public void newAlert(Sms sms) {
-    SharedState.setLastAlarmSmsNumberWithSubscriptionId(context, sms.getNumber(), sms.getSubscriptionId());
+    ApplicationState.setLastAlarmSmsNumberWithSubscriptionId(sms.getNumber(), sms.getSubscriptionId());
     if (this.alertDao.insertOrUpdateAlert(Instant.now(), sms.getText(), false)) {
       AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
     }
@@ -53,13 +54,13 @@ public class AlertService {
   }
 
   public void confirmAlert() {
-    Pair<String, Integer> smsNumberWithSubscriptionId = SharedState.getLastAlarmSmsNumberWithSubscriptionId(context);
+    Pair<String, Integer> smsNumberWithSubscriptionId = ApplicationState.getLastAlarmSmsNumberWithSubscriptionId();
     confirmAlert(this.context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);
   }
 
   public void confirmAlert(Context context, String smsNumber, Integer subscriptionId) {
     this.alertDao.confirmOpenAlert();
-    this.smsService.sendSms(SharedState.getSmsConfirmText(context), smsNumber, subscriptionId);
+    this.smsService.sendSms(ApplicationPreferences.getSmsConfirmText(context), smsNumber, subscriptionId);
     notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,

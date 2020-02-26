@@ -20,18 +20,15 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_KEY_V
 public class KeyValueDao implements KeyValueBacked {
 
   private static final String TAG = "KeyValueDao";
-  private static final String[] ALL_COLUMNS = {
+
+  static final String[] ALL_COLUMNS = {
       TABLE_KEY_VALUE_COLUMN_ID,
       TABLE_KEY_VALUE_COLUMN_VALUE
   };
 
   private final DbFactory dbFactory;
 
-  public KeyValueDao() {
-    this(DbFactory.instance());
-  }
-
-  KeyValueDao(DbFactory dbFactory) {
+  public KeyValueDao(DbFactory dbFactory) {
     this.dbFactory = dbFactory;
   }
 
@@ -39,14 +36,14 @@ public class KeyValueDao implements KeyValueBacked {
   public Map<String, String> load() {
     Map<String, String> keyValues = new HashMap<>();
     try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor cursor = db.query(TABLE_KEY_VALUE, ALL_COLUMNS, null, new String[0], null, null, null, null)) {
+         Cursor cursor = db.query(TABLE_KEY_VALUE, ALL_COLUMNS, null, null, null, null, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         do {
           keyValues.put(cursor.getString(0), cursor.getString(1));
         } while (cursor.moveToNext());
       }
     }
-    Log.i(TAG, "Key value map loaded with " + keyValues.size() + "entries.");
+    Log.i(TAG, "Key value map loaded with " + keyValues.size() + " entries.");
     return keyValues;
   }
 

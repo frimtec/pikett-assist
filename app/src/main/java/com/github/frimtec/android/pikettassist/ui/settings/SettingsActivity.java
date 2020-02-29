@@ -16,6 +16,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
 
@@ -57,6 +58,15 @@ public class SettingsActivity extends AppCompatActivity {
         alarmRingTone.setSummaryProvider(
             (Preference.SummaryProvider<RingtonePreference>) preference ->
                 preference.getRingtone() == null ? preference.getContext().getResources().getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
+      }
+
+      EditTextPreference proPostTimeSeconds = findPreference("pre_post_run_time_seconds");
+      if (proPostTimeSeconds != null) {
+        proPostTimeSeconds.setSummaryProvider(
+            (Preference.SummaryProvider<EditTextPreference>) preference -> {
+              String value = preference.getText();
+              return value + " " + getString("1".equals(value) ? R.string.units_second : R.string.units_seconds);
+            });
       }
 
       SeekBarPreference lowSignalFilterTime = findPreference("low_signal_filter");

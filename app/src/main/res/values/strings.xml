@@ -23,6 +23,8 @@
     <string name="pref_title_calendar_selection">Calendar filter</string>
     <string name="pref_title_calendar_event_pikett_title_pattern">Event filter</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
+    <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
+    <string name="pref_default_pre_post_run_time_seconds">300</string>
 
     <string name="pref_title_alarm_operations_center_contact">Operations center</string>
     <string name="pref_title_sms_confirm_text">Confirmation response</string>
@@ -233,6 +235,8 @@
     <string name="units_hour">hour</string>
     <string name="units_minutes">minutes</string>
     <string name="units_minute">minute</string>
+    <string name="units_seconds">seconds</string>
+    <string name="units_second">second</string>
     <string name="error_regexp_pattern">Syntax error in regexp pattern!</string>
     <string name="error_regexp_groups">Maximum of %d group(s) allowed in regexp pattern!</string>
     <string name="pref_message_test_alarm_message_pattern">Enter a valid regexp (use optionally a single group to select the test context)</string>

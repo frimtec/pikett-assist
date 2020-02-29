@@ -204,6 +204,7 @@ public class StateFragment extends AbstractListFragment<State> {
     boolean pikettStateManuallyOn = ApplicationState.getPikettStateManuallyOn();
     OnOffState pikettState = shiftService.getState();
     Instant now = Shift.now();
+    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(getContext());
     StateContext stateContext = new StateContext(
         getContext(),
         this::startActivityForResult,
@@ -218,7 +219,7 @@ public class StateFragment extends AbstractListFragment<State> {
         smsAdapterInstallation.getAppVersion().isPresent() && smsAdapterInstallation.getApiVersion().compareTo(smsAdapterInstallation.getAppVersion().get()) > 0,
         s2msp.areSmsPermissionsGranted(),
         pikettState,
-        shiftService.findCurrentOrNextShift(now).map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now)).orElse(""),
+        shiftService.findCurrentOrNextShift(now).map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now, prePostRunTime)).orElse(""),
         this.alertDao.getAlertState(),
         pikettStateManuallyOn,
         !(operationsCenterPhoneNumbers.isEmpty() || s2msp.isAllowed(operationsCenterPhoneNumbers)),
@@ -256,9 +257,9 @@ public class StateFragment extends AbstractListFragment<State> {
     }
   }
 
-  private String toDuration(boolean pikettStateManuallyOn, OnOffState pikettState, Shift currentOrNextShift, Instant now) {
+  private String toDuration(boolean pikettStateManuallyOn, OnOffState pikettState, Shift currentOrNextShift, Instant now, Duration prePostRunTime) {
     return pikettStateManuallyOn ? "" : String.format("(%s)",
-        toDurationString(Duration.between(now, pikettState == OnOffState.ON ? currentOrNextShift.getEndTime(true) : currentOrNextShift.getStartTime(true)), siFormatter()));
+        toDurationString(Duration.between(now, pikettState == OnOffState.ON ? currentOrNextShift.getEndTime(prePostRunTime) : currentOrNextShift.getStartTime(prePostRunTime)), siFormatter()));
   }
 
   private boolean randomizedOn() {

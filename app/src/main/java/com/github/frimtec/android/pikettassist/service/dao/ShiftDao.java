@@ -72,7 +72,7 @@ public final class ShiftDao {
         } while (cursor.moveToNext());
       }
     }
-    events.sort(Comparator.comparing(shift -> shift.getStartTime(false)));
+    events.sort(Comparator.comparing(Shift::getStartTime));
     return events;
   }
 

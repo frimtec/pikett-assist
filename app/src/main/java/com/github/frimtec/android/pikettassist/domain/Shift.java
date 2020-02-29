@@ -5,8 +5,6 @@ import org.threeten.bp.Instant;
 
 public class Shift {
 
-  static final Duration TIME_TOLERANCE = Duration.ofMinutes(5);
-
   private final long id;
   private final String title;
   private final Instant startTime;
@@ -31,27 +29,35 @@ public class Shift {
     return title;
   }
 
-  public Instant getStartTime(boolean withTolerance) {
-    return withTolerance ? startTime.minus(TIME_TOLERANCE) : startTime;
+  public Instant getStartTime(Duration prePostRuntime) {
+    return getStartTime().minus(prePostRuntime);
   }
 
-  public Instant getEndTime(boolean withTolerance) {
-    return withTolerance ? endTime.plus(TIME_TOLERANCE) : endTime;
+  public Instant getStartTime() {
+    return startTime;
   }
 
-  public boolean isNow() {
-    return isNow(now());
+  public Instant getEndTime(Duration prePostRuntime) {
+    return getEndTime().plus(prePostRuntime);
   }
 
-  public boolean isNow(Instant now) {
-    return !isInFuture(now) && !isOver(now);
+  public Instant getEndTime() {
+    return endTime;
   }
 
-  public boolean isOver(Instant now) {
-    return now.isAfter(getEndTime(true));
+  public boolean isNow(Duration prePostRunTime) {
+    return isNow(now(), prePostRunTime);
   }
 
-  public boolean isInFuture(Instant now) {
-    return now.isBefore(getStartTime(true));
+  public boolean isNow(Instant now, Duration prePostRunTime) {
+    return !isInFuture(now, prePostRunTime) && !isOver(now, prePostRunTime);
+  }
+
+  public boolean isOver(Instant now, Duration prePostRunTime) {
+    return now.isAfter(getEndTime(prePostRunTime));
+  }
+
+  public boolean isInFuture(Instant now, Duration prePostRunTime) {
+    return now.isBefore(getStartTime(prePostRunTime));
   }
 }

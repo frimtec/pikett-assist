@@ -56,12 +56,13 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
   protected ArrayAdapter<Shift> createAdapter() {
     List<Shift> shifts;
     Instant now = Shift.now();
+    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(getContext());
     if (!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
       Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {
       shifts = new ShiftDao(getContext()).getShifts(ApplicationPreferences.getCalendarEventPikettTitlePattern(getContext()), ApplicationPreferences.getCalendarSelection(getContext()))
-          .stream().filter(shift -> !shift.isOver(now)).collect(Collectors.toList());
+          .stream().filter(shift -> !shift.isOver(now, prePostRunTime)).collect(Collectors.toList());
       if (shifts.isEmpty()) {
         Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
       }
@@ -81,12 +82,12 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
     } else {
       Shift shift = shifts.get(0);
       Duration duration;
-      if (now.isBefore(shift.getStartTime(false))) {
+      if (now.isBefore(shift.getStartTime())) {
         label = getString(R.string.shift_header_next_label_starts);
-        duration = Duration.between(now, shift.getStartTime(false));
+        duration = Duration.between(now, shift.getStartTime());
       } else {
         label = getString(R.string.shift_header_next_label_ends);
-        duration = Duration.between(now, shift.getEndTime(false));
+        duration = Duration.between(now, shift.getEndTime());
       }
       value = toDurationString(duration, translatedFormatter(getContext()));
     }

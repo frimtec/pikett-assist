@@ -11,7 +11,7 @@ PAssist works for SMS based alerting systems.
 ## Features
 ### PAssist is controlled by your calendar
 PAssist activates and deactivates itself based on your calendar. All supervision features are only running, when PAssist is activated.
-PAssist activates five minutes before and keeps activated five minutes after the events start and stop time. 
+PAssist activates some time (configurable pre-/ post-run time) before and keeps activated some time after the events start and stop time. 
 This ensures you won't miss an alert in case of a small time discrepancy between the operations center time and your phone time.
 All calendar events matching a configured title pattern are considered as on-call events. 
 PAssist shows you an overview with all future on-call events on the calendar tab.
@@ -102,6 +102,10 @@ Defines one specific or all of your calenders, that should be used to look for o
 #### Event filter
 Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to 
 match the titles of your calendar events, which should be considered for your on-call duties.
+
+#### Pre- /post-run time
+Time in seconds to enable/disable the on-call state before and after the calender event.
+The default is 300 seconds (five minutes). 
     
 #### Supervise signal strength
 Defines whether the signal strength is supervised or not.

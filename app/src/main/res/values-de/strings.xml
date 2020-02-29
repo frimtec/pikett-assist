@@ -22,6 +22,8 @@
     <string name="pref_title_calendar_selection">Kalenderauswahl</string>
     <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
+    <string name="pref_title_pre_post_time_seconds">Vor-/Nachlaufzeit</string>
+    <string name="pref_default_pre_post_run_time_seconds">300</string>
 
     <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
     <string name="pref_title_sms_confirm_text">Bestätigungsantwort</string>
@@ -231,6 +233,8 @@
     <string name="units_hour">Stunde</string>
     <string name="units_minutes">Minuten</string>
     <string name="units_minute">Minute</string>
+    <string name="units_seconds">Sekunden</string>
+    <string name="units_second">Sekunde</string>
     <string name="error_regexp_pattern">Syntaxfehler in der RegExp!</string>
     <string name="error_regexp_groups">Maximal %d Gruppe(n) erlaubt in der RegExp!</string>
     <string name="pref_message_test_alarm_message_pattern">Gültige RegExp eingeben (mit einer optionalen Gruppe, kann der Testkontext ausgewählt werden)</string>

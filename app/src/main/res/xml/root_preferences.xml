@@ -46,6 +46,13 @@
             app:max_groups="0"
             app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern"
             />
+        <EditTextPreference
+            android:inputType="number"
+            app:icon="@drawable/ic_time_window"
+            app:defaultValue="@string/pref_default_pre_post_run_time_seconds"
+            app:key="pre_post_run_time_seconds"
+            app:singleLine="true"
+            app:title="@string/pref_title_pre_post_time_seconds" />
 
     </PreferenceCategory>
 

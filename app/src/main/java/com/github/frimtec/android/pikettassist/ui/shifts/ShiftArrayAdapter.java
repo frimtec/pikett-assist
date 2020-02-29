@@ -46,11 +46,11 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
     TextView titleView = convertView.findViewById(R.id.shift_item_title);
     TextView durationView = convertView.findViewById(R.id.shift_item_duration);
     ImageView playIcon = convertView.findViewById(R.id.shift_item_image_play);
-    playIcon.setVisibility(shift.isNow() ? View.VISIBLE : View.INVISIBLE);
-    startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime(false))));
-    endTimeView.setText(formatDateTime(shift.getEndTime(false)));
+    playIcon.setVisibility(shift.isNow(Duration.ofSeconds(0)) ? View.VISIBLE : View.INVISIBLE);
+    startTimeView.setText(String.format("%s - ", formatDateTime(shift.getStartTime())));
+    endTimeView.setText(formatDateTime(shift.getEndTime()));
     titleView.setText(shift.getTitle());
-    durationView.setText(String.valueOf(roundToDays(Duration.between(shift.getStartTime(false), shift.getEndTime(false)))));
+    durationView.setText(String.valueOf(roundToDays(Duration.between(shift.getStartTime(), shift.getEndTime()))));
     return convertView;
   }
 

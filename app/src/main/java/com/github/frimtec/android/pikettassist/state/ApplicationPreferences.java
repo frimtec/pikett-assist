@@ -8,6 +8,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
+import org.threeten.bp.Duration;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
@@ -20,6 +21,7 @@ public final class ApplicationPreferences {
 
   private static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   private static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
+  private static final String PREF_KEY_PRE_POST_RUN_TIME_SECONDS = "pre_post_run_time_seconds";
   private static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
   private static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
   private static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
@@ -52,6 +54,10 @@ public final class ApplicationPreferences {
 
   public static String getCalendarSelection(Context context) {
     return getSharedPreferences(context, PREF_KEY_CALENDAR_SELECTION, CALENDAR_FILTER_ALL);
+  }
+
+  public static Duration getPrePostRunTime(Context context) {
+    return Duration.ofSeconds(Integer.parseInt(getSharedPreferences(context, PREF_KEY_PRE_POST_RUN_TIME_SECONDS, context.getString(R.string.pref_default_pre_post_run_time_seconds))));
   }
 
   public static ContactReference getOperationsCenterContactReference(Context context) {

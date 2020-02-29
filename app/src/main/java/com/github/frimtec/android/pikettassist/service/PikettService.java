@@ -59,13 +59,14 @@ public class PikettService extends IntentService {
     }
     Instant now = Shift.now();
     Optional<Shift> first = this.shiftService.findCurrentOrNextShift(now);
-    Instant nextRun = first.map(shift -> shift.isNow(now) ? shift.getEndTime(true) : shift.getStartTime(true)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
+    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(this);
+    Instant nextRun = first.map(shift -> shift.isNow(now, prePostRunTime) ? shift.getEndTime(prePostRunTime) : shift.getStartTime(prePostRunTime)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
     long waitMs = Math.min(Duration.between(now, nextRun).toMillis(), MAX_SLEEP.toMillis());
     Log.i(TAG, "Next run in " + waitMs);
     boolean manageVolumeEnabled = ApplicationPreferences.getManageVolumeEnabled(this);
     VolumeService volumeService = manageVolumeEnabled ? new VolumeService(this) : null;
     NotificationService notificationService = new NotificationService(this);
-    if (ApplicationState.getPikettStateManuallyOn() || first.map(Shift::isNow).orElse(false)) {
+    if (ApplicationState.getPikettStateManuallyOn() || first.map(shift -> shift.isNow(prePostRunTime)).orElse(false)) {
       notificationService.notifyShiftOn();
       if (manageVolumeEnabled) {
         int defaultVolume = ApplicationState.getDefaultVolume();

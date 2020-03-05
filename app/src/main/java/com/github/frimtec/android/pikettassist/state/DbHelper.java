@@ -66,16 +66,21 @@ public class DbHelper extends SQLiteOpenHelper {
         "  " + TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE + " TEXT NOT NULL," +
         "  " + TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL" +
         ");");
+    createVersion2Tables(db);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     Log.i(TAG, String.format("Upgrade DB from %d to %d", oldVersion, newVersion));
     if (oldVersion < 2) {
-      db.execSQL("CREATE TABLE " + TABLE_KEY_VALUE + " (" +
-          "  " + TABLE_KEY_VALUE_COLUMN_ID + " TEXT PRIMARY KEY," +
-          "  " + TABLE_KEY_VALUE_COLUMN_VALUE + " TEXT" +
-          ");");
+      createVersion2Tables(db);
     }
+  }
+
+  private void createVersion2Tables(SQLiteDatabase db) {
+    db.execSQL("CREATE TABLE " + TABLE_KEY_VALUE + " (" +
+        "  " + TABLE_KEY_VALUE_COLUMN_ID + " TEXT PRIMARY KEY," +
+        "  " + TABLE_KEY_VALUE_COLUMN_VALUE + " TEXT" +
+        ");");
   }
 }

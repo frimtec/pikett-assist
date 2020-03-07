@@ -244,4 +244,7 @@
     <string name="button_regexp_help">RegExp help?</string>
     <string name="contact_name_no_access">No contact read permission</string>
     <string name="state_fragment_operations_center_no_number">No valid number!</string>
+    <string name="state_fragment_do_not_disturb">Do Not Disturb</string>
+    <string name="do_not_disturb_info_title">Do Not Disturb is active!</string>
+    <string name="do_not_disturb_info_text">During on-call duty you should disable the \"Do Not Disturb\" mode. Otherwise PAssist cannot control the ringtone volume. Important alerts and notifications are suppressed by the device.</string>
 </resources>

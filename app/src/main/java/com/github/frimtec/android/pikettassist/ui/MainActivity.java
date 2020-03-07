@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -301,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
     };
     IntentFilter filter = new IntentFilter(Action.REFRESH.getId());
     filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+    filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
     registerReceiver(broadcastReceiver, filter);
   }
 

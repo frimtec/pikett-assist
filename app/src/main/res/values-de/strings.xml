@@ -242,4 +242,7 @@
     <string name="button_regexp_help">RegExp Hilfe?</string>
     <string name="contact_name_no_access">Keine Kontaktleseberechtigung</string>
     <string name="state_fragment_operations_center_no_number">Keine gültige Nummer!</string>
+    <string name="state_fragment_do_not_disturb">Nicht stören</string>
+    <string name="do_not_disturb_info_title">Bitte nicht stören ist aktiv!</string>
+    <string name="do_not_disturb_info_text">Während des Bereitschaftsdienstes sollten Sie den Modus \"Bitte nicht stören\" deaktivieren. Andernfalls kann PAssist die Klingeltonlautstärke nicht steuern. Wichtige Warnungen und Benachrichtigungen werden vom Gerät unterdrückt.</string>
 </resources>

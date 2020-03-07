@@ -30,6 +30,7 @@ import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
@@ -230,13 +231,15 @@ public class StateFragment extends AbstractListFragment<State> {
         operationsCenterPhoneNumbers
     );
     states.add(new SmsAdapterState(stateContext));
+    if(pikettState == OnOffState.ON && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
+      states.add(new DoNotDisturbState(stateContext));
+    }
     states.addAll(Arrays.asList(
         new OperationsCenterState(stateContext),
         new OnCallState(stateContext),
         new AlarmState(stateContext),
         new SignalStrengthState(stateContext)
     ));
-
     if (ApplicationPreferences.getTestAlarmEnabled(getContext())) {
       ApplicationPreferences.getSupervisedTestAlarms(getContext())
           .forEach(testAlarmContext -> states.add(new TestAlarmState(
@@ -297,4 +300,5 @@ public class StateFragment extends AbstractListFragment<State> {
       return super.onContextItemSelected(item);
     }
   }
+
 }

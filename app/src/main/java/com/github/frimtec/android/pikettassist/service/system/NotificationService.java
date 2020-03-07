@@ -172,6 +172,11 @@ public class NotificationService {
     notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
   }
 
+  public boolean isDoNotDisturbEnabled() {
+    NotificationManager notificationManager = this.context.getSystemService(NotificationManager.class);
+    return notificationManager != null && notificationManager.getCurrentInterruptionFilter() != NotificationManager.INTERRUPTION_FILTER_ALL;
+  }
+
   private static String levelText(int level) {
     switch (level) {
       case 0:

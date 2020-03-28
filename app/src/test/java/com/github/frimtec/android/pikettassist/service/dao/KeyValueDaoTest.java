@@ -22,6 +22,7 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_KEY_V
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 class KeyValueDaoTest {
@@ -83,7 +84,7 @@ class KeyValueDaoTest {
     dao.insert("key.new", "value");
 
     verify(db).insert(Mockito.eq(TABLE_KEY_VALUE), Mockito.isNull(), Mockito.any());
-    verify(db).close();
+    verifyNoMoreInteractions(db);
   }
 
   @Test
@@ -97,7 +98,7 @@ class KeyValueDaoTest {
     dao.update("key.update", "value");
 
     verify(db).update(Mockito.eq(TABLE_KEY_VALUE), Mockito.any(), Mockito.eq(TABLE_KEY_VALUE_COLUMN_ID + "=?"), Mockito.eq(new String[]{"key.update"}));
-    verify(db).close();
+    verifyNoMoreInteractions(db);
   }
 
   @Test
@@ -111,7 +112,7 @@ class KeyValueDaoTest {
     dao.delete("key.to.delete");
 
     verify(db).delete(TABLE_KEY_VALUE, TABLE_KEY_VALUE_COLUMN_ID + "=?", new String[]{"key.to.delete"});
-    verify(db).close();
+    verifyNoMoreInteractions(db);
   }
 
   private Cursor createCursor(LinkedHashMap<String, String> expectedKeyValues) {

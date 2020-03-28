@@ -35,8 +35,8 @@ public class KeyValueDao implements KeyValueBacked {
   @Override
   public Map<String, String> load() {
     Map<String, String> keyValues = new HashMap<>();
-    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor cursor = db.query(TABLE_KEY_VALUE, ALL_COLUMNS, null, null, null, null, null)) {
+    SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
+    try (Cursor cursor = db.query(TABLE_KEY_VALUE, ALL_COLUMNS, null, null, null, null, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         do {
           keyValues.put(cursor.getString(0), cursor.getString(1));
@@ -49,36 +49,33 @@ public class KeyValueDao implements KeyValueBacked {
 
   @Override
   public void insert(String key, String value) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(TABLE_KEY_VALUE_COLUMN_ID, key);
-      contentValues.put(TABLE_KEY_VALUE_COLUMN_VALUE, value);
-      long id = db.insert(TABLE_KEY_VALUE, null, contentValues);
-      if (id < 0) {
-        Log.e(TAG, "Could not insert key " + key);
-      }
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(TABLE_KEY_VALUE_COLUMN_ID, key);
+    contentValues.put(TABLE_KEY_VALUE_COLUMN_VALUE, value);
+    long id = db.insert(TABLE_KEY_VALUE, null, contentValues);
+    if (id < 0) {
+      Log.e(TAG, "Could not insert key " + key);
     }
   }
 
   @Override
   public void update(String key, String value) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(TABLE_KEY_VALUE_COLUMN_ID, key);
-      contentValues.put(TABLE_KEY_VALUE_COLUMN_VALUE, value);
-      long id = db.update(TABLE_KEY_VALUE, contentValues, TABLE_KEY_VALUE_COLUMN_ID + "=?", new String[]{key});
-      if (id == 0) {
-        Log.e(TAG, "Could not update key " + key);
-      }
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(TABLE_KEY_VALUE_COLUMN_ID, key);
+    contentValues.put(TABLE_KEY_VALUE_COLUMN_VALUE, value);
+    long id = db.update(TABLE_KEY_VALUE, contentValues, TABLE_KEY_VALUE_COLUMN_ID + "=?", new String[]{key});
+    if (id == 0) {
+      Log.e(TAG, "Could not update key " + key);
     }
   }
 
   public void delete(String key) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
-      long id = db.delete(TABLE_KEY_VALUE, TABLE_KEY_VALUE_COLUMN_ID + "=?", new String[]{key});
-      if (id == 0) {
-        Log.e(TAG, "Could not delete key " + key);
-      }
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    long id = db.delete(TABLE_KEY_VALUE, TABLE_KEY_VALUE_COLUMN_ID + "=?", new String[]{key});
+    if (id == 0) {
+      Log.e(TAG, "Could not delete key " + key);
     }
   }
 }

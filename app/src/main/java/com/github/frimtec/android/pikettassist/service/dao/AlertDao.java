@@ -59,15 +59,14 @@ public class AlertDao {
   }
 
   public Pair<AlertState, Long> getAlertState() {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY)) {
-      return getAlertState(db);
-    }
+    SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY);
+    return getAlertState(db);
   }
 
   public List<Alert> loadAll() {
     List<Alert> alertList = new ArrayList<>();
-    try (SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-         Cursor cursor = db.query(TABLE_ALERT, ALERT_COLUMNS, null, new String[0], null, null, TABLE_ALERT_COLUMN_START_TIME + " DESC", null)) {
+    SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
+    try (Cursor cursor = db.query(TABLE_ALERT, ALERT_COLUMNS, null, new String[0], null, null, TABLE_ALERT_COLUMN_START_TIME + " DESC", null)) {
       if (cursor != null && cursor.moveToFirst()) {
         do {
           alertList.add(makeAlert(cursor, Collections.emptyList()));
@@ -78,8 +77,8 @@ public class AlertDao {
   }
 
   public Alert load(long id) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY);
-         Cursor alertCursor = db.query(TABLE_ALERT, ALERT_COLUMNS, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+    SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY);
+    try (Cursor alertCursor = db.query(TABLE_ALERT, ALERT_COLUMNS, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
          Cursor callCursor = db.query(TABLE_ALERT_CALL, CALL_COLUMNS, TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=?", new String[]{String.valueOf(id)}, null, null, TABLE_ALERT_CALL_COLUMN_TIME)) {
       if (alertCursor != null && alertCursor.moveToFirst()) {
         List<AlertCall> calls = new ArrayList<>();
@@ -126,77 +125,73 @@ public class AlertDao {
 
   public boolean insertOrUpdateAlert(Instant startTime, String text, boolean confirmed) {
     boolean reTriggered;
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
-      Pair<AlertState, Long> alarmState = getAlertState(db);
-      Long alertId;
-      int confirmedDbValue = confirmed ? BOOLEAN_TRUE : BOOLEAN_FALSE;
-      if (alarmState.first == AlertState.OFF) {
-        Log.i(TAG, "Alarm state OFF -> ON");
-        ContentValues contentValues = new ContentValues();
-        long startTimeEpochMillis = startTime.toEpochMilli();
-        contentValues.put(TABLE_ALERT_COLUMN_START_TIME, startTimeEpochMillis);
-        contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, confirmedDbValue);
-        if (confirmed) {
-          contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, startTimeEpochMillis);
-        }
-        alertId = db.insert(TABLE_ALERT, null, contentValues);
-        reTriggered = true;
-      } else if (alarmState.first == AlertState.ON_CONFIRMED) {
-        Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, confirmedDbValue);
-        alertId = alarmState.second;
-        db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
-        reTriggered = true;
-      } else {
-        Log.i(TAG, "Alarm state ON -> ON");
-        alertId = alarmState.second;
-        reTriggered = false;
-      }
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    Pair<AlertState, Long> alarmState = getAlertState(db);
+    Long alertId;
+    int confirmedDbValue = confirmed ? BOOLEAN_TRUE : BOOLEAN_FALSE;
+    if (alarmState.first == AlertState.OFF) {
+      Log.i(TAG, "Alarm state OFF -> ON");
       ContentValues contentValues = new ContentValues();
-      contentValues.put(TABLE_ALERT_CALL_COLUMN_ALERT_ID, alertId);
-      contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, startTime.toEpochMilli());
-      contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, text);
-      db.insert(TABLE_ALERT_CALL, null, contentValues);
+      long startTimeEpochMillis = startTime.toEpochMilli();
+      contentValues.put(TABLE_ALERT_COLUMN_START_TIME, startTimeEpochMillis);
+      contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, confirmedDbValue);
+      if (confirmed) {
+        contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, startTimeEpochMillis);
+      }
+      alertId = db.insert(TABLE_ALERT, null, contentValues);
+      reTriggered = true;
+    } else if (alarmState.first == AlertState.ON_CONFIRMED) {
+      Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, confirmedDbValue);
+      alertId = alarmState.second;
+      db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
+      reTriggered = true;
+    } else {
+      Log.i(TAG, "Alarm state ON -> ON");
+      alertId = alarmState.second;
+      reTriggered = false;
     }
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(TABLE_ALERT_CALL_COLUMN_ALERT_ID, alertId);
+    contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, startTime.toEpochMilli());
+    contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, text);
+    db.insert(TABLE_ALERT_CALL, null, contentValues);
     return reTriggered;
   }
 
   public void confirmOpenAlert() {
-    try (SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE)) {
-      try (Cursor cursor = writableDatabase.query(TABLE_ALERT,
-          new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME},
-          TABLE_ALERT_COLUMN_END_TIME + " IS NULL",
-          null, null, null, null)) {
-        ContentValues values = new ContentValues();
-        if (!cursor.moveToFirst() || cursor.getLong(0) == 0) {
-          values.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, Instant.now().toEpochMilli());
-        }
-        values.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_TRUE);
-        int update = writableDatabase.update(TABLE_ALERT, values,
-            TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null);
-        if (update != 1) {
-          Log.e(TAG, "One open case expected, but got " + update);
-        }
-      }
-    }
-  }
-
-  public void closeOpenAlert() {
-    try (SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE)) {
+    SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE);
+    try (Cursor cursor = writableDatabase.query(TABLE_ALERT,
+        new String[]{TABLE_ALERT_COLUMN_CONFIRM_TIME},
+        TABLE_ALERT_COLUMN_END_TIME + " IS NULL",
+        null, null, null, null)) {
       ContentValues values = new ContentValues();
-      values.put(TABLE_ALERT_COLUMN_END_TIME, Instant.now().toEpochMilli());
-      int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null);
+      if (!cursor.moveToFirst() || cursor.getLong(0) == 0) {
+        values.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, Instant.now().toEpochMilli());
+      }
+      values.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, BOOLEAN_TRUE);
+      int update = writableDatabase.update(TABLE_ALERT, values,
+          TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null);
       if (update != 1) {
         Log.e(TAG, "One open case expected, but got " + update);
       }
     }
   }
 
-  public void delete(Alert alert) {
-    try (SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE)) {
-      db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alert.getId())});
+  public void closeOpenAlert() {
+    SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE);
+    ContentValues values = new ContentValues();
+    values.put(TABLE_ALERT_COLUMN_END_TIME, Instant.now().toEpochMilli());
+    int update = writableDatabase.update(TABLE_ALERT, values, TABLE_ALERT_COLUMN_END_TIME + " IS NULL", null);
+    if (update != 1) {
+      Log.e(TAG, "One open case expected, but got " + update);
     }
+  }
+
+  public void delete(Alert alert) {
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alert.getId())});
   }
 
 }

@@ -8,6 +8,8 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import androidx.annotation.StringRes;
+
 import com.github.frimtec.android.pikettassist.R;
 
 import java.util.function.BiConsumer;
@@ -37,8 +39,12 @@ public class DialogHelper {
   }
 
   public static void areYouSure(Context context, DialogInterface.OnClickListener onYes, DialogInterface.OnClickListener onNo) {
+    yesNoDialog(context, R.string.general_are_you_sure, onYes, onNo);
+  }
+
+  public static void yesNoDialog(Context context, @StringRes int messageId, DialogInterface.OnClickListener onYes, DialogInterface.OnClickListener onNo) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setMessage(R.string.general_are_you_sure)
+    builder.setMessage(messageId)
         .setPositiveButton(R.string.general_yes, onYes)
         .setNegativeButton(R.string.general_no, onNo)
         .show();

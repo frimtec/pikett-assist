@@ -245,4 +245,13 @@
     <string name="state_fragment_do_not_disturb">Nicht stören</string>
     <string name="do_not_disturb_info_title">Bitte nicht stören ist aktiv!</string>
     <string name="do_not_disturb_info_text">Während des Bereitschaftsdienstes sollten Sie den Modus \"Bitte nicht stören\" deaktivieren. Andernfalls kann PAssist die Klingeltonlautstärke nicht steuern. Wichtige Warnungen und Benachrichtigungen werden vom Gerät unterdrückt.</string>
+
+    <string name="import_alert_log_are_you_sure">Alle existierenden Aufgebote werden ersetzt, bist Du sicher?</string>
+    <string name="general_export">Export</string>
+    <string name="general_import">Import</string>
+    <string name="alert_log_export_success">Export erfolgreich.</string>
+    <string name="alert_log_export_failed">Export fehlgeschalgen!</string>
+    <string name="alert_log_import_success">Import erfolgreich.</string>
+    <string name="alert_log_import_failed_bad_format">Import fehlgeschalgen, ungültiges Dateiformat!</string>
+    <string name="alert_log_import_failed">Import fehlgeschalgen!</string>
 </resources>

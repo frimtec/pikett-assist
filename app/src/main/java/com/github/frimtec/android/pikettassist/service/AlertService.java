@@ -2,9 +2,11 @@ package com.github.frimtec.android.pikettassist.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SmsService;
@@ -13,12 +15,21 @@ import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import org.threeten.bp.Instant;
 
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.github.frimtec.android.pikettassist.service.system.NotificationService.ACTION_CLOSE_ALARM;
+import static com.github.frimtec.android.pikettassist.util.GsonHelper.GSON;
 
 public class AlertService {
+
+  private static final String TAG = "AlertService";
 
   private final Context context;
   private final AlertDao alertDao;
@@ -73,4 +84,32 @@ public class AlertService {
     this.alertDao.closeOpenAlert();
     notificationService.cancelNotification(NotificationService.ALERT_NOTIFICATION_ID);
   }
+
+  public String exportAllAlerts() {
+    return GSON.toJson(
+        alertDao.loadAll().stream()
+            .map(alert -> alertDao.load(alert.getId()))
+            .collect(Collectors.toList())
+    );
+  }
+
+  public boolean importAllAlerts(String alertsAsJson) {
+    Type listType = new TypeToken<List<Alert>>() {
+    }.getType();
+    List<Alert> alerts;
+    try {
+      alerts = GSON.fromJson(alertsAsJson, listType);
+      if (alerts == null || alerts.isEmpty()) {
+        Log.w(TAG, "Empty list of alerts are not imported");
+        return false;
+      }
+    } catch (JsonSyntaxException e) {
+      Log.e(TAG, "Alerts cannot be de-serialized", e);
+      return false;
+    }
+    alertDao.loadAll().forEach(alertDao::delete);
+    alerts.forEach(alertDao::saveImportedAlert);
+    return true;
+  }
+
 }

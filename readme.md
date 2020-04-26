@@ -34,6 +34,7 @@ PAssist creates an alarm log with the start and end time of each incident.
 All SMS messages received between start and end time are attached to the alarm in the log.
 On the alert log tab you see all your passed alerts in an overview. Selecting an entry shows the details of an
 alert incident including current state, reaction time to confirm, duration from start to end and all received SMS messages.
+The alert log can be exported/imported from/to the external file system.    
 
 ![Alert log tab](images/PAssist_18.png)
 ![Alert details](images/PAssist_16.png)

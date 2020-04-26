@@ -247,4 +247,13 @@
     <string name="state_fragment_do_not_disturb">Do Not Disturb</string>
     <string name="do_not_disturb_info_title">Do Not Disturb is active!</string>
     <string name="do_not_disturb_info_text">During on-call duty you should disable the \"Do Not Disturb\" mode. Otherwise PAssist cannot control the ringtone volume. Important alerts and notifications are suppressed by the device.</string>
+    <string name="import_alert_log_are_you_sure">All existing alert log entries will be replaced, are you sure?</string>
+    <string name="general_export">Export</string>
+    <string name="general_import">Import</string>
+    <string name="alert_log_export_success">Export succeeded.</string>
+    <string name="alert_log_export_failed">Export failed!</string>
+    <string name="alert_log_import_success">Import succeeded.</string>
+    <string name="alert_log_import_failed_bad_format">Import failed due to bad file format!</string>
+    <string name="alert_log_import_failed">Import failed!</string>
+
 </resources>

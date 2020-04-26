@@ -1,9 +1,14 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +16,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -28,6 +35,13 @@ import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import org.threeten.bp.Instant;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +49,19 @@ import static com.github.frimtec.android.pikettassist.ui.FragmentName.ALERT_LOG;
 
 public class AlertListFragment extends AbstractListFragment<Alert> {
 
+  private static final String TAG = "AlertActivity";
+
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
+  private static final int REQUEST_CODE_NEW_FILE_SELECTED = 1213;
+  private static final int REQUEST_CODE_FILE_SELECTED = 1212;
   private final AlertDao alertDao;
 
   public AlertListFragment() {
     this(new AlertDao());
   }
+
+    private ImageButton exportButton;
 
   @SuppressLint("ValidFragment")
   AlertListFragment(AlertDao alertDao) {
@@ -57,6 +77,23 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       showAlertDetails(selectedAlert);
     });
     registerForContextMenu(listView);
+    View headerView = getLayoutInflater().inflate(R.layout.alert_header, listView, false);
+    this.exportButton = headerView.findViewById(R.id.alert_list_export);
+    exportButton.setOnClickListener(v -> {
+      Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/json");
+      intent.putExtra(Intent.EXTRA_TITLE, "passist-alert-log-export.json");
+      startActivityForResult(intent, REQUEST_CODE_NEW_FILE_SELECTED);
+    });
+    ImageButton importButton = headerView.findViewById(R.id.alert_list_import);
+    importButton.setOnClickListener(v -> {
+      Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+      intent.addCategory(Intent.CATEGORY_OPENABLE);
+      intent.setType("application/json");
+      startActivityForResult(intent, REQUEST_CODE_FILE_SELECTED);
+    });
+    listView.addHeaderView(headerView);
   }
 
   @Override
@@ -131,6 +168,70 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
     if (alertList.isEmpty()) {
       Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
     }
+    if(this.exportButton != null) {
+      this.exportButton.setVisibility(alertList.isEmpty() ? View.INVISIBLE : View.VISIBLE);
+    }
     return alertList;
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    Context context = getContext();
+    ContentResolver contentResolver = context != null ? context.getContentResolver() : null;
+    if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null && contentResolver != null) {
+      if (requestCode == REQUEST_CODE_NEW_FILE_SELECTED) {
+        try {
+          String fileContent = new AlertService(getContext()).exportAllAlerts();
+          writeTextToUri(contentResolver, data.getData(), fileContent);
+          Toast.makeText(getContext(), R.string.alert_log_export_success, Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+          Log.e(TAG, "Cannot store export in file", e);
+          Toast.makeText(getContext(), R.string.alert_log_export_failed, Toast.LENGTH_LONG).show();
+        }
+      } else if (requestCode == REQUEST_CODE_FILE_SELECTED) {
+        try {
+          String fileContent = readTextFromUri(contentResolver, data.getData());
+          DialogHelper.yesNoDialog(context, R.string.import_alert_log_are_you_sure, (dialog, which) -> {
+            if (new AlertService(getContext()).importAllAlerts(fileContent)) {
+              Toast.makeText(getContext(), R.string.alert_log_import_success, Toast.LENGTH_LONG).show();
+            } else {
+              Toast.makeText(getContext(), R.string.alert_log_import_failed_bad_format, Toast.LENGTH_LONG).show();
+            }
+            refresh();
+          }, (dialog, which) -> {});
+        } catch (IOException e) {
+          Log.e(TAG, "Cannot load import from file", e);
+          Toast.makeText(getContext(), R.string.alert_log_import_failed, Toast.LENGTH_LONG).show();
+        }
+      }
+    }
+  }
+
+  private static void writeTextToUri(ContentResolver contentResolver, Uri uri, String fileContent) throws IOException {
+    try (OutputStream outputStream = contentResolver.openOutputStream(uri)) {
+      if (outputStream == null) {
+        throw new IOException("Null output stream for URI: " + uri);
+      }
+      try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+        writer.write(fileContent);
+      }
+    }
+  }
+
+  private static String readTextFromUri(ContentResolver contentResolver, Uri uri) throws IOException {
+    StringBuilder stringBuilder = new StringBuilder();
+    try (InputStream inputStream = contentResolver.openInputStream(uri)) {
+      if (inputStream == null) {
+        throw new IOException("Null input stream for URI: " + uri);
+      }
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+          stringBuilder.append(line);
+        }
+      }
+    }
+    return stringBuilder.toString();
   }
 }

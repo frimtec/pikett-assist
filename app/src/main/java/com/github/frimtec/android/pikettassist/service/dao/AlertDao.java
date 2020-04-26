@@ -160,6 +160,27 @@ public class AlertDao {
     return reTriggered;
   }
 
+  public void saveImportedAlert(Alert alert) {
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(TABLE_ALERT_COLUMN_START_TIME, alert.getConfirmTime().toEpochMilli());
+    contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, alert.isConfirmed() ? BOOLEAN_TRUE : BOOLEAN_FALSE);
+    if (alert.isConfirmed()) {
+      contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, alert.getConfirmTime().toEpochMilli());
+    }
+    if (alert.getEndTime() != null) {
+      contentValues.put(TABLE_ALERT_COLUMN_END_TIME, alert.getEndTime().toEpochMilli());
+    }
+    Long alertId = db.insert(TABLE_ALERT, null, contentValues);
+    for (AlertCall call : alert.getCalls()) {
+      contentValues = new ContentValues();
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_ALERT_ID, alertId);
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, call.getTime().toEpochMilli());
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, call.getMessage());
+      db.insert(TABLE_ALERT_CALL, null, contentValues);
+    }
+  }
+
   public void confirmOpenAlert() {
     SQLiteDatabase writableDatabase = this.dbFactory.getDatabase(WRITABLE);
     try (Cursor cursor = writableDatabase.query(TABLE_ALERT,

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ebanx.swipebtn.SwipeButton;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
@@ -33,12 +35,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Supplier;
 
-import in.shadowfax.proswipebutton.ProSwipeButton;
-
 public abstract class AbstractAlarmActivity extends AppCompatActivity {
 
   protected enum SwipeButtonStyle {
-    RED, GREEN, BLUE
+    ALARM, NO_SIGNAL, MISSING_TEST_ALARM
   }
 
   @StringRes
@@ -114,28 +114,22 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
       supportActionBar.hide();
     }
 
-    ProSwipeButton swipeButton = findViewById(R.id.alarm_button_confirm);
+    SwipeButton swipeButton;
     switch (swipeButtonStyle) {
-      case RED:
-        swipeButton.setBackgroundColor(getColor(R.color.confirmButtonBackRed));
-        swipeButton.setTextColor(getColor(R.color.confirmButtonTextRed));
-        swipeButton.setArrowColor(getColor(R.color.confirmButtonArrowRed));
+      case ALARM:
+        swipeButton = (SwipeButton) findViewById(R.id.alarm_button_confirm_alarm);
         break;
-      case GREEN:
-        swipeButton.setBackgroundColor(getColor(R.color.confirmButtonBackGreen));
-        swipeButton.setTextColor(getColor(R.color.confirmButtonTextGreen));
-        swipeButton.setArrowColor(getColor(R.color.confirmButtonArrowGreen));
+      case NO_SIGNAL:
+        swipeButton = (SwipeButton) findViewById(R.id.alarm_button_confirm_no_signal);
         break;
-      case BLUE:
-        swipeButton.setBackgroundColor(getColor(R.color.confirmButtonBackBlue));
-        swipeButton.setTextColor(getColor(R.color.confirmButtonTextBlue));
-        swipeButton.setArrowColor(getColor(R.color.confirmButtonArrowBlue));
+      case MISSING_TEST_ALARM:
+        swipeButton = (SwipeButton) findViewById(R.id.alarm_button_confirm_test_alarm);
         break;
       default:
         throw new IllegalStateException("Unsupported style: " + swipeButtonStyle);
     }
-    swipeButton.setOnSwipeListener(() -> {
-      swipeButton.showResultIcon(true);
+    swipeButton.setVisibility(View.VISIBLE);
+    swipeButton.setOnStateChangeListener(active -> {
       swipeAction.run();
       finish();
     });

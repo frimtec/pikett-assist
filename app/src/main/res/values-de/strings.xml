@@ -254,4 +254,6 @@
     <string name="alert_log_import_success">Import erfolgreich.</string>
     <string name="alert_log_import_failed_bad_format">Import fehlgeschalgen, ungültiges Dateiformat!</string>
     <string name="alert_log_import_failed">Import fehlgeschalgen!</string>
+    <string name="alert_list_header_statistic_month_label">Letzte 30 Tage:</string>
+    <string name="alert_list_header_statistic_year_label">Letzte 365 Tage:</string>
 </resources>

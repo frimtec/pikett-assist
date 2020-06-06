@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -46,6 +47,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.frimtec.android.pikettassist.ui.FragmentName.ALERT_LOG;
+import static org.threeten.bp.temporal.ChronoUnit.DAYS;
 
 public class AlertListFragment extends AbstractListFragment<Alert> {
 
@@ -61,7 +63,9 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
     this(new AlertDao());
   }
 
-    private ImageButton exportButton;
+  private ImageButton exportButton;
+  private TextView valueMonth;
+  private TextView valueYear;
 
   @SuppressLint("ValidFragment")
   AlertListFragment(AlertDao alertDao) {
@@ -86,6 +90,9 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       intent.putExtra(Intent.EXTRA_TITLE, "passist-alert-log-export.json");
       startActivityForResult(intent, REQUEST_CODE_NEW_FILE_SELECTED);
     });
+    this.valueMonth = headerView.findViewById(R.id.alert_statistic_value_month);
+    this.valueYear = headerView.findViewById(R.id.alert_statistic_value_year);
+
     ImageButton importButton = headerView.findViewById(R.id.alert_list_import);
     importButton.setOnClickListener(v -> {
       Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -94,6 +101,11 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       startActivityForResult(intent, REQUEST_CODE_FILE_SELECTED);
     });
     listView.addHeaderView(headerView);
+  }
+
+  private long countAlertsWithinLastDays(List<Alert> alertList, int days) {
+    Instant lastDaysStart = Instant.now().minus(days, DAYS);
+    return alertList.stream().filter(alert -> alert.getStartTime().isAfter(lastDaysStart)).count();
   }
 
   @Override
@@ -168,8 +180,14 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
     if (alertList.isEmpty()) {
       Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
     }
-    if(this.exportButton != null) {
+    if (this.exportButton != null) {
       this.exportButton.setVisibility(alertList.isEmpty() ? View.INVISIBLE : View.VISIBLE);
+    }
+    if (this.valueMonth != null) {
+      this.valueMonth.setText(String.valueOf(countAlertsWithinLastDays(alertList, 30)));
+    }
+    if (this.valueYear != null) {
+      this.valueYear.setText(String.valueOf(countAlertsWithinLastDays(alertList, 365)));
     }
     return alertList;
   }
@@ -199,7 +217,8 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
               Toast.makeText(getContext(), R.string.alert_log_import_failed_bad_format, Toast.LENGTH_LONG).show();
             }
             refresh();
-          }, (dialog, which) -> {});
+          }, (dialog, which) -> {
+          });
         } catch (IOException e) {
           Log.e(TAG, "Cannot load import from file", e);
           Toast.makeText(getContext(), R.string.alert_log_import_failed, Toast.LENGTH_LONG).show();

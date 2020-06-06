@@ -24,7 +24,7 @@ public class AlertActivity extends AbstractAlarmActivity {
   private AlertService alertService;
 
   public AlertActivity() {
-    super(TAG, R.string.notification_alert_title, Pair.create(400, 200), SwipeButtonStyle.RED);
+    super(TAG, R.string.notification_alert_title, Pair.create(400, 200), SwipeButtonStyle.ALARM);
   }
 
   @Override

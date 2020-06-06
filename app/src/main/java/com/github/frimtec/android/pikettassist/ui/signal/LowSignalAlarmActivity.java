@@ -20,7 +20,7 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
   private static final String TAG = "LowSignalAlarmActivity";
 
   public LowSignalAlarmActivity() {
-    super(TAG, R.string.notification_low_signal_title, Pair.create(100, 500), SwipeButtonStyle.GREEN);
+    super(TAG, R.string.notification_low_signal_title, Pair.create(100, 500), SwipeButtonStyle.NO_SIGNAL);
     setEndCondition(() -> {
       SignalStrengthService.SignalLevel level = new SignalStrengthService(LowSignalAlarmActivity.this).getSignalStrength();
       return !isLowSignal(this, level) || !ApplicationPreferences.getSuperviseSignalStrength(getApplicationContext());

@@ -1,32 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="horizontal"
     android:paddingStart="10dp"
-    android:paddingEnd="10dp">
+    android:paddingEnd="10dp"
+    android:paddingBottom="5dp">
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <TextView
+        android:id="@+id/alert_statistic_label_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="@string/alert_list_header_statistic_month_label"
+        android:textSize="15sp"
+        android:textStyle="bold"  />
+
+    <TextView
+        android:id="@+id/alert_statistic_value_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
+        android:layout_toEndOf="@+id/alert_statistic_label_month"
+        android:textSize="15sp"
+        android:textStyle="bold"  />
+
+    <TextView
+        android:id="@+id/alert_statistic_label_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alert_statistic_label_month"
+        android:text="@string/alert_list_header_statistic_year_label"
+        android:textSize="15sp"
+        android:textStyle="bold"  />
+
+    <TextView
+        android:id="@+id/alert_statistic_value_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alert_statistic_value_month"
+        android:layout_marginStart="20sp"
+        android:layout_toEndOf="@+id/alert_statistic_label_month"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/alert_list_export"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_export"
-        android:contentDescription="@string/general_export"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/round_button"/>
+        android:layout_toStartOf="@+id/alert_list_import"
+        android:background="@drawable/round_button"
+        android:contentDescription="@string/general_export"
+        android:src="@drawable/ic_export" />
+
     <ImageButton
         android:id="@+id/alert_list_import"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_import"
         android:layout_marginStart="15dp"
         android:layout_marginBottom="5dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/round_button"
         android:contentDescription="@string/general_import"
-        android:background="@drawable/round_button"/>
-</LinearLayout>
+        android:src="@drawable/ic_import" />
+
+</RelativeLayout>

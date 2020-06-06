@@ -255,5 +255,7 @@
     <string name="alert_log_import_success">Import succeeded.</string>
     <string name="alert_log_import_failed_bad_format">Import failed due to bad file format!</string>
     <string name="alert_log_import_failed">Import failed!</string>
+    <string name="alert_list_header_statistic_month_label">Last 30 days:</string>
+    <string name="alert_list_header_statistic_year_label">Last 365 days:</string>
 
 </resources>

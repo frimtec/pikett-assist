@@ -173,8 +173,12 @@ public class NotificationService {
   }
 
   public boolean isDoNotDisturbEnabled() {
+    return getCurrentInterruptionFilter() != NotificationManager.INTERRUPTION_FILTER_ALL;
+  }
+
+  public int getCurrentInterruptionFilter() {
     NotificationManager notificationManager = this.context.getSystemService(NotificationManager.class);
-    return notificationManager != null && notificationManager.getCurrentInterruptionFilter() != NotificationManager.INTERRUPTION_FILTER_ALL;
+    return notificationManager != null ? notificationManager.getCurrentInterruptionFilter() : -1;
   }
 
   private static String levelText(int level) {

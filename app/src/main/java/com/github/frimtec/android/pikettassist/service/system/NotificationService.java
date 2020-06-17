@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -30,6 +32,8 @@ import static android.app.NotificationManager.IMPORTANCE_MAX;
 
 public class NotificationService {
 
+  private static final String TAG = "NotificationService";
+
   public static final int ALERT_NOTIFICATION_ID = 1;
   public static final int SHIFT_NOTIFICATION_ID = 2;
 
@@ -41,6 +45,7 @@ public class NotificationService {
   private static final String CHANNEL_ID_ALARM = "com.github.frimtec.android.pikettassist.alarm";
   private static final String CHANNEL_ID_NOTIFICATION = "com.github.frimtec.android.pikettassist.notification";
   private static final String CHANNEL_ID_CHANGE_SYSTEM = "com.github.frimtec.android.pikettassist.changeSystem";
+  public static final String ZEN_MODE = "zen_mode";
 
   private final Context context;
 
@@ -173,12 +178,16 @@ public class NotificationService {
   }
 
   public boolean isDoNotDisturbEnabled() {
-    return getCurrentInterruptionFilter() != NotificationManager.INTERRUPTION_FILTER_ALL;
+    return getCurrentZenMode() > 0;
   }
 
-  public int getCurrentInterruptionFilter() {
-    NotificationManager notificationManager = this.context.getSystemService(NotificationManager.class);
-    return notificationManager != null ? notificationManager.getCurrentInterruptionFilter() : -1;
+  public int getCurrentZenMode() {
+    try {
+      return Settings.Global.getInt(this.context.getContentResolver(), ZEN_MODE);
+    } catch (Settings.SettingNotFoundException e) {
+      Log.e(TAG, "Zen mode setting not found", e);
+      return -1;
+    }
   }
 
   private static String levelText(int level) {

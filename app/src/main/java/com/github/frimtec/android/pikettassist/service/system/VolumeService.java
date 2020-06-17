@@ -34,11 +34,11 @@ public class VolumeService {
       }
       try {
         this.audioManager.setStreamVolume(AudioManager.STREAM_RING, desiredLevel, 0);
+        notificationService.notifyVolumeChanged(currentLevel, desiredLevel);
+        Log.i(TAG, String.format("Change volume from %d to %d.", currentLevel, desiredLevel));
       } catch (SecurityException e) {
-        Log.e(TAG, String.format("Not allowed to change volume (interruption filter: %d)", notificationService.getCurrentInterruptionFilter()), e);
+        Log.e(TAG, String.format("Not allowed to change volume (zen mode: %d)", notificationService.getCurrentZenMode()), e);
       }
-      new NotificationService(context).notifyVolumeChanged(currentLevel, desiredLevel);
-      Log.i(TAG, String.format("Change volume from %d to %d.", currentLevel, desiredLevel));
     }
   }
 }

@@ -2,8 +2,7 @@ package com.github.frimtec.android.pikettassist.donation.billing;
 
 import android.text.TextUtils;
 import android.util.Base64;
-
-import com.android.billingclient.util.BillingHelper;
+import android.util.Log;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -35,7 +34,7 @@ final class Security {
                                 String signature) throws IOException {
     if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(base64PublicKey)
         || TextUtils.isEmpty(signature)) {
-      BillingHelper.logWarn(TAG, "Purchase verification failed: missing data.");
+      Log.w(TAG, "Purchase verification failed: missing data.");
       return false;
     }
 
@@ -60,7 +59,7 @@ final class Security {
       throw new RuntimeException(e);
     } catch (InvalidKeySpecException e) {
       String msg = "Invalid key specification: " + e;
-      BillingHelper.logWarn(TAG, msg);
+      Log.w(TAG, msg);
       throw new IOException(msg);
     }
   }
@@ -79,7 +78,7 @@ final class Security {
     try {
       signatureBytes = Base64.decode(signature, Base64.DEFAULT);
     } catch (IllegalArgumentException e) {
-      BillingHelper.logWarn(TAG, "Base64 decoding failed.");
+      Log.w(TAG, "Base64 decoding failed.");
       return false;
     }
     try {
@@ -87,7 +86,7 @@ final class Security {
       signatureAlgorithm.initVerify(publicKey);
       signatureAlgorithm.update(signedData.getBytes());
       if (!signatureAlgorithm.verify(signatureBytes)) {
-        BillingHelper.logWarn(TAG, "Signature verification failed.");
+        Log.w(TAG, "Signature verification failed.");
         return false;
       }
       return true;
@@ -95,9 +94,9 @@ final class Security {
       // "RSA" is guaranteed to be available.
       throw new RuntimeException(e);
     } catch (InvalidKeyException e) {
-      BillingHelper.logWarn(TAG, "Invalid key specification.");
+      Log.w(TAG, "Invalid key specification.");
     } catch (SignatureException e) {
-      BillingHelper.logWarn(TAG, "Signature exception.");
+      Log.w(TAG, "Signature exception.");
     }
     return false;
   }

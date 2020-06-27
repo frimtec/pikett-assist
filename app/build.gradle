@@ -29,7 +29,7 @@ versionProps.store(versionPropsFile.newWriter(), null)
 def purchaseValidationKeyProperties = new Properties()
 try {
     purchaseValidationKeyProperties.load(new FileInputStream(rootProject.file("purchaseValidationKey.properties")))
-} catch (Exception e) {
+} catch (Exception ignored) {
     purchaseValidationKeyProperties.put("purchase.validation.key", "\"NOT_SET\"")
 }
 

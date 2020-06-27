@@ -104,7 +104,7 @@
     <string name="notification_missing_test_alert_text">Testkontexte: </string>
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Akku-Optimierung ist aktiv!</string>
-    <string name="notification_battery_optimization_text"><![CDATA[Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden.<br/><br/><b>Anleitung:</b> Auf dem nächsten Akku-Optimierungsdialog, wähle das Dropdown \"Alle Apps\", suche und selektiere \"PAssist\", wähle \"Nicht optimieren\" und dann drücke \"Fertig\".]]></string>
+    <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden. Der Akkuverbrauch steigt nur leicht während dem aktiven Bereitschaftsdienst.</string>
     <string name="notification_draw_overlays_title">Overlays anzeigen ist deaktiviert!</string>
     <string name="notification_draw_overlays_text">Um den Alarmdialog darzustellen, auch wenn PAssist nicht aktiv oder im Hintergrund ist, muss die Einstellung Overlays anzeigen aktiviert werden.</string>
     <string name="alert_action_close">Schliessen</string>

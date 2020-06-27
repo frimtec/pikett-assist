@@ -58,6 +58,7 @@ import java.util.Set;
 import static android.app.Activity.RESULT_OK;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_BATTERY_OPTIMIZATION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
@@ -145,6 +146,8 @@ public class StateFragment extends AbstractListFragment<State> {
     } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
       Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
       ApplicationPreferences.setOperationsCenterContactReference(getContext(), contact.getReference());
+    } else if (requestCode == FROM_BATTERY_OPTIMIZATION_REQUEST_CODE ) {
+      Log.i(TAG, "Return from battery optimization activity; result=" + resultCode);
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }

@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.provider.Settings;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
@@ -51,7 +53,15 @@ public enum Feature {
     return new PowerService(context).isIgnoringBatteryOptimizations(context.getPackageName());
   }, (context, fragment) -> {
     DialogHelper.infoDialog(context, R.string.notification_battery_optimization_title, R.string.notification_battery_optimization_text,
-        (dialogInterface, integer) -> fragment.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)));
+        (dialogInterface, integer) -> {
+          @SuppressLint("BatteryLife")
+          Intent batteryIntent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+          batteryIntent.setData(Uri.parse("package:" + context.getPackageName()));
+          FragmentActivity activity = fragment.getActivity();
+          if (activity != null) {
+            activity.startActivityForResult(batteryIntent, RequestCodes.FROM_BATTERY_OPTIMIZATION_REQUEST_CODE);
+          }
+        });
   });
 
   private final boolean sensitive;
@@ -98,12 +108,17 @@ public enum Feature {
   }
 
   private static void requestPermissions(Fragment fragment, String[] permissions) {
-    ActivityCompat.requestPermissions(fragment.getActivity(), permissions, PERMISSION_CHANGED_REQUEST_CODE);
+    FragmentActivity activity = fragment.getActivity();
+    if (activity != null) {
+      ActivityCompat.requestPermissions(activity, permissions, PERMISSION_CHANGED_REQUEST_CODE);
+    }
   }
 
   public static final class RequestCodes {
+
     public static final int PERMISSION_CHANGED_REQUEST_CODE = 1;
     public static final int FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 2;
+    public static final int FROM_BATTERY_OPTIMIZATION_REQUEST_CODE = 3;
   }
 
   private enum PermissionSets {

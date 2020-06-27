@@ -54,6 +54,7 @@ import java.util.Map;
 
 import static com.android.billingclient.api.BillingClient.BillingResponseCode;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_BATTERY_OPTIMIZATION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
 import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REGISTER_SMS_ADAPTER_REQUEST_CODE;
 
@@ -220,6 +221,8 @@ public class MainActivity extends AppCompatActivity {
             registrationErrors[result.getReturnCode().ordinal()];
         Toast.makeText(this, registrationText, Toast.LENGTH_LONG).show();
       }
+    } else if (requestCode == FROM_BATTERY_OPTIMIZATION_REQUEST_CODE) {
+      Log.i(TAG, "Return from grant battery optimization deactivation activity; result=" + resultCode);
     }
   }
 

@@ -41,7 +41,7 @@ The alert log can be exported/imported from/to the external file system.
 
 
 ### Phone signal strength
-PAssist will supervise the phone signal strength and notifies you with a vibration pattern if the signal strength it 
+PAssist will supervise the phone signal strength and notifies you with a vibration pattern if the signal strength 
 is bad or off (includes airplane mode). 
 This ensures that you won't stay in a dead spot without recognize it during on-call duties. 
 

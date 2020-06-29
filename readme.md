@@ -7,6 +7,7 @@ The name PAssist is the short form of Pikett-Assist ('Pikett' is the Swiss Germa
 PAssist works for SMS based alerting systems.
 
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>
 
 ## Features
 ### PAssist is controlled by your calendar
@@ -67,10 +68,11 @@ that are under supervision.
 
 ## Installation
 
-### Google&nbsp;Play
-PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist).
+### App-Stores
+PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist) or [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist).
 
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>
 
 ### Self build
 Build PAssist on your own and then install the APK via ADB to your android phone.

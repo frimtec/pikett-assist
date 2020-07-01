@@ -130,6 +130,7 @@
     <string name="general_ok">OK</string>
     <string name="general_cancel">Cancel</string>
     <string name="general_download">Download</string>
+    <string name="general_install">Install</string>
     <string name="general_no">No</string>
     <string name="general_yes">Yes</string>
     <string name="general_are_you_sure">Are you sure?</string>
@@ -183,6 +184,9 @@
     <string name="permission_sms_text_unknown_source_request">
         To install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;, PAssist requires the permission to install an application from unknown source.
         After granting the permission, please repeat the procedure.
+    </string>
+    <string name="install_from_fdroid">
+        You can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; with F-Droid from the repo &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt;.
     </string>
     <string name="permission_sms_update_title">SMS adapter update</string>
     <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; needs to be updated.</string>
@@ -257,5 +261,6 @@
     <string name="alert_log_import_failed">Import failed!</string>
     <string name="alert_list_header_statistic_month_label">Last 30 days:</string>
     <string name="alert_list_header_statistic_year_label">Last 365 days:</string>
+    <string name="add_repo">Add Repo</string>
 
 </resources>

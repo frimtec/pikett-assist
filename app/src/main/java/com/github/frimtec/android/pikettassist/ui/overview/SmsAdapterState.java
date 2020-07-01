@@ -33,6 +33,11 @@ import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.
 
 class SmsAdapterState extends State {
 
+  private static final String F_DROID_PACKAGE_NAME = "org.fdroid.fdroid";
+
+  private static final int MENU_CONTEXT_VIEW = 1;
+  private static final int SEND_TEST_SMS = 2;
+
   private final StateContext stateContext;
   private final boolean smsAdapterSmsPermission;
   private final PackageManager packageManager;
@@ -96,7 +101,20 @@ class SmsAdapterState extends State {
   }
 
   private void openDownloadDialog(Context context, @StringRes int message, @StringRes int title, Installation installation) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+    if (isFDroidAvailable(context)) {
+      SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message) + "<br><br>" + context.getString(R.string.install_from_fdroid), Html.FROM_HTML_MODE_COMPACT));
+      AlertDialog alertDialog = new AlertDialog.Builder(context)
+          // set dialog message
+          .setTitle(title)
+          .setMessage(htmlMessage)
+          .setCancelable(true)
+          .setPositiveButton(R.string.general_install, (dialog, which) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.frimtec.android.securesmsproxy"))))
+          .setNeutralButton(R.string.add_repo, (dialog, which) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A"))))
+          .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+          }).create();
+      alertDialog.show();
+      enableLinks(alertDialog);
+    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
       // let the browser handle the stuff
       SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message), Html.FROM_HTML_MODE_COMPACT));
       AlertDialog alertDialog = new AlertDialog.Builder(context)
@@ -153,9 +171,14 @@ class SmsAdapterState extends State {
     }
   }
 
-  private static final int MENU_CONTEXT_VIEW = 1;
-  private static final int SEND_TEST_SMS = 2;
-
+  private boolean isFDroidAvailable(Context context) {
+    try {
+      context.getPackageManager().getPackageInfo(F_DROID_PACKAGE_NAME, 0);
+      return true;
+    } catch (PackageManager.NameNotFoundException e) {
+      return false;
+    }
+  }
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.Html;
@@ -103,15 +104,7 @@ class SmsAdapterState extends State {
   private void openDownloadDialog(Context context, @StringRes int message, @StringRes int title, Installation installation) {
     if (isFDroidAvailable(context)) {
       SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message) + "<br><br>" + context.getString(R.string.install_from_fdroid), Html.FROM_HTML_MODE_COMPACT));
-      AlertDialog alertDialog = new AlertDialog.Builder(context)
-          // set dialog message
-          .setTitle(title)
-          .setMessage(htmlMessage)
-          .setCancelable(true)
-          .setPositiveButton(R.string.general_install, (dialog, which) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.frimtec.android.securesmsproxy"))))
-          .setNeutralButton(R.string.add_repo, (dialog, which) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A"))))
-          .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
-          }).create();
+      AlertDialog alertDialog = new FDroidSmsAdapterInstallDialog(context, htmlMessage, title);
       alertDialog.show();
       enableLinks(alertDialog);
     } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -168,6 +161,26 @@ class SmsAdapterState extends State {
         alertDialog.show();
         enableLinks(alertDialog);
       }
+    }
+  }
+
+  private static class FDroidSmsAdapterInstallDialog extends AlertDialog {
+    public FDroidSmsAdapterInstallDialog(Context context, SpannableString htmlMessage, @StringRes int title) {
+      super(context);
+      setTitle(title);
+      setMessage(htmlMessage);
+      setCancelable(true);
+      setButton(AlertDialog.BUTTON_POSITIVE, getContext().getString(R.string.general_install), (dialog, which) -> context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.frimtec.android.securesmsproxy"))));
+      setButton(AlertDialog.BUTTON_NEUTRAL, getContext().getString(R.string.add_repo), (dialog, which) -> {
+        // this will never be called
+      });
+      setButton(AlertDialog.BUTTON_NEGATIVE, getContext().getString(R.string.general_cancel), (dialog, which) -> {});
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A"))));
     }
   }
 

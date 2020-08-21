@@ -100,10 +100,11 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
 
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    getWindow().setFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+    int flags =
         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+    getWindow().setFlags(flags, flags);
     setContentView(R.layout.alarm);
 
     TextView textView = findViewById(R.id.alarm_text);

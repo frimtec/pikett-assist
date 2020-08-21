@@ -7,9 +7,15 @@
         app:title="@string/pref_title_alarm_operations_center_contact">
     </com.github.frimtec.android.pikettassist.ui.settings.ContactPreference>
 
-    <EditTextPreference
-        app:defaultValue="@string/pref_default_sms_confirm_text"
+    <SwitchPreference
+        app:defaultValue="true"
+        app:key="send_confirm_sms"
         app:icon="@drawable/ic_message_black_24dp"
+        app:title="@string/pref_title_send_confirm_sms" />
+
+    <EditTextPreference
+        app:dependency="send_confirm_sms"
+        app:defaultValue="@string/pref_default_sms_confirm_text"
         app:key="sms_confirm_text"
         app:singleLine="true"
         app:title="@string/pref_title_sms_confirm_text"

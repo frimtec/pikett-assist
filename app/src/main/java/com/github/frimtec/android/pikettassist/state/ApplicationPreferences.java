@@ -28,6 +28,7 @@ public final class ApplicationPreferences {
   private static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   private static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
   private static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
+  private static final String PREF_KEY_SEND_CONFIRM_SMS = "send_confirm_sms";
   private static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   private static final String PREF_KEY_NOTIFY_LOW_SIGNAL = "notify_low_signal";
@@ -70,6 +71,11 @@ public final class ApplicationPreferences {
 
   public static String getSmsTestMessagePattern(Context context) {
     return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern)).trim();
+  }
+
+  public static boolean getSendConfirmSms(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_SEND_CONFIRM_SMS, true);
   }
 
   public static String getSmsConfirmText(Context context) {

@@ -71,7 +71,9 @@ public class AlertService {
 
   public void confirmAlert(Context context, String smsNumber, Integer subscriptionId) {
     this.alertDao.confirmOpenAlert();
-    this.smsService.sendSms(ApplicationPreferences.getSmsConfirmText(context), smsNumber, subscriptionId);
+    if (ApplicationPreferences.getSendConfirmSms(context)) {
+      this.smsService.sendSms(ApplicationPreferences.getSmsConfirmText(context), smsNumber, subscriptionId);
+    }
     notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,

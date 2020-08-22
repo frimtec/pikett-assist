@@ -93,7 +93,11 @@ PAssist will guide you to install this SMS adapter.
 Defines the contact of your operations center sending alarms via SMS.
 The SMS received from any phone number of this contact are supervised by PAssist. 
 
-#### Confirmation response
+#### Send confirmation replies
+Enable or disable whether confirmation replies should be sent back to the operations center.
+If the warning system of your operations center does not support confirmation messages, you can deactivate this setting to save the cost of sending the extra reply SMS.
+
+#### Confirmation reply
 Defines the text to send back as alarm acknowledgement to your operations center.
        
 #### Alarm ringtone

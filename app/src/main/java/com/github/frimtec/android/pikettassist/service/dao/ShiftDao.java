@@ -37,7 +37,7 @@ public final class ShiftDao {
 
   public List<Shift> getShifts(String eventTitleFilterPattern, String calendarSelection) {
     String[] projection = new String[]{
-        CalendarContract.Instances._ID,
+        CalendarContract.Instances.EVENT_ID,
         CalendarContract.Instances.TITLE,
         CalendarContract.Instances.BEGIN,
         CalendarContract.Instances.END,

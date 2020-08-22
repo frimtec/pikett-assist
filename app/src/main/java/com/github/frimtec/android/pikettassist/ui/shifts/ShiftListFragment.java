@@ -45,6 +45,8 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
         long eventId = selectedShift.getId();
         Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, selectedShift.getStartTime().toEpochMilli());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, selectedShift.getEndTime().toEpochMilli());
         startActivity(intent);
       }
     });

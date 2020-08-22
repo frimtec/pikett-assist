@@ -2,9 +2,11 @@ package com.github.frimtec.android.pikettassist.service.dao;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.icu.util.Calendar;
+import android.net.Uri;
 import android.provider.CalendarContract;
 import android.util.Log;
 
@@ -35,21 +37,21 @@ public final class ShiftDao {
 
   public List<Shift> getShifts(String eventTitleFilterPattern, String calendarSelection) {
     String[] projection = new String[]{
-        CalendarContract.Events._ID,
-        CalendarContract.Events.TITLE,
-        CalendarContract.Events.DTSTART,
-        CalendarContract.Events.DTEND,
-        CalendarContract.Events.CALENDAR_ID
+        CalendarContract.Instances._ID,
+        CalendarContract.Instances.TITLE,
+        CalendarContract.Instances.BEGIN,
+        CalendarContract.Instances.END,
+        CalendarContract.Instances.CALENDAR_ID
     };
     Calendar startTime = Calendar.getInstance();
     startTime.add(Calendar.DATE, -30);
     Calendar endTime = Calendar.getInstance();
 
     endTime.add(Calendar.DATE, 180);
-    String selection = "( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTEND + " <= " + endTime.getTimeInMillis() + " ) AND ( deleted != 1 )";
+    String selection = "deleted != 1";
     String[] args = new String[0];
     if (!CALENDAR_FILTER_ALL.equals(calendarSelection)) {
-      selection = selection + " AND (" + CalendarContract.Events.CALENDAR_ID + " = ?)";
+      selection = selection + " AND " + CalendarContract.Instances.CALENDAR_ID + " = ?";
       args = new String[]{calendarSelection};
     }
     if(!PERMISSION_CALENDAR_READ.isAllowed(context)) {
@@ -57,7 +59,13 @@ public final class ShiftDao {
       return Collections.emptyList();
     }
     List<Shift> events = new LinkedList<>();
-    try (@SuppressLint("MissingPermission") Cursor cursor = this.contentResolver.query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)) {
+
+    Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon();
+    ContentUris.appendId(eventsUriBuilder, startTime.getTimeInMillis());
+    ContentUris.appendId(eventsUriBuilder, endTime.getTimeInMillis());
+    Uri eventsUri = eventsUriBuilder.build();
+
+    try (@SuppressLint("MissingPermission") Cursor cursor = this.contentResolver.query(eventsUri, projection, selection, args, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
           long id = cursor.getLong(0);

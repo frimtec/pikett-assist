@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,6 +42,10 @@ public class AlertDetailActivity extends AppCompatActivity {
       ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
 
       View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, listView, false);
+
+      ImageView playIcon = headerView.findViewById(R.id.alert_detail_header_image_play);
+      playIcon.setVisibility(alert.isClosed() ? View.INVISIBLE : View.VISIBLE);
+
       TextView timeWindow = headerView.findViewById(R.id.alert_detail_header_time_window);
       TextView currentState = headerView.findViewById(R.id.alert_detail_header_current_state);
       TextView durations = headerView.findViewById(R.id.alert_detail_header_durations);

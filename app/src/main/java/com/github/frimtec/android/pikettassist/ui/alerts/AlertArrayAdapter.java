@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ class AlertArrayAdapter extends ArrayAdapter<Alert> {
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.alert_log_item, parent, false);
     }
+    ImageView playIcon = convertView.findViewById(R.id.alert_log_item_image_play);
+    playIcon.setVisibility(alert.isClosed() ? View.INVISIBLE : View.VISIBLE);
     TextView timeWindow = convertView.findViewById(R.id.alert_log_item_time_window);
     TextView durations = convertView.findViewById(R.id.alert_log_item_durations);
     timeWindow.setText(AlertViewHelper.getTimeWindow(alert));

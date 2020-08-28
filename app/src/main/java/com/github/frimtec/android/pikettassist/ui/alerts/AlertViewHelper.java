@@ -38,11 +38,8 @@ final class AlertViewHelper {
       Duration confirmDuration = alert.getConfirmTime() != null ? Duration.between(alert.getStartTime(), alert.getConfirmTime()) : Duration.ofSeconds(0);
       confirmText = String.format(context.getString(R.string.alert_view_confirm_time), confirmDuration.getSeconds());
     }
-    String durationText = "";
-    if (alert.isClosed()) {
-      Duration duration = Duration.between(alert.getStartTime(), alert.getEndTime());
-      durationText = String.format(context.getString(R.string.alert_view_duration), duration.getSeconds() / 60d);
-    }
+    Duration duration = Duration.between(alert.getStartTime(), alert.isClosed() ? alert.getEndTime() : Instant.now());
+    String durationText = String.format(context.getString(R.string.alert_view_duration), duration.getSeconds() / 60d);
     return Stream.of(confirmText, durationText).filter(((Predicate<String>) String::isEmpty).negate()).collect(Collectors.joining("\n"));
   }
 

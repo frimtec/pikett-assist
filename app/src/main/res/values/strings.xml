@@ -108,8 +108,8 @@
     <string name="notification_alert_confirm_button">Confirm</string>
     <string name="notification_battery_optimization_title">Battery optimization is on!</string>
     <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimization turned off. Battery consumption only increases slightly during active on-call duty.</string>
-    <string name="notification_draw_overlays_title">Draw overlays is off!</string>
-    <string name="notification_draw_overlays_text">To show an alter dialog even when the PAssist activity is not started or in background, the draw overlay setting must be switched on.</string>
+    <string name="notification_draw_overlays_title">\'Display over other apps\' is deactivated!</string>
+    <string name="notification_draw_overlays_text">To show alerts even if PAssist is in the background, the \'Display over other apps\' setting must be active for PAssist.</string>
     <string name="alert_action_close">Close</string>
     <string name="state_fragment_operations_center">Op. center</string>
     <string name="state_fragment_pikett_state">On-call state</string>
@@ -137,7 +137,7 @@
     <string name="general_are_you_sure">Are you sure?</string>
     <string name="general_entry_deleted">Entry has been deleted.</string>
     <string name="state_fragment_permissions">Permissions</string>
-    <string name="state_fragment_draw_overlays">Draw Overlays</string>
+    <string name="state_fragment_draw_overlays">Display over other apps</string>
     <string name="state_fragment_battery_optimization">Battery Optimization</string>
     <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
     <string name="general_no_data">No data available yet.</string>

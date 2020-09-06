@@ -106,8 +106,8 @@
     <string name="notification_alert_confirm_button">Bestätigen</string>
     <string name="notification_battery_optimization_title">Die Akku-Optimierung ist aktiv!</string>
     <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden. Der Akkuverbrauch steigt nur leicht während dem aktiven Bereitschaftsdienst.</string>
-    <string name="notification_draw_overlays_title">Overlays anzeigen ist deaktiviert!</string>
-    <string name="notification_draw_overlays_text">Um den Alarmdialog darzustellen, auch wenn PAssist nicht aktiv oder im Hintergrund ist, muss die Einstellung Overlays anzeigen aktiviert werden.</string>
+    <string name="notification_draw_overlays_title">\'Einblenung über anderen Apps\' ist deaktiviert!</string>
+    <string name="notification_draw_overlays_text">Um Alarme anzuzeigen, auch wenn PAssist im Hintergrund ist, muss die Einstellung \'Einblenung über anderen Apps\' für PAssist aktiviert sein.</string>
     <string name="alert_action_close">Schliessen</string>
     <string name="state_fragment_operations_center">Zentrale</string>
     <string name="state_fragment_pikett_state">Pikettzustand</string>
@@ -135,7 +135,7 @@
     <string name="general_are_you_sure">Bist Du sicher?</string>
     <string name="general_entry_deleted">Eintrag wurde gelöscht.</string>
     <string name="state_fragment_permissions">Berechtigungen</string>
-    <string name="state_fragment_draw_overlays">Overlays anzeigen</string>
+    <string name="state_fragment_draw_overlays">Einblenung über anderen Apps</string>
     <string name="state_fragment_battery_optimization">Akku-Optimierung</string>
     <string name="missing_permission_calendar_access">Fehlende Berechtigung zum Lesen des Kalenders!</string>
     <string name="general_no_data">Noch keine Daten vorhanden.</string>

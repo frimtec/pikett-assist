@@ -1,5 +1,5 @@
 # PAssist
-[![Build Status](https://travis-ci.org/frimtec/pikett-assist.svg?branch=master)](https://travis-ci.org/frimtec/pikett-assist) <!-- [![Coverage Status](https://coveralls.io/repos/github/frimtec/pikett-assist/badge.svg?branch=master)](https://coveralls.io/github/frimtec/pikett-assist?branch=master) --> [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://travis-ci.com/frimtec/pikett-assist.svg?branch=master)](https://travis-ci.com/frimtec/pikett-assist) <!-- [![Coverage Status](https://coveralls.io/repos/github/frimtec/pikett-assist/badge.svg?branch=master)](https://coveralls.io/github/frimtec/pikett-assist?branch=master) --> [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 PAssist is an Android application to assist you while doing on-call duties.
 The name PAssist is the short form of Pikett-Assist ('Pikett' is the Swiss German term for on-call).

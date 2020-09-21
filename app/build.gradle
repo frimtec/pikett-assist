@@ -8,7 +8,7 @@ def android_billingclient_version = '3.0.0'
 def ebanx_swipe_button_version = '0.8.3'
 def threetenabp_version = '1.2.4'
 def takisoft_preferencex_version = '1.1.0'
-def junit_version = '5.6.2'
+def junit_version = '5.7.0'
 
 jacoco {
     toolVersion = "0.8.4"

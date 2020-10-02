@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.settings;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -22,6 +21,7 @@ import com.takisoft.preferencex.RingtonePreference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
@@ -52,12 +52,12 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
       setPreferencesFromResource(R.xml.root_preferences, rootKey);
-
+      Context context = getContext();
       RingtonePreference alarmRingTone = findPreference("alarm_ring_tone");
       if (alarmRingTone != null) {
         alarmRingTone.setSummaryProvider(
             (Preference.SummaryProvider<RingtonePreference>) preference ->
-                preference.getRingtone() == null ? preference.getContext().getResources().getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
+                preference.getRingtone() == null ? getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
       }
 
       EditTextPreference proPostTimeSeconds = findPreference("pre_post_run_time_seconds");
@@ -78,8 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
         lowSignalFilterTime.setSummaryProvider(
             (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
               int value = preference.getValue();
-              Resources resources = preference.getContext().getResources();
-              return value == 0 ? resources.getString(R.string.state_off) : (value * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR) + " " + resources.getString(R.string.general_seconds);
+              return value == 0 ? getString(R.string.state_off) : (value * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR) + " " + getString(R.string.general_seconds);
             });
       }
 
@@ -87,7 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
       if (testAlarmGroup != null) {
         testAlarmGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
-                enabledOrDisabled(preference.getContext(), ApplicationPreferences.getTestAlarmEnabled(preference.getContext()))
+                enabledOrDisabled(ApplicationPreferences.getTestAlarmEnabled(preference.getContext()))
         );
       }
 
@@ -95,19 +94,21 @@ public class SettingsActivity extends AppCompatActivity {
       if (dayNightProfileGroup != null) {
         dayNightProfileGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
-                enabledOrDisabled(preference.getContext(), ApplicationPreferences.getManageVolumeEnabled(preference.getContext()))
+                enabledOrDisabled(ApplicationPreferences.getManageVolumeEnabled(preference.getContext()))
         );
 
         ListPreference calendarSelection = findPreference("calendar_selection");
         if (calendarSelection != null) {
           List<CharSequence> entries = new ArrayList<>();
           List<CharSequence> entriesValues = new ArrayList<>();
-          entries.add(getContext().getResources().getString(R.string.preferences_calendar_all));
+          entries.add(getString(R.string.preferences_calendar_all));
           entriesValues.add(CALENDAR_FILTER_ALL);
-          new CalendarDao(getContext()).all().forEach(calendar -> {
-            entries.add(calendar.getName());
-            entriesValues.add(String.valueOf(calendar.getId()));
-          });
+          if (context != null) {
+            new CalendarDao(context).all().forEach(calendar -> {
+              entries.add(calendar.getName());
+              entriesValues.add(String.valueOf(calendar.getId()));
+            });
+          }
           calendarSelection.setEntries(entries.toArray(new CharSequence[]{}));
           calendarSelection.setEntryValues(entriesValues.toArray(new CharSequence[]{}));
           calendarSelection.setDefaultValue(CALENDAR_FILTER_ALL);
@@ -118,19 +119,21 @@ public class SettingsActivity extends AppCompatActivity {
           List<CharSequence> entries = new ArrayList<>();
           List<CharSequence> entriesValues = new ArrayList<>();
 
-          for (int i = 0; i < MAX_SUPPORTED_SIMS; i++) {
-            SignalStrengthService signalStrengthService = new SignalStrengthService(getContext(), i);
-            String networkOperatorName = signalStrengthService.getNetworkOperatorName();
-            if (networkOperatorName != null) {
-              entriesValues.add(String.valueOf(i));
-              entries.add(String.format("%s %s: %s", getContext().getString(R.string.subscription), String.valueOf(i + 1), networkOperatorName));
-            } else {
-              Log.d(TAG, "No phone manager for subscriptionId " + i);
+          if (context != null) {
+            for (int i = 0; i < MAX_SUPPORTED_SIMS; i++) {
+              SignalStrengthService signalStrengthService = new SignalStrengthService(context, i);
+              String networkOperatorName = signalStrengthService.getNetworkOperatorName();
+              if (networkOperatorName != null) {
+                entriesValues.add(String.valueOf(i));
+                entries.add(String.format(Locale.getDefault(), "%s %d: %s", getString(R.string.subscription), i + 1, networkOperatorName));
+              } else {
+                Log.d(TAG, "No phone manager for subscriptionId " + i);
+              }
             }
           }
           superviseSignalStrengthSubscription.setEntries(entries.toArray(new CharSequence[]{}));
           superviseSignalStrengthSubscription.setEntryValues(entriesValues.toArray(new CharSequence[]{}));
-          superviseSignalStrengthSubscription.setDefaultValue(getContext().getString(R.string.pref_default_supervise_signal_strength_subscription));
+          superviseSignalStrengthSubscription.setDefaultValue(getString(R.string.pref_default_supervise_signal_strength_subscription));
           if (entries.size() < 2) {
             superviseSignalStrengthSubscription.setVisible(false);
           }
@@ -138,8 +141,8 @@ public class SettingsActivity extends AppCompatActivity {
       }
     }
 
-    private static String enabledOrDisabled(Context context, boolean flag) {
-      return context.getResources().getString(flag ? R.string.general_enabled : R.string.general_disabled);
+    private String enabledOrDisabled(boolean flag) {
+      return getString(flag ? R.string.general_enabled : R.string.general_disabled);
     }
   }
 }

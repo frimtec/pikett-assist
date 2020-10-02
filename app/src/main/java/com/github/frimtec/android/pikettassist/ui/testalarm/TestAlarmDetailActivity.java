@@ -2,10 +2,10 @@ package com.github.frimtec.android.pikettassist.ui.testalarm;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
@@ -53,7 +53,7 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
 
       TextView lastReceived = findViewById(R.id.test_alarm_details_last_received);
       TextView alarmState = findViewById(R.id.test_alarm_details_alarm_state);
-      Switch supervisedSwitch = findViewById(R.id.test_alarm_enabling_switch);
+      SwitchCompat supervisedSwitch = findViewById(R.id.test_alarm_enabling_switch);
       supervisedSwitch.setChecked(ApplicationPreferences.getSupervisedTestAlarms(this).contains(testAlarm));
       supervisedSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
         Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(this);

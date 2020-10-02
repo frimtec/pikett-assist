@@ -9,6 +9,6 @@
         android:id="@+id/alert_call_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="55dp"></ListView>
+        android:layout_marginBottom="55dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

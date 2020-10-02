@@ -118,13 +118,13 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     SwipeButton swipeButton;
     switch (swipeButtonStyle) {
       case ALARM:
-        swipeButton = (SwipeButton) findViewById(R.id.alarm_button_confirm_alarm);
+        swipeButton = findViewById(R.id.alarm_button_confirm_alarm);
         break;
       case NO_SIGNAL:
-        swipeButton = (SwipeButton) findViewById(R.id.alarm_button_confirm_no_signal);
+        swipeButton = findViewById(R.id.alarm_button_confirm_no_signal);
         break;
       case MISSING_TEST_ALARM:
-        swipeButton = (SwipeButton) findViewById(R.id.alarm_button_confirm_test_alarm);
+        swipeButton = findViewById(R.id.alarm_button_confirm_test_alarm);
         break;
       default:
         throw new IllegalStateException("Unsupported style: " + swipeButtonStyle);

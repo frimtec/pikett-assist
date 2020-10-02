@@ -31,7 +31,7 @@ class CardsWithHeadersDecoration extends RecyclerView.ItemDecoration {
     if (data.getRowType() == ArticleAdapter.TYPE_HEADER) {
       outRect.top = headerGap;
     }
-    RecyclerView.Adapter adapter = parent.getAdapter();
+    RecyclerView.Adapter<?> adapter = parent.getAdapter();
     if (adapter != null) {
       if (position == adapter.getItemCount() - 1) {
         outRect.bottom = headerGap;

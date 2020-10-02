@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -113,16 +114,18 @@ public class StateFragment extends AbstractListFragment<State> {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.alertService = new AlertService(getContext());
-    this.s2msp = SecureSmsProxyFacade.instance(getContext());
-    this.signalStrengthService = new SignalStrengthService(getContext());
-    this.operationsCenterContactService = new OperationsCenterContactService(getContext());
+    Context context = requireContext();
+    this.alertService = new AlertService(context);
+    this.s2msp = SecureSmsProxyFacade.instance(context);
+    this.signalStrengthService = new SignalStrengthService(context);
+    this.operationsCenterContactService = new OperationsCenterContactService(context);
   }
 
   @Override
   public void onResume() {
     // the configured subscription may have been changed
-    this.signalStrengthService = new SignalStrengthService(this.getContext());
+    Context context = requireContext();
+    this.signalStrengthService = new SignalStrengthService(context);
     super.onResume();
   }
 
@@ -138,13 +141,14 @@ public class StateFragment extends AbstractListFragment<State> {
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Context context = getContext();
     if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-      if (SETTING_DRAW_OVERLAYS.isAllowed(getContext())) {
-        getContext().startService(new Intent(getContext(), PikettService.class));
+      if (context != null && SETTING_DRAW_OVERLAYS.isAllowed(context)) {
+        context.startService(new Intent(context, PikettService.class));
       }
-    } else if (requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
+    } else if (context != null && requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
       Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
-      ApplicationPreferences.setOperationsCenterContactReference(getContext(), contact.getReference());
+      ApplicationPreferences.setOperationsCenterContactReference(context, contact.getReference());
     } else {
       super.onActivityResult(requestCode, resultCode, data);
     }
@@ -267,11 +271,14 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private boolean randomizedOn() {
     long installationAgeInDays = Integer.MAX_VALUE;
-    try {
-      PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-      installationAgeInDays = Duration.between(Instant.ofEpochMilli(packageInfo.firstInstallTime), Instant.now()).toDays();
-    } catch (PackageManager.NameNotFoundException e) {
-      Log.e(TAG, "Can not get package info", e);
+    Context context = getContext();
+    if (context != null) {
+      try {
+        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        installationAgeInDays = Duration.between(Instant.ofEpochMilli(packageInfo.firstInstallTime), Instant.now()).toDays();
+      } catch (PackageManager.NameNotFoundException e) {
+        Log.e(TAG, "Can not get package info", e);
+      }
     }
     return this.random.nextFloat() <= Math.min((installationAgeInDays - 30f) * 0.01f, 0.3f);
   }
@@ -282,7 +289,7 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     State selectedItem = (State) getListView().getItemAtPosition(info.position);
     selectedItem.onCreateContextMenu(getContext(), menu);

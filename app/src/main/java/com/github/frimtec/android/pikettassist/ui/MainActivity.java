@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
   private ShiftListFragment shiftListFragment;
   private AlertListFragment alertListFragment;
   private TestAlarmFragment testAlarmFragment;
-  private AbstractListFragment activeFragment;
+  private AbstractListFragment<?> activeFragment;
   private SecureSmsProxyFacade s2msp;
 
   private DonationFragment donationFragment;
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onSaveInstanceState(Bundle outState) {
+  protected void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putString(ACTIVE_FRAGMENT_STATE, this.activeFragment.getFragmentName().name());
   }

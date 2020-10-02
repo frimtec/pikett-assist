@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
@@ -114,7 +115,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
     menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.list_item_menu_delete);
   }
@@ -146,7 +147,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
     if (Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
         new ShiftService(getContext()).getState() == OnOffState.ON) {
       return Optional.of(view -> {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(getString(R.string.manually_created_alarm_reason));
         EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.github.frimtec.android.pikettassist.BuildConfig;
 import com.github.frimtec.android.pikettassist.R;
@@ -50,7 +51,7 @@ public class AboutActivity extends AppCompatActivity {
 
     textView.setText(Html.fromHtml(
         "<h2><a href='https://github.com/frimtec/pikett-assist'>PAssist</a></h2>" +
-            "<p>Version: <b>" + version + "</b><br/>" + "Build  " + build + "</p>" +
+            "<p>Version: <b>" + version + "</b><br/>" + "Build: " + build + "</p>" +
             "<p>&copy; 2019-2020 <a href='https://github.com/frimtec'>frimTEC</a></p>" +
             ""
         , Html.FROM_HTML_MODE_COMPACT));
@@ -68,7 +69,7 @@ public class AboutActivity extends AppCompatActivity {
     } else {
       textView.setText(Html.fromHtml(getString(R.string.about_sponsoring), Html.FROM_HTML_MODE_COMPACT));
       for (int i = 0; i < icons.length; i++) {
-        imageViews[i].setImageDrawable(getBaseContext().getDrawable(icons[i]));
+        imageViews[i].setImageDrawable(ContextCompat.getDrawable(this, icons[i]));
       }
       for (int i = icons.length; i < imageViews.length; i++) {
         ((ViewManager) imageViews[i].getParent()).removeView(imageViews[i]);

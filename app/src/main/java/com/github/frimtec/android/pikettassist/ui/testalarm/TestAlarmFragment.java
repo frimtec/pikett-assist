@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -66,7 +67,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     TestAlarmContext selectedItem = (TestAlarmContext) getListView().getItemAtPosition(info.position);
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
@@ -117,7 +118,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
   @Override
   protected Optional<View.OnClickListener> addAction() {
     return Optional.of(view -> {
-      AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+      AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
       builder.setTitle(getString(R.string.test_alarm_add_title));
       EditText input = new EditText(getContext());
       input.setInputType(InputType.TYPE_CLASS_TEXT);

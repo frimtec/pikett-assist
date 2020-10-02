@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -58,19 +59,20 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
   protected ArrayAdapter<Shift> createAdapter() {
     List<Shift> shifts;
     Instant now = Shift.now();
-    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(getContext());
-    if (!PERMISSION_CALENDAR_READ.isAllowed(getContext())) {
-      Toast.makeText(getContext(), getContext().getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
+    Context context = requireContext();
+    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(context);
+    if (!PERMISSION_CALENDAR_READ.isAllowed(context)) {
+      Toast.makeText(context, getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {
-      shifts = new ShiftDao(getContext()).getShifts(ApplicationPreferences.getCalendarEventPikettTitlePattern(getContext()), ApplicationPreferences.getCalendarSelection(getContext()))
+      shifts = new ShiftDao(context).getShifts(ApplicationPreferences.getCalendarEventPikettTitlePattern(context), ApplicationPreferences.getCalendarSelection(context))
           .stream().filter(shift -> !shift.isOver(now, prePostRunTime)).collect(Collectors.toList());
       if (shifts.isEmpty()) {
-        Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
       }
     }
     updateHeader(now, shifts);
-    return new ShiftArrayAdapter(getContext(), shifts);
+    return new ShiftArrayAdapter(context, shifts);
   }
 
   private void updateHeader(Instant now, List<Shift> shifts) {

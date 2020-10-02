@@ -8,7 +8,7 @@ public class SkuRowData {
   private final SkuDetails details;
   private final String title;
   @RowTypeDef
-  private int type;
+  private final int type;
 
   SkuRowData(SkuDetails details) {
     this.details = details;

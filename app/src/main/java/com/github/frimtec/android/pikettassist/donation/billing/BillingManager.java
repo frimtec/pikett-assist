@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -145,9 +146,7 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
       Log.i(TAG, "Got a blacklist purchase: " + purchase.getOrderId() + ", will be consumed.");
       billingClient.consumeAsync(ConsumeParams.newBuilder()
           .setPurchaseToken(purchase.getPurchaseToken())
-          .build(), (billingResult, s) -> {
-        Log.i(TAG, "Consume respond: " + billingResult + "; " + s);
-      });
+          .build(), (billingResult, s) -> Log.i(TAG, "Consume respond: " + billingResult + "; " + s));
       return;
     }
     if (!verifyValidSignature(purchase.getOriginalJson(), purchase.getSignature())) {
@@ -180,7 +179,7 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
   private void startServiceConnection(Runnable executeOnSuccess) {
     billingClient.startConnection(new BillingClientStateListener() {
       @Override
-      public void onBillingSetupFinished(BillingResult billingResult) {
+      public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
         if (billingResult.getResponseCode() == BillingResponseCode.OK) {
           serviceConnected = true;
           if (executeOnSuccess != null) {

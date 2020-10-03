@@ -32,6 +32,7 @@ import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
       registerOnSmsAdapter();
     }
     loadFragment(savedFragmentName);
-
+    updateBottomNavigation();
     startService(new Intent(this, PikettService.class));
   }
 
@@ -188,9 +189,16 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  private void updateBottomNavigation() {
+    BottomNavigationView navigation = findViewById(R.id.navigation);
+    MenuItem item = navigation.getMenu().findItem(R.id.navigation_test_alarms);
+    item.setVisible(ApplicationPreferences.getTestAlarmEnabled(this));
+  }
+
   @Override
   protected void onResume() {
     super.onResume();
+    updateBottomNavigation();
     BillingManager billingManager = this.billingAdapter.getBillingManager();
     if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
       billingManager.queryPurchases();

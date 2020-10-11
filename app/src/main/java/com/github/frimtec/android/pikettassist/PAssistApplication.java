@@ -9,12 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Process;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.service.KeyValueStore;
 import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
-import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.DbHelper;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -23,6 +21,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static android.content.Intent.EXTRA_BUG_REPORT;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 import static com.github.frimtec.android.pikettassist.ui.support.SendLogActivity.ACTION_SEND_LOG;
 
 public class PAssistApplication extends Application {
@@ -44,7 +45,7 @@ public class PAssistApplication extends Application {
     return keyValueStore;
   }
 
-  private static final String PREF_SMS_ADAPTER_SECRET = "sms_adapter_secret";
+  private static final String PREF_KEY_LOW_SIGNAL_FILTER_OLD = "low_signal_filter";
 
   @Override
   public void onCreate() {
@@ -55,20 +56,27 @@ public class PAssistApplication extends Application {
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");
     keyValueStore = new KeyValueStore(new KeyValueDao(DbFactory.instance()));
 
-    migrationToReleaseElephant();
+    doMigrations();
   }
 
-  private void migrationToReleaseElephant() {
-    if (TextUtils.isEmpty(ApplicationState.getSmsAdapterSecret())) {
-      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-      String secretToMigrate = preferences.getString(PREF_SMS_ADAPTER_SECRET, "");
-      if (!TextUtils.isEmpty(secretToMigrate)) {
-        Log.i(TAG, "Migrating SMS secret");
-        ApplicationState.setSmsAdapterSecret(secretToMigrate);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(PREF_SMS_ADAPTER_SECRET);
-        editor.apply();
-      }
+  private void doMigrations() {
+    migrateLowSignalFilterPreference();
+  }
+
+  /**
+   * Migrates preference "low_signal_filter" (linear filter value) to "low_signal_filter_nl" (non linear filter value).
+   * Migration between release 1.5.1 to release 1.5.2.
+   */
+  private void migrateLowSignalFilterPreference() {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    if (preferences.getInt(PREF_KEY_LOW_SIGNAL_FILTER, -1) == -1) {
+      int oldValue = preferences.getInt(PREF_KEY_LOW_SIGNAL_FILTER_OLD, getResources().getInteger(R.integer.default_low_signal_filter));
+      int migratedValue = LOW_SIGNAL_FILTER_PREFERENCE.getIndex(oldValue * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR);
+      SharedPreferences.Editor editor = preferences.edit();
+      editor.putInt(PREF_KEY_LOW_SIGNAL_FILTER, migratedValue);
+      editor.remove(PREF_KEY_LOW_SIGNAL_FILTER_OLD);
+      editor.apply();
+      Log.i(TAG, String.format("Migrating low signal filter preference from old value %s to new value %s", oldValue, migratedValue));
     }
   }
 

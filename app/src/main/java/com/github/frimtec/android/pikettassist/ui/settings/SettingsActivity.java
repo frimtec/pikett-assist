@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.convertLowSignalFilerToSeconds;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -69,8 +70,10 @@ public class SettingsActivity extends AppCompatActivity {
             });
       }
 
-      SeekBarPreference lowSignalFilterTime = findPreference("low_signal_filter");
+      SeekBarPreference lowSignalFilterTime = findPreference(PREF_KEY_LOW_SIGNAL_FILTER);
       if (lowSignalFilterTime != null) {
+        lowSignalFilterTime.setMin(ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE.getMinIndex());
+        lowSignalFilterTime.setMax(ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE.getMaxIndex());
         lowSignalFilterTime.setOnPreferenceChangeListener((preference, newValue) -> {
           ((SeekBarPreference) preference).setValue((int) newValue);
           return true;
@@ -78,7 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
         lowSignalFilterTime.setSummaryProvider(
             (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
               int value = preference.getValue();
-              return value == 0 ? getString(R.string.state_off) : (value * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR) + " " + getString(R.string.general_seconds);
+              return value == 0 ? getString(R.string.state_off) : convertLowSignalFilerToSeconds(value) + " " + getString(R.string.general_seconds);
             });
       }
 

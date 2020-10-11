@@ -58,11 +58,11 @@ public class LowSignalService extends IntentService {
     SignalStrengthService signalStrengthService = new SignalStrengthService(this);
     SignalLevel level = signalStrengthService.getSignalStrength();
     if (this.pikettState && ApplicationPreferences.getSuperviseSignalStrength(this) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(this, level)) {
-      int lowSignalFilter = ApplicationPreferences.getLowSignalFilter(this);
+      int lowSignalFilter = ApplicationPreferences.getLowSignalFilterSeconds(this);
       if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
         if (this.currentFilterState < lowSignalFilter) {
           Log.d(TAG, "Filter round: " + this.currentFilterState);
-          this.currentFilterState += 1;
+          this.currentFilterState += PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
           return;
         } else {
           this.currentFilterState = lowSignalFilter + 1;
@@ -104,7 +104,7 @@ public class LowSignalService extends IntentService {
       long nextRunInMillis = CHECK_INTERVAL_MS;
       if (this.currentFilterState > 0) {
         intent.putExtra(EXTRA_FILTER_STATE, this.currentFilterState);
-        if (this.currentFilterState <= ApplicationPreferences.getLowSignalFilter(this)) {
+        if (this.currentFilterState <= ApplicationPreferences.getLowSignalFilterSeconds(this)) {
           nextRunInMillis = Duration.ofSeconds(PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR).toMillis();
         }
       }

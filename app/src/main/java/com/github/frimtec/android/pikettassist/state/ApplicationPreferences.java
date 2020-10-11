@@ -32,7 +32,7 @@ public final class ApplicationPreferences {
   private static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   private static final String PREF_KEY_NOTIFY_LOW_SIGNAL = "notify_low_signal";
-  private static final String PREF_KEY_LOW_SIGNAL_FILTER = "low_signal_filter";
+  public static final String PREF_KEY_LOW_SIGNAL_FILTER = "low_signal_filter_nl";
   public static final int PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR = 15;
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL = "supervise_signal_strength_min_level";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION = "supervise_signal_strength_subscription";
@@ -45,6 +45,24 @@ public final class ApplicationPreferences {
   private static final String PREF_KEY_ON_CALL_NIGHT_VOLUME = "on_call_night_volume";
   private static final String PREF_KEY_DAY_START_TIME = "day_start_time";
   private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
+
+  @SuppressWarnings("PointlessArithmeticExpression")
+  public static final NonLinearNumericSeries LOW_SIGNAL_FILTER_PREFERENCE = new NonLinearNumericSeries(new int[]{
+      0 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      1 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      2 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      3 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      4 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      6 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      8 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      10 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      12 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      16 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      20 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      24 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      28 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR,
+      40 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR
+  });
 
   private ApplicationPreferences() {
   }
@@ -104,9 +122,13 @@ public final class ApplicationPreferences {
     return preferences.getBoolean(PREF_KEY_NOTIFY_LOW_SIGNAL, true);
   }
 
-  public static int getLowSignalFilter(Context context) {
+  public static int getLowSignalFilterSeconds(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getInt(PREF_KEY_LOW_SIGNAL_FILTER, R.integer.default_low_signal_filter);
+    return convertLowSignalFilerToSeconds(preferences.getInt(PREF_KEY_LOW_SIGNAL_FILTER,  context.getResources().getInteger(R.integer.default_low_signal_filter)));
+  }
+
+  public static int convertLowSignalFilerToSeconds(int filterValue) {
+    return LOW_SIGNAL_FILTER_PREFERENCE.getValue(filterValue);
   }
 
   public static boolean getTestAlarmEnabled(Context context) {

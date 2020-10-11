@@ -83,8 +83,7 @@
         <SeekBarPreference
             app:defaultValue="@integer/default_low_signal_filter"
             app:dependency="supervise_signal_strength"
-            app:key="low_signal_filter"
-            android:max="@integer/low_signal_filter_max"
+            app:key="low_signal_filter_nl"
             app:title="@string/pref_title_low_signal_filter"/>
 
         <SwitchPreference

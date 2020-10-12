@@ -175,6 +175,9 @@ Defines whether PAssist should control the ringtone volume during on-call duty o
 The desired ringtone volumes can be defined for the day and night profile separably.
 If activated, the ringtone volume is automatically restored to the former value, when on-call duty is finished.
 
+#### Battery drain
+Enable "Minimize at night" to reduce power drain at night by reducing the check interval for the signal strength monitoring.   
+
 ![Overview](images/PAssist_20.png)
 
 ## Supported languages

@@ -97,7 +97,11 @@ public class SettingsActivity extends AppCompatActivity {
       if (dayNightProfileGroup != null) {
         dayNightProfileGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
-                enabledOrDisabled(ApplicationPreferences.getManageVolumeEnabled(preference.getContext()))
+                enabledOrDisabled(
+                    ApplicationPreferences.getManageVolumeEnabled(preference.getContext()) ||
+                        ApplicationPreferences.getBatterySaferAtNightEnabled(preference.getContext())
+
+                )
         );
 
         ListPreference calendarSelection = findPreference("calendar_selection");

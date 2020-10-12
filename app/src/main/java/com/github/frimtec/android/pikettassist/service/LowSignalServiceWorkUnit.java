@@ -25,12 +25,16 @@ import java.util.Optional;
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.getBatterySaferAtNightEnabled;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.isDayProfile;
 
 final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
 
   private static final String TAG = "LowSignalValidator";
-  private static final int CHECK_INTERVAL_SECONDS = 60;
-  public static final String EXTRA_FILTER_STATE = "FILTER_STATE";
+
+  private static final String EXTRA_FILTER_STATE = "FILTER_STATE";
+  private static final Duration CHECK_INTERVAL = Duration.ofMinutes(1);
+  private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(10);
 
   private final AlarmService alarmService;
   private final TelephonyManager telephonyManager;
@@ -100,11 +104,12 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
 
   private Optional<ScheduleInfo> reSchedule(int currentFilterState, boolean pikettState) {
     if (pikettState) {
+      LocalTime now = LocalTime.now();
       if (ApplicationPreferences.getManageVolumeEnabled(context)) {
-        volumeService.setVolume(ApplicationPreferences.getOnCallVolume(context, LocalTime.now()));
+        volumeService.setVolume(ApplicationPreferences.getOnCallVolume(context, now));
       }
       Intent intent = new Intent();
-      Duration nextRunIn = Duration.ofSeconds(CHECK_INTERVAL_SECONDS);
+      Duration nextRunIn = isBatterySaferOn(now) ? getBatterySaferInterval(now) : CHECK_INTERVAL;
       if (currentFilterState > 0) {
         intent.putExtra(EXTRA_FILTER_STATE, currentFilterState);
         if (currentFilterState <= ApplicationPreferences.getLowSignalFilterSeconds(context)) {
@@ -115,5 +120,13 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
     } else {
       return Optional.empty();
     }
+  }
+
+  private Duration getBatterySaferInterval(LocalTime now) {
+    return isDayProfile(context, now.plus(CHECK_INTERVAL_BATTERY_SAFER)) ?  CHECK_INTERVAL : CHECK_INTERVAL_BATTERY_SAFER;
+  }
+
+  private boolean isBatterySaferOn(LocalTime now) {
+    return getBatterySaferAtNightEnabled(this.context) && !isDayProfile(context, now);
   }
 }

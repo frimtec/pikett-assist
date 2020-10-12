@@ -41,6 +41,7 @@ public final class ApplicationPreferences {
   private static final String PREF_KEY_SUPERVISE_TEST_CONTEXTS = "supervise_test_contexts";
   public static final String CALENDAR_FILTER_ALL = "-1";
   private static final String PREF_KEY_MANAGE_VOLUME = "manage_volume";
+  public static final String PREF_KEY_BATTERY_SAFER_AT_NIGHT = "battery_safer_at_night";
   private static final String PREF_KEY_ON_CALL_DAY_VOLUME = "on_call_day_volume";
   private static final String PREF_KEY_ON_CALL_NIGHT_VOLUME = "on_call_night_volume";
   private static final String PREF_KEY_DAY_START_TIME = "day_start_time";
@@ -177,13 +178,22 @@ public final class ApplicationPreferences {
     return preferences.getBoolean(PREF_KEY_MANAGE_VOLUME, false);
   }
 
+  public static boolean getBatterySaferAtNightEnabled(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_BATTERY_SAFER_AT_NIGHT, false);
+  }
+
   private static int getOnCallDayVolume(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getInt(PREF_KEY_ON_CALL_DAY_VOLUME, R.integer.default_volume_day);
   }
 
   public static int getOnCallVolume(Context context, LocalTime currentTime) {
-    return currentTime.isAfter(getDayProfileStartTime(context)) && currentTime.isBefore(getNightProfileStartTime(context)) ? getOnCallDayVolume(context) : getOnCallNightVolume(context);
+    return isDayProfile(context, currentTime) ? getOnCallDayVolume(context) : getOnCallNightVolume(context);
+  }
+
+  public static boolean isDayProfile(Context context, LocalTime currentTime) {
+    return currentTime.isAfter(getDayProfileStartTime(context)) && currentTime.isBefore(getNightProfileStartTime(context));
   }
 
   private static int getOnCallNightVolume(Context context) {

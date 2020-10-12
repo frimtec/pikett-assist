@@ -218,6 +218,10 @@
     <string name="pref_title_category_ringtone_volume">Lautstärke des Klingeltons</string>
     <string name="pref_title_volume_day">Lautstärke Tag</string>
     <string name="pref_title_volume_night">Lautstärke Nacht</string>
+    <string name="pref_title_category_battery_safer">Stromverbrauch</string>
+    <string name="pref_title_battery_safer_at_night">Nachts minimieren</string>
+    <string name="pref_summary_battery_safer_at_night_enabled">Das Überwachungsintervall für den Signalempfang wird nachts reduziert!</string>
+    <string name="pref_summary_battery_safer_at_night_disabled" />
     <string name="menu_create_manually_alarm">Manuelles Aufgebot erstellen</string>
     <string name="manually_created_alarm_reason">Grund für Aufgebot</string>
     <string name="manually_created_alarm_reason_default">Telefonanruf</string>

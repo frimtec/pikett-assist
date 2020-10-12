@@ -58,4 +58,13 @@
             app:title="@string/pref_title_volume_night" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:icon="@drawable/ic_battery_alert_black_24dp"
+        app:title="@string/pref_title_category_battery_safer">
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="battery_safer_at_night"
+            app:title="@string/pref_title_battery_safer_at_night" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

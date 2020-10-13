@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -227,7 +228,7 @@ public class StateFragment extends AbstractListFragment<State> {
         shiftService.findCurrentOrNextShift(now).map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now, prePostRunTime)).orElse(""),
         this.alertDao.getAlertState(),
         pikettStateManuallyOn,
-        !(operationsCenterPhoneNumbers.isEmpty() || s2msp.isAllowed(operationsCenterPhoneNumbers)),
+        !(operationsCenterPhoneNumbers.isEmpty() || isAllowedPhoneNumbers(operationsCenterPhoneNumbers)),
         this.signalStrengthService.getSignalStrength(),
         ApplicationPreferences.getSuperviseSignalStrength(getContext()),
         this.signalStrengthService.getNetworkOperatorName(),
@@ -261,6 +262,16 @@ public class StateFragment extends AbstractListFragment<State> {
         DonationState donationState = new DonationState(stateContext);
         states.add(this.random.nextInt(states.size() + 1), donationState);
       }
+    }
+  }
+
+  private boolean isAllowedPhoneNumbers(Set<String> operationsCenterPhoneNumbers) {
+    try {
+      return s2msp.isAllowed(operationsCenterPhoneNumbers);
+    } catch (SecurityException e) {
+      Log.e(TAG, "Not allowed to call isAllowed()", e);
+      Toast.makeText(getContext(), getString(R.string.missing_permission_s2msp_communication), Toast.LENGTH_LONG).show();
+      return false;
     }
   }
 

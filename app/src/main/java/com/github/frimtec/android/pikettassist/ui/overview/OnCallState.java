@@ -49,14 +49,14 @@ class OnCallState extends State {
     switch (item.getItemId()) {
       case MENU_CONTEXT_SET_MANUALLY_ON:
         ApplicationState.setPikettStateManuallyOn(true);
-        context.startService(new Intent(context, LowSignalService.class));
-        context.startService(new Intent(context, PikettService.class));
+        LowSignalService.enqueueWork(context);
+        PikettService.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_RESET:
         ApplicationState.setPikettStateManuallyOn(false);
-        context.startService(new Intent(context, LowSignalService.class));
-        context.startService(new Intent(context, PikettService.class));
+        LowSignalService.enqueueWork(context);
+        PikettService.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
       default:

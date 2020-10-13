@@ -25,6 +25,10 @@ public class SignalStrengthService {
   private final TelephonyManager telephonyManager;
   private final Context context;
 
+  public static boolean isLowSignal(Context context, SignalStrengthService.SignalLevel level) {
+    return level.ordinal() <= ApplicationPreferences.getSuperviseSignalStrengthMinLevel(context);
+  }
+
   public SignalStrengthService(Context context) {
     this(context, ApplicationPreferences.getSuperviseSignalStrengthSubscription(context));
   }

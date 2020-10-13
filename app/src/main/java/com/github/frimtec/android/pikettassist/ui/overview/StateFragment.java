@@ -145,7 +145,7 @@ public class StateFragment extends AbstractListFragment<State> {
     Context context = getContext();
     if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
       if (context != null && SETTING_DRAW_OVERLAYS.isAllowed(context)) {
-        context.startService(new Intent(context, PikettService.class));
+        PikettService.enqueueWork(context);
       }
     } else if (context != null && requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
       Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());

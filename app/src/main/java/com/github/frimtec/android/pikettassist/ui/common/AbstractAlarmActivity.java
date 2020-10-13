@@ -27,7 +27,6 @@ import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.VibrateService;
 
 import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
 
 import java.util.List;
 import java.util.Objects;
@@ -235,6 +234,6 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     extras.forEach(extra -> alarmIntent.putExtra(extra.first, extra.second));
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
         1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-    alarmService.setAlarmAbsolute(Instant.now().toEpochMilli() + 5, pendingIntent);
+    alarmService.setAlarmForIntent(Duration.ofMillis(5), pendingIntent);
   }
 }

@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
     loadFragment(savedFragmentName);
     updateBottomNavigation();
-    startService(new Intent(this, PikettService.class));
+    PikettService.enqueueWork(this);
   }
 
   private void registerOnSmsAdapter() {
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     refresh();
-    startService(new Intent(this, PikettService.class));
+    PikettService.enqueueWork(this);
   }
 
   @Override
@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
       public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
             new ShiftService(context).getState() == OnOffState.ON) {
-          context.startService(new Intent(context, LowSignalService.class));
+          LowSignalService.enqueueWork(context);
         }
         refresh();
       }

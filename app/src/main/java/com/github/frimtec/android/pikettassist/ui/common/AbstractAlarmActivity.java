@@ -37,6 +37,11 @@ import java.util.function.Supplier;
 
 public abstract class AbstractAlarmActivity extends AppCompatActivity {
 
+  private static final int WAKE_LOCK_TIMEOUT = 1000 * 60 * 60;
+
+  public static final int ONE_SECOND_MILLIS = 1000;
+  public static final int VIBRATION_START_DELAY_MS = 50;
+
   protected enum SwipeButtonStyle {
     ALARM, NO_SIGNAL, MISSING_TEST_ALARM
   }
@@ -95,7 +100,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     this.vibrateService = new VibrateService(this);
     this.wakeLock = new PowerService(this).newWakeLock("alarmActivity");
     if (!wakeLock.isHeld()) {
-      wakeLock.acquire(0);
+      wakeLock.acquire(WAKE_LOCK_TIMEOUT);
     }
 
     requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -162,9 +167,9 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
             AbstractAlarmActivity.this.ringtone.play();
           }
         }
-      }, 1000, 1000);
+      }, ONE_SECOND_MILLIS, ONE_SECOND_MILLIS);
     }
-    this.vibrateService.vibrate(vibrationPattern.first, vibrationPattern.second);
+    startVibrate();
   }
 
   @Override
@@ -177,6 +182,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   protected void onResume() {
     Log.v(tag, "onResume");
     super.onResume();
+    startVibrate();
   }
 
   @Override
@@ -208,6 +214,16 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     }
 
     this.sendBroadcast(new Intent(Action.REFRESH.getId()));
+  }
+
+  private void startVibrate() {
+    Timer oneShot = new Timer();
+    oneShot.schedule(new TimerTask() {
+      public void run() {
+        AbstractAlarmActivity.this.vibrateService.vibrate(vibrationPattern.first, vibrationPattern.second);
+        oneShot.cancel();
+      }
+    }, VIBRATION_START_DELAY_MS, ONE_SECOND_MILLIS);
   }
 
   protected static void trigger(

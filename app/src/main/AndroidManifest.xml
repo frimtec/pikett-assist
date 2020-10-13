@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.github.frimtec.android.pikettassist"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.frimtec.android.pikettassist">
+
     <queries>
         <package android:name="com.github.frimtec.android.securesmsproxy" />
         <package android:name="org.fdroid.fdroid" />
     </queries>
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -108,10 +110,23 @@
                 <action android:name="com.github.frimtec.android.pikettassist.*" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".service.system.AlarmService$Receiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.github.frimtec.android.pikettassist.ALARM.*" />
+            </intent-filter>
+        </receiver>
 
-        <service android:name=".service.PikettService" />
-        <service android:name=".service.TestAlarmService" />
-        <service android:name=".service.LowSignalService" />
+        <service
+            android:name=".service.PikettService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service android:name=".service.TestAlarmService"
+            android:permission="android.permission.BIND_JOB_SERVICE"  />
+        <service
+            android:name=".service.LowSignalService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

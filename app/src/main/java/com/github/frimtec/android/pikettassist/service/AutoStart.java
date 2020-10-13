@@ -20,7 +20,7 @@ public class AutoStart extends BroadcastReceiver {
       new NotificationService(context).registerChannel();
       if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O || Feature.SETTING_BATTERY_OPTIMIZATION_OFF.isAllowed(context)) {
         Log.i(TAG, "Start PikettService in background");
-        context.startService(new Intent(context, PikettService.class));
+        PikettService.enqueueWork(context);
       } else {
         Log.w(TAG, "Start PikettService not allowed with enabled battery optimization");
       }

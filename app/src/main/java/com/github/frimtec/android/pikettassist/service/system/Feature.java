@@ -34,7 +34,7 @@ public enum Feature {
   PERMISSION_CALENDAR_READ(true, true, R.string.permission_calendar_title, context -> allPermissionsGranted(context, PermissionSets.CALENDAR_READ.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.CALENDAR_READ.getPermissions(), R.string.permission_calendar_title, R.string.permission_calendar_text);
   }),
-  PERMISSION_WRITE_EXTERNAL_STORAGE(true, true, R.string.permission_write_external_storage_title, context -> allPermissionsGranted(context, PermissionSets.WRITE_EXTERNAL_STORAGE.getPermissions()), (context, fragment) -> {
+  PERMISSION_WRITE_EXTERNAL_STORAGE(true, true, R.string.permission_write_external_storage_title, context -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || allPermissionsGranted(context, PermissionSets.WRITE_EXTERNAL_STORAGE.getPermissions()), (context, fragment) -> {
     requestPermissionsWithExplanation(context, fragment, PermissionSets.WRITE_EXTERNAL_STORAGE.getPermissions(), R.string.permission_write_external_storage_title, R.string.permission_write_external_storage_text);
   }),
   PERMISSION_COARSE_LOCATION(true, true, R.string.permission_location_title, context -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || allPermissionsGranted(context, PermissionSets.COARSE_LOCATION.getPermissions()), (context, fragment) -> {

@@ -37,11 +37,10 @@ abstract class ReScheduleJobIntentService extends JobIntentService {
 
   @Override
   protected final void onHandleWork(@NonNull Intent intent) {
-    Log.i(TAG, String.format("[%s] Start work cycle", this.jobService));
     Optional<ScheduleInfo> scheduleInfo = this.workUnit.apply(intent);
     if (scheduleInfo.isPresent()) {
       this.alarmService.setAlarmForJob(scheduleInfo.get(), this.jobService);
-      Log.d(TAG, String.format("[%s] Scheduled for next work cycle in %s", this.jobService, scheduleInfo.get().getScheduleDelay()));
+      Log.i(TAG, String.format("[%s] Scheduled for next work cycle in %s", this.jobService, scheduleInfo.get().getScheduleDelay()));
     } else {
       Log.i(TAG, String.format("[%s] Stopped", this.jobService));
     }

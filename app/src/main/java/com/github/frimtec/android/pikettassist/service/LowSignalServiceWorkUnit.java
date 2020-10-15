@@ -33,8 +33,8 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   private static final String TAG = "LowSignalValidator";
 
   private static final String EXTRA_FILTER_STATE = "FILTER_STATE";
-  private static final Duration CHECK_INTERVAL = Duration.ofMinutes(1);
-  private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(10);
+  private static final Duration CHECK_INTERVAL = Duration.ofSeconds(90);
+  private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(15);
 
   private final AlarmService alarmService;
   private final TelephonyManager telephonyManager;

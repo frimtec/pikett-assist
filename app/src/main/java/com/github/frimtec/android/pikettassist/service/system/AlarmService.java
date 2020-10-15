@@ -21,7 +21,7 @@ import static android.content.Context.ALARM_SERVICE;
 public class AlarmService {
 
   private static final String TAG = "AlarmService";
-  private static String BASE_ACTION = "com.github.frimtec.android.pikettassist.ALARM.";
+  private static final String BASE_ACTION = "com.github.frimtec.android.pikettassist.ALARM.";
 
   private final Context context;
   private final AlarmManager alarmManager;
@@ -56,7 +56,6 @@ public class AlarmService {
     public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
       if (action != null && action.startsWith(BASE_ACTION)) {
-        Log.d(TAG, "Alarm received");
         String target = action.substring(BASE_ACTION.length());
         switch (JobService.valueOf(target)) {
           case LOW_SIGNAL_SERVICE:

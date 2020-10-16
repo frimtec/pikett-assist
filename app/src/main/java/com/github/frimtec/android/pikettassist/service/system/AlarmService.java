@@ -15,6 +15,8 @@ import com.github.frimtec.android.pikettassist.service.TestAlarmService;
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 
+import java.util.function.Consumer;
+
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.content.Context.ALARM_SERVICE;
 
@@ -29,24 +31,25 @@ public class AlarmService {
   public static final class ScheduleInfo {
 
     private final Duration scheduleDelay;
-    private final Intent intentExtras;
+    private final Consumer<Intent> intentExtrasSetter;
 
-    public ScheduleInfo(Duration scheduleDelay, Intent intentExtras) {
+    public ScheduleInfo(Duration scheduleDelay, Consumer<Intent> intentExtrasSetter) {
       this.scheduleDelay = scheduleDelay;
-      this.intentExtras = intentExtras;
+      this.intentExtrasSetter = intentExtrasSetter;
     }
 
     public ScheduleInfo(Duration scheduleDelay) {
       this.scheduleDelay = scheduleDelay;
-      this.intentExtras = new Intent();
+      this.intentExtrasSetter = intent -> {
+      };
     }
 
     public Duration getScheduleDelay() {
       return scheduleDelay;
     }
 
-    public Intent getIntentExtras() {
-      return intentExtras;
+    public Consumer<Intent> getIntentExtrasSetter() {
+      return intentExtrasSetter;
     }
   }
 
@@ -80,7 +83,8 @@ public class AlarmService {
   }
 
   public void setAlarmForJob(ScheduleInfo scheduleInfo, JobService target) {
-    Intent intent = scheduleInfo.getIntentExtras();
+    Intent intent = new Intent();
+    scheduleInfo.getIntentExtrasSetter().accept(intent);
     intent.setClass(this.context, AlarmService.Receiver.class);
     intent.setAction(BASE_ACTION + target.name());
     setAlarmForIntent(scheduleInfo.getScheduleDelay(),

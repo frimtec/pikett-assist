@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
   private void updateBottomNavigation() {
     BottomNavigationView navigation = findViewById(R.id.navigation);
     MenuItem item = navigation.getMenu().findItem(R.id.navigation_test_alarms);
-    item.setVisible(ApplicationPreferences.getTestAlarmEnabled(this));
+    item.setVisible(ApplicationPreferences.instance().getTestAlarmEnabled(this));
   }
 
   @Override
@@ -218,9 +218,9 @@ public class MainActivity extends AppCompatActivity {
       Log.d(TAG, "SMS adapter register result received.");
       RegistrationResult result = s2msp.getRegistrationResult(resultCode, data);
       result.getSecret().ifPresent(secret -> {
-        if (!secret.equals(ApplicationState.getSmsAdapterSecret())) {
+        if (!secret.equals(ApplicationState.instance().getSmsAdapterSecret())) {
           Log.i(TAG, "SMS adapter secret changed.");
-          ApplicationState.setSmsAdapterSecret(secret);
+          ApplicationState.instance().setSmsAdapterSecret(secret);
         }
       });
       if (!result.getReturnCode().isSuccess()) {

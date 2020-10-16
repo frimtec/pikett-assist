@@ -22,16 +22,35 @@ import java.util.Optional;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationState.DEFAULT_VOLUME_NOT_SET;
 
-public class PikettServiceWorkUnit implements ServiceWorkUnit {
+class PikettServiceWorkUnit implements ServiceWorkUnit {
 
   private static final String TAG = "PikettService";
   private static final Duration MAX_SLEEP = Duration.ofHours(24);
+  private static final Duration SECURE_DELAY = Duration.ofSeconds(5);
+  private static final Duration RERUN_DELAY = Duration.ofMinutes(1);
 
+  private final ApplicationState applicationState;
+  private final ApplicationPreferences applicationPreferences;
   private final ShiftService shiftService;
+  private final NotificationService notificationService;
+  private final VolumeService volumeService;
+  private final Runnable jobTrigger;
   private final Context context;
 
-  public PikettServiceWorkUnit(ShiftService shiftService, Context context) {
+  public PikettServiceWorkUnit(
+      ApplicationState applicationState,
+      ApplicationPreferences applicationPreferences,
+      ShiftService shiftService,
+      NotificationService notificationService,
+      VolumeService volumeService,
+      Runnable jobTrigger,
+      Context context) {
+    this.applicationState = applicationState;
+    this.applicationPreferences = applicationPreferences;
     this.shiftService = shiftService;
+    this.notificationService = notificationService;
+    this.volumeService = volumeService;
+    this.jobTrigger = jobTrigger;
     this.context = context;
   }
 
@@ -46,31 +65,31 @@ public class PikettServiceWorkUnit implements ServiceWorkUnit {
     }
     Instant now = Shift.now();
     Optional<Shift> first = this.shiftService.findCurrentOrNextShift(now);
-    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(context);
-    Instant nextRun = first.map(shift -> shift.isNow(now, prePostRunTime) ? shift.getEndTime(prePostRunTime) : shift.getStartTime(prePostRunTime)).orElse(now.plus(MAX_SLEEP).plusSeconds(10));
+    Duration prePostRunTime = this.applicationPreferences.getPrePostRunTime(context);
+    Instant nextRun = first.map(shift -> shift.isNow(now, prePostRunTime) ? shift.getEndTime(prePostRunTime) : shift.getStartTime(prePostRunTime)).orElse(now.plus(MAX_SLEEP)).plus(SECURE_DELAY);
     Duration waitTillNextRun = Duration.between(now, nextRun);
+    if(waitTillNextRun.isNegative()) {
+      waitTillNextRun = RERUN_DELAY;
+    }
 
-    boolean manageVolumeEnabled = ApplicationPreferences.getManageVolumeEnabled(context);
-    VolumeService volumeService = manageVolumeEnabled ? new VolumeService(context) : null;
-    NotificationService notificationService = new NotificationService(context);
-    if (ApplicationState.getPikettStateManuallyOn() || first.map(shift -> shift.isNow(prePostRunTime)).orElse(false)) {
-      notificationService.notifyShiftOn();
+    boolean manageVolumeEnabled = this.applicationPreferences.getManageVolumeEnabled(context);
+    if (this.applicationState.getPikettStateManuallyOn() || first.map(shift -> shift.isNow(prePostRunTime)).orElse(false)) {
+      this.notificationService.notifyShiftOn();
       if (manageVolumeEnabled) {
-        int defaultVolume = ApplicationState.getDefaultVolume();
+        int defaultVolume = this.applicationState.getDefaultVolume();
         if (defaultVolume == DEFAULT_VOLUME_NOT_SET) {
-          ApplicationState.setDefaultVolume(volumeService.getVolume());
-          volumeService.setVolume(ApplicationPreferences.getOnCallVolume(context, LocalTime.now()));
+          this.applicationState.setDefaultVolume(this.volumeService.getVolume());
+          this.volumeService.setVolume(this.applicationPreferences.getOnCallVolume(context, LocalTime.now()));
         }
       }
-      LowSignalService.enqueueWork(context);
-      TestAlarmService.enqueueWork(context);
+      jobTrigger.run();
     } else {
-      notificationService.cancelNotification(NotificationService.SHIFT_NOTIFICATION_ID);
+      this.notificationService.cancelNotification(NotificationService.SHIFT_NOTIFICATION_ID);
       if (manageVolumeEnabled) {
-        int defaultVolume = ApplicationState.getDefaultVolume();
+        int defaultVolume = this.applicationState.getDefaultVolume();
         if (defaultVolume != DEFAULT_VOLUME_NOT_SET) {
-          volumeService.setVolume(defaultVolume);
-          ApplicationState.setDefaultVolume(DEFAULT_VOLUME_NOT_SET);
+          this.volumeService.setVolume(defaultVolume);
+          this.applicationState.setDefaultVolume(DEFAULT_VOLUME_NOT_SET);
         }
       }
     }

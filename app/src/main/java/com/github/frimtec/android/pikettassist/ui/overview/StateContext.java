@@ -2,9 +2,9 @@ package com.github.frimtec.android.pikettassist.ui.overview;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Pair;
 
 import androidx.annotation.StringRes;
+import androidx.core.util.Pair;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.Contact;

@@ -54,15 +54,15 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
       TextView lastReceived = findViewById(R.id.test_alarm_details_last_received);
       TextView alarmState = findViewById(R.id.test_alarm_details_alarm_state);
       SwitchCompat supervisedSwitch = findViewById(R.id.test_alarm_enabling_switch);
-      supervisedSwitch.setChecked(ApplicationPreferences.getSupervisedTestAlarms(this).contains(testAlarm));
+      supervisedSwitch.setChecked(ApplicationPreferences.instance().getSupervisedTestAlarms(this).contains(testAlarm));
       supervisedSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-        Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(this);
+        Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(this);
         if (isChecked) {
           supervisedTestAlarmContexts.add(testAlarm);
         } else {
           supervisedTestAlarmContexts.remove(testAlarm);
         }
-        ApplicationPreferences.setSuperviseTestContexts(this, supervisedTestAlarmContexts);
+        ApplicationPreferences.instance().setSuperviseTestContexts(this, supervisedTestAlarmContexts);
       });
       TextView message = findViewById(R.id.test_alarm_details_message);
 

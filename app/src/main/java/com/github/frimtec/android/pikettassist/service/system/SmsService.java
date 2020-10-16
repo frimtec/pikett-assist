@@ -22,13 +22,13 @@ public final class SmsService {
 
   public List<Sms> getSmsFromReceivedIntent(Intent intent) {
     SecureSmsProxyFacade s2msp = SecureSmsProxyFacade.instance(this.context);
-    return s2msp.extractReceivedSms(intent, ApplicationState.getSmsAdapterSecret());
+    return s2msp.extractReceivedSms(intent, ApplicationState.instance().getSmsAdapterSecret());
   }
 
   public void sendSms(String confirmText, String number, Integer subscriptionId) {
     SecureSmsProxyFacade s2msp = SecureSmsProxyFacade.instance(this.context);
     Log.d(TAG, "Send SMS to SIM with subscription: " + subscriptionId);
     Sms sms = new Sms(number, confirmText, subscriptionId);
-    s2msp.sendSms(sms, ApplicationState.getSmsAdapterSecret());
+    s2msp.sendSms(sms, ApplicationState.instance().getSmsAdapterSecret());
   }
 }

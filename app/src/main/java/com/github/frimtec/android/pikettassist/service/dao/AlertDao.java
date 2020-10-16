@@ -4,7 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.util.Pair;
+
+import androidx.core.util.Pair;
 
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;

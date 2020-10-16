@@ -8,25 +8,22 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
-import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.LocalTime;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
 import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.getBatterySaferAtNightEnabled;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.isDayProfile;
 
 final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
 
@@ -36,31 +33,34 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   private static final Duration CHECK_INTERVAL = Duration.ofSeconds(90);
   private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(15);
 
-  private final AlarmService alarmService;
+  private final ApplicationPreferences applicationPreferences;
   private final TelephonyManager telephonyManager;
   private final AlertDao alertDao;
   private final ShiftService shiftService;
   private final SignalStrengthService signalStrengthService;
   private final VolumeService volumeService;
   private final NotificationService notificationService;
+  private final Runnable alarmTrigger;
   private final Context context;
 
   LowSignalServiceWorkUnit(
-      AlarmService alarmService,
+      ApplicationPreferences applicationPreferences,
       TelephonyManager telephonyManager,
       AlertDao alertDao,
       ShiftService shiftService,
       SignalStrengthService signalStrengthService,
       VolumeService volumeService,
       NotificationService notificationService,
+      Runnable alarmTrigger,
       Context context) {
-    this.alarmService = alarmService;
+    this.applicationPreferences = applicationPreferences;
     this.telephonyManager = telephonyManager;
     this.alertDao = alertDao;
     this.shiftService = shiftService;
     this.signalStrengthService = signalStrengthService;
     this.volumeService = volumeService;
     this.notificationService = notificationService;
+    this.alarmTrigger = alarmTrigger;
     this.context = context;
   }
 
@@ -68,9 +68,9 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   public Optional<ScheduleInfo> apply(Intent intent) {
     int currentFilterState = intent.getIntExtra(EXTRA_FILTER_STATE, 0);
     boolean pikettState = this.shiftService.getState() == OnOffState.ON;
-    SignalLevel level = signalStrengthService.getSignalStrength();
-    if (pikettState && ApplicationPreferences.getSuperviseSignalStrength(context) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(context, level)) {
-      int lowSignalFilter = ApplicationPreferences.getLowSignalFilterSeconds(context);
+    SignalLevel level = this.signalStrengthService.getSignalStrength();
+    if (pikettState && this.applicationPreferences.getSuperviseSignalStrength(context) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context))) {
+      int lowSignalFilter = this.applicationPreferences.getLowSignalFilterSeconds(context);
       if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
         if (currentFilterState < lowSignalFilter) {
           Log.d(TAG, "Filter round: " + currentFilterState);
@@ -81,10 +81,10 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
           Log.d(TAG, "Filter triggered, alarm raced");
         }
       }
-      if (ApplicationPreferences.getNotifyLowSignal(context)) {
-        notificationService.notifySignalLow(level);
+      if (this.applicationPreferences.getNotifyLowSignal(context)) {
+        this.notificationService.notifySignalLow(level);
       }
-      LowSignalAlarmActivity.trigger(context, this.alarmService);
+      this.alarmTrigger.run();
     } else {
       if (currentFilterState > 0) {
         Log.d(TAG, "Filter stopped, signal ok");
@@ -105,28 +105,31 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   private Optional<ScheduleInfo> reSchedule(int currentFilterState, boolean pikettState) {
     if (pikettState) {
       LocalTime now = LocalTime.now();
-      if (ApplicationPreferences.getManageVolumeEnabled(context)) {
-        volumeService.setVolume(ApplicationPreferences.getOnCallVolume(context, now));
+      if (this.applicationPreferences.getManageVolumeEnabled(context)) {
+        volumeService.setVolume(this.applicationPreferences.getOnCallVolume(context, now));
       }
-      Intent intent = new Intent();
+      Consumer<Intent> intentExtrasSetter;
       Duration nextRunIn = isBatterySaferOn(now) ? getBatterySaferInterval(now) : CHECK_INTERVAL;
       if (currentFilterState > 0) {
-        intent.putExtra(EXTRA_FILTER_STATE, currentFilterState);
-        if (currentFilterState <= ApplicationPreferences.getLowSignalFilterSeconds(context)) {
+        intentExtrasSetter = intent -> intent.putExtra(EXTRA_FILTER_STATE, currentFilterState);
+        if (currentFilterState <= this.applicationPreferences.getLowSignalFilterSeconds(context)) {
           nextRunIn = Duration.ofSeconds(PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR);
         }
+      } else {
+        intentExtrasSetter = intent -> {
+        };
       }
-      return Optional.of(new ScheduleInfo(nextRunIn, intent));
+      return Optional.of(new ScheduleInfo(nextRunIn, intentExtrasSetter));
     } else {
       return Optional.empty();
     }
   }
 
   private Duration getBatterySaferInterval(LocalTime now) {
-    return isDayProfile(context, now.plus(CHECK_INTERVAL_BATTERY_SAFER)) ?  CHECK_INTERVAL : CHECK_INTERVAL_BATTERY_SAFER;
+    return this.applicationPreferences.isDayProfile(context, now.plus(CHECK_INTERVAL_BATTERY_SAFER)) ? CHECK_INTERVAL : CHECK_INTERVAL_BATTERY_SAFER;
   }
 
   private boolean isBatterySaferOn(LocalTime now) {
-    return getBatterySaferAtNightEnabled(this.context) && !isDayProfile(context, now);
+    return this.applicationPreferences.getBatterySaferAtNightEnabled(this.context) && !this.applicationPreferences.isDayProfile(context, now);
   }
 }

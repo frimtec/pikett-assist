@@ -38,7 +38,7 @@ public class AlertActivity extends AbstractAlarmActivity {
   }
 
   private Uri getAlarmTone(Context context) {
-    String alarmRingTone = ApplicationPreferences.getAlarmRingTone(context);
+    String alarmRingTone = ApplicationPreferences.instance().getAlarmRingTone(context);
     if (!alarmRingTone.isEmpty()) {
       return Uri.parse(alarmRingTone);
     }

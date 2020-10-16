@@ -37,7 +37,7 @@ class OnCallState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    if (ApplicationState.getPikettStateManuallyOn()) {
+    if (ApplicationState.instance().getPikettStateManuallyOn()) {
       menu.add(Menu.NONE, MENU_CONTEXT_RESET, Menu.NONE, R.string.list_item_menu_reset);
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_SET_MANUALLY_ON, Menu.NONE, R.string.list_item_menu_set_manually_on);
@@ -48,13 +48,13 @@ class OnCallState extends State {
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
       case MENU_CONTEXT_SET_MANUALLY_ON:
-        ApplicationState.setPikettStateManuallyOn(true);
+        ApplicationState.instance().setPikettStateManuallyOn(true);
         LowSignalService.enqueueWork(context);
         PikettService.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_RESET:
-        ApplicationState.setPikettStateManuallyOn(false);
+        ApplicationState.instance().setPikettStateManuallyOn(false);
         LowSignalService.enqueueWork(context);
         PikettService.enqueueWork(context);
         stateContext.refreshFragment();

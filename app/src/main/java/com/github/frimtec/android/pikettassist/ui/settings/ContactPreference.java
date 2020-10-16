@@ -54,7 +54,7 @@ public class ContactPreference extends Preference implements PreferenceActivityR
     if (requestCode == CONTACT_SELECTED && data != null) {
       Uri contactUri = data.getData();
       Contact contact = this.operationsCenterContactService.getContactFromUri(contactUri);
-      ApplicationPreferences.setOperationsCenterContactReference(getContext(), contact.getReference());
+      ApplicationPreferences.instance().setOperationsCenterContactReference(getContext(), contact.getReference());
       notifyChanged();
     }
   }

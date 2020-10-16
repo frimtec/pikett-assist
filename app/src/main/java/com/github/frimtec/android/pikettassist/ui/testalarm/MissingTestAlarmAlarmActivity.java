@@ -30,7 +30,7 @@ public class MissingTestAlarmAlarmActivity extends AbstractAlarmActivity {
   }
 
   private Uri getAlarmTone(Context context) {
-    String alarmRingTone = ApplicationPreferences.getTestAlarmRingTone(context);
+    String alarmRingTone = ApplicationPreferences.instance().getTestAlarmRingTone(context);
     if (!alarmRingTone.isEmpty()) {
       return Uri.parse(alarmRingTone);
     }

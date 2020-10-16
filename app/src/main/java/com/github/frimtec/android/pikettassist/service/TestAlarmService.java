@@ -5,6 +5,9 @@ import android.content.Intent;
 
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
 
 import static com.github.frimtec.android.pikettassist.action.JobService.TEST_ALARM_SERVICE;
 
@@ -17,9 +20,11 @@ public class TestAlarmService extends ReScheduleJobIntentService {
   @Override
   protected ServiceWorkUnit createWorkUnit(Context context, AlarmService alarmService) {
     return new TestAlarmServiceWorkUnit(
+        ApplicationPreferences.instance(),
         new TestAlarmDao(),
-        alarmService,
         new ShiftService(context),
+        new NotificationService(context),
+        () -> MissingTestAlarmAlarmActivity.trigger(context, alarmService),
         context
     );
   }

@@ -13,10 +13,6 @@ import org.threeten.bp.Instant;
 
 import java.util.Optional;
 
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.getCalendarEventPikettTitlePattern;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.getCalendarSelection;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.getPrePostRunTime;
-
 public class ShiftService {
 
   private final Context context;
@@ -28,17 +24,17 @@ public class ShiftService {
   }
 
   public OnOffState getState() {
-    return ApplicationState.getPikettStateManuallyOn() ||
+    return ApplicationState.instance().getPikettStateManuallyOn() ||
         hasShiftEventForNow(
-            getCalendarEventPikettTitlePattern(this.context),
-            getCalendarSelection(this.context),
-            getPrePostRunTime(context)
+            ApplicationPreferences.instance().getCalendarEventPikettTitlePattern(this.context),
+            ApplicationPreferences.instance().getCalendarSelection(this.context),
+            ApplicationPreferences.instance().getPrePostRunTime(context)
         ) ? OnOffState.ON : OnOffState.OFF;
   }
 
   public Optional<Shift> findCurrentOrNextShift(Instant now) {
-    return this.shiftDao.getShifts(ApplicationPreferences.getCalendarEventPikettTitlePattern(this.context), getCalendarSelection(this.context))
-        .stream().filter(shift -> !shift.isOver(now, getPrePostRunTime(context))).findFirst();
+    return this.shiftDao.getShifts(ApplicationPreferences.instance().getCalendarEventPikettTitlePattern(this.context), ApplicationPreferences.instance().getCalendarSelection(this.context))
+        .stream().filter(shift -> !shift.isOver(now, ApplicationPreferences.instance().getPrePostRunTime(context))).findFirst();
   }
 
   private boolean hasShiftEventForNow(String eventTitleFilterPattern, String calendarSelection, Duration prePostRunTime) {

@@ -58,16 +58,16 @@ public class SmsListener extends BroadcastReceiver {
       for (Sms sms : receivedSms) {
         if (operationsCenterContactService.isContactsPhoneNumber(operationsCenterContact, sms.getNumber())) {
           Log.i(TAG, "SMS from pikett number");
-          Pattern testSmsPattern = Pattern.compile(ApplicationPreferences.getSmsTestMessagePattern(context), Pattern.DOTALL);
+          Pattern testSmsPattern = Pattern.compile(ApplicationPreferences.instance().getSmsTestMessagePattern(context), Pattern.DOTALL);
           Matcher matcher = testSmsPattern.matcher(sms.getText());
-          if (ApplicationPreferences.getTestAlarmEnabled(context) && matcher.matches()) {
+          if (ApplicationPreferences.instance().getTestAlarmEnabled(context) && matcher.matches()) {
             TestAlarmContext testAlarmContext = new TestAlarmContext(matcher.groupCount() > 0 ? matcher.group(1) : context.getString(R.string.test_alarm_context_general));
             Log.i(TAG, "TEST alarm with context: " + testAlarmContext.getContext());
-            smsService.sendSms(ApplicationPreferences.getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
+            smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
             if (this.testAlarmDao.updateReceivedTestAlert(testAlarmContext, Instant.now(), sms.getText())) {
-              Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(context);
+              Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(context);
               supervisedTestAlarmContexts.add(testAlarmContext);
-              ApplicationPreferences.setSuperviseTestContexts(context, supervisedTestAlarmContexts);
+              ApplicationPreferences.instance().setSuperviseTestContexts(context, supervisedTestAlarmContexts);
             }
           } else {
             Log.i(TAG, "New alert");

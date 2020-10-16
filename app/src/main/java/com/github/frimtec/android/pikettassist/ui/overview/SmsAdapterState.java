@@ -200,7 +200,7 @@ class SmsAdapterState extends State {
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view)
         .setEnabled(present);
     menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms)
-        .setEnabled(present && !TextUtils.isEmpty(ApplicationState.getSmsAdapterSecret()));
+        .setEnabled(present && !TextUtils.isEmpty(ApplicationState.instance().getSmsAdapterSecret()));
   }
 
   @Override

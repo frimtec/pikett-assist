@@ -19,7 +19,7 @@ public class DayNightProfileFragment extends PreferenceFragmentCompat {
 
     SwitchPreference enableBatterySaferAtNight = findPreference(PREF_KEY_BATTERY_SAFER_AT_NIGHT);
     if (enableBatterySaferAtNight != null) {
-      enableBatterySaferAtNight.setSummary(getBatterySaferAtNightSummary(ApplicationPreferences.getBatterySaferAtNightEnabled(enableBatterySaferAtNight.getContext())));
+      enableBatterySaferAtNight.setSummary(getBatterySaferAtNightSummary(ApplicationPreferences.instance().getBatterySaferAtNightEnabled(enableBatterySaferAtNight.getContext())));
       enableBatterySaferAtNight.setOnPreferenceChangeListener((preference, newValue) -> {
         preference.setSummary(getBatterySaferAtNightSummary(Boolean.TRUE.equals(newValue)));
         return true;

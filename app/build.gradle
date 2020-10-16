@@ -83,6 +83,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.ebanx:swipe-button:$ebanx_swipe_button_version"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
+    testImplementation("org.threeten:threetenbp:$threetenabp_version") {
+        exclude module: "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
+    }
     implementation "com.android.billingclient:billing:$android_billingclient_version"
     implementation "com.github.frimtec:secure-sms-proxy-api:$secure_sms_proxy_api_version"
     implementation "com.takisoft.preferencex:preferencex:$takisoft_preferencex_version"

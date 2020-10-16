@@ -2,53 +2,27 @@ package com.github.frimtec.android.pikettassist.state;
 
 import android.util.Pair;
 
-import static com.github.frimtec.android.pikettassist.PAssistApplication.getKeyValueStore;
+public interface ApplicationState {
 
-public final class ApplicationState {
+  int DEFAULT_VOLUME_NOT_SET = -1;
 
-  public static final int DEFAULT_VOLUME_NOT_SET = -1;
-
-  private static final String DELIMITER = ";";
-
-  private static final String KEY_SMS_ADAPTER_SECRET = "sms_adapter.secret";
-  private static final String KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state.manually_on";
-  private static final String KEY_LAST_ALARM_SMS_NUMBER = "last_alarm.sms_number_subscription_id";
-  private static final String KEY_DEFAULT_VOLUME = "volume.default";
-
-  private ApplicationState() {
+  static ApplicationState instance() {
+    return KeyValueStoreApplicationState.INSTANCE;
   }
 
-  public static String getSmsAdapterSecret() {
-    return getKeyValueStore().get(KEY_SMS_ADAPTER_SECRET, "");
-  }
+  String getSmsAdapterSecret();
 
-  public static void setSmsAdapterSecret(String secret) {
-    getKeyValueStore().put(KEY_SMS_ADAPTER_SECRET, secret);
-  }
+  void setSmsAdapterSecret(String secret);
 
-  public static boolean getPikettStateManuallyOn() {
-    return Boolean.parseBoolean(getKeyValueStore().get(KEY_PIKETT_STATE_MANUALLY_ON, String.valueOf(false)));
-  }
+   boolean getPikettStateManuallyOn();
 
-  public static void setPikettStateManuallyOn(boolean manuallyOn) {
-    getKeyValueStore().put(KEY_PIKETT_STATE_MANUALLY_ON, String.valueOf(manuallyOn));
-  }
+   void setPikettStateManuallyOn(boolean manuallyOn);
 
-  public static Pair<String, Integer> getLastAlarmSmsNumberWithSubscriptionId() {
-    String value = getKeyValueStore().get(KEY_LAST_ALARM_SMS_NUMBER, DELIMITER);
-    String[] split = value.split(DELIMITER);
-    return Pair.create(split[0], split.length > 1 && !split[1].isEmpty() ? Integer.valueOf(split[1]) : null);
-  }
+  Pair<String, Integer> getLastAlarmSmsNumberWithSubscriptionId();
 
-  public static void setLastAlarmSmsNumberWithSubscriptionId(String smsNumber, Integer subscriptionId) {
-    getKeyValueStore().put(KEY_LAST_ALARM_SMS_NUMBER, smsNumber + DELIMITER + (subscriptionId != null ? subscriptionId : ""));
-  }
+   void setLastAlarmSmsNumberWithSubscriptionId(String smsNumber, Integer subscriptionId);
 
-  public static int getDefaultVolume() {
-    return Integer.parseInt(getKeyValueStore().get(KEY_DEFAULT_VOLUME, String.valueOf(DEFAULT_VOLUME_NOT_SET)));
-  }
+   int getDefaultVolume();
 
-  public static void setDefaultVolume(int volume) {
-    getKeyValueStore().put(KEY_DEFAULT_VOLUME, String.valueOf(volume));
-  }
+   void setDefaultVolume(int volume);
 }

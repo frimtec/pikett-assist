@@ -7,12 +7,10 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
-import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
 
 import org.threeten.bp.Duration;
 import org.threeten.bp.ZonedDateTime;
@@ -29,19 +27,25 @@ public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
 
   private static final String PARAM_INITIAL = "initial";
 
+  private final ApplicationPreferences applicationPreferences;
   private final TestAlarmDao testAlarmDao;
-  private final AlarmService alarmService;
   private final ShiftService shiftService;
+  private final NotificationService notificationService;
+  private final Runnable alarmTrigger;
   private final Context context;
 
   public TestAlarmServiceWorkUnit(
+      ApplicationPreferences applicationPreferences,
       TestAlarmDao testAlarmDao,
-      AlarmService alarmService,
       ShiftService shiftService,
+      NotificationService notificationService,
+      Runnable alarmTrigger,
       Context context) {
+    this.applicationPreferences = applicationPreferences;
     this.testAlarmDao = testAlarmDao;
-    this.alarmService = alarmService;
     this.shiftService = shiftService;
+    this.notificationService = notificationService;
+    this.alarmTrigger = alarmTrigger;
     this.context = context;
   }
 
@@ -50,38 +54,35 @@ public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
     boolean initial = intent.getBooleanExtra(PARAM_INITIAL, true);
     OnOffState shiftState = this.shiftService.getState();
     Log.i(TAG, "Service cycle; shift state: " + shiftState + "; initial: " + initial);
-    if (!initial && ApplicationPreferences.getTestAlarmEnabled(context) && shiftState == OnOffState.ON) {
+    boolean testAlarmEnabled = this.applicationPreferences.getTestAlarmEnabled(context);
+    Set<Integer> testAlarmCheckWeekdays = this.applicationPreferences.getTestAlarmCheckWeekdays(context).stream()
+        .map(Integer::valueOf)
+        .collect(Collectors.toSet());
+    if (!testAlarmEnabled || shiftState != OnOffState.ON || testAlarmCheckWeekdays.isEmpty()) {
+      return Optional.empty();
+    }
+
+    if (!initial) {
       ZonedDateTime now = ZonedDateTime.now();
-      ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(ApplicationPreferences.getTestAlarmAcceptTimeWindowMinutes(context));
-      Set<TestAlarmContext> missingTestAlarmContextContexts = ApplicationPreferences.getSupervisedTestAlarms(context).stream()
+      ZonedDateTime messageAcceptedTime = getTodaysCheckTime(now).minusMinutes(this.applicationPreferences.getTestAlarmAcceptTimeWindowMinutes(context));
+      Set<TestAlarmContext> supervisedTestAlarms = this.applicationPreferences.getSupervisedTestAlarms(context);
+      Set<TestAlarmContext> missingTestAlarmContextContexts = supervisedTestAlarms.stream()
           .filter(tc -> !this.testAlarmDao.isTestAlarmReceived(tc, messageAcceptedTime.toInstant()))
           .collect(Collectors.toSet());
       missingTestAlarmContextContexts.forEach(testContext -> {
         Log.i(TAG, "Not received test messages: " + testContext);
-        new TestAlarmDao().updateAlertState(testContext, OnOffState.ON);
+        this.testAlarmDao.updateAlertState(testContext, OnOffState.ON);
       });
 
       if (!missingTestAlarmContextContexts.isEmpty()) {
-        new NotificationService(context).notifyMissingTestAlarm(
+        this.notificationService.notifyMissingTestAlarm(
             new Intent(context, MainActivity.class),
             missingTestAlarmContextContexts
         );
-        MissingTestAlarmAlarmActivity.trigger(context, this.alarmService);
+        this.alarmTrigger.run();
       }
     }
 
-    if (shiftState == OnOffState.OFF) {
-      return Optional.empty();
-    }
-    Set<Integer> testAlarmCheckWeekdays = ApplicationPreferences.getTestAlarmCheckWeekdays(context).stream()
-        .map(Integer::valueOf)
-        .collect(Collectors.toSet());
-    if (testAlarmCheckWeekdays.isEmpty()) {
-      return Optional.empty();
-    }
-
-    Intent intentExtras = new Intent(context, TestAlarmServiceWorkUnit.class);
-    intentExtras.putExtra(PARAM_INITIAL, false);
     ZonedDateTime now = ZonedDateTime.now();
     ZonedDateTime nextRun = getTodaysCheckTime(now);
     if (nextRun.isBefore(now)) {
@@ -90,11 +91,11 @@ public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
     while (!testAlarmCheckWeekdays.contains(nextRun.getDayOfWeek().getValue())) {
       nextRun = nextRun.plusDays(1);
     }
-    return Optional.of(new ScheduleInfo(Duration.between(now, nextRun), intentExtras));
+    return Optional.of(new ScheduleInfo(Duration.between(now, nextRun), newIntent -> newIntent.putExtra(PARAM_INITIAL, false)));
   }
 
   private ZonedDateTime getTodaysCheckTime(ZonedDateTime now) {
-    String[] testAlarmCheckTime = ApplicationPreferences.getTestAlarmCheckTime(context).split(":");
+    String[] testAlarmCheckTime = this.applicationPreferences.getTestAlarmCheckTime(context).split(":");
     return now.truncatedTo(ChronoUnit.MINUTES)
         .with(ChronoField.HOUR_OF_DAY, Integer.parseInt(testAlarmCheckTime[0]))
         .with(ChronoField.MINUTE_OF_HOUR, Integer.parseInt(testAlarmCheckTime[1]));

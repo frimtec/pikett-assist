@@ -36,7 +36,7 @@ class TestAlarmArrayAdapter extends ArrayAdapter<TestAlarmContext> {
     TextView textView = convertView.findViewById(R.id.test_alarm_item_context);
     textView.setText(testAlarmContext.getContext());
 
-    Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
+    Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
     if(!supervisedTestAlarmContexts.contains(testAlarmContext)) {
       textView.setTextAppearance(R.style.deactivatedItem);
     }

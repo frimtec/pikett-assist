@@ -73,7 +73,7 @@ class OperationsCenterState extends State {
         return true;
       case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
         DialogHelper.areYouSure(stateContext.getContext(), (dialog, which) -> {
-          ApplicationPreferences.setOperationsCenterContactReference(context, ContactReference.NO_SELECTION);
+          ApplicationPreferences.instance().setOperationsCenterContactReference(context, ContactReference.NO_SELECTION);
           stateContext.refreshFragment();
         }, (dialog, which) -> {
         });

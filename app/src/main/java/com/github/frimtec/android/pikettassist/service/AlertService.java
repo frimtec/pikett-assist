@@ -48,7 +48,7 @@ public class AlertService {
   }
 
   public void newAlert(Sms sms) {
-    ApplicationState.setLastAlarmSmsNumberWithSubscriptionId(sms.getNumber(), sms.getSubscriptionId());
+    ApplicationState.instance().setLastAlarmSmsNumberWithSubscriptionId(sms.getNumber(), sms.getSubscriptionId());
     if (this.alertDao.insertOrUpdateAlert(Instant.now(), sms.getText(), false)) {
       AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
     }
@@ -65,14 +65,14 @@ public class AlertService {
   }
 
   public void confirmAlert() {
-    Pair<String, Integer> smsNumberWithSubscriptionId = ApplicationState.getLastAlarmSmsNumberWithSubscriptionId();
+    Pair<String, Integer> smsNumberWithSubscriptionId = ApplicationState.instance().getLastAlarmSmsNumberWithSubscriptionId();
     confirmAlert(this.context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);
   }
 
   public void confirmAlert(Context context, String smsNumber, Integer subscriptionId) {
     this.alertDao.confirmOpenAlert();
-    if (ApplicationPreferences.getSendConfirmSms(context)) {
-      this.smsService.sendSms(ApplicationPreferences.getSmsConfirmText(context), smsNumber, subscriptionId);
+    if (ApplicationPreferences.instance().getSendConfirmSms(context)) {
+      this.smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), smsNumber, subscriptionId);
     }
     notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),

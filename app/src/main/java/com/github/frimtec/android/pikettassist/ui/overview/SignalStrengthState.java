@@ -44,7 +44,7 @@ class SignalStrengthState extends State {
       return OFF;
     } else if (stateContext.getSignalStrengthLevel().ordinal() <= SignalLevel.NONE.ordinal()) {
       return RED;
-    } else if (stateContext.getSignalStrengthLevel().ordinal() <= ApplicationPreferences.getSuperviseSignalStrengthMinLevel(stateContext.getContext())) {
+    } else if (stateContext.getSignalStrengthLevel().ordinal() <= ApplicationPreferences.instance().getSuperviseSignalStrengthMinLevel(stateContext.getContext())) {
       return YELLOW;
     } else {
       return GREEN;
@@ -53,7 +53,7 @@ class SignalStrengthState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    if (ApplicationPreferences.getSuperviseSignalStrength(context)) {
+    if (ApplicationPreferences.instance().getSuperviseSignalStrength(context)) {
       menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE, Menu.NONE, R.string.list_item_menu_deactivate);
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE, Menu.NONE, R.string.list_item_menu_activate);
@@ -64,11 +64,11 @@ class SignalStrengthState extends State {
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
       case MENU_CONTEXT_DEACTIVATE:
-        ApplicationPreferences.setSuperviseSignalStrength(context, false);
+        ApplicationPreferences.instance().setSuperviseSignalStrength(context, false);
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_ACTIVATE:
-        ApplicationPreferences.setSuperviseSignalStrength(context, true);
+        ApplicationPreferences.instance().setSuperviseSignalStrength(context, true);
         stateContext.refreshFragment();
         return true;
       default:

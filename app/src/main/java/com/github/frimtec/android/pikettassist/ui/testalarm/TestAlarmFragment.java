@@ -71,7 +71,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     TestAlarmContext selectedItem = (TestAlarmContext) getListView().getItemAtPosition(info.position);
     menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
-    if (ApplicationPreferences.getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
+    if (ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
       menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE_ID, Menu.NONE, R.string.list_item_menu_deactivate);
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE_ID, Menu.NONE, R.string.list_item_menu_activate);
@@ -97,16 +97,16 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
         });
         return true;
       case MENU_CONTEXT_ACTIVATE_ID:
-        Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
+        Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
         supervisedTestAlarmContexts.add(selectedItem);
-        ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+        ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
         refresh();
         Toast.makeText(getContext(), R.string.test_alarm_activated_toast, Toast.LENGTH_SHORT).show();
         return true;
       case MENU_CONTEXT_DEACTIVATE_ID:
-        supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
+        supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
         supervisedTestAlarmContexts.remove(selectedItem);
-        ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+        ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
         refresh();
         Toast.makeText(getContext(), R.string.test_alarm_deactivated_toast, Toast.LENGTH_SHORT).show();
         return true;
@@ -128,9 +128,9 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
         dialog.dismiss();
         TestAlarmContext newTestAlarmContext = new TestAlarmContext(input.getText().toString());
         if (this.testAlarmDao.createNewContext(newTestAlarmContext, getString(R.string.test_alarm_message_empty))) {
-          Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
+          Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
           supervisedTestAlarmContexts.add(newTestAlarmContext);
-          ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+          ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
           refresh();
           Toast.makeText(getContext(), R.string.test_alarm_toast_added_success, Toast.LENGTH_SHORT).show();
         } else {
@@ -152,9 +152,9 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
 
   private void deleteTestAlarm(TestAlarmContext selectedTestAlarmContext) {
     this.testAlarmDao.delete(selectedTestAlarmContext);
-    Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.getSupervisedTestAlarms(getContext());
+    Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
     supervisedTestAlarmContexts.remove(selectedTestAlarmContext);
-    ApplicationPreferences.setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
+    ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
   }
 
   private List<TestAlarmContext> loadTestAlarmList() {

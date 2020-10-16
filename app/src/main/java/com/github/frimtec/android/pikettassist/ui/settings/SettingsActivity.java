@@ -25,8 +25,6 @@ import java.util.Locale;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.convertLowSignalFilerToSeconds;
-
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -81,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
         lowSignalFilterTime.setSummaryProvider(
             (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
               int value = preference.getValue();
-              return value == 0 ? getString(R.string.state_off) : convertLowSignalFilerToSeconds(value) + " " + getString(R.string.general_seconds);
+              return value == 0 ? getString(R.string.state_off) : ApplicationPreferences.instance().convertLowSignalFilerToSeconds(value) + " " + getString(R.string.general_seconds);
             });
       }
 
@@ -89,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
       if (testAlarmGroup != null) {
         testAlarmGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
-                enabledOrDisabled(ApplicationPreferences.getTestAlarmEnabled(preference.getContext()))
+                enabledOrDisabled(ApplicationPreferences.instance().getTestAlarmEnabled(preference.getContext()))
         );
       }
 
@@ -98,8 +96,8 @@ public class SettingsActivity extends AppCompatActivity {
         dayNightProfileGroup.setSummaryProvider(
             (Preference.SummaryProvider<Preference>) preference ->
                 enabledOrDisabled(
-                    ApplicationPreferences.getManageVolumeEnabled(preference.getContext()) ||
-                        ApplicationPreferences.getBatterySaferAtNightEnabled(preference.getContext())
+                    ApplicationPreferences.instance().getManageVolumeEnabled(preference.getContext()) ||
+                        ApplicationPreferences.instance().getBatterySaferAtNightEnabled(preference.getContext())
 
                 )
         );

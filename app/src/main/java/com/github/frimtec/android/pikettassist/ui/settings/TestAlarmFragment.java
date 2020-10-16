@@ -51,10 +51,10 @@ public class TestAlarmFragment extends PreferenceFragmentCompat {
     if (superviseTestContexts != null) {
       TestAlarmDao testAlarmDao = new TestAlarmDao();
       Set<TestAlarmContext> testAlarmContexts = testAlarmDao.loadAllContexts();
-      Set<TestAlarmContext> persistedEntries = ApplicationPreferences.getSupervisedTestAlarms(getContext());
+      Set<TestAlarmContext> persistedEntries = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
       Set<TestAlarmContext> filteredEntries = persistedEntries.stream().filter(testAlarmContexts::contains).collect(Collectors.toSet());
       if (!filteredEntries.containsAll(persistedEntries)) {
-        ApplicationPreferences.setSuperviseTestContexts(getContext(), filteredEntries);
+        ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), filteredEntries);
       }
       Set<CharSequence> validEntries = testAlarmContexts.stream().map(TestAlarmContext::getContext).collect(Collectors.toSet());
       superviseTestContexts.setEntries(validEntries.toArray(new CharSequence[]{}));

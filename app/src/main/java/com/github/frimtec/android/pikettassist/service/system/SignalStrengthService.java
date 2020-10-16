@@ -25,12 +25,12 @@ public class SignalStrengthService {
   private final TelephonyManager telephonyManager;
   private final Context context;
 
-  public static boolean isLowSignal(Context context, SignalStrengthService.SignalLevel level) {
-    return level.ordinal() <= ApplicationPreferences.getSuperviseSignalStrengthMinLevel(context);
+  public static boolean isLowSignal(SignalStrengthService.SignalLevel level, int minLevel) {
+    return level.ordinal() <= minLevel;
   }
 
   public SignalStrengthService(Context context) {
-    this(context, ApplicationPreferences.getSuperviseSignalStrengthSubscription(context));
+    this(context, ApplicationPreferences.instance().getSuperviseSignalStrengthSubscription(context));
   }
 
   public SignalStrengthService(Context context, int subscriptionId) {

@@ -60,12 +60,12 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
     List<Shift> shifts;
     Instant now = Shift.now();
     Context context = requireContext();
-    Duration prePostRunTime = ApplicationPreferences.getPrePostRunTime(context);
+    Duration prePostRunTime = ApplicationPreferences.instance().getPrePostRunTime(context);
     if (!PERMISSION_CALENDAR_READ.isAllowed(context)) {
       Toast.makeText(context, getString(R.string.missing_permission_calendar_access), Toast.LENGTH_LONG).show();
       shifts = Collections.emptyList();
     } else {
-      shifts = new ShiftDao(context).getShifts(ApplicationPreferences.getCalendarEventPikettTitlePattern(context), ApplicationPreferences.getCalendarSelection(context))
+      shifts = new ShiftDao(context).getShifts(ApplicationPreferences.instance().getCalendarEventPikettTitlePattern(context), ApplicationPreferences.instance().getCalendarSelection(context))
           .stream().filter(shift -> !shift.isOver(now, prePostRunTime)).collect(Collectors.toList());
       if (shifts.isEmpty()) {
         Toast.makeText(context, getString(R.string.general_no_data), Toast.LENGTH_LONG).show();

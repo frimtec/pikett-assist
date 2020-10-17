@@ -251,33 +251,33 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.settings:
-        startActivity(new Intent(this, SettingsActivity.class));
-        return true;
-      case R.id.donate:
-        showDonationDialog();
-        return true;
-      case R.id.logcat:
-        startActivity(new Intent(this, LogcatActivity.class));
-        return true;
-      case R.id.about:
-        Intent intent = new Intent(this, AboutActivity.class);
+    int itemId = item.getItemId();
+    if (itemId == R.id.settings) {
+      startActivity(new Intent(this, SettingsActivity.class));
+      return true;
+    } else if (itemId == R.id.donate) {
+      showDonationDialog();
+      return true;
+    } else if (itemId == R.id.logcat) {
+      startActivity(new Intent(this, LogcatActivity.class));
+      return true;
+    } else if (itemId == R.id.about) {
+      Intent intent = new Intent(this, AboutActivity.class);
 
-        List<Integer> sponsorMedals = new ArrayList<>();
-        if (billingAdapter.getBronzeSponsor() == PURCHASED) {
-          sponsorMedals.add(R.drawable.bronze_icon);
-        }
-        if (billingAdapter.getSilverSponsor() == PURCHASED) {
-          sponsorMedals.add(R.drawable.silver_icon);
-        }
-        if (billingAdapter.getGoldSponsor() == PURCHASED) {
-          sponsorMedals.add(R.drawable.gold_icon);
-        }
+      List<Integer> sponsorMedals = new ArrayList<>();
+      if (billingAdapter.getBronzeSponsor() == PURCHASED) {
+        sponsorMedals.add(R.drawable.bronze_icon);
+      }
+      if (billingAdapter.getSilverSponsor() == PURCHASED) {
+        sponsorMedals.add(R.drawable.silver_icon);
+      }
+      if (billingAdapter.getGoldSponsor() == PURCHASED) {
+        sponsorMedals.add(R.drawable.gold_icon);
+      }
 
-        intent.putExtra(AboutActivity.EXTRA_SPONSOR_ICONS, sponsorMedals.stream().mapToInt(value -> value).toArray());
-        startActivity(intent);
-        return true;
+      intent.putExtra(AboutActivity.EXTRA_SPONSOR_ICONS, sponsorMedals.stream().mapToInt(value -> value).toArray());
+      startActivity(intent);
+      return true;
     }
     return super.onOptionsItemSelected(item);
   }

@@ -17,7 +17,6 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="com.github.frimtec.android.securesmsproxy.permission.S2MSP_COMMUNICATION" />
     <uses-permission android:maxSdkVersion="27" android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:maxSdkVersion="28" android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 

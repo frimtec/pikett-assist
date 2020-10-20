@@ -138,7 +138,6 @@
     <string name="state_fragment_draw_overlays">Einblenung über anderen Apps</string>
     <string name="state_fragment_battery_optimization">Akku-Optimierung</string>
     <string name="missing_permission_calendar_access">Fehlende Berechtigung zum Lesen des Kalenders!</string>
-    <string name="missing_permission_s2msp_communication">Fehlende Berechtigung zum Kommunizieren mit S2MSP!</string>
     <string name="general_no_data">Noch keine Daten vorhanden.</string>
 
     <string name="permission_required">Benötigte Berechtigung:</string>

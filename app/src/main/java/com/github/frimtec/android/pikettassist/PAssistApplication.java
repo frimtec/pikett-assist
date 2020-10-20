@@ -8,8 +8,9 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Process;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.github.frimtec.android.pikettassist.service.KeyValueStore;
 import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
@@ -108,7 +109,7 @@ public class PAssistApplication extends Application {
 
     writer.println("Android version: " + Build.VERSION.SDK_INT);
     writer.println("Device: " + model);
-    writer.println("App version: " + (info == null ? "NOT AVAILABLE" : info.versionCode));
+    writer.println("App version: " + (info == null ? "NOT AVAILABLE" : BuildConfig.VERSION_CODE));
     writer.println("Thread name: " + thread.getName());
     writer.println();
     writer.println("Exception stack trace:");

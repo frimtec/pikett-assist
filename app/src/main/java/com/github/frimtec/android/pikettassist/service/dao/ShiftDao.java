@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.icu.util.Calendar;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Attendees;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Shift;
@@ -41,7 +42,8 @@ public final class ShiftDao {
         CalendarContract.Instances.TITLE,
         CalendarContract.Instances.BEGIN,
         CalendarContract.Instances.END,
-        CalendarContract.Instances.CALENDAR_ID
+        CalendarContract.Instances.CALENDAR_ID,
+        CalendarContract.Instances.SELF_ATTENDEE_STATUS
     };
     Calendar startTime = Calendar.getInstance();
     startTime.add(Calendar.DATE, -30);
@@ -54,7 +56,7 @@ public final class ShiftDao {
       selection = selection + " AND " + CalendarContract.Instances.CALENDAR_ID + " = ?";
       args = new String[]{calendarSelection};
     }
-    if(!PERMISSION_CALENDAR_READ.isAllowed(context)) {
+    if (!PERMISSION_CALENDAR_READ.isAllowed(context)) {
       Log.e(TAG, "No permissions to read calendar");
       return Collections.emptyList();
     }
@@ -72,16 +74,22 @@ public final class ShiftDao {
           String eventTitle = cursor.getString(1);
           Instant eventStartTime = Instant.ofEpochMilli(cursor.getLong(2));
           Instant eventEndTime = Instant.ofEpochMilli(cursor.getLong(3));
+          int selfAttendeeStatus = cursor.getInt(5);
 
           Pattern pattern = Pattern.compile(eventTitleFilterPattern, Pattern.CASE_INSENSITIVE);
           if (pattern.matcher(nonNullString(eventTitle)).matches()) {
-            events.add(new Shift(id, eventTitle, eventStartTime, eventEndTime));
+            events.add(new Shift(id, eventTitle, eventStartTime, eventEndTime, isConfirmed(selfAttendeeStatus)));
           }
         } while (cursor.moveToNext());
       }
     }
     events.sort(Comparator.comparing(Shift::getStartTime));
     return events;
+  }
+
+  private boolean isConfirmed(int selfAttendeeStatus) {
+    return selfAttendeeStatus == Attendees.ATTENDEE_STATUS_ACCEPTED ||
+        selfAttendeeStatus == Attendees.ATTENDEE_STATUS_NONE;
   }
 
   private static CharSequence nonNullString(String value) {

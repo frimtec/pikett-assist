@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,13 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
     endTimeView.setText(formatDateTime(shift.getEndTime()));
     titleView.setText(shift.getTitle());
     durationView.setText(String.valueOf(roundToDays(Duration.between(shift.getStartTime(), shift.getEndTime()))));
+    ImageView unconfirmedIcon = convertView.findViewById(R.id.shift_item_image_unconfirmed);
+    unconfirmedIcon.setVisibility(!shift.isConfirmed() ? View.VISIBLE : View.INVISIBLE);
+    if(!shift.isConfirmed()) {
+      titleView.setText(String.format("%s (%s)", titleView.getText(), getContext().getString(R.string.shift_item_unconfirmed)));
+      titleView.setTypeface(titleView.getTypeface(), Typeface.BOLD_ITALIC);
+      convertView.setBackgroundColor(getContext().getResources().getColor(R.color.unconfirmedShift, getDropDownViewTheme()));
+    }
     return convertView;
   }
 

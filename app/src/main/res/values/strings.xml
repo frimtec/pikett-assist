@@ -240,6 +240,7 @@
     <string name="shift_header_next_label_no_entry">No entry in calendar!</string>
     <string name="shift_header_next_label_starts">Shift starts in:</string>
     <string name="shift_header_next_label_ends">Shift ends in:</string>
+    <string name="shift_item_unconfirmed">unconfirmed</string>
     <string name="units_days">days</string>
     <string name="units_day">day</string>
     <string name="units_hours">hours</string>

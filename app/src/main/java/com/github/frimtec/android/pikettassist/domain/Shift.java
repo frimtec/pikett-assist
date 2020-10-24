@@ -9,12 +9,14 @@ public class Shift {
   private final String title;
   private final Instant startTime;
   private final Instant endTime;
+  private final boolean confirmed;
 
-  public Shift(long id, String title, Instant startTime, Instant endTime) {
+  public Shift(long id, String title, Instant startTime, Instant endTime, boolean confirmed) {
     this.id = id;
     this.title = title;
     this.startTime = startTime;
     this.endTime = endTime;
+    this.confirmed = confirmed;
   }
 
   public static Instant now() {
@@ -59,5 +61,9 @@ public class Shift {
 
   public boolean isInFuture(Instant now, Duration prePostRunTime) {
     return now.isBefore(getStartTime(prePostRunTime));
+  }
+
+  public boolean isConfirmed() {
+    return confirmed;
   }
 }

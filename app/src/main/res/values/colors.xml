@@ -23,4 +23,6 @@
     <color name="list_bg_color">#eeeeee</color>
     <color name="row_header_bg_color">#ffffff</color>
     <color name="row_bg_color">#ffffff</color>
+
+    <color name="unconfirmedShift">#DDDDDD</color>
 </resources>

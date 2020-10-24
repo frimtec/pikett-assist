@@ -90,6 +90,8 @@
     <string name="list_item_menu_select">Auswählen</string>
     <string name="list_item_menu_clear">Entfernen</string>
     <string name="list_item_menu_activate">Aktivieren</string>
+    <string name="list_item_menu_bogus_alarm">Probealarm auslösen</string>
+    <string name="toast_bogus_alarm">Probealarm wir in 10 Sekunden ausgelöst …</string>
     <string name="list_item_menu_deactivate">Deaktivieren</string>
     <string name="list_item_menu_set_manually_on">Manuell ein</string>
     <string name="list_item_menu_reset">Zurücksetzen</string>

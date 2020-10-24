@@ -30,7 +30,7 @@ public class LowSignalService extends ReScheduleJobIntentService {
         new SignalStrengthService(context),
         new VolumeService(context),
         new NotificationService(context),
-        () -> LowSignalAlarmActivity.trigger(context, alarmService),
+        () -> LowSignalAlarmActivity.trigger(context, alarmService, true),
         context
     );
   }

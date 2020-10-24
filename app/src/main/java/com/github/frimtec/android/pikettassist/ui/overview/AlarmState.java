@@ -18,12 +18,14 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertDetailActivity;
 
 import org.threeten.bp.Instant;
 
 import java.util.function.Supplier;
 
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.ALERT;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
@@ -32,6 +34,7 @@ import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficL
 class AlarmState extends State {
 
   private static final int MENU_CONTEXT_CREATE_ALARM_MANUALLY = 1;
+  private static final int MENU_CONTEXT_BOGUS_ALARM = 2;
   private final StateContext stateContext;
 
   AlarmState(StateContext stateContext) {
@@ -106,29 +109,35 @@ class AlarmState extends State {
     if (stateContext.getPikettState() == OnOffState.ON) {
       menu.add(Menu.NONE, MENU_CONTEXT_CREATE_ALARM_MANUALLY, Menu.NONE, R.string.menu_create_manually_alarm);
     }
+    menu.add(Menu.NONE, MENU_CONTEXT_BOGUS_ALARM, Menu.NONE, R.string.list_item_menu_bogus_alarm);
   }
 
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
-    if (item.getItemId() == MENU_CONTEXT_CREATE_ALARM_MANUALLY) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(stateContext.getContext());
-      builder.setTitle(stateContext.getString(R.string.manually_created_alarm_reason));
-      EditText input = new EditText(stateContext.getContext());
-      input.setInputType(InputType.TYPE_CLASS_TEXT);
-      input.setText(R.string.manually_created_alarm_reason_default);
-      input.requestFocus();
-      builder.setView(input);
-      builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
-        dialog.dismiss();
-        String comment = input.getText().toString();
-        AlertService alertService = new AlertService(stateContext.getContext());
-        alertService.newManuallyAlert(Instant.now(), comment);
-        stateContext.refreshFragment();
-      });
-      builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
-      builder.show();
-      return true;
+    switch (item.getItemId()) {
+      case MENU_CONTEXT_CREATE_ALARM_MANUALLY:
+        AlertDialog.Builder builder = new AlertDialog.Builder(stateContext.getContext());
+        builder.setTitle(stateContext.getString(R.string.manually_created_alarm_reason));
+        EditText input = new EditText(stateContext.getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(R.string.manually_created_alarm_reason_default);
+        input.requestFocus();
+        builder.setView(input);
+        builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+          dialog.dismiss();
+          String comment = input.getText().toString();
+          AlertService alertService = new AlertService(stateContext.getContext());
+          alertService.newManuallyAlert(Instant.now(), comment);
+          stateContext.refreshFragment();
+        });
+        builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+        builder.show();
+        return true;
+      case MENU_CONTEXT_BOGUS_ALARM:
+        BogusAlarmService.scheduleBogusAlarm(context, ALERT);
+        return true;
+      default:
+        return false;
     }
-    return false;
   }
 }

@@ -17,7 +17,7 @@ import static org.threeten.bp.Duration.ofMinutes;
   @Test
    void isOver() {
     Instant now = Shift.now();
-    Shift shift = new Shift(0L, "Test", now, now.plus(ofMinutes(1)));
+    Shift shift = new Shift(0L, "Test", now, now.plus(ofMinutes(1)), true);
     checkTime(() -> shift.isOver(now.minus(TIME_TOLERANCE).minusMillis(1),TIME_TOLERANCE), false);
     checkTime(() -> shift.isOver(now.minus(TIME_TOLERANCE), TIME_TOLERANCE), false);
     checkTime(() -> shift.isOver(now, TIME_TOLERANCE), false);
@@ -28,7 +28,7 @@ import static org.threeten.bp.Duration.ofMinutes;
   @Test
    void isInFuture() {
     Instant now = Shift.now();
-    Shift shift = new Shift(0L, "Test", now, now.plus(ofMinutes(1)));
+    Shift shift = new Shift(0L, "Test", now, now.plus(ofMinutes(1)), true);
     checkTime(() -> shift.isInFuture(now.minus(TIME_TOLERANCE).minusMillis(1), TIME_TOLERANCE), true);
     checkTime(() -> shift.isInFuture(now.minus(TIME_TOLERANCE), TIME_TOLERANCE), false);
     checkTime(() -> shift.isInFuture(now, TIME_TOLERANCE), false);
@@ -39,7 +39,7 @@ import static org.threeten.bp.Duration.ofMinutes;
   @Test
    void isNow() {
     Instant now = Shift.now();
-    Shift shift = new Shift(0L, "Test", now, now.plus(ofMinutes(1)));
+    Shift shift = new Shift(0L, "Test", now, now.plus(ofMinutes(1)), true);
     checkTime(() -> shift.isNow(now.minus(TIME_TOLERANCE).minusMillis(1), TIME_TOLERANCE), false);
     checkTime(() -> shift.isNow(now.minus(TIME_TOLERANCE), TIME_TOLERANCE), true);
     checkTime(() -> shift.isNow(now, TIME_TOLERANCE), true);

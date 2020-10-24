@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.action.JobService;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
 import com.github.frimtec.android.pikettassist.service.LowSignalService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.TestAlarmService;
@@ -70,6 +71,8 @@ public class AlarmService {
           case TEST_ALARM_SERVICE:
             TestAlarmService.enqueueWork(context, intent);
             break;
+          case BOGUS_ALARM_SERVICE:
+            BogusAlarmService.enqueueWork(context, intent);
           default:
             Log.w(TAG, "Unknown target in action: " + target);
         }

@@ -126,6 +126,10 @@
         <service
             android:name=".service.LowSignalService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".service.BogusAlarmService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

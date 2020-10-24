@@ -7,9 +7,11 @@ import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.LOW_SIGNAL;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
@@ -19,6 +21,7 @@ class SignalStrengthState extends State {
 
   private static final int MENU_CONTEXT_DEACTIVATE = 1;
   private static final int MENU_CONTEXT_ACTIVATE = 2;
+  private static final int MENU_CONTEXT_BOGUS_ALARM = 3;
 
   private final StateContext stateContext;
 
@@ -58,6 +61,7 @@ class SignalStrengthState extends State {
     } else {
       menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE, Menu.NONE, R.string.list_item_menu_activate);
     }
+    menu.add(Menu.NONE, MENU_CONTEXT_BOGUS_ALARM, Menu.NONE, R.string.list_item_menu_bogus_alarm);
   }
 
   @Override
@@ -70,6 +74,9 @@ class SignalStrengthState extends State {
       case MENU_CONTEXT_ACTIVATE:
         ApplicationPreferences.instance().setSuperviseSignalStrength(context, true);
         stateContext.refreshFragment();
+        return true;
+      case MENU_CONTEXT_BOGUS_ALARM:
+        BogusAlarmService.scheduleBogusAlarm(context, LOW_SIGNAL);
         return true;
       default:
         return false;

@@ -7,8 +7,15 @@ import android.widget.Toast;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
+import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
+import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
+import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 
 import org.threeten.bp.Duration;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static com.github.frimtec.android.pikettassist.action.JobService.BOGUS_ALARM_SERVICE;
 
@@ -28,7 +35,11 @@ public class BogusAlarmService extends ReScheduleJobIntentService {
 
   @Override
   protected ServiceWorkUnit createWorkUnit(Context context, AlarmService alarmService) {
-    return new BogusAlarmServiceWorkUnit(alarmService, context);
+    Map<AlarmType, Runnable> alarmTriggers = new EnumMap<>(AlarmType.class);
+    alarmTriggers.put(AlarmType.ALERT, () -> AlertActivity.trigger(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, null, context));
+    alarmTriggers.put(AlarmType.LOW_SIGNAL, () -> LowSignalAlarmActivity.trigger(context, alarmService, false));
+    alarmTriggers.put(AlarmType.MISSING_TEST_ALARM, () -> MissingTestAlarmAlarmActivity.trigger(context, alarmService));
+    return new BogusAlarmServiceWorkUnit(alarmTriggers);
   }
 
   public static void enqueueWork(Context context, Intent intent) {

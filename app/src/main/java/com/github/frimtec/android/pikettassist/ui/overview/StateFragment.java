@@ -22,6 +22,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.Shift;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
@@ -49,6 +50,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -245,7 +247,8 @@ public class StateFragment extends AbstractListFragment<State> {
         new SignalStrengthState(stateContext)
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
-      ApplicationPreferences.instance().getSupervisedTestAlarms(getContext())
+      ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
+          .sorted(Comparator.comparing(TestAlarmContext::getContext))
           .forEach(testAlarmContext -> states.add(new TestAlarmState(
               this.testAlarmDao.loadDetails(testAlarmContext)
                   .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.getReceivedTime()), details.getAlertState()))

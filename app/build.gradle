@@ -33,11 +33,6 @@ try {
     purchaseValidationKeyProperties.put("purchase.validation.key", "\"NOT_SET\"")
 }
 
-coveralls {
-    jacocoReportPath 'app/build/reports/jacoco/jacocoTestReportDebug/jacocoTestReportDebug.xml'
-    sourceDirs += ['app/src/main/java']
-}
-
 jacocoAndroidUnitTestReport {
     csv.enabled false
     html.enabled false

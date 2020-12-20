@@ -78,7 +78,7 @@ jobs:
 
       - name: Choose Release track
         id: get_track
-        run: echo ::set-output name=TRACK::$(if [[ "${{ steps.get_release.outputs.prerelease }}" == "false" ]] ; then echo production ; else echo beta ; fi)
+        run: echo ::set-output name=TRACK::$(if [[ "${{ steps.get_release.outputs.prerelease }}" == "false" ]] ; then echo production ; else echo alpha ; fi)
 
       - name: Upload AAB Google Play
         id: upload-release-asset-aab

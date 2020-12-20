@@ -20,17 +20,16 @@ def versionPropsFile = file('version.properties')
 if (versionPropsFile.exists()) {
     versionProps.load(new FileInputStream(versionPropsFile))
 }
-int vcode = (versionProps['VERSION_CODE'] ?: "0").toInteger() + 1
-String vname = (versionProps['VERSION_NAME'] ?: "0.0.1")
-versionProps['VERSION_CODE'] = vcode.toString()
-versionProps['VERSION_NAME'] = vname
-versionProps.store(versionPropsFile.newWriter(), null)
+
+int vcode = (Integer.parseInt(System.getProperty("version.code.time", String.valueOf((int) (System.currentTimeMillis() / 1000)))) / 60) - 26_797_800
+String vname = (versionProps['VERSION_NAME'] == null || versionProps['VERSION_NAME'].startsWith('$')) ? '0.0.0' : versionProps['VERSION_NAME']
 
 def purchaseValidationKeyProperties = new Properties()
 try {
     purchaseValidationKeyProperties.load(new FileInputStream(rootProject.file("purchaseValidationKey.properties")))
+    throw RuntimeException("Pha")
 } catch (Exception ignored) {
-    purchaseValidationKeyProperties.put("purchase.validation.key", "\"NOT_SET\"")
+    purchaseValidationKeyProperties.put("purchase.validation.key", "\"" + System.getProperty("purchase.validation.key", "NOT_SET") + "\"")
 }
 
 jacocoAndroidUnitTestReport {

@@ -76,13 +76,16 @@ jobs:
           asset_name: app-release.apk
           asset_content_type: application/zip
 
-      - name: Upload AAB Release Asset
+      - name: Choose Release track
+        id: get_track
+        run: echo ::set-output name=TRACK::$(if [[ "${{ steps.get_release.outputs.prerelease }}" == "false" ]] ; then echo production ; else echo beta ; fi)
+
+      - name: Upload AAB Google Play
         id: upload-release-asset-aab
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: r0adkll/upload-google-play@v1
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
-          asset_name: app-release.aab
-          asset_content_type: application/zip
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
+          packageName: com.github.frimtec.android.pikettassist
+          releaseFile: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
+          track: ${{ steps.get_track.outputs.TRACK }}
+          whatsNewDirectory: google-play/whatsnew

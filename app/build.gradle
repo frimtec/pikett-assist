@@ -27,7 +27,6 @@ String vname = (versionProps['VERSION_NAME'] == null || versionProps['VERSION_NA
 def purchaseValidationKeyProperties = new Properties()
 try {
     purchaseValidationKeyProperties.load(new FileInputStream(rootProject.file("purchaseValidationKey.properties")))
-    throw RuntimeException("Pha")
 } catch (Exception ignored) {
     purchaseValidationKeyProperties.put("purchase.validation.key", "\"" + System.getProperty("purchase.validation.key", "NOT_SET") + "\"")
 }

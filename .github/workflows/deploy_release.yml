@@ -86,6 +86,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
           packageName: com.github.frimtec.android.pikettassist
-          releaseFile: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
+          releaseFiles: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
           track: ${{ steps.get_track.outputs.TRACK }}
           whatsNewDirectory: google-play/whatsnew

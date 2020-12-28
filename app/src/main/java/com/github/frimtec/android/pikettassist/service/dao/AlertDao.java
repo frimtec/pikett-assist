@@ -37,14 +37,14 @@ public class AlertDao {
 
   private static final String TAG = "AlertDao";
 
-  private static final String[] ALERT_COLUMNS = {
+  static final String[] ALERT_COLUMNS = {
       TABLE_ALERT_COLUMN_ID,
       TABLE_ALERT_COLUMN_START_TIME,
       TABLE_ALERT_COLUMN_CONFIRM_TIME,
       TABLE_ALERT_COLUMN_IS_CONFIRMED,
       TABLE_ALERT_COLUMN_END_TIME
   };
-  private static final String[] CALL_COLUMNS = {
+  static final String[] CALL_COLUMNS = {
       TABLE_ALERT_CALL_COLUMN_TIME,
       TABLE_ALERT_CALL_COLUMN_MESSAGE
   };

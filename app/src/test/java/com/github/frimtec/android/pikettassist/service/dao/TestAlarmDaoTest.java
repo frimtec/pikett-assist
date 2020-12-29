@@ -255,6 +255,7 @@ class TestAlarmDaoTest {
 
     verify(db).delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()});
   }
+
   private Cursor createTestAlertContextCursor(List<String> contexts) {
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(contexts.size());
@@ -268,6 +269,5 @@ class TestAlarmDaoTest {
     }
     return cursor;
   }
-
 
 }

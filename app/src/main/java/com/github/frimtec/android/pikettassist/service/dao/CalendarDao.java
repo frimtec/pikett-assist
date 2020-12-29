@@ -15,12 +15,12 @@ import static com.github.frimtec.android.pikettassist.service.system.Feature.PER
 
 public class CalendarDao {
 
-  private static final String[] PROJECTION = new String[]{
+  static final String[] PROJECTION = new String[]{
       CalendarContract.Calendars._ID,
       CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
   };
-  private static final String SELECTION = "(" + CalendarContract.Calendars.VISIBLE + " = ?)";
-  private static final String[] SELECTION_ARGS = new String[]{"1"};
+  static final String SELECTION = "(" + CalendarContract.Calendars.VISIBLE + " = ?)";
+  static final String[] SELECTION_ARGS = new String[]{"1"};
 
   private final Context context;
   private final ContentResolver contentResolver;

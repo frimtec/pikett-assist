@@ -125,6 +125,6 @@ public class TestAlarmDao {
 
   public void delete(TestAlarmContext testAlarmContext) {
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
-    db.delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(testAlarmContext.getContext())});
+    db.delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()});
   }
 }

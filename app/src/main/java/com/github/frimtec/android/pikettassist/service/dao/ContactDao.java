@@ -19,6 +19,12 @@ public class ContactDao {
 
   private static final String TAG = "ContactDao";
 
+  static final String[] PROJECTION_URI = new String[]{
+      ContactsContract.Contacts._ID,
+      ContactsContract.Contacts.LOOKUP_KEY,
+      ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+  };
+
   private final ContentResolver contentResolver;
 
   public ContactDao(Context context) {
@@ -39,8 +45,7 @@ public class ContactDao {
   }
 
   public Optional<Contact> getContact(Uri contactUri) {
-    String[] projection = new String[]{ContactsContract.Contacts._ID, ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
-    try (Cursor cursor = this.contentResolver.query(contactUri, projection, null, null, null)) {
+    try (Cursor cursor = this.contentResolver.query(contactUri, PROJECTION_URI, null, null, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         ContactReference reference = new ContactReference(cursor.getLong(0), cursor.getString(1));
         return Optional.of(new Contact(reference, true, cursor.getString(2)));

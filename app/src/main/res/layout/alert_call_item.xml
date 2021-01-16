@@ -19,5 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/alert_cal_item_received_time"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:autoLink="all"
+        android:textIsSelectable="true"
+        />
 </RelativeLayout>

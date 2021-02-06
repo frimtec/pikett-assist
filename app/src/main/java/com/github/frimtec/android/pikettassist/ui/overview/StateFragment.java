@@ -20,11 +20,13 @@ import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.service.ContactPersonService;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
@@ -51,9 +53,11 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -96,6 +100,7 @@ public class StateFragment extends AbstractListFragment<State> {
   private final AlertDao alertDao;
   private final TestAlarmDao testAlarmDao;
   private OperationsCenterContactService operationsCenterContactService;
+  private ContactPersonService contactPersonService;
 
   public StateFragment() {
     this(new AlertDao(), new TestAlarmDao());
@@ -121,6 +126,7 @@ public class StateFragment extends AbstractListFragment<State> {
     this.s2msp = SecureSmsProxyFacade.instance(context);
     this.signalStrengthService = new SignalStrengthService(context);
     this.operationsCenterContactService = new OperationsCenterContactService(context);
+    this.contactPersonService = new ContactPersonService(context);
   }
 
   @Override
@@ -212,6 +218,7 @@ public class StateFragment extends AbstractListFragment<State> {
     OnOffState pikettState = shiftService.getState();
     Instant now = Shift.now();
     Duration prePostRunTime = ApplicationPreferences.instance().getPrePostRunTime(getContext());
+    Optional<Shift> currentOrNextShift = shiftService.findCurrentOrNextShift(now);
     StateContext stateContext = new StateContext(
         getContext(),
         this::startActivityForResult,
@@ -226,7 +233,7 @@ public class StateFragment extends AbstractListFragment<State> {
         smsAdapterInstallation.getAppVersion().isPresent() && smsAdapterInstallation.getApiVersion().compareTo(smsAdapterInstallation.getAppVersion().get()) > 0,
         s2msp.areSmsPermissionsGranted(),
         pikettState,
-        shiftService.findCurrentOrNextShift(now).map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now, prePostRunTime)).orElse(""),
+        currentOrNextShift.map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now, prePostRunTime)).orElse(""),
         this.alertDao.getAlertState(),
         pikettStateManuallyOn,
         !(operationsCenterPhoneNumbers.isEmpty() || s2msp.isAllowed(operationsCenterPhoneNumbers)),
@@ -240,8 +247,14 @@ public class StateFragment extends AbstractListFragment<State> {
     if (pikettState == OnOffState.ON && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
       states.add(new DoNotDisturbState(stateContext));
     }
+    states.add(new OperationsCenterState(stateContext));
+    Optional<List<String>> partners = currentOrNextShift.map(Shift::getPartners);
+    if(pikettState == OnOffState.ON && partners.isPresent()) {
+      List<String> pairAliases = (List<String>) partners.get();
+      Map<String, ContactPerson> contactPersonsByAliases = this.contactPersonService.findContactPersonsByAliases(new HashSet<>(pairAliases));
+      pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair)))));
+    }
     states.addAll(Arrays.asList(
-        new OperationsCenterState(stateContext),
         new OnCallState(stateContext),
         new AlarmState(stateContext),
         new SignalStrengthState(stateContext)

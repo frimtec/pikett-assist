@@ -21,7 +21,10 @@
     <string name="pref_header_calendar">Kalender</string>
     <string name="pref_title_calendar_selection">Kalenderauswahl</string>
     <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter</string>
+    <string name="pref_title_use_partner_contact_extraction">Extrahiere Partner aus dem Termin</string>
+    <string name="pref_title_partner_search_pattern">Partnerextrahiermuster</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
+    <string name="pref_default_partner_search_pattern">Deputy: ([a-z,0-9]{5})</string>
     <string name="pref_title_pre_post_time_seconds">Vor-/Nachlaufzeit</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
 
@@ -112,6 +115,7 @@
     <string name="notification_draw_overlays_text">Um Alarme anzuzeigen, auch wenn PAssist im Hintergrund ist, muss die Einstellung \'Einblenung über anderen Apps\' für PAssist aktiviert sein.</string>
     <string name="alert_action_close">Schliessen</string>
     <string name="state_fragment_operations_center">Zentrale</string>
+    <string name="state_fragment_partner">Partner</string>
     <string name="state_fragment_pikett_state">Pikettzustand</string>
     <string name="state_fragment_alarm_state">Alarmzustand</string>
     <string name="general_enabled">Aktiviert</string>
@@ -119,6 +123,7 @@
     <string name="state_on">Ein</string>
     <string name="state_manually_on">Ein (manuell)</string>
     <string name="state_off">Aus</string>
+    <string name="state_fragment_partner_not_found_clipboard_label">Partner Spitzname</string>
 
     <string name="alarm_state_on">Unbestätigt</string>
     <string name="alarm_state_on_confirmed">Bestätigt</string>
@@ -248,9 +253,11 @@
     <string name="units_seconds">Sekunden</string>
     <string name="units_second">Sekunde</string>
     <string name="error_regexp_pattern">Syntaxfehler in der RegExp!</string>
-    <string name="error_regexp_groups">Maximal %d Gruppe(n) erlaubt in der RegExp!</string>
+    <string name="error_regexp_groups_min">Mindestens %d Gruppe(s) benötigt in der RegExp!</string>
+    <string name="error_regexp_groups_max">Maximal %d Gruppe(n) erlaubt in der RegExp!</string>
     <string name="pref_message_test_alarm_message_pattern">Gültige RegExp eingeben (mit einer optionalen Gruppe, kann der Testkontext ausgewählt werden)</string>
     <string name="pref_message_calendar_event_pikett_title_pattern">Gültige RegExp eingeben (Gross-/ Kleinschreibung wird ignoriert)</string>
+    <string name="pref_message_partner_search_pattern">Gültige RegExp eingeben mit einer Gruppe, zum selektieren des Partnerkontaktes.</string>
     <string name="button_regexp_help">RegExp Hilfe?</string>
     <string name="contact_name_no_access">Keine Kontaktleseberechtigung</string>
     <string name="state_fragment_operations_center_no_number">Keine gültige Nummer!</string>

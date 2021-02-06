@@ -42,11 +42,11 @@ class ShiftDaoTest {
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
     Instant now = Instant.now();
-    Shift shift0 = new Shift(0, "PIKETT-0", now.minus(5, ChronoUnit.DAYS), now.minus(0, ChronoUnit.DAYS), true);
-    Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true);
-    Shift shift2 = new Shift(14, "Any pikett-2", now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false);
-    Shift shift3 = new Shift(15, "piket-3", now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false);
-    Shift shift4 = new Shift(16, null, now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false);
+    Shift shift0 = new Shift(0, "PIKETT-0", now.minus(5, ChronoUnit.DAYS), now.minus(0, ChronoUnit.DAYS), true, Collections.emptyList());
+    Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Collections.emptyList());
+    Shift shift2 = new Shift(14, "Any pikett-2", now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false, Collections.emptyList());
+    Shift shift3 = new Shift(15, "piket-3", now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false, Collections.emptyList());
+    Shift shift4 = new Shift(16, null, now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false, Collections.emptyList());
     Cursor cursor = createShiftCursor(Arrays.asList(
         shift0,
         shift2,
@@ -57,7 +57,7 @@ class ShiftDaoTest {
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1"), eq(new String[0]), isNull()))
         .thenReturn(cursor);
 
-    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL);
+    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL, null);
     assertThat(shifts.size()).isEqualTo(3);
     assertShift(shifts.get(0), shift0);
     assertShift(shifts.get(1), shift1);
@@ -73,12 +73,12 @@ class ShiftDaoTest {
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
     Instant now = Instant.now();
-    Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true);
+    Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Collections.emptyList());
     Cursor cursor = createShiftCursor(Collections.singletonList(shift1));
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1 AND calendar_id = ?"), eq(new String[]{"frimtec"}), isNull()))
         .thenReturn(cursor);
 
-    List<Shift> shifts = dao.getShifts(".*pikett.*", "frimtec");
+    List<Shift> shifts = dao.getShifts(".*pikett.*", "frimtec", null);
     assertThat(shifts.size()).isEqualTo(1);
     assertShift(shifts.get(0), shift1);
   }
@@ -92,7 +92,7 @@ class ShiftDaoTest {
         .thenReturn(1);
     ShiftDao dao = new ShiftDao(context);
 
-    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL);
+    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL, null);
     assertThat(shifts).isEmpty();
     verifyNoMoreInteractions(resolver);
   }
@@ -108,7 +108,7 @@ class ShiftDaoTest {
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1"), eq(new String[0]), isNull()))
         .thenReturn(null);
 
-    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL);
+    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL, null);
     assertThat(shifts).isEmpty();
   }
 
@@ -124,7 +124,7 @@ class ShiftDaoTest {
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1"), eq(new String[0]), isNull()))
         .thenReturn(cursor);
 
-    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL);
+    List<Shift> shifts = dao.getShifts(".*pikett.*", CALENDAR_FILTER_ALL, null);
     assertThat(shifts).isEmpty();
   }
 

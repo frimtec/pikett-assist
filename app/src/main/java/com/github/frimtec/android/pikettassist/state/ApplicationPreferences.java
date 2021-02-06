@@ -41,6 +41,10 @@ public interface ApplicationPreferences {
 
   String getCalendarEventPikettTitlePattern(Context context);
 
+  boolean getPartnerExtractionEnabled(Context context);
+
+  String getPartnerSearchExtractPattern(Context context);
+
   String getCalendarSelection(Context context);
 
   Duration getPrePostRunTime(Context context);

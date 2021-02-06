@@ -50,8 +50,25 @@
             app:title="@string/pref_title_calendar_event_pikett_title_pattern"
             app:useSimpleSummaryProvider="true"
             app:max_groups="0"
-            app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern"
-            />
+            app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern"/>
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="use_partner_extraction"
+            app:title="@string/pref_title_use_partner_contact_extraction" />
+
+        <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
+            app:defaultValue="@string/pref_default_partner_search_pattern"
+            app:dependency="use_partner_extraction"
+            app:key="partner_search_extract_pattern"
+            app:singleLine="true"
+            app:singleLineTitle="false"
+            app:title="@string/pref_title_partner_search_pattern"
+            app:useSimpleSummaryProvider="true"
+            app:min_groups="1"
+            app:max_groups="1"
+            app:dialogMessage="@string/pref_message_partner_search_pattern"/>
+
         <EditTextPreference
             android:inputType="number"
             app:icon="@drawable/ic_time_window"

@@ -23,9 +23,11 @@ import java.util.regex.PatternSyntaxException;
 
 public class RegExpTextPreference extends EditTextPreference {
 
-  private static final int NO_GROUP_COUNT_CHECK = -1;
+  private static final int NO_GROUP_MIN_COUNT_CHECK = 0;
+  private static final int NO_GROUP_MAX_COUNT_CHECK = -1;
 
-  private int maxGroups = NO_GROUP_COUNT_CHECK;
+  private int minGroups = NO_GROUP_MIN_COUNT_CHECK;
+  private int maxGroups = NO_GROUP_MAX_COUNT_CHECK;
 
   @SuppressWarnings("unused")
   public RegExpTextPreference(Context context) {
@@ -56,7 +58,8 @@ public class RegExpTextPreference extends EditTextPreference {
 
   private void configureAttributes(Context context, AttributeSet attrs, int defStyleAttr) {
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RegExpTextPreference, defStyleAttr, 0);
-    maxGroups = a.getInteger(R.styleable.RegExpTextPreference_max_groups, NO_GROUP_COUNT_CHECK);
+    minGroups = a.getInteger(R.styleable.RegExpTextPreference_min_groups, NO_GROUP_MIN_COUNT_CHECK);
+    maxGroups = a.getInteger(R.styleable.RegExpTextPreference_max_groups, NO_GROUP_MAX_COUNT_CHECK);
     a.recycle();
   }
 
@@ -84,10 +87,17 @@ public class RegExpTextPreference extends EditTextPreference {
         boolean hasError = false;
         try {
           Pattern pattern = Pattern.compile(s.toString());
-          if (maxGroups > NO_GROUP_COUNT_CHECK) {
+          if (minGroups > 0) {
+            Matcher matcher = pattern.matcher("");
+            if (matcher.groupCount() < minGroups) {
+              editText.setError(String.format(context.getString(R.string.error_regexp_groups_min), RegExpTextPreference.this.minGroups));
+              hasError = true;
+            }
+          }
+          if (maxGroups > NO_GROUP_MAX_COUNT_CHECK) {
             Matcher matcher = pattern.matcher("");
             if (matcher.groupCount() > maxGroups) {
-              editText.setError(String.format(context.getString(R.string.error_regexp_groups), RegExpTextPreference.this.maxGroups));
+              editText.setError(String.format(context.getString(R.string.error_regexp_groups_max), RegExpTextPreference.this.maxGroups));
               hasError = true;
             }
           }

@@ -33,12 +33,18 @@ public class ShiftService {
   }
 
   public Optional<Shift> findCurrentOrNextShift(Instant now) {
-    return this.shiftDao.getShifts(ApplicationPreferences.instance().getCalendarEventPikettTitlePattern(this.context), ApplicationPreferences.instance().getCalendarSelection(this.context))
-        .stream().filter(shift -> !shift.isOver(now, ApplicationPreferences.instance().getPrePostRunTime(context))).findFirst();
+    ApplicationPreferences preferences = ApplicationPreferences.instance();
+    return this.shiftDao.getShifts(
+        preferences.getCalendarEventPikettTitlePattern(this.context),
+        preferences.getCalendarSelection(this.context),
+        preferences.getPartnerExtractionEnabled(this.context) ? preferences.getPartnerSearchExtractPattern(this.context) : ""
+    ).stream()
+        .filter(shift -> !shift.isOver(now, preferences.getPrePostRunTime(context)))
+        .findFirst();
   }
 
   private boolean hasShiftEventForNow(String eventTitleFilterPattern, String calendarSelection, Duration prePostRunTime) {
-    return this.shiftDao.getShifts(eventTitleFilterPattern, calendarSelection).stream()
+    return this.shiftDao.getShifts(eventTitleFilterPattern, calendarSelection, null).stream()
         .anyMatch(shift -> shift.isNow(prePostRunTime));
   }
 

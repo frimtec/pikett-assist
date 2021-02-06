@@ -15,6 +15,7 @@ import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 import org.threeten.bp.LocalTime;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationState.DEFAULT_VOLUME_NOT_SET;
@@ -91,7 +92,8 @@ class PikettServiceWorkUnitTest {
             "Test",
             now.plus(Duration.ofDays(1).plus(PRE_POST_RUN_TIME).plus(Duration.ofMinutes(2))),
             now.plus(Duration.ofDays(2)),
-            true
+            true,
+            Collections.emptyList()
         ))
     );
     VolumeService volumeService = mock(VolumeService.class);
@@ -139,7 +141,8 @@ class PikettServiceWorkUnitTest {
             "Test",
             now.plus(Duration.ofDays(1).plus(PRE_POST_RUN_TIME).plus(Duration.ofMinutes(2))),
             now.plus(Duration.ofDays(2)),
-            true
+            true,
+            Collections.emptyList()
         ))
     );
     VolumeService volumeService = mock(VolumeService.class);
@@ -187,7 +190,8 @@ class PikettServiceWorkUnitTest {
             "Test",
             now.plus(Duration.ofDays(1).plus(PRE_POST_RUN_TIME).plus(Duration.ofMinutes(2))),
             now.plus(Duration.ofDays(2)),
-            true))
+            true,
+            Collections.emptyList()))
     );
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
@@ -234,7 +238,8 @@ class PikettServiceWorkUnitTest {
             "Test",
             now.plus(Duration.ofDays(1).plus(PRE_POST_RUN_TIME).minus(Duration.ofMinutes(2))),
             now.plus(Duration.ofDays(2)),
-            true))
+            true,
+            Collections.emptyList()))
     );
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
@@ -276,7 +281,7 @@ class PikettServiceWorkUnitTest {
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     ShiftService shiftService = mock(ShiftService.class);
     Instant now = Shift.now();
-    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minusSeconds(60), now.plusSeconds(60), true)));
+    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minusSeconds(60), now.plusSeconds(60), true, Collections.emptyList())));
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
@@ -317,7 +322,7 @@ class PikettServiceWorkUnitTest {
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     ShiftService shiftService = mock(ShiftService.class);
     Instant now = Shift.now();
-    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minus(PRE_POST_RUN_TIME), now.plusSeconds(60), true)));
+    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minus(PRE_POST_RUN_TIME), now.plusSeconds(60), true, Collections.emptyList())));
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
@@ -358,7 +363,7 @@ class PikettServiceWorkUnitTest {
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     ShiftService shiftService = mock(ShiftService.class);
     Instant now = Shift.now();
-    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minus(Duration.ofMinutes(10)), now.minus(PRE_POST_RUN_TIME).plusSeconds(1), true)));
+    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minus(Duration.ofMinutes(10)), now.minus(PRE_POST_RUN_TIME).plusSeconds(1), true, Collections.emptyList())));
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
@@ -399,7 +404,7 @@ class PikettServiceWorkUnitTest {
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     ShiftService shiftService = mock(ShiftService.class);
     Instant now = Shift.now();
-    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minus(Duration.ofMinutes(10)), now.minus(PRE_POST_RUN_TIME).minusMillis(1), true)));
+    when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minus(Duration.ofMinutes(10)), now.minus(PRE_POST_RUN_TIME).minusMillis(1), true, Collections.emptyList())));
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 

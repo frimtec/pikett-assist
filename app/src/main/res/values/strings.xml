@@ -22,7 +22,10 @@
     <string name="pref_header_calendar">Calendar</string>
     <string name="pref_title_calendar_selection">Calendar filter</string>
     <string name="pref_title_calendar_event_pikett_title_pattern">Event filter</string>
+    <string name="pref_title_use_partner_contact_extraction">Extract partners from event</string>
+    <string name="pref_title_partner_search_pattern">Partner extract pattern</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
+    <string name="pref_default_partner_search_pattern">Deputy: ([a-z,0-9]{5})</string>
     <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
 
@@ -114,6 +117,7 @@
     <string name="notification_draw_overlays_text">To show alerts even if PAssist is in the background, the \'Display over other apps\' setting must be active for PAssist.</string>
     <string name="alert_action_close">Close</string>
     <string name="state_fragment_operations_center">Op. center</string>
+    <string name="state_fragment_partner">Partner</string>
     <string name="state_fragment_pikett_state">On-call state</string>
     <string name="state_fragment_alarm_state">Alarm state</string>
     <string name="general_enabled">Enabled</string>
@@ -121,6 +125,8 @@
     <string name="state_on">On</string>
     <string name="state_manually_on">On (manually)</string>
     <string name="state_off">Off</string>
+    <string name="state_fragment_partner_not_found_clipboard_label">Partner nickname</string>
+
     <string name="alarm_state_on">Unconfirmed</string>
     <string name="alarm_state_on_confirmed">Confirmed</string>
     <string name="alarm_state_off">Off</string>
@@ -250,9 +256,11 @@
     <string name="units_seconds">seconds</string>
     <string name="units_second">second</string>
     <string name="error_regexp_pattern">Syntax error in regexp pattern!</string>
-    <string name="error_regexp_groups">Maximum of %d group(s) allowed in regexp pattern!</string>
+    <string name="error_regexp_groups_min">Minimum of %d group(s) required in regexp pattern!</string>
+    <string name="error_regexp_groups_max">Maximum of %d group(s) allowed in regexp pattern!</string>
     <string name="pref_message_test_alarm_message_pattern">Enter a valid regexp (use optionally a single group to select the test context)</string>
     <string name="pref_message_calendar_event_pikett_title_pattern">Enter a valid regexp (case will be ignored)</string>
+    <string name="pref_message_partner_search_pattern">Enter a valid regexp with one single group to select the partner contact.</string>
     <string name="button_regexp_help">RegExp help?</string>
     <string name="contact_name_no_access">No contact read permission</string>
     <string name="state_fragment_operations_center_no_number">No valid number!</string>

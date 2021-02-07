@@ -72,7 +72,9 @@ public class ContactDao {
       if (cursor != null && cursor.moveToFirst()) {
         Map<String, ContactPerson> contactPeople = new HashMap<>();
         do {
-          contactPeople.put(cursor.getString(0), new ContactPerson(
+          String nickname = cursor.getString(0);
+          contactPeople.put(nickname, new ContactPerson(
+              nickname,
               cursor.getLong(1),
               cursor.getString(2)
           ));

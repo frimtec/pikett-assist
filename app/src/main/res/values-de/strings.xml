@@ -21,8 +21,8 @@
     <string name="pref_header_calendar">Kalender</string>
     <string name="pref_title_calendar_selection">Kalenderauswahl</string>
     <string name="pref_title_calendar_event_pikett_title_pattern">Terminfilter</string>
-    <string name="pref_title_use_partner_contact_extraction">Extrahiere Partner aus dem Termin</string>
-    <string name="pref_title_partner_search_pattern">Partnerextrahiermuster</string>
+    <string name="pref_title_use_partner_contact_extraction">Partnerkontakte aus Terminen extrahieren</string>
+    <string name="pref_title_partner_search_pattern">Extraktionsmuster für Partnerkontakte</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
     <string name="pref_default_partner_search_pattern">Deputy:\s([a-z,0-9]{5})(\s|$)</string>
     <string name="pref_title_pre_post_time_seconds">Vor-/Nachlaufzeit</string>
@@ -277,5 +277,5 @@
     <string name="alert_list_header_statistic_year_label">Letzte 365 Tage:</string>
     <string name="add_repo">Repo hinzufügen</string>
     <string name="partner_contact_unknown_info_title">Unbekannter Kontakt</string>
-    <string name="partner_contact_unknown_info_text">Es existiert kein Kontakt mit dem entsprechendern Spitznamen.\nBitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitznamen wurde in die Zwischenablage kopiert) .</string>
+    <string name="partner_contact_unknown_info_text">Es existiert kein Kontakt mit dem entsprechendern Spitznamen.\nBitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in die Zwischenablage kopiert) .</string>
 </resources>

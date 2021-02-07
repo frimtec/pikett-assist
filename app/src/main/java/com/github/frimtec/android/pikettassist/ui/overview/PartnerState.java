@@ -23,7 +23,7 @@ public class PartnerState extends State {
         stateContext.getString(R.string.state_fragment_partner),
         partner.getFullName(),
         null,
-        partner.getId() > 0 ? TrafficLight.GREEN : TrafficLight.YELLOW
+        partner.getContactId() > 0 ? TrafficLight.GREEN : TrafficLight.YELLOW
     );
     this.stateContext = stateContext;
     this.partner = partner;
@@ -35,7 +35,7 @@ public class PartnerState extends State {
       actionViewContact();
     } else {
       ClipboardManager clipboard = (ClipboardManager) this.stateContext.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-      clipboard.setPrimaryClip(ClipData.newPlainText(stateContext.getString(R.string.state_fragment_partner_not_found_clipboard_label), partner.getFullName()));
+      clipboard.setPrimaryClip(ClipData.newPlainText(stateContext.getString(R.string.state_fragment_partner_not_found_clipboard_label), partner.getNickname()));
       DialogHelper.infoDialog(
           context,
           R.string.partner_contact_unknown_info_title,
@@ -50,7 +50,7 @@ public class PartnerState extends State {
 
   private void actionViewContact() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(this.partner.getId()));
+    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(this.partner.getContactId()));
     intent.setData(uri);
     stateContext.getContext().startActivity(intent);
   }

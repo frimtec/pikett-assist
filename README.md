@@ -114,6 +114,16 @@ Defines one specific or all of your calenders, that should be used to look for o
 Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to 
 match the titles of your calendar events, which should be considered for your on-call duties.
 
+#### Extract partner contacts from events
+Defines whether partner contacts are extracted from on-call duty events. 
+
+#### Extraction pattern for partner contacts
+Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to 
+extract partner contacts from on-call duty events.
+The partner contacts are extracted from the notes field of on-call duty events.
+There can be several partner contacts in the event notes.  
+The extracted partner contacts are interpreted as contact nicknames. 
+
 #### Pre- /post-run time
 Time in seconds to enable/disable the on-call state before and after the calender event.
 The default is 300 seconds (five minutes). 

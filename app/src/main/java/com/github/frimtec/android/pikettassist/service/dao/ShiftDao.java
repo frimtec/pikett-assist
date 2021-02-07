@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -96,7 +95,7 @@ public final class ShiftDao {
   }
 
   private Set<String> extractPartners(String partnerDescriptionSearchPattern, String text) {
-    if (!TextUtils.isEmpty(partnerDescriptionSearchPattern)) {
+    if (partnerDescriptionSearchPattern != null && !partnerDescriptionSearchPattern.isEmpty()) {
       try {
         Pattern searchPattern = Pattern.compile(partnerDescriptionSearchPattern);
         Matcher partnerMatcher = searchPattern.matcher(text);

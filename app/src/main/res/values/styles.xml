@@ -53,6 +53,7 @@
 
 
     <declare-styleable name="RegExpTextPreference">
+        <attr format="integer" name="min_groups"/>
         <attr format="integer" name="max_groups"/>
     </declare-styleable>
 

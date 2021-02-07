@@ -10,6 +10,8 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Attendees;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.github.frimtec.android.pikettassist.domain.Shift;
 
 import org.threeten.bp.Instant;
@@ -17,9 +19,12 @@ import org.threeten.bp.temporal.ChronoUnit;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
@@ -38,7 +43,8 @@ public final class ShiftDao {
       CalendarContract.Instances.BEGIN,
       CalendarContract.Instances.END,
       CalendarContract.Instances.CALENDAR_ID,
-      CalendarContract.Instances.SELF_ATTENDEE_STATUS
+      CalendarContract.Instances.SELF_ATTENDEE_STATUS,
+      CalendarContract.Instances.DESCRIPTION,
   };
 
   private final BiFunction<Instant, Instant, Uri> eventUriProvider;
@@ -53,7 +59,7 @@ public final class ShiftDao {
     this.eventUriProvider = eventUriProvider;
   }
 
-  public List<Shift> getShifts(String eventTitleFilterPattern, String calendarSelection) {
+  public List<Shift> getShifts(String eventTitleFilterPattern, String calendarSelection, @Nullable String partnerDescriptionSearchPattern) {
     if (!PERMISSION_CALENDAR_READ.isAllowed(context)) {
       Log.e(TAG, "No permissions to read calendar");
       return Collections.emptyList();
@@ -77,10 +83,9 @@ public final class ShiftDao {
           Instant eventStartTime = Instant.ofEpochMilli(cursor.getLong(2));
           Instant eventEndTime = Instant.ofEpochMilli(cursor.getLong(3));
           int selfAttendeeStatus = cursor.getInt(5);
-
           Pattern pattern = Pattern.compile(eventTitleFilterPattern, Pattern.CASE_INSENSITIVE);
           if (pattern.matcher(nonNullString(eventTitle)).matches()) {
-            events.add(new Shift(id, eventTitle, eventStartTime, eventEndTime, isConfirmed(selfAttendeeStatus)));
+            events.add(new Shift(id, eventTitle, eventStartTime, eventEndTime, isConfirmed(selfAttendeeStatus), extractPartners(partnerDescriptionSearchPattern, cursor.getString(6))));
           }
         } while (cursor.moveToNext());
       }
@@ -88,6 +93,26 @@ public final class ShiftDao {
     events.sort(Comparator.comparing(Shift::getStartTime));
     return events;
   }
+
+  private Set<String> extractPartners(String partnerDescriptionSearchPattern, String text) {
+    if (partnerDescriptionSearchPattern != null && !partnerDescriptionSearchPattern.isEmpty()) {
+      try {
+        Pattern searchPattern = Pattern.compile(partnerDescriptionSearchPattern);
+        Matcher partnerMatcher = searchPattern.matcher(text);
+        Set<String> partners = new LinkedHashSet<>();
+        while (partnerMatcher.find()) {
+          partners.add(partnerMatcher.group(1));
+        }
+        return partners;
+      } catch (Exception e) {
+        Log.e(TAG, "Cannot extract partners from event description", e);
+        return Collections.emptySet();
+      }
+    } else {
+      return Collections.emptySet();
+    }
+  }
+
 
   private boolean isConfirmed(int selfAttendeeStatus) {
     return selfAttendeeStatus == Attendees.ATTENDEE_STATUS_ACCEPTED ||

@@ -8,12 +8,17 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import static java.util.stream.Collectors.joining;
 
 public class ContactDao {
 
@@ -52,6 +57,36 @@ public class ContactDao {
       }
     }
     return Optional.empty();
+  }
+
+  public Map<String, ContactPerson> findContactPersonsByAliases(Set<String> aliases) {
+    try (Cursor cursor = this.contentResolver.query(ContactsContract.Data.CONTENT_URI,
+        new String[]{
+            ContactsContract.CommonDataKinds.Nickname.DATA1,
+            ContactsContract.Data.CONTACT_ID,
+            ContactsContract.Data.DISPLAY_NAME
+        },
+        ContactsContract.CommonDataKinds.Nickname.DATA1 + " IN (" + in(aliases) + ")",
+        null,
+        null)) {
+      if (cursor != null && cursor.moveToFirst()) {
+        Map<String, ContactPerson> contactPeople = new HashMap<>();
+        do {
+          String nickname = cursor.getString(0);
+          contactPeople.put(nickname, new ContactPerson(
+              nickname,
+              cursor.getLong(1),
+              cursor.getString(2)
+          ));
+        } while (cursor.moveToNext());
+        return contactPeople;
+      }
+      return Collections.emptyMap();
+    }
+  }
+
+  private String in(Set<String> elements) {
+    return elements.stream().map(element -> String.format("'%s'", element)).collect(joining(","));
   }
 
   public Set<Long> lookupContactIdsByPhoneNumber(String phoneNumber) {

@@ -10,24 +10,21 @@ import androidx.annotation.StringRes;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
-import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.Set;
 
 import static com.github.frimtec.android.pikettassist.domain.ContactReference.NO_SELECTION;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CONTACTS_READ;
 
-public class OperationsCenterContactService {
+public class OperationsCenterContactService extends AbstractContactService {
 
   private static final String TAG = "OperationsCenterContactService";
 
-  private final ContactDao contactDao;
   private final Context context;
 
   public OperationsCenterContactService(Context context) {
+    super(context);
     this.context = context;
-    this.contactDao = new ContactDao(context);
   }
 
   public Contact getOperationsCenterContact() {
@@ -42,7 +39,7 @@ public class OperationsCenterContactService {
       return invalidContact(R.string.contact_preference_empty_selection);
     }
     Uri lookupUri = ContactsContract.Contacts.getLookupUri(contactReference.getId(), contactReference.getLookupKey());
-    Contact contact = this.contactDao.getContact(lookupUri)
+    Contact contact = getContactDao().getContact(lookupUri)
         .orElseGet(() -> invalidContact(R.string.contact_helper_unknown_contact));
     if (contact.isValid()) {
       if (!contact.getReference().equals(contactReference)) {
@@ -56,7 +53,7 @@ public class OperationsCenterContactService {
   }
 
   public Contact getContactFromUri(Uri uri) {
-    return this.contactDao.getContact(uri)
+    return getContactDao().getContact(uri)
         .orElse(invalidContact(R.string.contact_helper_unknown_contact));
   }
 
@@ -65,16 +62,16 @@ public class OperationsCenterContactService {
       Log.e(TAG, "SMS received but no valid operations center defined.");
       return false;
     }
-    Set<Long> contactIds = this.contactDao.lookupContactIdsByPhoneNumber(number);
+    Set<Long> contactIds = getContactDao().lookupContactIdsByPhoneNumber(number);
     return contactIds.contains(contact.getReference().getId());
   }
 
   public Set<String> getPhoneNumbers(Contact contact) {
-    return this.contactDao.getPhoneNumbers(contact);
+    return getContactDao().getPhoneNumbers(contact);
   }
 
   private ContactReference migrateToFullReference(ContactReference contactReference) {
-    ContactReference migratedReference = this.contactDao.getContact(contactReference.getId())
+    ContactReference migratedReference = getContactDao().getContact(contactReference.getId())
         .map(Contact::getReference)
         .orElse(NO_SELECTION);
     ApplicationPreferences.instance().setOperationsCenterContactReference(this.context, migratedReference);
@@ -84,10 +81,6 @@ public class OperationsCenterContactService {
       Log.e(TAG, "Operations center contact migration failed.");
     }
     return migratedReference;
-  }
-
-  private boolean hasReadContactPermission() {
-    return PERMISSION_CONTACTS_READ.isAllowed(this.context);
   }
 
   private Contact invalidContact(@StringRes int contactName) {

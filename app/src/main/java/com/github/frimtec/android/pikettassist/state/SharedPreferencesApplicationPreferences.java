@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 final class SharedPreferencesApplicationPreferences implements ApplicationPreferences {
 
   private static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
+  private static final String PREF_KEY_PARTNER_SEARCH_EXTRACT_PATTERN = "partner_search_extract_pattern";
+  private static final String PREF_KEY_USE_PARTNER_EXTRACTION = "use_partner_extraction";
   private static final String PREF_KEY_CALENDAR_SELECTION = "calendar_selection";
   private static final String PREF_KEY_PRE_POST_RUN_TIME_SECONDS = "pre_post_run_time_seconds";
   private static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
@@ -51,6 +53,17 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public String getCalendarEventPikettTitlePattern(Context context) {
     return getSharedPreferences(context, PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN, context.getString(R.string.pref_default_calendar_event_pikett_title_pattern)).trim();
+  }
+
+  @Override
+  public boolean getPartnerExtractionEnabled(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_USE_PARTNER_EXTRACTION, true);
+  }
+
+  @Override
+  public String getPartnerSearchExtractPattern(Context context) {
+    return getSharedPreferences(context, PREF_KEY_PARTNER_SEARCH_EXTRACT_PATTERN, context.getString(R.string.pref_default_partner_search_pattern)).trim();
   }
 
   @Override

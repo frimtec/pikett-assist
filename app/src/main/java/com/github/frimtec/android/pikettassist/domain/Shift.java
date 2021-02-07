@@ -3,6 +3,11 @@ package com.github.frimtec.android.pikettassist.domain;
 import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public class Shift {
 
   private final long id;
@@ -10,13 +15,15 @@ public class Shift {
   private final Instant startTime;
   private final Instant endTime;
   private final boolean confirmed;
+  private final List<String> partners;
 
-  public Shift(long id, String title, Instant startTime, Instant endTime, boolean confirmed) {
+  public Shift(long id, String title, Instant startTime, Instant endTime, boolean confirmed, Collection<String> partners) {
     this.id = id;
     this.title = title;
     this.startTime = startTime;
     this.endTime = endTime;
     this.confirmed = confirmed;
+    this.partners = new ArrayList<>(partners);
   }
 
   public static Instant now() {
@@ -65,5 +72,9 @@ public class Shift {
 
   public boolean isConfirmed() {
     return confirmed;
+  }
+
+  public List<String> getPartners() {
+    return Collections.unmodifiableList(partners);
   }
 }

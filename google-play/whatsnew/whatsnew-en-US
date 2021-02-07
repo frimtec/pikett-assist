@@ -1,3 +1,2 @@
 Features and improvements:
-* Phone numbers, email and web addresses received as SMS are rendered as hyper links.
-* The text in received SMS is selectable and can be copied.
+* Extract partner contacts from on-call duty events and show them on the state overview.

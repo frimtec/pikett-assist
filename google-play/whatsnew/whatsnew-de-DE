@@ -1,3 +1,2 @@
 Funktionen und Verbesserungen:
-* Telefonnummern, Email- und Web-Adressen in empfangenen Aufgebots-Meldungen sind Hyperlinks.
-* Der Text in empfangenen Aufgebots-Meldungen kann selektiert und kopiert werden.
+* Extrahiert Partnerkontakte aus den Pikettterminen und zeigt sie in der Zustandsübersicht an.

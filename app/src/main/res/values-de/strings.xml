@@ -257,7 +257,7 @@
     <string name="error_regexp_groups_max">Maximal %d Gruppe(n) erlaubt in der RegExp!</string>
     <string name="pref_message_test_alarm_message_pattern">Gültige RegExp eingeben (mit einer optionalen Gruppe, kann der Testkontext ausgewählt werden)</string>
     <string name="pref_message_calendar_event_pikett_title_pattern">Gültige RegExp eingeben (Gross-/ Kleinschreibung wird ignoriert)</string>
-    <string name="pref_message_partner_search_pattern">Gültige RegExp eingeben mit einer Gruppe, zum selektieren des Partnerkontaktes.</string>
+    <string name="pref_message_partner_search_pattern">Gültige RegExp eingeben mit einer Gruppe zum Extrahieren des Partnerkontaktspitznamen aus dem Terminkommentar.</string>
     <string name="button_regexp_help">RegExp Hilfe?</string>
     <string name="contact_name_no_access">Keine Kontaktleseberechtigung</string>
     <string name="state_fragment_operations_center_no_number">Keine gültige Nummer!</string>
@@ -276,4 +276,6 @@
     <string name="alert_list_header_statistic_month_label">Letzte 30 Tage:</string>
     <string name="alert_list_header_statistic_year_label">Letzte 365 Tage:</string>
     <string name="add_repo">Repo hinzufügen</string>
+    <string name="partner_contact_unknown_info_title">Unbekannter Kontakt</string>
+    <string name="partner_contact_unknown_info_text">Es existiert kein Kontakt mit dem entsprechendern Spitznamen.\nBitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitznamen wurde in die Zwischenablage kopiert) .</string>
 </resources>

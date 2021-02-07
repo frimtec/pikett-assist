@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
+import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 public class PartnerState extends State {
 
@@ -33,10 +34,17 @@ public class PartnerState extends State {
     if (partner.isValid()) {
       actionViewContact();
     } else {
-      // TODO: 06.02.2021 Show instruction
       ClipboardManager clipboard = (ClipboardManager) this.stateContext.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-      ClipData clip = ClipData.newPlainText(stateContext.getString(R.string.state_fragment_partner_not_found_clipboard_label), partner.getFullName());
-      clipboard.setPrimaryClip(clip);
+      clipboard.setPrimaryClip(ClipData.newPlainText(stateContext.getString(R.string.state_fragment_partner_not_found_clipboard_label), partner.getFullName()));
+      DialogHelper.infoDialog(
+          context,
+          R.string.partner_contact_unknown_info_title,
+          R.string.partner_contact_unknown_info_text,
+          (dialogInterface, integer) -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(ContactsContract.Contacts.CONTENT_URI);
+            stateContext.getContext().startActivity(intent);
+          });
     }
   }
 

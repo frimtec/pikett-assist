@@ -53,6 +53,7 @@
             app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern"/>
 
         <SwitchPreference
+            app:icon="@drawable/ic_baseline_people_24"
             app:defaultValue="true"
             app:key="use_partner_extraction"
             app:title="@string/pref_title_use_partner_contact_extraction" />

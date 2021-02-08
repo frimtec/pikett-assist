@@ -24,7 +24,6 @@
     <string name="pref_title_use_partner_contact_extraction">Partnerkontakte aus Terminen extrahieren</string>
     <string name="pref_title_partner_search_pattern">Extraktionsmuster für Partnerkontakte</string>
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
-    <string name="pref_default_partner_search_pattern">Deputy:\\s([a-z,0-9]{5})(\\s|$)</string>
     <string name="pref_title_pre_post_time_seconds">Vor-/Nachlaufzeit</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
 

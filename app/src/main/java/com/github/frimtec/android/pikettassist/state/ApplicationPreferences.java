@@ -16,6 +16,7 @@ public interface ApplicationPreferences {
   int PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR = 15;
   String CALENDAR_FILTER_ALL = "-1";
   String PREF_KEY_BATTERY_SAFER_AT_NIGHT = "battery_safer_at_night";
+  String PREF_KEY_BATTERY_WARN_LEVEL = "battery_warn_level";
 
   @SuppressWarnings("PointlessArithmeticExpression")
   NonLinearNumericSeries LOW_SIGNAL_FILTER_PREFERENCE = new NonLinearNumericSeries(new int[]{
@@ -72,6 +73,10 @@ public interface ApplicationPreferences {
   int getLowSignalFilterSeconds(Context context);
 
   int convertLowSignalFilerToSeconds(int filterValue);
+
+  boolean getSuperviseBatteryLevel(Context context);
+
+  int getBatteryWarnLevel(Context context);
 
   boolean getTestAlarmEnabled(Context context);
 

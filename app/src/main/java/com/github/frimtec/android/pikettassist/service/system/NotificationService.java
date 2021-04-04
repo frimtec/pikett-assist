@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
@@ -39,6 +41,7 @@ public class NotificationService {
 
   private static final int SIGNAL_NOTIFICATION_ID = 3;
   private static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
+  public static final int BATTERY_NOTIFICATION_ID = 5;
 
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
 
@@ -154,6 +157,26 @@ public class NotificationService {
 
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
+  }
+
+  public void notifyBatteryLow(BatteryStatus batteryStatus) {
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+    );
+    @SuppressLint("DefaultLocale")
+    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
+        .setContentTitle(context.getString(R.string.notification_low_battery_title))
+        .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.getLevel()))
+        .setSmallIcon(R.drawable.ic_battery_alert_black_24dp)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setCategory(CATEGORY_EVENT)
+        .setOnlyAlertOnce(true)
+        .setOngoing(true)
+        .setContentIntent(notifyPendingIntent)
+        .build();
+
+    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+    notificationManagerCompat.notify(BATTERY_NOTIFICATION_ID, notification);
   }
 
   void notifyVolumeChanged(int oldLevel, int newLevel) {

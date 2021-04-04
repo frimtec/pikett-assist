@@ -6,9 +6,11 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
+import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
+import com.github.frimtec.android.pikettassist.service.system.BatteryService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
@@ -22,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.BATTERY_NOTIFICATION_ID;
 import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 
@@ -108,8 +111,18 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
       if (this.applicationPreferences.getManageVolumeEnabled(context)) {
         volumeService.setVolume(this.applicationPreferences.getOnCallVolume(context, now));
       }
+      BatteryStatus batteryStatus = new BatteryService(context).batteryStatus();
+      if(this.applicationPreferences.getSuperviseBatteryLevel(context)) {
+        if(batteryStatus.getLevel() <= this.applicationPreferences.getBatteryWarnLevel(context)) {
+          notificationService.notifyBatteryLow(batteryStatus);
+        } else {
+          notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
+        }
+      } else {
+        notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
+      }
       Consumer<Intent> intentExtrasSetter;
-      Duration nextRunIn = isBatterySaferOn(now) ? getBatterySaferInterval(now) : CHECK_INTERVAL;
+      Duration nextRunIn = isBatterySaferOn(now) || batteryStatus.getLevel() < 10 ? getBatterySaferInterval(now) : CHECK_INTERVAL;
       if (currentFilterState > 0) {
         intentExtrasSetter = intent -> intent.putExtra(EXTRA_FILTER_STATE, currentFilterState);
         if (currentFilterState <= this.applicationPreferences.getLowSignalFilterSeconds(context)) {
@@ -121,6 +134,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
       }
       return Optional.of(new ScheduleInfo(nextRunIn, intentExtrasSetter));
     } else {
+      notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
       return Optional.empty();
     }
   }

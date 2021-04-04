@@ -32,6 +32,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
   private static final String PREF_KEY_SEND_CONFIRM_SMS = "send_confirm_sms";
   private static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
+  private static final String PREF_KEY_SUPERVISE_BATTERY_LEVEL = "supervise_battery_level";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   private static final String PREF_KEY_NOTIFY_LOW_SIGNAL = "notify_low_signal";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL = "supervise_signal_strength_min_level";
@@ -138,6 +139,17 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public int convertLowSignalFilerToSeconds(int filterValue) {
     return LOW_SIGNAL_FILTER_PREFERENCE.getValue(filterValue);
+  }
+
+  @Override
+  public boolean getSuperviseBatteryLevel(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_SUPERVISE_BATTERY_LEVEL, true);
+  }
+
+  @Override
+  public int getBatteryWarnLevel(Context context) {
+    return PreferenceManager.getDefaultSharedPreferences(context).getInt(PREF_KEY_BATTERY_WARN_LEVEL, context.getResources().getInteger(R.integer.default_battery_warn_level));
   }
 
   @Override

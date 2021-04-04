@@ -7,6 +7,7 @@ import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
+import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
@@ -46,6 +47,7 @@ class StateContext {
 
   private final Contact operationCenter;
   private final Set<String> operationsCenterPhoneNumbers;
+  private final BatteryStatus batteryStatus;
 
   StateContext(
       Context context,
@@ -69,7 +71,8 @@ class StateContext {
       boolean superviseSignalStrength,
       String networkOperatorName,
       Contact operationCenter,
-      Set<String> operationsCenterPhoneNumbers) {
+      Set<String> operationsCenterPhoneNumbers,
+      BatteryStatus batteryStatus) {
     this.context = context;
     this.startActivityForResultAction = startActivityForResultAction;
     this.fragmentRefreshAction = fragmentRefreshAction;
@@ -92,6 +95,7 @@ class StateContext {
     this.networkOperatorName = networkOperatorName;
     this.operationCenter = operationCenter;
     this.operationsCenterPhoneNumbers = new HashSet<>(operationsCenterPhoneNumbers);
+    this.batteryStatus = batteryStatus;
   }
 
   Context getContext() {
@@ -185,5 +189,9 @@ class StateContext {
 
   public Set<String> getOperationsCenterPhoneNumbers() {
     return Collections.unmodifiableSet(operationsCenterPhoneNumbers);
+  }
+
+  public BatteryStatus getBatteryStatus() {
+    return batteryStatus;
   }
 }

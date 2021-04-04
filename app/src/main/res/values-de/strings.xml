@@ -27,6 +27,9 @@
     <string name="pref_title_pre_post_time_seconds">Vor-/Nachlaufzeit</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
 
+    <string name="pref_title_supervise_battery_level">Akkufüllstand überwachen</string>
+    <string name="pref_title_battery_warn_level">Minimaler Füllstand</string>
+
     <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
     <string name="pref_title_send_confirm_sms">Bestätigungsantwort senden</string>
     <string name="pref_title_sms_confirm_text">Bestätigungsantwort</string>
@@ -100,6 +103,8 @@
     <string name="test_alarm_context_general">Allgemein</string>
     <string name="notification_low_signal_title">Unzureichender Signalempfang</string>
     <string name="notification_low_signal_text">Empfangsstufe</string>
+    <string name="notification_low_battery_title">Akku fast leer</string>
+    <string name="notification_low_battery_text">Akkufüllstand</string>
     <string name="state_fragment_signal_level">Signal</string>
     <string name="notification_pikett_on_title">Pikett</string>
     <string name="notification_pikett_on_text">Du bist auf Pikett!</string>
@@ -171,6 +176,8 @@
     <string name="test_alarm_toast_added_success">Neuer Testalarmkontext wurde hinzugefügt.</string>
     <string name="test_alarm_toast_added_duplicate">Testalarmkontext existiert bereits.</string>
     <string name="state_fragment_sms_adapter">SMS Adapter</string>
+    <string name="state_fragment_battery">Akku</string>
+    <string name="state_fragment_battery_charging">lädt</string>
     <string name="state_fragment_sms_adapter_not_installed">Nicht vorhanden</string>
     <string name="state_fragment_sms_adapter_no_sms_permissions">Kein SMS-Recht</string>
     <string name="state_fragment_phone_numbers_blocked">Nummer blockiert</string>

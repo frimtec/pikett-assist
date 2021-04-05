@@ -148,6 +148,11 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   }
 
   @Override
+  public void setSuperviseBatteryLevel(Context context, boolean supervise) {
+    setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_SUPERVISE_BATTERY_LEVEL, supervise));
+  }
+
+  @Override
   public int getBatteryWarnLevel(Context context) {
     return PreferenceManager.getDefaultSharedPreferences(context).getInt(PREF_KEY_BATTERY_WARN_LEVEL, context.getResources().getInteger(R.integer.default_battery_warn_level));
   }

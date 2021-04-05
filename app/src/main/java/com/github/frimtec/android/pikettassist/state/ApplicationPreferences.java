@@ -76,6 +76,8 @@ public interface ApplicationPreferences {
 
   boolean getSuperviseBatteryLevel(Context context);
 
+  void setSuperviseBatteryLevel(Context context, boolean supervise);
+
   int getBatteryWarnLevel(Context context);
 
   boolean getTestAlarmEnabled(Context context);

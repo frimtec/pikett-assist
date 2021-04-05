@@ -54,6 +54,9 @@ This ensures that you won't stay in a dead spot without recognize it during on-c
 ![Low signal state info](images/PAssist_13.png)
 ![None signal state info](images/PAssist_04.png)
 
+### Battery level
+PAssist will supervise the battery level and notifies if it is below a configured minimum level. 
+
 ### Ringtone volume
 PAssist can control the ringtone volume during on-call duty with separate profiles for day and night. 
 
@@ -130,6 +133,8 @@ The default is 300 seconds (five minutes).
     
 #### Supervise signal strength
 Defines whether the signal strength is supervised or not.
+In case the battery level falls below 10% the check interval is reduced in favour of a longer 
+remaining term. 
 
 #### Minimal signal strength
 Defines the lowest accepted signal strength level.
@@ -147,6 +152,16 @@ The phone also shows a low signal strength through a vibration pattern, regardle
 
 #### Supervised subscription (for Dual SIM only)
 For dual SIM phones you can select the subscription for which the signal strength is supervised.
+
+#### Supervise battery level
+Defines whether the battery level is supervised or not.
+
+#### Minimal battery level
+Defines the minimal battery level in percentage (between 10% - 50%). 
+If the current battery level falls below this minimal level, a alert notification is created.
+Independent of the this minimal battery level, whenever the battery level is in the danger zone 
+(below 10%) the polling interval for PAssist checks (e.g. signal strength) is lowered to minimize 
+the power consumption.
 
 ### Test alarm settings 
 #### Use test alarms

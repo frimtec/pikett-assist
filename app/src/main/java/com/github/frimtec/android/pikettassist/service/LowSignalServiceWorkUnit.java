@@ -35,6 +35,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   private static final String EXTRA_FILTER_STATE = "FILTER_STATE";
   private static final Duration CHECK_INTERVAL = Duration.ofSeconds(90);
   private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(15);
+  private static final int BATTERY_LOW_LIMIT = 10;
 
   private final ApplicationPreferences applicationPreferences;
   private final TelephonyManager telephonyManager;
@@ -122,7 +123,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
         notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
       }
       Consumer<Intent> intentExtrasSetter;
-      Duration nextRunIn = isBatterySaferOn(now) || batteryStatus.getLevel() < 10 ? getBatterySaferInterval(now) : CHECK_INTERVAL;
+      Duration nextRunIn = isBatterySaferOn(now) || batteryStatus.getLevel() < BATTERY_LOW_LIMIT ? getBatterySaferInterval(now) : CHECK_INTERVAL;
       if (currentFilterState > 0) {
         intentExtrasSetter = intent -> intent.putExtra(EXTRA_FILTER_STATE, currentFilterState);
         if (currentFilterState <= this.applicationPreferences.getLowSignalFilterSeconds(context)) {

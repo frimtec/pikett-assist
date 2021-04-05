@@ -1,2 +1,3 @@
 Features and improvements:
-* SMS-Adapter S2MSP V2.0.3 integrated with Fix for some SMS carriers.
+* New supervision for the battery level.
+* Reduction of the interval for checking the signal strength if the battery level falls below 10%.

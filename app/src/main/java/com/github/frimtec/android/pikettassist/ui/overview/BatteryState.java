@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.ui.overview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +18,9 @@ import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficL
 
 class BatteryState extends State {
 
-  private static final int MENU_CONTEXT_DEACTIVATE = 1;
-  private static final int MENU_CONTEXT_ACTIVATE = 2;
+  private static final int MENU_CONTEXT_VIEW = 1;
+  private static final int MENU_CONTEXT_DEACTIVATE = 2;
+  private static final int MENU_CONTEXT_ACTIVATE = 3;
 
   private final StateContext stateContext;
 
@@ -69,7 +71,13 @@ class BatteryState extends State {
   }
 
   @Override
+  public void onClickAction(Context context) {
+    stateContext.getContext().startActivity(new Intent(Intent.ACTION_POWER_USAGE_SUMMARY));
+  }
+
+  @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
+    menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view);
     if (ApplicationPreferences.instance().getSuperviseBatteryLevel(context)) {
       menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE, Menu.NONE, R.string.list_item_menu_deactivate);
     } else {
@@ -80,6 +88,9 @@ class BatteryState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
+      case MENU_CONTEXT_VIEW:
+        onClickAction(context);
+        return true;
       case MENU_CONTEXT_DEACTIVATE:
         ApplicationPreferences.instance().setSuperviseBatteryLevel(context, false);
         stateContext.refreshFragment();

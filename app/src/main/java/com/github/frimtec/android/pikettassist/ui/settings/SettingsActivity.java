@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.settings;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_BATTERY_WARN_LEVEL;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -48,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final int MAX_SUPPORTED_SIMS = 2;
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
       setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -66,6 +69,18 @@ public class SettingsActivity extends AppCompatActivity {
               String value = preference.getText();
               return value + " " + getString("1".equals(value) ? R.string.units_second : R.string.units_seconds);
             });
+      }
+
+      SeekBarPreference batteryWarnLevel = findPreference(PREF_KEY_BATTERY_WARN_LEVEL);
+      if (batteryWarnLevel != null) {
+        batteryWarnLevel.setMin(10);
+        batteryWarnLevel.setMax(50);
+        batteryWarnLevel.setOnPreferenceChangeListener((preference, newValue) -> {
+          ((SeekBarPreference) preference).setValue((int) newValue);
+          return true;
+        });
+        batteryWarnLevel.setSummaryProvider(
+            (Preference.SummaryProvider<SeekBarPreference>) preference -> String.format("%d%%", preference.getValue()));
       }
 
       SeekBarPreference lowSignalFilterTime = findPreference(PREF_KEY_LOW_SIGNAL_FILTER);

@@ -117,6 +117,22 @@
             app:title="@string/pref_title_supervise_signal_strength_subscription" />
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_battery_alert_black_24dp"
+        app:title="@string/pref_title_supervise_battery_level">
+
+        <SwitchPreference
+            app:defaultValue="true"
+            app:key="supervise_battery_level"
+            app:title="@string/pref_title_supervise_battery_level" />
+
+        <SeekBarPreference
+            app:defaultValue="@integer/default_battery_warn_level"
+            app:key="battery_warn_level"
+            app:title="@string/pref_title_battery_warn_level" />
+
+    </PreferenceCategory>
     <PreferenceCategory>
         <Preference
             app:fragment="com.github.frimtec.android.pikettassist.ui.settings.TestAlarmFragment"

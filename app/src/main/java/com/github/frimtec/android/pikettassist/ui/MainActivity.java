@@ -302,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
 
   private void registerReceiver() {
     broadcastReceiver = new BroadcastReceiver() {
+      @SuppressLint("DefaultLocale")
       @Override
       public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
@@ -312,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
       }
     };
     IntentFilter filter = new IntentFilter(Action.REFRESH.getId());
+    filter.addAction(Intent.ACTION_BATTERY_CHANGED);
     filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
     filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
     registerReceiver(broadcastReceiver, filter);

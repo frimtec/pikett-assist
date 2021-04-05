@@ -33,6 +33,7 @@ import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
+import com.github.frimtec.android.pikettassist.service.system.BatteryService;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
@@ -214,6 +215,7 @@ public class StateFragment extends AbstractListFragment<State> {
     Contact operationsCenterContact = this.operationsCenterContactService.getOperationsCenterContact();
     Set<String> operationsCenterPhoneNumbers = this.operationsCenterContactService.getPhoneNumbers(operationsCenterContact);
     ShiftService shiftService = new ShiftService(getContext());
+    BatteryService batteryService = new BatteryService(getContext());
     boolean pikettStateManuallyOn = ApplicationState.instance().getPikettStateManuallyOn();
     OnOffState pikettState = shiftService.getState();
     Instant now = Shift.now();
@@ -241,7 +243,8 @@ public class StateFragment extends AbstractListFragment<State> {
         ApplicationPreferences.instance().getSuperviseSignalStrength(getContext()),
         this.signalStrengthService.getNetworkOperatorName(),
         operationsCenterContact,
-        operationsCenterPhoneNumbers
+        operationsCenterPhoneNumbers,
+        batteryService.batteryStatus()
     );
     states.add(new SmsAdapterState(stateContext));
     if (pikettState == OnOffState.ON && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
@@ -249,7 +252,7 @@ public class StateFragment extends AbstractListFragment<State> {
     }
     states.add(new OperationsCenterState(stateContext));
     Optional<List<String>> partners = currentOrNextShift.map(Shift::getPartners);
-    if(pikettState == OnOffState.ON && partners.isPresent()) {
+    if (pikettState == OnOffState.ON && partners.isPresent()) {
       List<String> pairAliases = (List<String>) partners.get();
       Map<String, ContactPerson> contactPersonsByAliases = this.contactPersonService.findContactPersonsByAliases(new HashSet<>(pairAliases));
       pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair)))));
@@ -257,7 +260,8 @@ public class StateFragment extends AbstractListFragment<State> {
     states.addAll(Arrays.asList(
         new OnCallState(stateContext),
         new AlarmState(stateContext),
-        new SignalStrengthState(stateContext)
+        new SignalStrengthState(stateContext),
+        new BatteryState(stateContext)
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
       ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()

@@ -1,6 +1,8 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
 import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +21,10 @@ import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficL
 
 class SignalStrengthState extends State {
 
-  private static final int MENU_CONTEXT_DEACTIVATE = 1;
-  private static final int MENU_CONTEXT_ACTIVATE = 2;
-  private static final int MENU_CONTEXT_BOGUS_ALARM = 3;
+  private static final int MENU_CONTEXT_VIEW = 1;
+  private static final int MENU_CONTEXT_DEACTIVATE = 2;
+  private static final int MENU_CONTEXT_ACTIVATE = 3;
+  private static final int MENU_CONTEXT_BOGUS_ALARM = 4;
 
   private final StateContext stateContext;
 
@@ -55,7 +58,15 @@ class SignalStrengthState extends State {
   }
 
   @Override
+  public void onClickAction(Context context) {
+    Intent intent = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(intent);
+  }
+
+  @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
+    menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view);
     if (ApplicationPreferences.instance().getSuperviseSignalStrength(context)) {
       menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE, Menu.NONE, R.string.list_item_menu_deactivate);
     } else {
@@ -67,6 +78,9 @@ class SignalStrengthState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
+      case MENU_CONTEXT_VIEW:
+        onClickAction(context);
+        return true;
       case MENU_CONTEXT_DEACTIVATE:
         ApplicationPreferences.instance().setSuperviseSignalStrength(context, false);
         stateContext.refreshFragment();

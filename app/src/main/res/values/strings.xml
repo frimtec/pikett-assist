@@ -29,6 +29,9 @@
     <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
 
+    <string name="pref_title_supervise_battery_level">Supervise battery level</string>
+    <string name="pref_title_battery_warn_level">Minimal battery level</string>
+
     <string name="pref_title_alarm_operations_center_contact">Operations center</string>
     <string name="pref_title_send_confirm_sms">Send confirmation replies</string>
     <string name="pref_title_sms_confirm_text">Confirmation reply</string>
@@ -103,6 +106,8 @@
     <string name="test_alarm_context_general">General</string>
     <string name="notification_low_signal_title">Low signal</string>
     <string name="notification_low_signal_text">Signal level</string>
+    <string name="notification_low_battery_title">Low battery</string>
+    <string name="notification_low_battery_text">Battery level</string>
     <string name="state_fragment_signal_level">Signal</string>
     <string name="notification_pikett_on_title">On-call</string>
     <string name="notification_pikett_on_text">You are on-call!</string>
@@ -175,6 +180,8 @@
     <string name="test_alarm_toast_added_success">New test alarm context added.</string>
     <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
     <string name="state_fragment_sms_adapter">SMS adapter</string>
+    <string name="state_fragment_battery">Battery</string>
+    <string name="state_fragment_battery_charging">charging</string>
     <string name="state_fragment_sms_adapter_not_installed">Not installed</string>
     <string name="state_fragment_sms_adapter_no_sms_permissions">No SMS permission</string>
     <string name="state_fragment_phone_numbers_blocked">Number blocked</string>

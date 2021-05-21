@@ -19,12 +19,12 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ebanx.swipebtn.SwipeButton;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.VibrateService;
+import com.ncorti.slidetoact.SlideToActView;
 
 import org.threeten.bp.Duration;
 
@@ -119,7 +119,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
       supportActionBar.hide();
     }
 
-    SwipeButton swipeButton;
+    SlideToActView swipeButton;
     switch (swipeButtonStyle) {
       case ALARM:
         swipeButton = findViewById(R.id.alarm_button_confirm_alarm);
@@ -134,7 +134,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
         throw new IllegalStateException("Unsupported style: " + swipeButtonStyle);
     }
     swipeButton.setVisibility(View.VISIBLE);
-    swipeButton.setOnStateChangeListener(active -> {
+    swipeButton.setOnSlideCompleteListener(active -> {
       swipeAction.run();
       finish();
     });

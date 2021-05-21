@@ -1,3 +1,2 @@
 Features and improvements:
-* New supervision for the battery level.
-* Reduction of the interval for checking the signal strength if the battery level falls below 10%.
+* Swipe button replaced by new implementation (SlideToAct).

@@ -227,7 +227,7 @@ PAssist is developed with [Android-Studio 4.2](https://developer.android.com/stu
 The current Android target SDK is 30 (Android 11-R) and the minimal SDK is 24 (Android 7.0-Nougat).
 
 ## Used libraries
-* [Swipe-Button](https://github.com/ebanx/swipe-button)
+* [SlideToAct](https://github.com/cortinico/slidetoact)
 * [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP) (java.time backport for SDK 24 and 25)
 * [preferencex-android](https://github.com/takisoft/preferencex-android)
 * [Secure-SMS-Proxy API](https://github.com/frimtec/secure-sms-proxy)

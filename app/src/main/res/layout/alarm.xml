@@ -27,7 +27,7 @@
         android:textColor="@color/white"
         android:textSize="24sp" />
 
-    <com.ebanx.swipebtn.SwipeButton
+    <com.ncorti.slidetoact.SlideToActView
         android:id="@+id/alarm_button_confirm_alarm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,24 +37,13 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:visibility="invisible"
-        app:button_background="@drawable/shape_button"
-        app:button_bottom_padding="20dp"
-        app:button_image_disabled="@drawable/ic_siren"
-        app:button_image_enabled="@drawable/ic_baseline_check_24"
-        app:button_image_height="70dp"
-        app:button_image_width="70dp"
-        app:button_left_padding="20dp"
-        app:button_right_padding="20dp"
-        app:button_top_padding="20dp"
-        app:has_activate_state="true"
-        app:initial_state="disabled"
-        app:inner_text="@string/notification_alert_confirm_button"
-        app:inner_text_background="@drawable/shape_rounded"
-        app:inner_text_bottom_padding="24dp"
-        app:inner_text_color="@android:color/white"
-        app:inner_text_size="20sp"
-        app:inner_text_top_padding="24dp" />
-    <com.ebanx.swipebtn.SwipeButton
+        app:slider_icon="@drawable/ic_siren"
+        app:slider_icon_color="@color/black"
+        app:outer_color="@color/swipeButtonBackground"
+        app:text="@string/notification_alert_confirm_button"
+        app:text_size="20sp"
+        app:area_margin="0dp"/>
+    <com.ncorti.slidetoact.SlideToActView
         android:id="@+id/alarm_button_confirm_test_alarm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,24 +53,13 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:visibility="invisible"
-        app:button_background="@drawable/shape_button"
-        app:button_bottom_padding="20dp"
-        app:button_image_disabled="@drawable/ic_test_alarm"
-        app:button_image_enabled="@drawable/ic_baseline_check_24"
-        app:button_image_height="70dp"
-        app:button_image_width="70dp"
-        app:button_left_padding="20dp"
-        app:button_right_padding="20dp"
-        app:button_top_padding="20dp"
-        app:has_activate_state="true"
-        app:initial_state="disabled"
-        app:inner_text="@string/notification_alert_confirm_button"
-        app:inner_text_background="@drawable/shape_rounded"
-        app:inner_text_bottom_padding="24dp"
-        app:inner_text_color="@android:color/white"
-        app:inner_text_size="20sp"
-        app:inner_text_top_padding="24dp" />
-    <com.ebanx.swipebtn.SwipeButton
+        app:slider_icon="@drawable/ic_test_alarm"
+        app:slider_icon_color="@color/black"
+        app:outer_color="@color/swipeButtonBackground"
+        app:text="@string/notification_alert_confirm_button"
+        app:text_size="20sp"
+        app:area_margin="0dp"/>
+    <com.ncorti.slidetoact.SlideToActView
         android:id="@+id/alarm_button_confirm_no_signal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,22 +69,11 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:visibility="invisible"
-        app:button_background="@drawable/shape_button"
-        app:button_bottom_padding="20dp"
-        app:button_image_disabled="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
-        app:button_image_enabled="@drawable/ic_baseline_check_24"
-        app:button_image_height="70dp"
-        app:button_image_width="70dp"
-        app:button_left_padding="20dp"
-        app:button_right_padding="20dp"
-        app:button_top_padding="20dp"
-        app:has_activate_state="true"
-        app:initial_state="disabled"
-        app:inner_text="@string/notification_alert_confirm_button"
-        app:inner_text_background="@drawable/shape_rounded"
-        app:inner_text_bottom_padding="24dp"
-        app:inner_text_color="@android:color/white"
-        app:inner_text_size="20sp"
-        app:inner_text_top_padding="24dp" />
+        app:slider_icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
+        app:slider_icon_color="@color/black"
+        app:outer_color="@color/swipeButtonBackground"
+        app:text="@string/notification_alert_confirm_button"
+        app:text_size="20sp"
+        app:area_margin="0dp"/>
 
 </RelativeLayout>

@@ -1,3 +1,2 @@
 Funktionen und Verbesserungen:
-* Neue Überwachung für den Akkuladezustand.
-* Reduktion des Intervalls für das Prüfen der Signalstärke, falls der Akkufüllstand 10% unterschreitet.
+* Swipe-Button mit neuer Implementierung ersetzt (SlideToAct).

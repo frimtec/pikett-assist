@@ -4,25 +4,15 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#1D887A</color>
 
-    <color name="confirmButtonBackRed">#FF0000</color>
-    <color name="confirmButtonTextRed">#FFFFFF</color>
-    <color name="confirmButtonArrowRed">#FFFFFF</color>
-
-    <color name="confirmButtonBackGreen">#00AA00</color>
-    <color name="confirmButtonTextGreen">#FFFFFF</color>
-    <color name="confirmButtonArrowGreen">#AAFFAA</color>
-
-    <color name="confirmButtonBackBlue">#0000AA</color>
-    <color name="confirmButtonTextBlue">#FFFFFF</color>
-    <color name="confirmButtonArrowBlue">#AAAAFF</color>
+    <color name="swipeButtonBackground">#4C6070</color>
 
     <color name="black">#000000</color>
     <color name="lightGray">#BBBBBB</color>
     <color name="white">#FFFFFF</color>
 
-    <color name="list_bg_color">#eeeeee</color>
-    <color name="row_header_bg_color">#ffffff</color>
-    <color name="row_bg_color">#ffffff</color>
+    <color name="list_bg_color">#EEEEEE</color>
+    <color name="row_header_bg_color">#FFFFFF</color>
+    <color name="row_bg_color">#FFFFFF</color>
 
     <color name="unconfirmedShift">#DDDDDD</color>
 </resources>

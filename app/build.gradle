@@ -12,6 +12,10 @@ def junit_version = '5.7.2'
 
 jacoco {
     toolVersion = "0.8.4"
+    tasks.withType(Test) {
+        jacoco.includeNoLocationClasses = true
+        jacoco.excludes = ['jdk.internal.*']
+    }
 }
 
 System.setProperty("line.separator", "\n")

@@ -1,5 +1,11 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
+import static android.app.Notification.CATEGORY_ALARM;
+import static android.app.Notification.CATEGORY_EVENT;
+import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
+import static android.app.NotificationManager.IMPORTANCE_LOW;
+import static android.app.NotificationManager.IMPORTANCE_MAX;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -24,12 +30,6 @@ import com.github.frimtec.android.pikettassist.service.system.SignalStrengthServ
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
 import java.util.Set;
-
-import static android.app.Notification.CATEGORY_ALARM;
-import static android.app.Notification.CATEGORY_EVENT;
-import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
-import static android.app.NotificationManager.IMPORTANCE_LOW;
-import static android.app.NotificationManager.IMPORTANCE_MAX;
 
 
 public class NotificationService {
@@ -77,11 +77,11 @@ public class NotificationService {
   public void notifyAlarm(Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
     actionIntent.setAction(action);
     PendingIntent confirmPendingIntent =
-        PendingIntent.getBroadcast(context, 0, actionIntent, 0);
+        PendingIntent.getBroadcast(context, 0, actionIntent,  PendingIntent.FLAG_IMMUTABLE);
 
     notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-        context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
 
     String message = context.getString(R.string.notification_alert_text);
@@ -104,7 +104,7 @@ public class NotificationService {
   public void notifyMissingTestAlarm(Intent notifyIntent, Set<TestAlarmContext> testAlarmContexts) {
     notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-        context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
     String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testAlarmContexts);
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
@@ -124,7 +124,7 @@ public class NotificationService {
 
   public void notifyShiftOn() {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_NOTIFICATION)
         .setContentTitle(context.getString(R.string.notification_pikett_on_title))
@@ -142,7 +142,7 @@ public class NotificationService {
 
   public void notifySignalLow(SignalLevel level) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_NOTIFICATION)
         .setContentTitle(context.getString(R.string.notification_low_signal_title))
@@ -161,7 +161,7 @@ public class NotificationService {
 
   public void notifyBatteryLow(BatteryStatus batteryStatus) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
     @SuppressLint("DefaultLocale")
     Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
@@ -181,7 +181,7 @@ public class NotificationService {
 
   void notifyVolumeChanged(int oldLevel, int newLevel) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
 
     String change = oldLevel > newLevel ? context.getString(R.string.reduced) : context.getString(R.string.increased);

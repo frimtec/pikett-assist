@@ -102,7 +102,6 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     }
 
     requestWindowFeature(Window.FEATURE_NO_TITLE);
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     int flags =
         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |

@@ -38,7 +38,6 @@ public class NonLinearNumericSeries {
     return valueSeries[index];
   }
 
-  @SuppressWarnings("ConstantConditions")
   public int getIndex(int value) {
     return IntStream.range(0, valueSeries.length)
         .mapToObj(index -> Pair.create(index, Math.abs(value - valueSeries[index])))

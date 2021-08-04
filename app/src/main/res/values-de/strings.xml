@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="channel_name_alarm">Alarme</string>
     <string name="channel_description_alarm">Dringende Alarme.</string>
     <string name="channel_name_notification">Benachrichtigungen</string>
@@ -14,7 +14,7 @@
     <string name="title_activity_logcat">Logcat</string>
 
     <string name="main_state_button_confirm_alert">Bestätigen</string>
-    <string name="main_state_button_close_alert">Schliessen</string>
+    <string name="main_state_button_close_alert" tools:ignore="Typos">Schliessen</string>
 
     <!-- Strings related to Settings -->
 
@@ -117,7 +117,7 @@
     <string name="notification_battery_optimization_text">Damit PAssist zuverlässig arbeitet kann, muss die Akku-Optimierung deaktiviert werden. Der Akkuverbrauch steigt nur leicht während dem aktiven Bereitschaftsdienst.</string>
     <string name="notification_draw_overlays_title">\'Einblenung über anderen Apps\' ist deaktiviert!</string>
     <string name="notification_draw_overlays_text">Um Alarme anzuzeigen, auch wenn PAssist im Hintergrund ist, muss die Einstellung \'Einblenung über anderen Apps\' für PAssist aktiviert sein.</string>
-    <string name="alert_action_close">Schliessen</string>
+    <string name="alert_action_close" tools:ignore="Typos">Schliessen</string>
     <string name="state_fragment_operations_center">Zentrale</string>
     <string name="state_fragment_partner">Partner</string>
     <string name="state_fragment_pikett_state">Pikettzustand</string>

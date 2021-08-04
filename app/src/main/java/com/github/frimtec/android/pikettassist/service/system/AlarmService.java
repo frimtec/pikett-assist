@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.content.Context.ALARM_SERVICE;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -17,9 +20,6 @@ import org.threeten.bp.Duration;
 import org.threeten.bp.Instant;
 
 import java.util.function.Consumer;
-
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmService {
 
@@ -91,7 +91,7 @@ public class AlarmService {
     intent.setClass(this.context, AlarmService.Receiver.class);
     intent.setAction(BASE_ACTION + target.name());
     setAlarmForIntent(scheduleInfo.getScheduleDelay(),
-        PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
+        PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE)
     );
   }
 

@@ -3,7 +3,6 @@ package com.github.frimtec.android.pikettassist.ui.common;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.media.Ringtone;
 import android.os.Bundle;
 import android.os.PowerManager.WakeLock;
@@ -103,7 +102,6 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     }
 
     requestWindowFeature(Window.FEATURE_NO_TITLE);
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     int flags =
         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
@@ -233,7 +231,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     Intent alarmIntent = new Intent(context, activityClass);
     extras.forEach(extra -> alarmIntent.putExtra(extra.first, extra.second));
     PendingIntent pendingIntent = PendingIntent.getActivity(context,
-        1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     alarmService.setAlarmForIntent(Duration.ofMillis(5), pendingIntent);
   }
 }

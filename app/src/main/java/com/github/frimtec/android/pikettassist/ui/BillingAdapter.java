@@ -1,5 +1,10 @@
 package com.github.frimtec.android.pikettassist.ui;
 
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
@@ -12,11 +17,6 @@ import com.github.frimtec.android.pikettassist.donation.billing.BillingManager.B
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 
 import java.util.List;
-
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 
 class BillingAdapter implements BillingUpdatesListener, BillingProvider {
 
@@ -69,18 +69,20 @@ class BillingAdapter implements BillingUpdatesListener, BillingProvider {
     goldSponsor = NOT_PURCHASED;
     for (Purchase purchase : purchases) {
       BillingState state = getBillingState(purchase);
-      switch (purchase.getSku()) {
-        case BillingConstants.SKU_SPONSOR_BRONZE:
-          bronzeSponsor = state;
-          break;
-        case BillingConstants.SKU_SPONSOR_SILVER:
-          silverSponsor = state;
-          break;
-        case BillingConstants.SKU_SPONSOR_GOLD:
-          goldSponsor = state;
-          break;
-        default:
-          Log.e(TAG, "Has unknown product: " + purchase.getSku());
+      for (String sku : purchase.getSkus()) {
+        switch (sku) {
+          case BillingConstants.SKU_SPONSOR_BRONZE:
+            bronzeSponsor = state;
+            break;
+          case BillingConstants.SKU_SPONSOR_SILVER:
+            silverSponsor = state;
+            break;
+          case BillingConstants.SKU_SPONSOR_GOLD:
+            goldSponsor = state;
+            break;
+          default:
+            Log.e(TAG, "Has unknown product: " + sku);
+        }
       }
     }
     DonationFragment donationFragment = (DonationFragment) activity.getSupportFragmentManager().findFragmentByTag(BILLING_DIALOG_TAG);

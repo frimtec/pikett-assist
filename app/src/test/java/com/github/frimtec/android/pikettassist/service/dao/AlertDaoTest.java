@@ -1,23 +1,5 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import androidx.core.util.Pair;
-
-import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
-import com.github.frimtec.android.pikettassist.domain.AlertState;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
-
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.ALERT_COLUMNS;
 import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.CALL_COLUMNS;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
@@ -42,6 +24,24 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import androidx.core.util.Pair;
+
+import com.github.frimtec.android.pikettassist.domain.Alert;
+import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
+import com.github.frimtec.android.pikettassist.domain.AlertState;
+import com.github.frimtec.android.pikettassist.state.DbFactory;
+
+import org.junit.jupiter.api.Test;
+import org.threeten.bp.Instant;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class AlertDaoTest {
 
@@ -490,7 +490,6 @@ class AlertDaoTest {
       when(cursor.moveToNext()).thenReturn(alertStates.size() > 1, moveResults);
 
       List<Long> ids = alertStates.stream().map(pair -> pair.first).collect(Collectors.toList());
-      //noinspection ConstantConditions
       List<Integer> confirmedStates = alertStates.stream().map(pair -> pair.second ? 1 : 0).collect(Collectors.toList());
 
       when(cursor.getLong(0)).thenReturn(ids.get(0), ids.subList(1, ids.size()).toArray(new Long[0]));

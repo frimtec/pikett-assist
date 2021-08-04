@@ -1,5 +1,11 @@
 package com.github.frimtec.android.pikettassist.ui;
 
+import static com.android.billingclient.api.BillingClient.BillingResponseCode;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_BATTERY_OPTIMIZATION_REQUEST_CODE;
+import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
+import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REGISTER_SMS_ADAPTER_REQUEST_CODE;
+
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -53,12 +59,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.android.billingclient.api.BillingClient.BillingResponseCode;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_BATTERY_OPTIMIZATION_REQUEST_CODE;
-import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
-import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REGISTER_SMS_ADAPTER_REQUEST_CODE;
-
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "MainActivity";
@@ -89,16 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
     FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
   }
-
-  private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> {
-    FragmentName fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
-
-    if (fragment != null) {
-      loadFragment(fragment);
-      return true;
-    }
-    return false;
-  };
 
   private void loadFragment(FragmentName fragment) {
     switch (fragment) {
@@ -158,7 +148,14 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     BottomNavigationView navigation = findViewById(R.id.navigation);
-    navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    navigation.setOnItemSelectedListener(item -> {
+      FragmentName fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
+      if (fragment != null) {
+        loadFragment(fragment);
+        return true;
+      }
+      return false;
+    });
 
     this.billingAdapter = new BillingAdapter(this);
 

@@ -1,8 +1,8 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class ContactReferenceTest {
 
@@ -83,6 +83,7 @@ class ContactReferenceTest {
   @Test
   void equalsForOtherClass() {
     ContactReference reference = new ContactReference(12, "key");
+    //noinspection AssertBetweenInconvertibleTypesk
     assertThat(reference).isNotEqualTo("any");
   }
 

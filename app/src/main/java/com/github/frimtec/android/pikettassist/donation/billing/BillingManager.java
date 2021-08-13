@@ -18,7 +18,6 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.Purchase.PurchasesResult;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
@@ -142,7 +141,7 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
   }
 
   private void handlePurchase(Purchase purchase) {
-    if(BLACKLIST.contains(purchase.getOrderId())){
+    if (BLACKLIST.contains(purchase.getOrderId())) {
       Log.i(TAG, "Got a blacklist purchase: " + purchase.getOrderId() + ", will be consumed.");
       billingClient.consumeAsync(ConsumeParams.newBuilder()
           .setPurchaseToken(purchase.getPurchaseToken())
@@ -156,24 +155,16 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
     purchases.add(purchase);
   }
 
-  private void onQueryPurchasesFinished(PurchasesResult result) {
-    if (billingClient == null || result.getResponseCode() != BillingResponseCode.OK) {
-      Log.w(TAG, "Billing client was null or result code (" + result.getResponseCode() + ") was bad - quitting");
-      return;
-    }
-    purchases.clear();
-    onPurchasesUpdated(result.getBillingResult(), result.getPurchasesList());
-  }
-
   public void queryPurchases() {
-    Runnable queryToExecute = () -> {
-      PurchasesResult purchasesResult = billingClient.queryPurchases(SkuType.INAPP);
-      if (purchasesResult.getResponseCode() != BillingResponseCode.OK) {
-        Log.w(TAG, "queryPurchases() got an error response code: " + purchasesResult.getResponseCode());
-      }
-      onQueryPurchasesFinished(purchasesResult);
-    };
-    executeServiceRequest(queryToExecute);
+    executeServiceRequest(() ->
+        billingClient.queryPurchasesAsync(SkuType.INAPP, (billingResult, purchases) -> {
+          if (billingResult.getResponseCode() != BillingResponseCode.OK) {
+            Log.w(TAG, "Billing client result code for queryPurchasesAsync (" + billingResult.getResponseCode() + ") was bad - quitting");
+            return;
+          }
+          this.purchases.clear();
+          onPurchasesUpdated(billingResult, purchases);
+        }));
   }
 
   private void startServiceConnection(Runnable executeOnSuccess) {

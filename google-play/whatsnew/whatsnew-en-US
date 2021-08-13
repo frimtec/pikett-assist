@@ -1,5 +1,2 @@
 Features and improvements:
-* Rollback billing library from 4.0.0 to 3.0.3
-* Rework use of deprecated APIs
-* Bump Java version from 1.8 to 11
-* Various dependency updates
+* Bump billing library to 4.0.0

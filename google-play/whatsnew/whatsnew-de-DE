@@ -1,5 +1,2 @@
 Funktionen und Verbesserungen:
-* Zurückrollen der Billing-Library von 4.0.0 auf 3.0.3
-* Verwendung von veralteten (deprecated) APIs abgelöst
-* Java von Version 1.8 auf Version 11 angehoben
-* Verschiedene Abhängigkeiten aktualisiert
+* Aktualisieren der Billing-Library auf 4.0.0

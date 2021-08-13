@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -117,33 +118,37 @@ public class DonationFragment extends DialogFragment {
   private void addSkuRows(List<SkuRowData> inList, List<String> skusList) {
     billingProvider.getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, skusList,
         (billingResult, skuDetailsList) -> {
+          FragmentActivity activity = getActivity();
+          if (activity != null) {
+            activity.runOnUiThread(() -> {
+              if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+                Log.w(TAG, "Unsuccessful query. Error code: " + billingResult.getResponseCode());
+              } else if (skuDetailsList != null && skuDetailsList.size() > 0) {
+                // If we successfully got SKUs, add a header in front of the row
+                inList.add(new SkuRowData(getString(R.string.header_inapp)));
+                // Then fill all the other rows
 
-          if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
-            Log.w(TAG, "Unsuccessful query. Error code: " + billingResult.getResponseCode());
-          } else if (skuDetailsList != null && skuDetailsList.size() > 0) {
-            // If we successfully got SKUs, add a header in front of the row
-            inList.add(new SkuRowData(getString(R.string.header_inapp)));
-            // Then fill all the other rows
-
-            skuDetailsList.stream().sorted(Comparator.comparing(SkuDetails::getOriginalPriceAmountMicros).reversed()).forEach(skuDetails ->
-                inList.add(new SkuRowData(skuDetails)));
-            if (inList.size() == 0) {
-              displayAnErrorIfNeeded();
-            } else {
-              if (recyclerView.getAdapter() == null) {
-                recyclerView.setAdapter(adapter);
-                Context context = getContext();
-                if (context != null) {
-                  Resources res = getContext().getResources();
-                  recyclerView.addItemDecoration(new CardsWithHeadersDecoration(adapter, (int) res.getDimension(R.dimen.header_gap), (int) res.getDimension(R.dimen.row_gap)));
+                skuDetailsList.stream().sorted(Comparator.comparing(SkuDetails::getOriginalPriceAmountMicros).reversed()).forEach(skuDetails ->
+                    inList.add(new SkuRowData(skuDetails)));
+                if (inList.size() == 0) {
+                  displayAnErrorIfNeeded();
+                } else {
+                  if (recyclerView.getAdapter() == null) {
+                    recyclerView.setAdapter(adapter);
+                    Context context = getContext();
+                    if (context != null) {
+                      Resources res = getContext().getResources();
+                      recyclerView.addItemDecoration(new CardsWithHeadersDecoration(adapter, (int) res.getDimension(R.dimen.header_gap), (int) res.getDimension(R.dimen.row_gap)));
+                    }
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                  }
+                  adapter.updateData(inList);
+                  setWaitScreen(false);
                 }
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+              } else {
+                displayAnErrorIfNeeded();
               }
-              adapter.updateData(inList);
-              setWaitScreen(false);
-            }
-          } else {
-            displayAnErrorIfNeeded();
+            });
           }
         });
   }

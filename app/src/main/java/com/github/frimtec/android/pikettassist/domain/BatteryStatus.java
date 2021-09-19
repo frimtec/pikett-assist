@@ -8,7 +8,7 @@ public final class BatteryStatus {
     USB(true),
     WIRELESS(true);
 
-    boolean charging;
+    final boolean charging;
 
     Charging(boolean charging) {
       this.charging = charging;

@@ -1,8 +1,18 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static android.media.AudioManager.MODE_IN_CALL;
+import static android.media.AudioManager.MODE_NORMAL;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.TelephonyManager;
+import android.media.AudioManager;
 
 import androidx.core.util.Pair;
 
@@ -21,16 +31,6 @@ import org.threeten.bp.Duration;
 import org.threeten.bp.LocalTime;
 
 import java.util.Optional;
-
-import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
-import static android.telephony.TelephonyManager.CALL_STATE_OFFHOOK;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class LowSignalServiceWorkUnitTest {
 
@@ -54,8 +54,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.OFF;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -66,7 +66,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -109,8 +109,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.GREAT;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -121,7 +121,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -169,8 +169,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.MODERATE;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -181,7 +181,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -229,8 +229,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.MODERATE;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -241,7 +241,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -287,8 +287,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.POOR;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -299,7 +299,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -345,8 +345,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.POOR;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -357,7 +357,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -403,8 +403,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.MODERATE;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -415,7 +415,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -462,8 +462,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.OFF;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -474,7 +474,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -520,8 +520,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.POOR;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -532,7 +532,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -578,8 +578,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.POOR;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_OFFHOOK);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_IN_CALL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -590,7 +590,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -636,8 +636,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.POOR;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.ON, 2L));
@@ -648,7 +648,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -694,8 +694,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.POOR;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -706,7 +706,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -754,8 +754,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.GREAT;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -766,7 +766,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,
@@ -814,8 +814,8 @@ class LowSignalServiceWorkUnitTest {
     SignalLevel signalLevel = SignalLevel.GREAT;
     when(signalStrengthService.getSignalStrength()).thenReturn(signalLevel);
 
-    TelephonyManager telephonyManager = mock(TelephonyManager.class);
-    when(telephonyManager.getCallState()).thenReturn(CALL_STATE_IDLE);
+    AudioManager audioManager = mock(AudioManager.class);
+    when(audioManager.getMode()).thenReturn(MODE_NORMAL);
 
     AlertDao alertDao = mock(AlertDao.class);
     when(alertDao.getAlertState()).thenReturn(Pair.create(AlertState.OFF, 2L));
@@ -826,7 +826,7 @@ class LowSignalServiceWorkUnitTest {
 
     ServiceWorkUnit workUnit = new LowSignalServiceWorkUnit(
         applicationPreferences,
-        telephonyManager,
+        audioManager,
         alertDao,
         shiftService,
         signalStrengthService,

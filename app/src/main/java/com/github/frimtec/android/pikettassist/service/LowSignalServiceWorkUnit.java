@@ -1,8 +1,12 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.BATTERY_NOTIFICATION_ID;
+import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.TelephonyManager;
+import android.media.AudioManager;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
@@ -23,11 +27,6 @@ import org.threeten.bp.LocalTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static android.telephony.TelephonyManager.CALL_STATE_IDLE;
-import static com.github.frimtec.android.pikettassist.service.system.NotificationService.BATTERY_NOTIFICATION_ID;
-import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
-
 final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
 
   private static final String TAG = "LowSignalValidator";
@@ -38,7 +37,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   private static final int BATTERY_LOW_LIMIT = 10;
 
   private final ApplicationPreferences applicationPreferences;
-  private final TelephonyManager telephonyManager;
+  private final AudioManager audioManager;
   private final AlertDao alertDao;
   private final ShiftService shiftService;
   private final SignalStrengthService signalStrengthService;
@@ -49,7 +48,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
 
   LowSignalServiceWorkUnit(
       ApplicationPreferences applicationPreferences,
-      TelephonyManager telephonyManager,
+      AudioManager audioManager,
       AlertDao alertDao,
       ShiftService shiftService,
       SignalStrengthService signalStrengthService,
@@ -58,7 +57,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
       Runnable alarmTrigger,
       Context context) {
     this.applicationPreferences = applicationPreferences;
-    this.telephonyManager = telephonyManager;
+    this.audioManager = audioManager;
     this.alertDao = alertDao;
     this.shiftService = shiftService;
     this.signalStrengthService = signalStrengthService;
@@ -73,7 +72,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
     int currentFilterState = intent.getIntExtra(EXTRA_FILTER_STATE, 0);
     boolean pikettState = this.shiftService.getState() == OnOffState.ON;
     SignalLevel level = this.signalStrengthService.getSignalStrength();
-    if (pikettState && this.applicationPreferences.getSuperviseSignalStrength(context) && isCallStateIdle() && !isAlarmStateOn() && isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context))) {
+    if (pikettState && this.applicationPreferences.getSuperviseSignalStrength(context) && !isInCall() && !isAlarmStateOn() && isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context))) {
       int lowSignalFilter = this.applicationPreferences.getLowSignalFilterSeconds(context);
       if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
         if (currentFilterState < lowSignalFilter) {
@@ -102,8 +101,8 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
     return this.alertDao.getAlertState().first == AlertState.ON;
   }
 
-  private boolean isCallStateIdle() {
-    return this.telephonyManager.getCallState() == CALL_STATE_IDLE;
+  private boolean isInCall() {
+    return audioManager.getMode() == AudioManager.MODE_IN_CALL;
   }
 
   private Optional<ScheduleInfo> reSchedule(int currentFilterState, boolean pikettState) {
@@ -113,8 +112,8 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
         volumeService.setVolume(this.applicationPreferences.getOnCallVolume(context, now));
       }
       BatteryStatus batteryStatus = new BatteryService(context).batteryStatus();
-      if(this.applicationPreferences.getSuperviseBatteryLevel(context)) {
-        if(batteryStatus.getLevel() <= this.applicationPreferences.getBatteryWarnLevel(context)) {
+      if (this.applicationPreferences.getSuperviseBatteryLevel(context)) {
+        if (batteryStatus.getLevel() <= this.applicationPreferences.getBatteryWarnLevel(context)) {
           notificationService.notifyBatteryLow(batteryStatus);
         } else {
           notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);

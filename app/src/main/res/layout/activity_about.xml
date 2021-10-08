@@ -26,11 +26,20 @@
             android:layout_centerHorizontal="true"
             android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/app_info"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/button_rate"/>
+
         <TextView
             android:id="@+id/sponsoring"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/app_info"
+            android:layout_below="@id/rate"
             android:layout_marginStart="10dp" />
 
         <LinearLayout
@@ -70,5 +79,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/documentation"
             android:layout_marginStart="10dp" />
+
     </RelativeLayout>
 </ScrollView>

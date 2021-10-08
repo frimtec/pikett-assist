@@ -284,4 +284,5 @@
     <string name="add_repo">Repo hinzufügen</string>
     <string name="partner_contact_unknown_info_title">Unbekannter Kontakt</string>
     <string name="partner_contact_unknown_info_text">Es existiert kein Kontakt mit dem entsprechendern Spitznamen.\nBitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in die Zwischenablage kopiert) .</string>
+    <string name="button_rate">App bewerten</string>
 </resources>

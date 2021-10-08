@@ -287,5 +287,6 @@
     <string name="add_repo">Add Repo</string>
     <string name="partner_contact_unknown_info_title">Unknown contact</string>
     <string name="partner_contact_unknown_info_text">No contact with given nickname exists.\nPlease add nickname to the corresponding contact (nickname was copied to the clipboard).</string>
+    <string name="button_rate">Rate app</string>
 
 </resources>

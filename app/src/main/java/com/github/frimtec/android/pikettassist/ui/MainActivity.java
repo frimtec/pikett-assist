@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     this.s2msp = SecureSmsProxyFacade.instance(this);
-    registerReceiver();
+    registerBroadcastReceiver();
 
     new NotificationService(this).registerChannel();
 
@@ -193,13 +193,21 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onPause() {
+    unregisterBroadcastReceiver();
+    super.onPause();
+  }
+
+  @Override
   protected void onResume() {
     super.onResume();
+    registerBroadcastReceiver();
     updateBottomNavigation();
     BillingManager billingManager = this.billingAdapter.getBillingManager();
     if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
       billingManager.queryPurchases();
     }
+    refresh();
   }
 
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -297,25 +305,6 @@ public class MainActivity extends AppCompatActivity {
     return donationFragment != null && donationFragment.isVisible();
   }
 
-  private void registerReceiver() {
-    broadcastReceiver = new BroadcastReceiver() {
-      @SuppressLint("DefaultLocale")
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
-            new ShiftService(context).getState() == OnOffState.ON) {
-          LowSignalService.enqueueWork(context);
-        }
-        refresh();
-      }
-    };
-    IntentFilter filter = new IntentFilter(Action.REFRESH.getId());
-    filter.addAction(Intent.ACTION_BATTERY_CHANGED);
-    filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-    filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
-    registerReceiver(broadcastReceiver, filter);
-  }
-
   @Override
   protected void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
@@ -324,13 +313,38 @@ public class MainActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
-    if (broadcastReceiver != null) {
-      unregisterReceiver(broadcastReceiver);
-      broadcastReceiver = null;
-    }
+    unregisterBroadcastReceiver();
     if (billingAdapter != null) {
       billingAdapter.destroy();
     }
     super.onDestroy();
+  }
+
+  private void registerBroadcastReceiver() {
+    if (broadcastReceiver == null) {
+      broadcastReceiver = new BroadcastReceiver() {
+        @SuppressLint("DefaultLocale")
+        @Override
+        public void onReceive(Context context, Intent intent) {
+          if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
+              new ShiftService(context).getState() == OnOffState.ON) {
+            LowSignalService.enqueueWork(context);
+          }
+          refresh();
+        }
+      };
+      IntentFilter filter = new IntentFilter(Action.REFRESH.getId());
+      filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+      filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+      filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
+      registerReceiver(broadcastReceiver, filter);
+    }
+  }
+
+  private void unregisterBroadcastReceiver() {
+    if (broadcastReceiver != null) {
+      unregisterReceiver(broadcastReceiver);
+      broadcastReceiver = null;
+    }
   }
 }

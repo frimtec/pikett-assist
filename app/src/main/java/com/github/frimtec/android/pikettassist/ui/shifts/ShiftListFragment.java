@@ -1,5 +1,10 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
+import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
+import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
+
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -17,17 +22,11 @@ import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
-import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 
 public class ShiftListFragment extends AbstractListFragment<Shift> {
 

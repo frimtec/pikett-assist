@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static com.github.frimtec.android.pikettassist.state.ApplicationState.DEFAULT_VOLUME_NOT_SET;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -13,14 +15,11 @@ import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-import org.threeten.bp.LocalTime;
-
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Optional;
-
-import static com.github.frimtec.android.pikettassist.state.ApplicationState.DEFAULT_VOLUME_NOT_SET;
 
 class PikettServiceWorkUnit implements ServiceWorkUnit {
 

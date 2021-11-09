@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import org.threeten.bp.Instant;
+import java.time.Instant;
 
 public class TestAlarm {
   private final TestAlarmContext context;

@@ -21,9 +21,8 @@ import com.github.frimtec.android.pikettassist.service.system.SignalStrengthServ
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.LocalTime;
-
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 

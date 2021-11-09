@@ -6,7 +6,6 @@ apply plugin: "com.hiya.jacoco-android"
 def secure_sms_proxy_api_version = '2.1.1'
 def android_billingclient_version = '4.0.0'
 def slidetoact_version = '0.9.0'
-def threetenabp_version = '1.3.1'
 def junit_version = '5.8.1'
 
 jacoco {
@@ -48,7 +47,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "com.github.frimtec.android.pikettassist"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 31
         versionCode vcode
         versionName vname
@@ -78,10 +77,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation "com.ncorti:slidetoact:$slidetoact_version"
-    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
-    testImplementation("org.threeten:threetenbp:$threetenabp_version") {
-        exclude module: "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
-    }
     implementation "com.android.billingclient:billing:$android_billingclient_version"
     implementation "com.github.frimtec:secure-sms-proxy-api:$secure_sms_proxy_api_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"

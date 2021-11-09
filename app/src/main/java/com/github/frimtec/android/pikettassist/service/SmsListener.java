@@ -17,8 +17,7 @@ import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
-import org.threeten.bp.Instant;
-
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;

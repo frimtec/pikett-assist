@@ -1,9 +1,10 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Duration;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
 
 class ShiftArrayAdapterTest {
 

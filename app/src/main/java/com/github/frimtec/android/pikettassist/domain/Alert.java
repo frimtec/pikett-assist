@@ -2,7 +2,7 @@ package com.github.frimtec.android.pikettassist.domain;
 
 import androidx.annotation.NonNull;
 
-import org.threeten.bp.Instant;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;

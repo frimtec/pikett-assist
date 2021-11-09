@@ -1,9 +1,10 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 
 class TestAlarmTest {
 

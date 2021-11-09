@@ -1,23 +1,5 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-
-import com.github.frimtec.android.pikettassist.domain.Shift;
-
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
-import org.threeten.bp.temporal.ChronoUnit;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
-
 import static com.github.frimtec.android.pikettassist.service.dao.ShiftDao.PROJECTION;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +9,24 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+
+import com.github.frimtec.android.pikettassist.domain.Shift;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 class ShiftDaoTest {
 
@@ -41,7 +41,7 @@ class ShiftDaoTest {
     when(context.checkPermission("android.permission.READ_CALENDAR", 0, 0))
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Shift shift0 = new Shift(0, "PIKETT-0", now.minus(5, ChronoUnit.DAYS), now.minus(0, ChronoUnit.DAYS), true, Collections.emptyList());
     Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Collections.emptyList());
     Shift shift2 = new Shift(14, "Any pikett-2", now.plus(2, ChronoUnit.DAYS), now.plus(3, ChronoUnit.DAYS), false, Collections.emptyList());
@@ -72,7 +72,7 @@ class ShiftDaoTest {
     when(context.checkPermission("android.permission.READ_CALENDAR", 0, 0))
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Collections.emptyList());
     Cursor cursor = createShiftCursor(Collections.singletonList(shift1), "");
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1 AND calendar_id = ?"), eq(new String[]{"frimtec"}), isNull()))
@@ -91,7 +91,7 @@ class ShiftDaoTest {
     when(context.checkPermission("android.permission.READ_CALENDAR", 0, 0))
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Collections.emptyList());
     Cursor cursor = createShiftCursor(Collections.singletonList(shift1), "Note - Deputy: one Deputy: one\nDeputy: two");
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1 AND calendar_id = ?"), eq(new String[]{"frimtec"}), isNull()))
@@ -110,7 +110,7 @@ class ShiftDaoTest {
     when(context.checkPermission("android.permission.READ_CALENDAR", 0, 0))
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Arrays.asList("one", "two"));
     Cursor cursor = createShiftCursor(Collections.singletonList(shift1), "Note - Deputy: one Deputy: one\nDeputy: two");
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1 AND calendar_id = ?"), eq(new String[]{"frimtec"}), isNull()))
@@ -129,7 +129,7 @@ class ShiftDaoTest {
     when(context.checkPermission("android.permission.READ_CALENDAR", 0, 0))
         .thenReturn(0);
     ShiftDao dao = new ShiftDao(context, URI_PROVIDER);
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Shift shift1 = new Shift(20, "Pikett-1", now.minus(3, ChronoUnit.DAYS), now.minus(2, ChronoUnit.DAYS), true, Collections.emptySet());
     Cursor cursor = createShiftCursor(Collections.singletonList(shift1), "Note - Deputy: one Deputy: one\nDeputy: two");
     when(resolver.query(any(), eq(PROJECTION), eq("deleted != 1 AND calendar_id = ?"), eq(new String[]{"frimtec"}), isNull()))

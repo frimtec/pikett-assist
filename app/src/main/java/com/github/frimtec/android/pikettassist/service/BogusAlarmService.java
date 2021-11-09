@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static com.github.frimtec.android.pikettassist.action.JobService.BOGUS_ALARM_SERVICE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
@@ -12,12 +14,9 @@ import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 
-import org.threeten.bp.Duration;
-
+import java.time.Duration;
 import java.util.EnumMap;
 import java.util.Map;
-
-import static com.github.frimtec.android.pikettassist.action.JobService.BOGUS_ALARM_SERVICE;
 
 public class BogusAlarmService extends ReScheduleJobIntentService {
 

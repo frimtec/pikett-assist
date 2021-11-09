@@ -1,5 +1,11 @@
 package com.github.frimtec.android.pikettassist;
 
+import static android.content.Intent.EXTRA_BUG_REPORT;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+import static com.github.frimtec.android.pikettassist.ui.support.SendLogActivity.ACTION_SEND_LOG;
+
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,16 +22,9 @@ import com.github.frimtec.android.pikettassist.service.KeyValueStore;
 import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.DbHelper;
-import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import static android.content.Intent.EXTRA_BUG_REPORT;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
-import static com.github.frimtec.android.pikettassist.ui.support.SendLogActivity.ACTION_SEND_LOG;
 
 public class PAssistApplication extends Application {
 
@@ -51,7 +50,6 @@ public class PAssistApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    AndroidThreeTen.init(this);
     Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
     openHelper = new DbHelper(this);
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");

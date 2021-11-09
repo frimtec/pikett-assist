@@ -16,9 +16,8 @@ import com.github.frimtec.android.pikettassist.service.LowSignalService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.TestAlarmService;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.function.Consumer;
 
 public class AlarmService {

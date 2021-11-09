@@ -1,23 +1,5 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
-import androidx.core.util.Pair;
-
-import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
-import com.github.frimtec.android.pikettassist.domain.AlertState;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
-
-import org.threeten.bp.Instant;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_FALSE;
@@ -32,6 +14,23 @@ import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_IS_CONFIRMED;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_START_TIME;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import androidx.core.util.Pair;
+
+import com.github.frimtec.android.pikettassist.domain.Alert;
+import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
+import com.github.frimtec.android.pikettassist.domain.AlertState;
+import com.github.frimtec.android.pikettassist.state.DbFactory;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AlertDao {
 

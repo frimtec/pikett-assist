@@ -11,10 +11,9 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
-import org.threeten.bp.Instant;
-import org.threeten.bp.format.DateTimeFormatter;
-
 import java.lang.reflect.Type;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 public class GsonHelper {
 

@@ -2,8 +2,7 @@ package com.github.frimtec.android.pikettassist.ui.common;
 
 import android.content.Context;
 
-import org.threeten.bp.Duration;
-
+import java.time.Duration;
 import java.util.Locale;
 
 public class DurationFormatter {

@@ -36,8 +36,9 @@ import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 
 import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -136,7 +137,7 @@ class AlertDaoTest {
     when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
     AlertDao dao = new AlertDao(dbFactory);
 
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Alert alert1 = new Alert(12L, now.minusSeconds(3), now.minusSeconds(2), true, now.minusSeconds(1), Collections.emptyList());
     Alert alert2 = new Alert(13L, now.plusSeconds(1), now.plusSeconds(2), true, null, Collections.emptyList());
     Alert alert3 = new Alert(14L, now.plusSeconds(1), null, false, null, Collections.emptyList());
@@ -163,7 +164,7 @@ class AlertDaoTest {
     when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
     AlertDao dao = new AlertDao(dbFactory);
 
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     Alert expectedAlert = new Alert(12L, now.minusSeconds(3), now.minusSeconds(2), true, now.minusSeconds(1), Collections.emptyList());
     Cursor cursorAlert = createAlertCursor(Collections.singletonList(expectedAlert));
     Cursor cursorAlertCalls = createAlertCursor(Collections.emptyList());
@@ -184,7 +185,7 @@ class AlertDaoTest {
     when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
     AlertDao dao = new AlertDao(dbFactory);
 
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     List<AlertCall> calls = Arrays.asList(
         new AlertCall(now.plusMillis(100), "msg1"),
         new AlertCall(now.plusMillis(200), "msg2")

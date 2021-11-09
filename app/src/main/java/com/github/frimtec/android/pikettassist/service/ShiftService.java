@@ -8,9 +8,8 @@ import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 public class ShiftService {

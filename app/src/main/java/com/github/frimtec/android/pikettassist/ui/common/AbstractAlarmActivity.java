@@ -25,8 +25,7 @@ import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.VibrateService;
 import com.ncorti.slidetoact.SlideToActView;
 
-import org.threeten.bp.Duration;
-
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;

@@ -1,16 +1,5 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import android.content.Context;
-
-import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
-
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
-
-import java.util.Arrays;
-import java.util.Collections;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -18,6 +7,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import android.content.Context;
+
+import com.github.frimtec.android.pikettassist.domain.Alert;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 
 class AlertServiceTest {
 

@@ -1,11 +1,12 @@
 package com.github.frimtec.android.pikettassist.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 
 import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.time.Instant;
 
 class AlertCallTest {
 

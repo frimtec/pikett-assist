@@ -1,5 +1,10 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -8,12 +13,8 @@ import com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitN
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.threeten.bp.Duration;
 
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import java.time.Duration;
 
 
 class TranslatedDurationFormatterTest {

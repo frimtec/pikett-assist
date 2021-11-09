@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.signal;
 
+import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Pair;
@@ -12,12 +14,9 @@ import com.github.frimtec.android.pikettassist.service.system.SignalStrengthServ
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 
-import org.threeten.bp.Duration;
-
+import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
 
 public class LowSignalAlarmActivity extends AbstractAlarmActivity {
 

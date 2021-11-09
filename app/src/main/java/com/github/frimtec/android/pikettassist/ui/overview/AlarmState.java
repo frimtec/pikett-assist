@@ -1,5 +1,11 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.ALERT;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,15 +27,8 @@ import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertDetailActivity;
 
-import org.threeten.bp.Instant;
-
+import java.time.Instant;
 import java.util.function.Supplier;
-
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.ALERT;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
 class AlarmState extends State {
 

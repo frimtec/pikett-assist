@@ -1,11 +1,15 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.S2MSP_PACKAGE_NAME;
+
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
@@ -25,12 +29,6 @@ import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
-import static com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.S2MSP_PACKAGE_NAME;
 
 class SmsAdapterState extends State {
 
@@ -105,23 +103,6 @@ class SmsAdapterState extends State {
     if (isFDroidAvailable(context)) {
       SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message) + "<br><br>" + context.getString(R.string.install_from_fdroid), Html.FROM_HTML_MODE_COMPACT));
       AlertDialog alertDialog = new FDroidSmsAdapterInstallDialog(context, htmlMessage, title);
-      alertDialog.show();
-      enableLinks(alertDialog);
-    } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-      // let the browser handle the stuff
-      SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message), Html.FROM_HTML_MODE_COMPACT));
-      AlertDialog alertDialog = new AlertDialog.Builder(context)
-          // set dialog message
-          .setTitle(title)
-          .setMessage(htmlMessage)
-          .setCancelable(true)
-          .setPositiveButton(R.string.general_download, (dialog, which) -> {
-            Intent openBrowserIntent = new Intent(Intent.ACTION_VIEW, installation.getDownloadLink());
-            openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(openBrowserIntent);
-          })
-          .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
-          }).create();
       alertDialog.show();
       enableLinks(alertDialog);
     } else {

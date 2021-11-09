@@ -1,13 +1,13 @@
 package com.github.frimtec.android.pikettassist.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.frimtec.android.pikettassist.domain.Alert;
 
 import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
 
+import java.time.Instant;
 import java.util.Arrays;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 class GsonHelperTest {

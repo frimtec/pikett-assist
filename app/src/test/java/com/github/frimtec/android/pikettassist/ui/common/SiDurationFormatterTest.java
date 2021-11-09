@@ -1,13 +1,14 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
-import com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider;
-
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Duration;
-
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
 
 class SiDurationFormatterTest {
 

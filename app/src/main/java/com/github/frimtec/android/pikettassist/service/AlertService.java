@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.ACTION_CLOSE_ALARM;
+import static com.github.frimtec.android.pikettassist.util.GsonHelper.GSON;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -18,14 +21,10 @@ import com.github.frimtec.android.securesmsproxyapi.Sms;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import org.threeten.bp.Instant;
-
 import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.github.frimtec.android.pikettassist.service.system.NotificationService.ACTION_CLOSE_ALARM;
-import static com.github.frimtec.android.pikettassist.util.GsonHelper.GSON;
 
 public class AlertService {
 

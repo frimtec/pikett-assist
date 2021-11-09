@@ -1,5 +1,16 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static android.app.Activity.RESULT_OK;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -45,12 +56,11 @@ import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.ZoneId;
-import org.threeten.bp.format.DateTimeFormatter;
-
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -62,17 +72,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
-
-import static android.app.Activity.RESULT_OK;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
 public class StateFragment extends AbstractListFragment<State> {
 

@@ -1,23 +1,5 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.domain.TestAlarm;
-import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.state.DbFactory;
-
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Instant;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
@@ -36,6 +18,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.state.DbFactory;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class TestAlarmDaoTest {
 
@@ -93,7 +94,7 @@ class TestAlarmDaoTest {
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(1);
     when(cursor.moveToFirst()).thenReturn(true);
-    Instant now = Instant.now();
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
     when(cursor.getLong(1)).thenReturn(now.toEpochMilli());
     when(cursor.getString(2)).thenReturn(OnOffState.ON.name());
     when(cursor.getString(3)).thenReturn("message");

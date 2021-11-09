@@ -12,11 +12,10 @@ import com.github.frimtec.android.pikettassist.service.system.NotificationServic
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.temporal.ChronoField;
-import org.threeten.bp.temporal.ChronoUnit;
-
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

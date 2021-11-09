@@ -1,8 +1,7 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
-
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

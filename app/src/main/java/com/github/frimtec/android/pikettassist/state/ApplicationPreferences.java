@@ -5,9 +5,8 @@ import android.content.Context;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
-import org.threeten.bp.Duration;
-import org.threeten.bp.LocalTime;
-
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Set;
 
 public interface ApplicationPreferences {

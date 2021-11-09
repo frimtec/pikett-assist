@@ -14,12 +14,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -57,17 +55,14 @@ public class NotificationService {
   }
 
   public void registerChannel() {
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-      NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-      if (notificationManager != null) {
-        createChannel(notificationManager, CHANNEL_ID_ALARM, context.getString(R.string.channel_name_alarm), context.getString(R.string.channel_description_alarm), IMPORTANCE_MAX);
-        createChannel(notificationManager, CHANNEL_ID_NOTIFICATION, context.getString(R.string.channel_name_notification), context.getString(R.string.channel_description_notification), IMPORTANCE_DEFAULT);
-        createChannel(notificationManager, CHANNEL_ID_CHANGE_SYSTEM, context.getString(R.string.channel_name_change_system), context.getString(R.string.channel_description_change_system), IMPORTANCE_LOW);
-      }
+    NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+    if (notificationManager != null) {
+      createChannel(notificationManager, CHANNEL_ID_ALARM, context.getString(R.string.channel_name_alarm), context.getString(R.string.channel_description_alarm), IMPORTANCE_MAX);
+      createChannel(notificationManager, CHANNEL_ID_NOTIFICATION, context.getString(R.string.channel_name_notification), context.getString(R.string.channel_description_notification), IMPORTANCE_DEFAULT);
+      createChannel(notificationManager, CHANNEL_ID_CHANGE_SYSTEM, context.getString(R.string.channel_name_change_system), context.getString(R.string.channel_description_change_system), IMPORTANCE_LOW);
     }
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.O)
   private void createChannel(NotificationManager notificationManager, String channelId, String name, String description, int importance) {
     NotificationChannel channel = new NotificationChannel(channelId, name, importance);
     channel.setDescription(description);
@@ -77,7 +72,7 @@ public class NotificationService {
   public void notifyAlarm(Intent actionIntent, String action, String actionLabel, Intent notifyIntent) {
     actionIntent.setAction(action);
     PendingIntent confirmPendingIntent =
-        PendingIntent.getBroadcast(context, 0, actionIntent,  PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent.getBroadcast(context, 0, actionIntent, PendingIntent.FLAG_IMMUTABLE);
 
     notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(

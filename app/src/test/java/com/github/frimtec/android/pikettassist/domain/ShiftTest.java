@@ -1,19 +1,20 @@
 package com.github.frimtec.android.pikettassist.domain;
 
 
-import org.junit.jupiter.api.Test;
-import org.threeten.bp.Duration;
-import org.threeten.bp.Instant;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import static java.time.Duration.ofMinutes;
+
+import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.function.Supplier;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.threeten.bp.Duration.ofMinutes;
-
 class ShiftTest {
 
-  private static final Duration TIME_TOLERANCE = Duration.ofMinutes(5);
+  private static final Duration TIME_TOLERANCE = ofMinutes(5);
 
   @Test
   void getId() {

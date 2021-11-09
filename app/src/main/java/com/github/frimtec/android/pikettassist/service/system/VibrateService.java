@@ -42,11 +42,7 @@ public class VibrateService {
           @Override
           public void vibrate(long onPhaseMs, long pausePhaseMs) {
             if (this.vibrator != null) {
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                this.vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, onPhaseMs, pausePhaseMs}, 1));
-              } else {
-                this.vibrator.vibrate(new long[]{0, onPhaseMs, pausePhaseMs}, 0);
-              }
+              this.vibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, onPhaseMs, pausePhaseMs}, 1));
             }
           }
 

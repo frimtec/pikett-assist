@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
+import static com.github.frimtec.android.pikettassist.ui.FragmentName.ALERT_LOG;
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -35,8 +38,6 @@ import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-import org.threeten.bp.Instant;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -44,11 +45,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
-import static com.github.frimtec.android.pikettassist.ui.FragmentName.ALERT_LOG;
-import static org.threeten.bp.temporal.ChronoUnit.DAYS;
 
 public class AlertListFragment extends AbstractListFragment<Alert> {
 

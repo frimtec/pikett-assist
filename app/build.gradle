@@ -6,7 +6,7 @@ apply plugin: "com.hiya.jacoco-android"
 def secure_sms_proxy_api_version = '2.1.1'
 def android_billingclient_version = '4.0.0'
 def slidetoact_version = '0.9.0'
-def junit_version = '5.8.1'
+def junit_version = '5.8.2'
 
 jacoco {
     toolVersion = "0.8.4"

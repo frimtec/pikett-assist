@@ -106,7 +106,13 @@ If the warning system of your operations center does not support confirmation me
 
 #### Confirmation reply
 Defines the text to send back as alarm acknowledgement to your operations center.
-       
+
+#### SMS ignore filter
+[Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to identify SMS messages
+to be ignored.
+If empty, SMS filtering is disabled.
+_WARNING_: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!
+
 #### Alarm ringtone
 Defines the ringtone that is used to alert for on-call alarms.
 

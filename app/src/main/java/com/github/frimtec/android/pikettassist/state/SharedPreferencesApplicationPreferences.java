@@ -26,6 +26,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_PRE_POST_RUN_TIME_SECONDS = "pre_post_run_time_seconds";
   private static final String PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT = "alarm_operations_center_contact";
   private static final String PREF_KEY_TEST_ALARM_MESSAGE_PATTERN = "test_alarm_message_pattern";
+  private static final String PREF_KEY_META_SMS_MESSAGE_PATTERN = "meta_sms_message_pattern";
   private static final String PREF_KEY_TEST_ALARM_CHECK_TIME = "test_alarm_check_time";
   private static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   private static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
@@ -90,6 +91,11 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public String getSmsTestMessagePattern(Context context) {
     return getSharedPreferences(context, PREF_KEY_TEST_ALARM_MESSAGE_PATTERN, context.getString(R.string.pref_default_test_alarm_message_pattern)).trim();
+  }
+
+  @Override
+  public String getMetaSmsMessagePattern(Context context) {
+    return getSharedPreferences(context, PREF_KEY_META_SMS_MESSAGE_PATTERN, "").trim();
   }
 
   @Override

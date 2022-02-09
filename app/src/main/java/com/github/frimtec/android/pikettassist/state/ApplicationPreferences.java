@@ -55,6 +55,8 @@ public interface ApplicationPreferences {
 
   String getSmsTestMessagePattern(Context context);
 
+  String getMetaSmsMessagePattern(Context context);
+
   boolean getSendConfirmSms(Context context);
 
   String getSmsConfirmText(Context context);

@@ -26,6 +26,8 @@
     <string name="pref_default_calendar_event_pikett_title_pattern">.*Pikett.*</string>
     <string name="pref_title_pre_post_time_seconds">Vor-/Nachlaufzeit</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
+    <string name="pref_title_meta_sms_message_pattern">SMS Ignorierfilter</string>
+    <string name="pref_meta_sms_message_pattern">Gültige RegExp eingeben die komplette SMS erkennt die zu ignorieren sind</string>
 
     <string name="pref_title_supervise_battery_level">Akkufüllstand überwachen</string>
     <string name="pref_title_battery_warn_level">Minimaler Füllstand</string>
@@ -183,6 +185,7 @@
     <string name="state_fragment_phone_numbers_blocked">Nummer blockiert</string>
     <string name="state_fragment_loopback_sms_sent">Test-SMS gesendet…</string>
     <string name="sms_listener_loopback_sms_received">Test-SMS empfangen!</string>
+    <string name="sms_listener_meta_sms_filtered">SMS empfangen und gefiltert!</string>
     <string name="state_fragment_s2msp_requires_update">Benötigt Update</string>
 
     <string name="permission_sms_title">SMS-Adapter Installation</string>

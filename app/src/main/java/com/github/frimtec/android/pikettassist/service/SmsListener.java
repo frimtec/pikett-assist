@@ -69,13 +69,28 @@ public class SmsListener extends BroadcastReceiver {
               ApplicationPreferences.instance().setSuperviseTestContexts(context, supervisedTestAlarmContexts);
             }
           } else {
-            Log.i(TAG, "New alert");
-            new AlertService(context).newAlert(sms);
+            if(isMetaSms(context, sms)) {
+              Toast.makeText(context, context.getString(R.string.sms_listener_meta_sms_filtered), Toast.LENGTH_LONG).show();
+              Log.i(TAG, "New meta SMS filtered: " + sms);
+            } else {
+              Log.i(TAG, "New alert");
+              new AlertService(context).newAlert(sms);
+            }
           }
         }
       }
       context.sendBroadcast(new Intent(Action.REFRESH.getId()));
     }
+  }
+
+  private boolean isMetaSms(Context context, Sms sms) {
+    String metaSmsMessagePattern = ApplicationPreferences.instance().getMetaSmsMessagePattern(context);
+    if(metaSmsMessagePattern.isEmpty()) {
+      return false;
+    }
+    Pattern pattern = Pattern.compile(metaSmsMessagePattern, Pattern.DOTALL);
+    Matcher matcher = pattern.matcher(sms.getText());
+    return matcher.matches();
   }
 
 }

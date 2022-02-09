@@ -28,6 +28,8 @@
     <string name="pref_default_partner_search_pattern" translatable="false">Deputy:\\s([a-z,0-9]{5})(\\s|$)</string>
     <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
     <string name="pref_default_pre_post_run_time_seconds">300</string>
+    <string name="pref_title_meta_sms_message_pattern">SMS ignore filter</string>
+    <string name="pref_meta_sms_message_pattern">Enter a valid regexp that fully matches SMS to be ignored</string>
 
     <string name="pref_title_supervise_battery_level">Supervise battery level</string>
     <string name="pref_title_battery_warn_level">Minimal battery level</string>
@@ -187,6 +189,7 @@
     <string name="state_fragment_phone_numbers_blocked">Number blocked</string>
     <string name="state_fragment_loopback_sms_sent">Test-SMS sent…</string>
     <string name="sms_listener_loopback_sms_received">Test-SMS received!</string>
+    <string name="sms_listener_meta_sms_filtered">SMS received and filtered!</string>
     <string name="state_fragment_s2msp_requires_update">Requires update</string>
 
     <string name="permission_sms_title">SMS adapter installation</string>

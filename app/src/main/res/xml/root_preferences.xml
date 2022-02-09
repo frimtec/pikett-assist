@@ -21,6 +21,17 @@
         app:title="@string/pref_title_sms_confirm_text"
         app:useSimpleSummaryProvider="true" />
 
+    <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
+        app:defaultValue=""
+        app:icon="@drawable/ic_baseline_filter_alt_24"
+        app:key="meta_sms_message_pattern"
+        app:singleLine="true"
+        app:singleLineTitle="false"
+        app:title="@string/pref_title_meta_sms_message_pattern"
+        app:dialogMessage="@string/pref_meta_sms_message_pattern"
+        app:useSimpleSummaryProvider="true"
+        />
+
     <RingtonePreference
         android:dialogTitle="@string/pref_title_alarm_ring_tone"
         android:icon="@drawable/ic_notifications_black_24dp"

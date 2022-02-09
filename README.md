@@ -110,7 +110,7 @@ Defines the text to send back as alarm acknowledgement to your operations center
 #### SMS ignore filter
 [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to identify SMS messages
 to be ignored.
-If empty, SMS filtering is disabled.
+If empty, SMS filtering is disabled.<br>
 _WARNING_: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!
 
 #### Alarm ringtone

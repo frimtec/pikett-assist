@@ -1,9 +1,11 @@
 # PAssist
-[![codecov](https://codecov.io/gh/frimtec/pikett-assist/branch/master/graph/badge.svg?token=WT64UK4Y3I)](https://codecov.io/gh/frimtec/pikett-assist)
-[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-[![Build](https://github.com/frimtec/pikett-assist/workflows/Build/badge.svg)](https://github.com/frimtec/pikett-assist/actions?query=workflow%3ABuild)
-[![Deploy release](https://github.com/frimtec/pikett-assist/workflows/Deploy%20release/badge.svg)](https://github.com/frimtec/pikett-assist/actions?query=workflow%3A%22Deploy+release%22)
+![Project Maintenance][maintenance-shield]
+[![Code Coverage][codecov-shield]][codecov]
+[![License][license-shield]][license]
+
+[![Build Status][build-status-shield]][build-status]
+[![Deploy Status][deploy-status-shield]][deploy-status]
 
 PAssist is an Android application to assist you while doing on-call duties.
 The name PAssist is the short form of Pikett-Assist ('Pikett' is the Swiss German term for on-call).
@@ -76,7 +78,7 @@ that are under supervision.
 ## Installation
 
 ### App-Stores
-PAssist can be installed from [Google&nbsp;Play](https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist) or [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist).
+PAssist can be installed from [Google&nbsp;Play][google-play] or [IzzyOnDroid][izzy-on-droid].
 
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>
@@ -88,7 +90,7 @@ Build PAssist on your own and then install the APK via ADB to your android phone
 In order to perform the functions of PAssist, PAssist needs to be able to receive and send SMS.
 As these SMS permissions are no more granted by Google, a compatible SMS adapter is required.
 
-Currently the only supported SMS adapter is [secure-sms-proxy](https://github.com/frimtec/secure-sms-proxy/blob/master/README.md).
+Currently the only supported SMS adapter is [secure-sms-proxy][secure-sms-proxy-readme].
 PAssist will guide you to install this SMS adapter.  
  
 ## Configuration 
@@ -108,7 +110,7 @@ If the warning system of your operations center does not support confirmation me
 Defines the text to send back as alarm acknowledgement to your operations center.
 
 #### SMS ignore filter
-[Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to identify SMS messages
+[Regular expression][regular-expression] pattern to identify SMS messages
 to be ignored.
 If empty, SMS filtering is disabled.<br>
 _WARNING_: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!
@@ -120,14 +122,14 @@ Defines the ringtone that is used to alert for on-call alarms.
 Defines one specific or all of your calenders, that should be used to look for on-call events. 
 
 #### Event filter
-Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern (case insensitive) to 
+Defines a [Regular expression][regular-expression] pattern (case insensitive) to 
 match the titles of your calendar events, which should be considered for your on-call duties.
 
 #### Extract partner contacts from events
 Defines whether partner contacts are extracted from on-call duty events. 
 
 #### Extraction pattern for partner contacts
-Defines a [Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to 
+Defines a [Regular expression][regular-expression] pattern to 
 extract partner contacts from on-call duty events.
 The partner contacts are extracted from the notes field of on-call duty events.
 There can be several partner contacts in the event notes.  
@@ -174,7 +176,7 @@ the power consumption.
 Enable or disable the test alarm feature.
 
 #### Test alarm message pattern
-[Regular expression](https://en.wikipedia.org/wiki/Regular_expression) pattern to identify SMS alarm messages as test alarms (case sensitive).<br> 
+[Regular expression][regular-expression] pattern to identify SMS alarm messages as test alarms (case sensitive).<br> 
 _WARNING_: Be careful, if the pattern is not well designed and triggers for a real alarm, you won't be alerted!
 
 The regular expression can define a group to extract the test context (for example the name of the system) out of the SMS.
@@ -229,21 +231,43 @@ The use of PAssist is at your own risk. The author assumes no liability for malf
 Any warranty claims are excluded.
 
 ## Development
-PAssist is developed with [Android-Studio 2021.1.1](https://developer.android.com/studio) with Java 11.
+PAssist is developed with [Android-Studio][android-studio] with Java 11.
 The current Android target SDK is 31 (Android 12-S) and the minimal SDK is 26 (Android 8.0-Oreo).
 
 ## Used libraries
-* [SlideToAct](https://github.com/cortinico/slidetoact)
-* [preferencex-android](https://github.com/takisoft/preferencex-android)
-* [Secure-SMS-Proxy API](https://github.com/frimtec/secure-sms-proxy)
+* [SlideToAct][slide-to-act]
+* [preferencex-android][preferencex-android]
+* [Secure-SMS-Proxy API][secure-sms-proxy-api]
 
 ## Devices compatibility
-* https://github.com/frimtec/pikett-assist/wiki/Device-compatibility
+* [Devices compatibility][devices-compatibility]
 
 ## Feedback
 Feedback, bug reports or feature requests are very welcome.
-You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub](https://github.com/frimtec/pikett-assist/issues).
+You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub][issues].
 
 ## Credits
-* [bakito](https://github.com/bakito): For implementing dual SIM support and excellent testing support.
-* [IzzySoft](https://github.com/IzzySoft): For offering PAssist on IzzyOnDroid F-Droid repository.
+* [bakito][github-bakito]: For implementing dual SIM support and excellent testing support.
+* [IzzySoft][github-izzysoft]: For offering PAssist on IzzyOnDroid F-Droid repository.
+
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
+[license-shield]: https://img.shields.io/github/license/frimtec/pikett-assist.svg
+[license]: https://opensource.org/licenses/Apache-2.0
+[codecov-shield]: https://codecov.io/gh/frimtec/pikett-assist/branch/master/graph/badge.svg?token=WT64UK4Y3I
+[codecov]: https://codecov.io/gh/frimtec/pikett-assist
+[build-status-shield]: https://github.com/frimtec/pikett-assist/workflows/Build/badge.svg
+[build-status]: https://github.com/frimtec/pikett-assist/actions?query=workflow%3ABuild
+[deploy-status-shield]: https://github.com/frimtec/pikett-assist/workflows/Deploy%20release/badge.svg
+[deploy-status]: https://github.com/frimtec/pikett-assist/actions?query=workflow%3A%22Deploy+release%22
+[secure-sms-proxy-readme]: https://github.com/frimtec/secure-sms-proxy/blob/master/README.md
+[google-play]: https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist
+[issues]: https://github.com/frimtec/pikett-assist/issues
+[devices-compatibility]: https://github.com/frimtec/pikett-assist/wiki/Device-compatibility
+[izzy-on-droid]: https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist
+[github-bakito]: https://github.com/bakito
+[github-izzysoft]: https://github.com/IzzySoft
+[regular-expression]: https://en.wikipedia.org/wiki/Regular_expression
+[android-studio]: https://developer.android.com/studio
+[slide-to-act]: https://github.com/cortinico/slidetoact
+[preferencex-android]: https://github.com/takisoft/preferencex-android
+[secure-sms-proxy-api]: https://github.com/frimtec/secure-sms-proxy

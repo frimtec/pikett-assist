@@ -1,8 +1,9 @@
 # PAssist
+![Icon](app/src/main/res/mipmap-hdpi/ic_launcher.png)
+[![License][license-shield]][license]
 
 ![Project Maintenance][maintenance-shield]
 [![Code Coverage][codecov-shield]][codecov]
-[![License][license-shield]][license]
 
 [![Build Status][build-status-shield]][build-status]
 [![Deploy Status][deploy-status-shield]][deploy-status]

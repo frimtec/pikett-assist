@@ -55,19 +55,23 @@ import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "MainActivity";
 
   private static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
+  public static final int[] TAB_ICONS = new int[]{
+      R.drawable.ic_home_black_24dp,
+      R.drawable.ic_date_range_black_24dp,
+      R.drawable.ic_siren,
+      R.drawable.ic_test_alarm
+  };
 
   class SwipeFragmentStateAdapter extends FragmentStateAdapter {
 
@@ -116,26 +120,12 @@ public class MainActivity extends AppCompatActivity {
   private ViewPager2 viewPager;
 
   private BroadcastReceiver broadcastReceiver;
-  private ViewPager2.OnPageChangeCallback pageChangeCallback;
   private SecureSmsProxyFacade s2msp;
 
   private DonationFragment donationFragment;
   private BillingAdapter billingAdapter;
 
-  private static final Map<FragmentPosition, Integer> FRAGMENT_BUTTON_ID_MAP;
-
-  @SuppressLint("UseSparseArrays")
-  private static final Map<Integer, FragmentPosition> BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
-
-  static {
-    FRAGMENT_BUTTON_ID_MAP = new EnumMap<>(FragmentPosition.class);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentPosition.STATE, R.id.navigation_home);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentPosition.SHIFTS, R.id.navigation_shifts);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentPosition.ALERT_LOG, R.id.navigation_alert_log);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentPosition.TEST_ALARMS, R.id.navigation_test_alarms);
-
-    FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
-  }
+  private TabLayoutMediator tabLayoutMediator;
 
   private void loadFragment(FragmentPosition fragmentPosition) {
     viewPager.setCurrentItem(fragmentPosition.ordinal(), false);
@@ -161,19 +151,12 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     viewPager = findViewById(R.id.view_pager);
-    FragmentStateAdapter pagerAdapter = new SwipeFragmentStateAdapter(this);
-    viewPager.setAdapter(pagerAdapter);
+    viewPager.setAdapter(new SwipeFragmentStateAdapter(this));
     ViewPager2Helper.reduceDragSensitivity(viewPager, 8);
-    registerPageChangeCallback(viewPager);
-    BottomNavigationView navigation = findViewById(R.id.navigation);
-    navigation.setOnItemSelectedListener(item -> {
-      FragmentPosition fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
-      if (fragment != null) {
-        loadFragment(fragment);
-        return true;
-      }
-      return false;
-    });
+
+    TabLayout tabLayout = findViewById(R.id.tab_layout);
+    tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setIcon(TAB_ICONS[position]));
+    tabLayoutMediator.attach();
 
     this.billingAdapter = new BillingAdapter(this);
 
@@ -185,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
       registerOnSmsAdapter();
     }
     loadFragment(savedFragmentPosition);
-    updateBottomNavigation();
     PikettService.enqueueWork(this);
   }
 
@@ -199,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void refresh() {
+    refreshTabLabels();
     FragmentManager fm = getSupportFragmentManager();
     var activeFragment = (AbstractListFragment<?>) fm.findFragmentByTag("f" + viewPager.getCurrentItem());
     if (activeFragment != null) {
@@ -206,10 +189,11 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void updateBottomNavigation() {
-    BottomNavigationView navigation = findViewById(R.id.navigation);
-    MenuItem item = navigation.getMenu().findItem(R.id.navigation_test_alarms);
-    item.setVisible(ApplicationPreferences.instance().getTestAlarmEnabled(this));
+  private void refreshTabLabels() {
+    if (tabLayoutMediator != null) {
+      tabLayoutMediator.detach();
+      tabLayoutMediator.attach();
+    }
   }
 
   @Override
@@ -222,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     registerBroadcastReceiver();
-    updateBottomNavigation();
     BillingManager billingManager = this.billingAdapter.getBillingManager();
     if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
       billingManager.queryPurchases();
@@ -334,7 +317,6 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     unregisterBroadcastReceiver();
-    unregisterPageChangeCallback(this.viewPager);
     if (billingAdapter != null) {
       billingAdapter.destroy();
     }
@@ -369,27 +351,4 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void registerPageChangeCallback(ViewPager2 viewPager) {
-    if (pageChangeCallback == null) {
-      pageChangeCallback = new ViewPager2.OnPageChangeCallback() {
-        @Override
-        public void onPageSelected(int position) {
-          super.onPageSelected(position);
-          BottomNavigationView navigation = findViewById(R.id.navigation);
-          Integer itemId = FRAGMENT_BUTTON_ID_MAP.get(ensureValidFragmentPosition(position));
-          if (itemId != null) {
-            navigation.setSelectedItemId(itemId);
-          }
-        }
-      };
-      viewPager.registerOnPageChangeCallback(pageChangeCallback);
-    }
-  }
-
-  private void unregisterPageChangeCallback(ViewPager2 viewPager) {
-    if (pageChangeCallback != null) {
-      viewPager.unregisterOnPageChangeCallback(pageChangeCallback);
-      pageChangeCallback = null;
-    }
-  }
 }

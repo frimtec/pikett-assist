@@ -3,6 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#1D887A</color>
+    <color name="tabBackground">#EEEEEE</color>
 
     <color name="swipeButtonBackground">#4C6070</color>
 

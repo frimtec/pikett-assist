@@ -11,22 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.ui.FragmentName;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Optional;
 
 public abstract class AbstractListFragment<T> extends Fragment {
 
-  private final FragmentName fragmentName;
   private ListView listView;
 
-  protected AbstractListFragment(FragmentName fragmentName) {
-    this.fragmentName = fragmentName;
-  }
-
-  public FragmentName getFragmentName() {
-    return fragmentName;
+  protected AbstractListFragment() {
   }
 
   @Override

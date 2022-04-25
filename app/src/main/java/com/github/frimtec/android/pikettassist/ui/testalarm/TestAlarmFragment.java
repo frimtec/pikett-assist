@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.github.frimtec.android.pikettassist.ui.FragmentName.TEST_ALARMS;
-
 public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
@@ -47,7 +45,6 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
 
   @SuppressLint("ValidFragment")
   TestAlarmFragment(TestAlarmDao testAlarmDao) {
-    super(TEST_ALARMS);
     this.testAlarmDao = testAlarmDao;
   }
 

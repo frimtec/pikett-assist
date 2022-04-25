@@ -50,7 +50,6 @@ import com.github.frimtec.android.pikettassist.service.system.NotificationServic
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
-import com.github.frimtec.android.pikettassist.ui.FragmentName;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
@@ -108,7 +107,6 @@ public class StateFragment extends AbstractListFragment<State> {
 
   @SuppressLint("ValidFragment")
   StateFragment(AlertDao alertDao, TestAlarmDao testAlarmDao) {
-    super(FragmentName.STATE);
     this.alertDao = alertDao;
     this.testAlarmDao = testAlarmDao;
   }

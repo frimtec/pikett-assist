@@ -4,6 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/frim/AndroidStudioProjects/pikett-assist/app/src/main/res/layout/alarm.xml" value="0.178125" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.128" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/activity_main.xml" value="0.2989583333333333" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/activity_test_alarm_detail.xml" value="0.2989583333333333" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/alarm.xml" value="0.2989583333333333" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/alert_call_item.xml" value="0.2989583333333333" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/alert_header.xml" value="0.2015625" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/alert_log_item.xml" value="0.2989583333333333" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/fragment_list.xml" value="0.2015625" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/shift_item.xml" value="0.2015625" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/layout/state_item.xml" value="0.2015625" />
+        <entry key="..\:/Users/frim/StudioProjects/pikett-assist/app/src/main/res/menu/navigation.xml" value="0.2989583333333333" />
       </map>
     </option>
   </component>

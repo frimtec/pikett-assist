@@ -23,8 +23,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
@@ -43,6 +46,7 @@ import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
+import com.github.frimtec.android.pikettassist.ui.common.ViewPager2Helper;
 import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
 import com.github.frimtec.android.pikettassist.ui.settings.SettingsActivity;
 import com.github.frimtec.android.pikettassist.ui.shifts.ShiftListFragment;
@@ -51,51 +55,41 @@ import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.RegistrationResult;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
   private static final String TAG = "MainActivity";
 
   private static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
-  private BroadcastReceiver broadcastReceiver;
-  private StateFragment stateFragment;
-  private ShiftListFragment shiftListFragment;
-  private AlertListFragment alertListFragment;
-  private TestAlarmFragment testAlarmFragment;
-  private AbstractListFragment<?> activeFragment;
-  private SecureSmsProxyFacade s2msp;
+  public static final int[] TAB_ICONS = new int[]{
+      R.drawable.ic_home_black_24dp,
+      R.drawable.ic_date_range_black_24dp,
+      R.drawable.ic_siren,
+      R.drawable.ic_test_alarm
+  };
 
-  private DonationFragment donationFragment;
-  private BillingAdapter billingAdapter;
+  class SwipeFragmentStateAdapter extends FragmentStateAdapter {
 
-  private static final Map<FragmentName, Integer> FRAGMENT_BUTTON_ID_MAP;
+    private final FragmentActivity fragmentActivity;
 
-  @SuppressLint("UseSparseArrays")
-  private static final Map<Integer, FragmentName> BUTTON_ID_FRAGMENT_MAP = new HashMap<>();
+    public SwipeFragmentStateAdapter(@NonNull FragmentActivity fragmentActivity) {
+      super(fragmentActivity);
+      this.fragmentActivity = fragmentActivity;
+    }
 
-  static {
-    FRAGMENT_BUTTON_ID_MAP = new EnumMap<>(FragmentName.class);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.STATE, R.id.navigation_home);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.SHIFTS, R.id.navigation_shifts);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.ALERT_LOG, R.id.navigation_alert_log);
-    FRAGMENT_BUTTON_ID_MAP.put(FragmentName.TEST_ALARMS, R.id.navigation_test_alarms);
-
-    FRAGMENT_BUTTON_ID_MAP.forEach((fragment, buttonId) -> BUTTON_ID_FRAGMENT_MAP.put(buttonId, fragment));
-  }
-
-  private void loadFragment(FragmentName fragment) {
-    switch (fragment) {
-      case STATE:
-        if (stateFragment == null) {
-          stateFragment = new StateFragment();
-          stateFragment.setActivityFacade(this, new StateFragment.BillingAccess() {
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+      FragmentPosition fragmentPosition = ensureValidFragmentPosition(position);
+      switch (fragmentPosition) {
+        case STATE:
+          StateFragment stateFragment = new StateFragment();
+          stateFragment.setActivityFacade(MainActivity.this, new StateFragment.BillingAccess() {
             @Override
             public List<BillingProvider.BillingState> getProducts() {
               return MainActivity.this.billingAdapter.getAllProducts();
@@ -106,34 +100,43 @@ public class MainActivity extends AppCompatActivity {
               MainActivity.this.showDonationDialog();
             }
           });
-        }
-        activeFragment = stateFragment;
-        break;
-      case SHIFTS:
-        if (shiftListFragment == null) {
-          shiftListFragment = new ShiftListFragment();
-        }
-        activeFragment = shiftListFragment;
-        break;
-      case ALERT_LOG:
-        if (alertListFragment == null) {
-          alertListFragment = new AlertListFragment();
-        }
-        activeFragment = alertListFragment;
-        break;
-      case TEST_ALARMS:
-        if (testAlarmFragment == null) {
-          testAlarmFragment = new TestAlarmFragment();
-        }
-        activeFragment = testAlarmFragment;
-        break;
-      default:
-        throw new IllegalStateException("Unknown fragment: " + fragment);
+          return stateFragment;
+        case SHIFTS:
+          return new ShiftListFragment();
+        case ALERT_LOG:
+          return new AlertListFragment();
+        case TEST_ALARMS:
+          return new TestAlarmFragment();
+      }
+      throw new IllegalStateException("Unknown fragment: " + fragmentPosition);
     }
-    FragmentManager fm = getSupportFragmentManager();
-    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-    fragmentTransaction.replace(R.id.frame_layout, activeFragment);
-    fragmentTransaction.commit();
+
+    @Override
+    public int getItemCount() {
+      return ApplicationPreferences.instance().getTestAlarmEnabled(fragmentActivity.getApplicationContext()) ? 4 : 3;
+    }
+  }
+
+  private ViewPager2 viewPager;
+
+  private BroadcastReceiver broadcastReceiver;
+  private SecureSmsProxyFacade s2msp;
+
+  private DonationFragment donationFragment;
+  private BillingAdapter billingAdapter;
+
+  private TabLayoutMediator tabLayoutMediator;
+
+  private void loadFragment(FragmentPosition fragmentPosition) {
+    viewPager.setCurrentItem(fragmentPosition.ordinal(), false);
+  }
+
+  @NonNull
+  private static FragmentPosition ensureValidFragmentPosition(int fragmentPosition) {
+    if (fragmentPosition >= FragmentPosition.values().length) {
+      throw new IllegalStateException("Unknown fragment position: " + fragmentPosition);
+    }
+    return FragmentPosition.values()[fragmentPosition];
   }
 
   @Override
@@ -147,27 +150,24 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_main);
 
-    BottomNavigationView navigation = findViewById(R.id.navigation);
-    navigation.setOnItemSelectedListener(item -> {
-      FragmentName fragment = BUTTON_ID_FRAGMENT_MAP.get(item.getItemId());
-      if (fragment != null) {
-        loadFragment(fragment);
-        return true;
-      }
-      return false;
-    });
+    viewPager = findViewById(R.id.view_pager);
+    viewPager.setAdapter(new SwipeFragmentStateAdapter(this));
+    ViewPager2Helper.reduceDragSensitivity(viewPager, 8);
+
+    TabLayout tabLayout = findViewById(R.id.tab_layout);
+    tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setIcon(TAB_ICONS[position]));
+    tabLayoutMediator.attach();
 
     this.billingAdapter = new BillingAdapter(this);
 
-    FragmentName savedFragmentName = FragmentName.STATE;
+    FragmentPosition savedFragmentPosition = FragmentPosition.STATE;
     if (savedInstanceState != null) {
-      savedFragmentName = FragmentName.valueOf(savedInstanceState.getString(ACTIVE_FRAGMENT_STATE, savedFragmentName.name()));
+      savedFragmentPosition = ensureValidFragmentPosition(savedInstanceState.getInt(ACTIVE_FRAGMENT_STATE, savedFragmentPosition.ordinal()));
     } else {
       // register on new app start only, not on orientation change
       registerOnSmsAdapter();
     }
-    loadFragment(savedFragmentName);
-    updateBottomNavigation();
+    loadFragment(savedFragmentPosition);
     PikettService.enqueueWork(this);
   }
 
@@ -181,15 +181,19 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void refresh() {
+    refreshTabLabels();
+    FragmentManager fm = getSupportFragmentManager();
+    var activeFragment = (AbstractListFragment<?>) fm.findFragmentByTag("f" + viewPager.getCurrentItem());
     if (activeFragment != null) {
       activeFragment.refresh();
     }
   }
 
-  private void updateBottomNavigation() {
-    BottomNavigationView navigation = findViewById(R.id.navigation);
-    MenuItem item = navigation.getMenu().findItem(R.id.navigation_test_alarms);
-    item.setVisible(ApplicationPreferences.instance().getTestAlarmEnabled(this));
+  private void refreshTabLabels() {
+    if (tabLayoutMediator != null) {
+      tabLayoutMediator.detach();
+      tabLayoutMediator.attach();
+    }
   }
 
   @Override
@@ -202,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     registerBroadcastReceiver();
-    updateBottomNavigation();
     BillingManager billingManager = this.billingAdapter.getBillingManager();
     if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
       billingManager.queryPurchases();
@@ -308,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putString(ACTIVE_FRAGMENT_STATE, this.activeFragment.getFragmentName().name());
+    outState.putInt(ACTIVE_FRAGMENT_STATE, this.viewPager.getCurrentItem());
   }
 
   @Override
@@ -347,4 +350,5 @@ public class MainActivity extends AppCompatActivity {
       broadcastReceiver = null;
     }
   }
+
 }

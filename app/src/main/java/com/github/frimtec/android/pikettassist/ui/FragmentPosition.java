@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui;
 
-public enum FragmentName {
+public enum FragmentPosition {
   STATE,
   SHIFTS,
   ALERT_LOG,

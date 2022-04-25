@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
 import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
-import static com.github.frimtec.android.pikettassist.ui.FragmentName.SHIFTS;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 
@@ -31,10 +30,6 @@ import java.util.stream.Collectors;
 public class ShiftListFragment extends AbstractListFragment<Shift> {
 
   private View headerView;
-
-  public ShiftListFragment() {
-    super(SHIFTS);
-  }
 
   @Override
   protected void configureListView(ListView listView) {

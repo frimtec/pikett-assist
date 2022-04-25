@@ -1,6 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
-import static com.github.frimtec.android.pikettassist.ui.FragmentName.ALERT_LOG;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import android.annotation.SuppressLint;
@@ -69,7 +68,6 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
 
   @SuppressLint("ValidFragment")
   AlertListFragment(AlertDao alertDao) {
-    super(ALERT_LOG);
     this.alertDao = alertDao;
   }
 

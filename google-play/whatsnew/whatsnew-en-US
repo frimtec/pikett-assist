@@ -1,3 +1,3 @@
 Features and improvements:
-* Switch tabs with a horizontal swipe
-* Update dependencies
+* Das permission REQUEST_INSTALL_PACKAGES has been removed from the app (new Google-Play policy).
+  The SMS adapter S2MSP will be installed via browser now.

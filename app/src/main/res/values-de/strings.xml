@@ -191,16 +191,13 @@
     <string name="permission_sms_title">SMS-Adapter Installation</string>
     <string name="permission_sms_text">
         Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfiguriertten Zentrale.
-        Zur Quittierung wird eine SMS an den Sender zurückgeschickt.
-        Die empfangenen SMS werden in der Applikation gespeichert, damit sie auf der Aufgebotsseite angezeigt werden können.
-        Da SMS Berechtigungen von Google nicht mehr gewährt werden, musst du einen der unterstützen SMS Adapter installieren.
-        Aktuell wird &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; als SMS-Adapter unterstützt.
+        Die dazu notwendigen SMS Berechtigungen werden von Google-Play nicht mehr gewährt.
+        Die SMS-Kommunikation wird deshalb mit einer Adapter-App (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;) umgesetzt.
     </string>
-    <string name="permission_sms_text_unknown_source_request">
-        Um &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; zu installieren, braucht PAssist das Recht, Applikationen aus unbekannten Quellen zu installieren.
-        Nach dem Erteilen des Rechtes, bitte den Vorgang wiederholen.
+    <string name="install_with_browser">
+        Der SMS-Adapter wird via Browser herunter geladen. Zur Installation muss \"Installieren unbekannter Apps\" im Browser aktiviert sein.
     </string>
-    <string name="install_from_fdroid">
+    <string name="install_with_fdroid">
         Du kannst &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit F-Droid aus dem Repo &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt; installieren.
     </string>
     <string name="permission_sms_update_title">SMS-Adapter Update</string>
@@ -241,9 +238,6 @@
     <string name="manually_created_alarm_reason">Grund für Aufgebot</string>
     <string name="manually_created_alarm_reason_default">Telefonanruf</string>
     <string name="manually_created_alarm_reason_prefix">Manuell erstellt</string>
-    <string name="s2msp_download_started">Download wurde gestartet.</string>
-    <string name="s2msp_download_request">&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; kann nun heruntergeladen werden. Sobald der Download abgeschlossen ist, kann &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit einem Klick auf die Download-Notifikation installiert werden.</string>
-    <string name="s2msp_settings">Einstellungen</string>
     <string name="pref_title_notify_low_signal">Warnung mit Notifikation</string>
     <string name="pref_title_low_signal_filter">Signalfilter</string>
     <string name="general_seconds">Sekunden</string>
@@ -284,7 +278,6 @@
     <string name="alert_log_import_failed">Import fehlgeschalgen!</string>
     <string name="alert_list_header_statistic_month_label">Letzte 30 Tage:</string>
     <string name="alert_list_header_statistic_year_label">Letzte 365 Tage:</string>
-    <string name="add_repo">Repo hinzufügen</string>
     <string name="partner_contact_unknown_info_title">Unbekannter Kontakt</string>
     <string name="partner_contact_unknown_info_text">Es existiert kein Kontakt mit dem entsprechendern Spitznamen.\nBitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in die Zwischenablage kopiert) .</string>
     <string name="button_rate">App bewerten</string>

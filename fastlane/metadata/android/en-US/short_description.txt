@@ -1,1 +1,1 @@
-On-call service assistant in connection with an SMS-based alarm system
+On-call assistant for SMS-based alarm systems

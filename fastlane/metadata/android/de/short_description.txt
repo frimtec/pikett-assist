@@ -1,1 +1,1 @@
-Pikettdiest-Assistent in Verbindung mit einem SMS-basierten Alarmierungssystem
+Bereitschaftsassistent für SMS-basierte Alarmierungssysteme

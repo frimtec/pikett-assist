@@ -1,6 +1,7 @@
 PAssist supports you in providing on-call service in conjunction with an SMS-based alerting system.
 
 The application is automatically activated via defined on-call service events in your calendar and performs the following functions during the on-call duties:
+
 * Triggering of an alarm on the receipt of an SMS from the operations center as well as acknowledgment via SMS after the confirmation of the alarm by the user.
 * Monitoring of the phone signal level and notification in case of bad or off signal level.
 * Automatically control of the ringtone volume based on your day and night profile.
@@ -8,6 +9,7 @@ The application is automatically activated via defined on-call service events in
 * Monitoring and acknowledgment of periodic test alarms for testing the alarm chain from end to end.
 
 Other functions that are available regardless of the current on-call state:
+
 * On-call event calender
 * History of all alert incidents
 

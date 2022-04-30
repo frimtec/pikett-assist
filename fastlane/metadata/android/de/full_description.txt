@@ -1,6 +1,7 @@
 PAssist unterstützt dich beim Leisten von Bereitschaftsdienst im Zusammenspiel mit einem SMS basierten Alarmierungssystem.
 
 Die Applikation wird über definierte Bereitschaftsdienst-Termine im Kalender automatisch aktiviert und übernimmt während des Bereitschaftsdienstes die folgenden Funktionen:
+
 * Auslösen eines Alarms beim Eingang einer SMS von der Alarmierungszentrale sowie die Quittierung via SMS nach der Bestätigung des Alarmes durch den Benutzer.
 * Überwachung des Telefonempfangspegel und Benachrichtigung bei schlechtem oder ausgeschaltetem Empfang.
 * Automatisches setzen der Klingeltonlautstärke basierend auf einem Tag- und Nachtprofil.
@@ -8,6 +9,7 @@ Die Applikation wird über definierte Bereitschaftsdienst-Termine im Kalender au
 * Überwachung und Quittierung von periodischen Testalarmen zum Testen der Alarmierungskette.
 
 Weitere Funktionen die unabhängig vom aktuellen Bereitschaftsdienst zur Verfügung stehen:
+
 * Bereitschaftsdienstkalender
 * Historie aller Aufgebote
 

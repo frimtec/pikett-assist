@@ -1,0 +1,1 @@
+Das Recht REQUEST_INSTALL_PACKAGES wurde aus der Applikation entfernt (neue Google-Play Policy). Der SMS-Adapter S2MSP wird neu via Browser installiert.

@@ -1,0 +1,14 @@
+PAssist unterstützt dich beim Leisten von Bereitschaftsdienst im Zusammenspiel mit einem SMS basierten Alarmierungssystem.
+
+Die Applikation wird über definierte Bereitschaftsdienst-Termine im Kalender automatisch aktiviert und übernimmt während des Bereitschaftsdienstes die folgenden Funktionen:
+* Auslösen eines Alarms beim Eingang einer SMS von der Alarmierungszentrale sowie die Quittierung via SMS nach der Bestätigung des Alarmes durch den Benutzer.
+* Überwachung des Telefonempfangspegel und Benachrichtigung bei schlechtem oder ausgeschaltetem Empfang.
+* Automatisches setzen der Klingeltonlautstärke basierend auf einem Tag- und Nachtprofil.
+* Protokollierung der Aufgebote mit Start- und Endzeit sowie aller dazugehörigen SMS-Meldungen.
+* Überwachung und Quittierung von periodischen Testalarmen zum Testen der Alarmierungskette.
+
+Weitere Funktionen die unabhängig vom aktuellen Bereitschaftsdienst zur Verfügung stehen:
+* Bereitschaftsdienstkalender
+* Historie aller Aufgebote
+
+Um die Funktionen von PAssist wahrzunehmen, brauch PAssist die Möglichkeit SMS zu Empfangen und zu Senden. Da diese Berechtigungen von Google nicht mehr gewährt werden, ist ein kompatibler SMS-Adapter erforderlich  - [S2MSP](https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.securesmsproxy).

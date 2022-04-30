@@ -1,1 +1,1 @@
-PAssist assisitiert bei Pikettdiest (Bereitschaftsdiensten) in Verbindung mit einem SMS-basierten Alarmierungssystem.
+Pikettdiest-Assistent in Verbindung mit einem SMS-basierten Alarmierungssystem

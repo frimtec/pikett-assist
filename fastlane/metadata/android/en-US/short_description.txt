@@ -1,1 +1,1 @@
-PAssist supports you in providing on-call service in conjunction with an SMS-based alerting system.
+On-call service assistant in connection with an SMS-based alarm system

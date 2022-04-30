@@ -24,9 +24,9 @@ This ensures you won't miss an alert in case of a small time discrepancy between
 All calendar events matching a configured title pattern are considered as on-call events. 
 PAssist shows you an overview with all future on-call events on the calendar tab.
 
-![Deactivated PAssist](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_17.png)
-![Calendar Tab](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_01.png)
-![Activated PAssist](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_07.png)
+![Deactivated PAssist](images/PAssist_17.png)
+![Calendar Tab](images/PAssist_01.png)
+![Activated PAssist](images/PAssist_07.png)
 
 ### Alarming
 If an SMS is received from your configured operations center, PAssist will race an alert. 
@@ -34,8 +34,8 @@ It is playing a configured ringtone and starts a vibration pattern until you con
 When confirmed, an acknowledge SMS is send back to your operations center. 
 The alarm goes into the confirmed alarm state and can be finally closed when all your support activities are completed.
 
-![On-call alarm](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_02.png)
-![Confirmed alarm](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_08.png)
+![On-call alarm](images/PAssist_02.png)
+![Confirmed alarm](images/PAssist_08.png)
 
 ### Alarm log
 PAssist creates an alarm log with the start and end time of each incident. 
@@ -44,8 +44,8 @@ On the alert log tab you see all your passed alerts in an overview. Selecting an
 alert incident including current state, reaction time to confirm, duration from start to end and all received SMS messages.
 The alert log can be exported/imported from/to the external file system.    
 
-![Alert log tab](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_18.png)
-![Alert details](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_16.png)
+![Alert log tab](images/PAssist_18.png)
+![Alert details](images/PAssist_16.png)
 
 
 ### Phone signal strength
@@ -53,9 +53,9 @@ PAssist will supervise the phone signal strength and notifies you with a vibrati
 is bad or off (includes airplane mode). 
 This ensures that you won't stay in a dead spot without recognize it during on-call duties. 
 
-![Low/None signal alarm](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_03.png)
-![Low signal state info](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_13.png)
-![None signal state info](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_04.png)
+![Low/None signal alarm](images/PAssist_03.png)
+![Low signal state info](images/PAssist_13.png)
+![None signal state info](images/PAssist_04.png)
 
 ### Battery level
 PAssist will supervise the battery level and notifies if it is below a configured minimum level. 
@@ -71,9 +71,9 @@ race an alert with a configured ringtone and starts a vibration pattern until yo
 Test alarms can be configured for different contexts, as your alarming system may send a test alarms for various systems 
 that are under supervision.
 
-![Missing test alarm detected](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_09.png)
-![Alarm for missing test alarm](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_05.png)
-![Details to test alarm](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_06.png)
+![Missing test alarm detected](images/PAssist_09.png)
+![Alarm for missing test alarm](images/PAssist_05.png)
+![Details to test alarm](images/PAssist_06.png)
 
 
 ## Installation
@@ -95,7 +95,7 @@ Currently the only supported SMS adapter is [secure-sms-proxy][secure-sms-proxy-
 PAssist will guide you to install this SMS adapter.  
  
 ## Configuration 
-![Settings](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_10.png)
+![Settings](images/PAssist_10.png)
 
 ### Main settings
 
@@ -202,7 +202,7 @@ Defines the weekdays on which the test alarms are checked.
 #### Missing test alarm ringtone
 Defines the ringtone that is used to alert for missing test alarms.
 
-![Test alarm settings](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_14.png)
+![Test alarm settings](images/PAssist_14.png)
 
 ### Day/night profile settings
 #### Profile start times
@@ -216,7 +216,7 @@ If activated, the ringtone volume is automatically restored to the former value,
 #### Battery drain
 Enable "Minimize at night" to reduce power drain at night by reducing the check interval for the signal strength monitoring.   
 
-![Overview](fastlane/metadata/android/en-US/images/phoneScreenshots/PAssist_20.png)
+![Overview](images/PAssist_20.png)
 
 ## Supported languages
 Currently the following languages are supported in PAssist:

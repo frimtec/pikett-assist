@@ -1,3 +1,0 @@
-Features and improvements:
-* The permission REQUEST_INSTALL_PACKAGES has been removed from the app (new Google-Play policy).
-  The SMS adapter S2MSP will be installed via browser now.

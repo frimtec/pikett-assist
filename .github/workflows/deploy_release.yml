@@ -2,12 +2,15 @@ name: Deploy release
 
 on:
   release:
-    types: [created]
+    types: [prereleased, released]
 
 jobs:
   deploy:
 
     runs-on: ubuntu-18.04
+
+    outputs:
+      VCODE: ${{ steps.get_vcode.outputs.VCODE }}
 
     steps:
       - uses: actions/checkout@v3
@@ -32,15 +35,15 @@ jobs:
         run: |
           sed -i 's/$version/${{ steps.get_version.outputs.VERSION }}/g' app/version.properties
 
-      - name: Get VCODE_TIME
-        id: get_vcode_time
-        run: echo ::set-output name=VCODE_TIME::$(date +%s)
+      - name: Get VCODE
+        id: get_vcode
+        run: echo ::set-output name=VCODE::$(expr $(date +%s) / 60 - 26797800)
 
       - name: Build APK
-        run: bash ./gradlew assembleRelease --stacktrace -Dversion.code.time=${{ steps.get_vcode_time.outputs.VCODE_TIME }} -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
+        run: bash ./gradlew assembleRelease --stacktrace -Dversion.code=${{ steps.get_vcode.outputs.VCODE }} -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
 
       - name: Build AAB
-        run: bash ./gradlew :app:bundleRelease --stacktrace -Dversion.code.time=${{ steps.get_vcode_time.outputs.VCODE_TIME }} -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
+        run: bash ./gradlew :app:bundleRelease --stacktrace -Dversion.code=${{ steps.get_vcode.outputs.VCODE }} -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
 
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
@@ -81,6 +84,13 @@ jobs:
         id: get_track
         run: echo ::set-output name=TRACK::$(if [[ "${{ steps.get_release.outputs.prerelease }}" == "false" ]] ; then echo production ; else echo alpha ; fi)
 
+      - name: Generate whatsnew
+        id: generate_whatsnew
+        run: |
+          mkdir -p google-play/whatsnew
+          echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' >> google-play/whatsnew/whatsnew-de-DE
+          echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' >> google-play/whatsnew/whatsnew-en-US
+
       - name: Upload AAB Google Play
         id: upload-release-asset-aab
         uses: r0adkll/upload-google-play@v1.0.15
@@ -90,3 +100,47 @@ jobs:
           releaseFiles: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
           track: ${{ steps.get_track.outputs.TRACK }}
           whatsNewDirectory: google-play/whatsnew
+
+  update-repo:
+
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      - name: Checkout master
+        run: |
+          git checkout master
+
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Create fastlane changelog
+        run: |
+          mkdir -p fastlane/metadata/android/en-US/changelogs
+          echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' | head -n 10 >> fastlane/metadata/android/en-US/changelogs/${{needs.deploy-apk.outputs.VCODE}}.txt
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add fastlane/metadata/android/en-US/changelogs/${{needs.deploy-apk.outputs.VCODE}}.txt
+          git commit -m "Update release changelog for ${{ steps.get_version.outputs.VERSION }}"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'master'

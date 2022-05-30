@@ -42,7 +42,7 @@ class AlarmState extends State {
         stateContext.getString(R.string.state_fragment_alarm_state),
         stateContext.getString(getAlertValue(stateContext.getAlarmState().first)),
         getSupplierButtons(stateContext),
-        getAlertTrafficLight(stateContext.getAlarmState().first, stateContext.getPikettState())
+        getAlertTrafficLight(stateContext.getAlarmState().first, stateContext.getShiftState().getState())
     );
     this.stateContext = stateContext;
   }
@@ -105,7 +105,7 @@ class AlarmState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    if (stateContext.getPikettState() == OnOffState.ON) {
+    if (stateContext.getShiftState().isOn()) {
       menu.add(Menu.NONE, MENU_CONTEXT_CREATE_ALARM_MANUALLY, Menu.NONE, R.string.menu_create_manually_alarm);
     }
     menu.add(Menu.NONE, MENU_CONTEXT_BOGUS_ALARM, Menu.NONE, R.string.list_item_menu_bogus_alarm);

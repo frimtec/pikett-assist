@@ -49,7 +49,7 @@ class BatteryState extends State {
     if (!ApplicationPreferences.instance().getSuperviseBatteryLevel(stateContext.getContext())) {
       return YELLOW;
     }
-    if (stateContext.getPikettState() == OnOffState.OFF) {
+    if (stateContext.getShiftState().getState() == OnOffState.OFF) {
       return TrafficLight.OFF;
     }
     int level = stateContext.getBatteryStatus().getLevel();

@@ -142,7 +142,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   @Override
   protected Optional<View.OnClickListener> addAction() {
     if (Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
-        new ShiftService(getContext()).getState() == OnOffState.ON) {
+        new ShiftService(getContext()).getShiftState().isOn()) {
       return Optional.of(view -> {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(getString(R.string.manually_created_alarm_reason));

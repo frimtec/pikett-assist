@@ -9,7 +9,7 @@ import androidx.core.util.Pair;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.domain.Contact;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.ShiftState;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 
@@ -30,7 +30,7 @@ class StateContext {
   private final Runnable closeAlertAction;
   private final Runnable showDonationDialogAction;
 
-  private final OnOffState pikettState;
+  private final ShiftState shiftState;
   private final String pikettStateDuration;
   private final Pair<AlertState, Long> alarmState;
   private final boolean pikettStateManuallyOn;
@@ -62,7 +62,7 @@ class StateContext {
       boolean smsAdapterMissing,
       boolean smsAdapterVersionOutdated,
       boolean smsAdapterPermissionsGranted,
-      OnOffState pikettState,
+      ShiftState shiftState,
       String pikettStateDuration,
       Pair<AlertState, Long> alarmState,
       boolean pikettStateManuallyOn,
@@ -85,7 +85,7 @@ class StateContext {
     this.smsAdapterMissing = smsAdapterMissing;
     this.smsAdapterVersionOutdated = smsAdapterVersionOutdated;
     this.smsAdapterPermissionsGranted = smsAdapterPermissionsGranted;
-    this.pikettState = pikettState;
+    this.shiftState = shiftState;
     this.pikettStateDuration = pikettStateDuration;
     this.alarmState = alarmState;
     this.pikettStateManuallyOn = pikettStateManuallyOn;
@@ -147,8 +147,8 @@ class StateContext {
     return smsAdapterPermissionsGranted;
   }
 
-  OnOffState getPikettState() {
-    return pikettState;
+  ShiftState getShiftState() {
+    return shiftState;
   }
 
   public String getPikettStateDuration() {

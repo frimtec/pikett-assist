@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.LowSignalService;
 import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
@@ -28,9 +27,9 @@ class OnCallState extends State {
     super(
         R.drawable.ic_eye,
         stateContext.getString(R.string.state_fragment_pikett_state),
-        String.format("%s %s", stateContext.getString(stateContext.getPikettState() == OnOffState.ON ? (stateContext.isPikettStateManuallyOn() ? R.string.state_manually_on : (R.string.state_on)) : R.string.state_off), stateContext.getPikettStateDuration()),
+        String.format("%s %s", stateContext.getString(stateContext.getShiftState().isOn() ? (stateContext.isPikettStateManuallyOn() ? R.string.state_manually_on : (R.string.state_on)) : R.string.state_off), stateContext.getPikettStateDuration()),
         null,
-        stateContext.getPikettState() == OnOffState.ON ? (stateContext.isPikettStateManuallyOn() ? TrafficLight.YELLOW : TrafficLight.GREEN) : TrafficLight.OFF
+        stateContext.getShiftState().isOn() ? (stateContext.isPikettStateManuallyOn() ? TrafficLight.YELLOW : TrafficLight.GREEN) : TrafficLight.OFF
     );
     this.stateContext = stateContext;
   }

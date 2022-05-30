@@ -48,7 +48,7 @@ public class SmsListener extends BroadcastReceiver {
       receivedSms.stream()
           .filter(sms -> SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK.equals(sms.getNumber()))
           .forEach(sms -> Toast.makeText(context, context.getString(R.string.sms_listener_loopback_sms_received), Toast.LENGTH_SHORT).show());
-      if (shiftService.getState() == OnOffState.OFF) {
+      if (shiftService.getShiftState().getState() == OnOffState.OFF) {
         Log.d(TAG, "Drop SMS, not on-call");
         return;
       }

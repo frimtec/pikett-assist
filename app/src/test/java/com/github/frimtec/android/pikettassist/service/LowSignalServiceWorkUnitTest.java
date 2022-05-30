@@ -18,6 +18,7 @@ import androidx.core.util.Pair;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.ShiftState;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
@@ -48,7 +49,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(true);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.OFF);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.OFF));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.OFF;
@@ -103,7 +104,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(true);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.GREAT;
@@ -163,7 +164,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.MODERATE;
@@ -223,7 +224,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(false, true);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.MODERATE;
@@ -281,7 +282,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.POOR;
@@ -339,7 +340,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.POOR;
@@ -397,7 +398,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.MODERATE;
@@ -456,7 +457,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.OFF;
@@ -514,7 +515,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.POOR;
@@ -572,7 +573,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.POOR;
@@ -630,7 +631,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.POOR;
@@ -688,7 +689,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.POOR;
@@ -748,7 +749,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(true);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.GREAT;
@@ -808,7 +809,7 @@ class LowSignalServiceWorkUnitTest {
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(true);
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.OFF);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.OFF));
 
     SignalStrengthService signalStrengthService = mock(SignalStrengthService.class);
     SignalLevel signalLevel = SignalLevel.GREAT;

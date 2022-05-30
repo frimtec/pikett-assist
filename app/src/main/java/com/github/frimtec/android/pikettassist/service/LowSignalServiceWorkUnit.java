@@ -69,7 +69,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   @Override
   public Optional<ScheduleInfo> apply(Intent intent) {
     int currentFilterState = intent.getIntExtra(EXTRA_FILTER_STATE, 0);
-    boolean pikettState = this.shiftService.getState() == OnOffState.ON;
+    boolean pikettState = this.shiftService.getShiftState().isOn();
     SignalLevel level = this.signalStrengthService.getSignalStrength();
     if (pikettState && this.applicationPreferences.getSuperviseSignalStrength(context) && !isInCall() && !isAlarmStateOn() && isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context))) {
       int lowSignalFilter = this.applicationPreferences.getLowSignalFilterSeconds(context);

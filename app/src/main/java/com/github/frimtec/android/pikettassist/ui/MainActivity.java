@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
           if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
-              new ShiftService(context).getState() == OnOffState.ON) {
+              new ShiftService(context).getShiftState().isOn()) {
             LowSignalService.enqueueWork(context);
           }
           refresh();

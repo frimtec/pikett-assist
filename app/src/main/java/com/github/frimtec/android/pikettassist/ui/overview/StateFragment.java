@@ -34,6 +34,7 @@ import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.Shift;
+import com.github.frimtec.android.pikettassist.domain.ShiftState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
@@ -214,7 +215,7 @@ public class StateFragment extends AbstractListFragment<State> {
     ShiftService shiftService = new ShiftService(getContext());
     BatteryService batteryService = new BatteryService(getContext());
     boolean pikettStateManuallyOn = ApplicationState.instance().getPikettStateManuallyOn();
-    OnOffState pikettState = shiftService.getState();
+    ShiftState shiftState = shiftService.getShiftState();
     Instant now = Shift.now();
     Duration prePostRunTime = ApplicationPreferences.instance().getPrePostRunTime(getContext());
     Optional<Shift> currentOrNextShift = shiftService.findCurrentOrNextShift(now);
@@ -231,8 +232,8 @@ public class StateFragment extends AbstractListFragment<State> {
         !smsAdapterInstallation.getAppVersion().isPresent(),
         smsAdapterInstallation.getAppVersion().isPresent() && smsAdapterInstallation.getApiVersion().compareTo(smsAdapterInstallation.getAppVersion().get()) > 0,
         s2msp.areSmsPermissionsGranted(),
-        pikettState,
-        currentOrNextShift.map(shift -> toDuration(pikettStateManuallyOn, pikettState, shift, now, prePostRunTime)).orElse(""),
+        shiftState,
+        currentOrNextShift.map(shift -> toDuration(pikettStateManuallyOn, shiftState, shift, now, prePostRunTime)).orElse(""),
         this.alertDao.getAlertState(),
         pikettStateManuallyOn,
         !(operationsCenterPhoneNumbers.isEmpty() || s2msp.isAllowed(operationsCenterPhoneNumbers)),
@@ -244,12 +245,12 @@ public class StateFragment extends AbstractListFragment<State> {
         batteryService.batteryStatus()
     );
     states.add(new SmsAdapterState(stateContext));
-    if (pikettState == OnOffState.ON && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
+    if (shiftState.isOn() && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
       states.add(new DoNotDisturbState(stateContext));
     }
     states.add(new OperationsCenterState(stateContext));
     Optional<List<String>> partners = currentOrNextShift.map(Shift::getPartners);
-    if (pikettState == OnOffState.ON && partners.isPresent()) {
+    if (shiftState.isOn() && partners.isPresent()) {
       List<String> pairAliases = (List<String>) partners.get();
       Map<String, ContactPerson> contactPersonsByAliases = this.contactPersonService.findContactPersonsByAliases(new HashSet<>(pairAliases));
       pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair)))));
@@ -281,9 +282,11 @@ public class StateFragment extends AbstractListFragment<State> {
     }
   }
 
-  private String toDuration(boolean pikettStateManuallyOn, OnOffState pikettState, Shift currentOrNextShift, Instant now, Duration prePostRunTime) {
-    return pikettStateManuallyOn ? "" : String.format("(%s)",
-        toDurationString(Duration.between(now, pikettState == OnOffState.ON ? currentOrNextShift.getEndTime(prePostRunTime) : currentOrNextShift.getStartTime(prePostRunTime)), siFormatter()));
+  private String toDuration(boolean pikettStateManuallyOn, ShiftState shiftState, Shift currentOrNextShift, Instant now, Duration prePostRunTime) {
+    return pikettStateManuallyOn ? "" : String.format("(%s)%s",
+        toDurationString(Duration.between(now, shiftState.isOn() ? currentOrNextShift.getEndTime(prePostRunTime) : currentOrNextShift.getStartTime(prePostRunTime)), siFormatter()),
+        shiftState.getShift().map(shift -> "\n" + shift.getTitle()).orElse("")
+    );
   }
 
   private boolean randomizedOn() {

@@ -51,7 +51,7 @@ public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
   @Override
   public Optional<ScheduleInfo> apply(Intent intent) {
     boolean initial = intent.getBooleanExtra(PARAM_INITIAL, true);
-    OnOffState shiftState = this.shiftService.getState();
+    OnOffState shiftState = this.shiftService.getShiftState().getState();
     Log.i(TAG, "Service cycle; shift state: " + shiftState + "; initial: " + initial);
     boolean testAlarmEnabled = this.applicationPreferences.getTestAlarmEnabled(context);
     Set<Integer> testAlarmCheckWeekdays = this.applicationPreferences.getTestAlarmCheckWeekdays(context).stream()

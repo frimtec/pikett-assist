@@ -32,7 +32,7 @@ class TestAlarmState extends State {
         testAlarmStateContext.getTestAlarmContext().getContext(),
         testAlarmStateContext.getLastReceived(),
         getTestAlarmCloseButtonSupplier(testAlarmStateContext.getStateContext(), testAlarmStateContext.getTestAlarmContext(), testAlarmStateContext.getTestAlarmState()),
-        testAlarmStateContext.getStateContext().getPikettState() == OnOffState.ON ? (testAlarmStateContext.getTestAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF);
+        testAlarmStateContext.getStateContext().getShiftState().isOn() ? (testAlarmStateContext.getTestAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF);
     this.testAlarmContext = testAlarmStateContext.getTestAlarmContext();
   }
 

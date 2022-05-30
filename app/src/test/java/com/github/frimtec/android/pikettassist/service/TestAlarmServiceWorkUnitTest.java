@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.ShiftState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
@@ -52,7 +53,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn("12:00");
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     TestAlarmContext testAlarmContext = new TestAlarmContext("context");
@@ -97,7 +98,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn("12:00");
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.OFF);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.OFF));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     TestAlarmContext testAlarmContext = new TestAlarmContext("context");
@@ -142,7 +143,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn("12:00");
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     TestAlarmContext testAlarmContext = new TestAlarmContext("context");
@@ -189,7 +190,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn(checkTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     TestAlarmContext testAlarmContext = new TestAlarmContext("context");
@@ -240,7 +241,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn(checkTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     TestAlarmContext testAlarmContext = new TestAlarmContext("context");
@@ -295,7 +296,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn(checkTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     TestAlarmContext testAlarmContext = new TestAlarmContext("context");
@@ -348,7 +349,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn(checkTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     when(testAlarmDao.isTestAlarmReceived(eq(tc1), any(Instant.class))).thenReturn(false);
@@ -400,7 +401,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn(checkTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     when(testAlarmDao.isTestAlarmReceived(any(TestAlarmContext.class), any(Instant.class))).thenReturn(false);
@@ -452,7 +453,7 @@ class TestAlarmServiceWorkUnitTest {
     when(applicationPreferences.getTestAlarmCheckTime(context)).thenReturn(checkTime.format(DateTimeFormatter.ofPattern("HH:mm")));
 
     ShiftService shiftService = mock(ShiftService.class);
-    when(shiftService.getState()).thenReturn(OnOffState.ON);
+    when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
 
     TestAlarmDao testAlarmDao = mock(TestAlarmDao.class);
     when(testAlarmDao.isTestAlarmReceived(eq(tc1), any(Instant.class))).thenReturn(true);

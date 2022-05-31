@@ -3,7 +3,7 @@ apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: "com.hiya.jacoco-android"
 
 // Third party library versions
-def secure_sms_proxy_api_version = '2.1.1'
+def secure_sms_proxy_api_version = '2.2.0'
 def android_billingclient_version = '5.0.0'
 def slidetoact_version = '0.9.0'
 def takisoft_preferencex_version = '1.1.0'
@@ -45,11 +45,11 @@ tasks.withType(Test) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     defaultConfig {
         applicationId "com.github.frimtec.android.pikettassist"
         minSdkVersion 26
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode vcode
         versionName vname
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

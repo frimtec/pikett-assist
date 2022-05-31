@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import androidx.recyclerview.widget.RecyclerView;
 

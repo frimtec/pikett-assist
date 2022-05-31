@@ -29,7 +29,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;

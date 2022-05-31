@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;

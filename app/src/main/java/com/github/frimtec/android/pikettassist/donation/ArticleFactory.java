@@ -20,7 +20,7 @@ final class ArticleFactory {
     articles.put(BillingConstants.SKU_SPONSOR_GOLD, new Article(provider, BillingProvider::getGoldSponsor, R.drawable.gold_icon));
   }
 
-  final List<String> getSkuList() {
+  List<String> getSkuList() {
     return BillingConstants.getSkuList();
   }
 

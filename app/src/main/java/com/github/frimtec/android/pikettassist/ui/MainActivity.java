@@ -32,7 +32,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;

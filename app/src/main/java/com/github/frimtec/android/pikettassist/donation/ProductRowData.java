@@ -1,28 +1,30 @@
 package com.github.frimtec.android.pikettassist.donation;
 
-import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.ProductDetails;
 import com.github.frimtec.android.pikettassist.donation.ArticleAdapter.RowTypeDef;
 
-public class SkuRowData {
+import java.util.Objects;
 
-  private final SkuDetails details;
+public class ProductRowData {
+
+  private final ProductDetails details;
   private final String title;
   @RowTypeDef
   private final int type;
 
-  SkuRowData(SkuDetails details) {
+  ProductRowData(ProductDetails details) {
     this.details = details;
     this.title = details.getDescription();
     this.type = ArticleAdapter.TYPE_NORMAL;
   }
 
-  SkuRowData(String title) {
+  ProductRowData(String title) {
     this.details = null;
     this.title = title;
     this.type = ArticleAdapter.TYPE_HEADER;
   }
 
-  SkuDetails getSkuDetails() {
+  ProductDetails getProductDetails() {
     return details;
   }
 
@@ -31,7 +33,7 @@ public class SkuRowData {
   }
 
   String getPrice() {
-    return details.getPrice();
+    return Objects.requireNonNull(details.getOneTimePurchaseOfferDetails()).getFormattedPrice();
   }
 
   @RowTypeDef

@@ -33,7 +33,7 @@ class UiManager implements RowViewHolder.OnButtonClickListener {
     }
   }
 
-  void onBindViewHolder(SkuRowData data, RowViewHolder holder) {
+  void onBindViewHolder(ProductRowData data, RowViewHolder holder) {
     if (data != null) {
       holder.title.setText(data.getTitle());
       // For non-header rows we need to feel other data and init button's state
@@ -44,7 +44,7 @@ class UiManager implements RowViewHolder.OnButtonClickListener {
   }
 
   public void onButtonClicked(int position) {
-    SkuRowData data = rowDataProvider.getData(position);
+    ProductRowData data = rowDataProvider.getData(position);
     if (data != null) {
       articleFactory.onButtonClicked(data);
     }

@@ -69,19 +69,19 @@ class BillingAdapter implements BillingUpdatesListener, BillingProvider {
     goldSponsor = NOT_PURCHASED;
     for (Purchase purchase : purchases) {
       BillingState state = getBillingState(purchase);
-      for (String sku : purchase.getSkus()) {
-        switch (sku) {
-          case BillingConstants.SKU_SPONSOR_BRONZE:
+      for (String productId : purchase.getProducts()) {
+        switch (productId) {
+          case BillingConstants.SPONSOR_BRONZE_PRODUCT_ID:
             bronzeSponsor = state;
             break;
-          case BillingConstants.SKU_SPONSOR_SILVER:
+          case BillingConstants.SPONSOR_SILVER_PRODUCT_ID:
             silverSponsor = state;
             break;
-          case BillingConstants.SKU_SPONSOR_GOLD:
+          case BillingConstants.SPONSOR_GOLD_PRODUCT_ID:
             goldSponsor = state;
             break;
           default:
-            Log.e(TAG, "Has unknown product: " + sku);
+            Log.e(TAG, "Has unknown product: " + productId);
         }
       }
     }

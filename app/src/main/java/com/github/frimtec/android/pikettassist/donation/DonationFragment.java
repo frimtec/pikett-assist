@@ -17,13 +17,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.QueryProductDetailsParams.Product;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class DonationFragment extends DialogFragment {
 
@@ -84,7 +86,7 @@ public class DonationFragment extends DialogFragment {
 
   private void handleManagerAndUiReady() {
     setWaitScreen(true);
-    querySkuDetails();
+    queryProductDetails();
   }
 
   private void displayAnErrorIfNeeded() {
@@ -103,34 +105,34 @@ public class DonationFragment extends DialogFragment {
     }
   }
 
-  private void querySkuDetails() {
+  private void queryProductDetails() {
     if (getActivity() != null && !getActivity().isFinishing()) {
-      final List<SkuRowData> dataList = new ArrayList<>();
+      final List<ProductRowData> dataList = new ArrayList<>();
       adapter = new ArticleAdapter();
-      final UiManager uiManager = createUiManager(adapter, billingProvider);
+      UiManager uiManager = createUiManager(adapter, billingProvider);
       adapter.setUiManager(uiManager);
       // Once we added all the subscription items, fill the in-app items rows below
-      List<String> inAppSkus = uiManager.getDelegatesFactory().getSkuList();
-      addSkuRows(dataList, inAppSkus);
+      addProductRows(dataList, uiManager.getDelegatesFactory().getProductList());
     }
   }
 
-  private void addSkuRows(List<SkuRowData> inList, List<String> skusList) {
-    billingProvider.getBillingManager().querySkuDetailsAsync(BillingClient.SkuType.INAPP, skusList,
-        (billingResult, skuDetailsList) -> {
+  private void addProductRows(List<ProductRowData> inList, List<Product> products) {
+    billingProvider.getBillingManager().querySkuDetailsAsync(products,
+        (billingResult, productDetails) -> {
           FragmentActivity activity = getActivity();
           if (activity != null) {
             activity.runOnUiThread(() -> {
               if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 Log.w(TAG, "Unsuccessful query. Error code: " + billingResult.getResponseCode());
-              } else if (skuDetailsList != null && skuDetailsList.size() > 0) {
+              } else if (productDetails.size() > 0) {
                 // If we successfully got SKUs, add a header in front of the row
-                inList.add(new SkuRowData(getString(R.string.header_inapp)));
-                // Then fill all the other rows
-
-                skuDetailsList.stream().sorted(Comparator.comparing(SkuDetails::getOriginalPriceAmountMicros).reversed()).forEach(skuDetails ->
-                    inList.add(new SkuRowData(skuDetails)));
-                if (inList.size() == 0) {
+                inList.add(new ProductRowData(getString(R.string.header_inapp)));
+                productDetails.stream()
+                    .sorted(
+                        Comparator.comparing((ProductDetails details) -> Objects.requireNonNull(details.getOneTimePurchaseOfferDetails()).getPriceAmountMicros())
+                            .reversed()
+                    ).forEach(productDetail -> inList.add(new ProductRowData(productDetail)));
+                if (inList.size() == 1) {
                   displayAnErrorIfNeeded();
                 } else {
                   if (recyclerView.getAdapter() == null) {

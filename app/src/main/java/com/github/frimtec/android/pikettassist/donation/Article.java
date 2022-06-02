@@ -2,6 +2,9 @@ package com.github.frimtec.android.pikettassist.donation;
 
 import androidx.annotation.DrawableRes;
 
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams;
+import com.android.billingclient.api.ProductDetails;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
@@ -25,7 +28,7 @@ final class Article {
     this.icon = icon;
   }
 
-  void onBindViewHolder(SkuRowData data, RowViewHolder holder) {
+  void onBindViewHolder(ProductRowData data, RowViewHolder holder) {
     holder.price.setText(data.getPrice());
     holder.button.setEnabled(true);
     BillingState billingState = this.billingState.apply(billingProvider);
@@ -42,9 +45,14 @@ final class Article {
     holder.skuIcon.setImageResource(icon);
   }
 
-  void onButtonClicked(SkuRowData data) {
+  void onButtonClicked(ProductRowData data) {
     if (data != null && NOT_PURCHASED == billingState.apply(billingProvider)) {
-      billingProvider.getBillingManager().initiatePurchaseFlow(data.getSkuDetails());
+      ProductDetails productDetails = data.getProductDetails();
+      billingProvider.getBillingManager().initiatePurchaseFlow(
+          ProductDetailsParams.newBuilder()
+              .setProductDetails(productDetails)
+              .build()
+      );
     }
   }
 }

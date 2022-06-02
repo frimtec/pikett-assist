@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
@@ -16,13 +15,11 @@ import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Install
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.BiConsumer;
 
 class StateContext {
 
   private final Context context;
 
-  private final BiConsumer<Intent, Integer> startActivityForResultAction;
   private final Runnable fragmentRefreshAction;
   private final Runnable registerPhoneNumberOnSmsAdapterAction;
   private final Runnable sendLoopbackSmsAction;
@@ -51,7 +48,6 @@ class StateContext {
 
   StateContext(
       Context context,
-      BiConsumer<Intent, Integer> startActivityForResultAction,
       Runnable fragmentRefreshAction,
       Runnable registerPhoneNumberOnSmsAdapterAction,
       Runnable sendLoopbackSmsAction,
@@ -74,7 +70,6 @@ class StateContext {
       Set<String> operationsCenterPhoneNumbers,
       BatteryStatus batteryStatus) {
     this.context = context;
-    this.startActivityForResultAction = startActivityForResultAction;
     this.fragmentRefreshAction = fragmentRefreshAction;
     this.registerPhoneNumberOnSmsAdapterAction = registerPhoneNumberOnSmsAdapterAction;
     this.sendLoopbackSmsAction = sendLoopbackSmsAction;
@@ -100,11 +95,6 @@ class StateContext {
 
   Context getContext() {
     return context;
-  }
-
-  @SuppressWarnings("SameParameterValue")
-  void startActivityForResultAction(Intent intent, int requestCode) {
-    startActivityForResultAction.accept(intent, requestCode);
   }
 
   void refreshFragment() {

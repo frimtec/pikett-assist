@@ -1,0 +1,5 @@
+- Bump android target API from 31 to 32 (Android 13)
+- Use newest version of S2MSP (ready for Android 13)
+- Fix context menu actions handling on alert log and test alarm tab
+- Visibility of add button on alert log
+- Bump mockito-core from 4.5.1 to 4.6.0

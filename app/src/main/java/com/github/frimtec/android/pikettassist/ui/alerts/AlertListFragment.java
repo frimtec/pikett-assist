@@ -194,28 +194,24 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
 
   @Override
   protected Optional<View.OnClickListener> addAction() {
-    if (Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
-        new ShiftService(getContext()).getShiftState().isOn()) {
-      return Optional.of(view -> {
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle(getString(R.string.manually_created_alarm_reason));
-        EditText input = new EditText(getContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setText(R.string.manually_created_alarm_reason_default);
-        input.requestFocus();
-        builder.setView(input);
-        builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
-          dialog.dismiss();
-          String comment = input.getText().toString();
-          AlertService alertService = new AlertService(getContext());
-          alertService.newManuallyAlert(Instant.now(), comment);
-          refresh();
-        });
-        builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
-        builder.show();
+    return Optional.of(view -> {
+      AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+      builder.setTitle(getString(R.string.manually_created_alarm_reason));
+      EditText input = new EditText(getContext());
+      input.setInputType(InputType.TYPE_CLASS_TEXT);
+      input.setText(R.string.manually_created_alarm_reason_default);
+      input.requestFocus();
+      builder.setView(input);
+      builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+        dialog.dismiss();
+        String comment = input.getText().toString();
+        AlertService alertService = new AlertService(getContext());
+        alertService.newManuallyAlert(Instant.now(), comment);
+        refresh();
       });
-    }
-    return Optional.empty();
+      builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+      builder.show();
+    });
   }
 
   private void showAlertDetails(Alert selectedAlert) {
@@ -268,5 +264,11 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       }
     }
     return stringBuilder.toString();
+  }
+
+  @Override
+  protected boolean isAddButtonVisible() {
+    return Feature.PERMISSION_CALENDAR_READ.isAllowed(getContext()) &&
+        new ShiftService(getContext()).getShiftState().isOn();
   }
 }

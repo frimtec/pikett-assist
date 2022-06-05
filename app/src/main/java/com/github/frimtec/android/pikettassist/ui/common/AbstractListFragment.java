@@ -24,6 +24,7 @@ import java.util.Optional;
 public abstract class AbstractListFragment<T> extends Fragment {
 
   private ListView listView;
+  private FloatingActionButton addButton;
 
   private final FragmentPosition fragmentPosition;
 
@@ -41,9 +42,7 @@ public abstract class AbstractListFragment<T> extends Fragment {
     });
 
     listView = view.findViewById(R.id.fragment_list_list);
-
-
-    FloatingActionButton addButton = view.findViewById(R.id.list_add_button);
+    addButton = view.findViewById(R.id.list_add_button);
     addAction().map(onClickListener -> {
       addButton.setVisibility(View.VISIBLE);
       addButton.setOnClickListener(onClickListener);
@@ -68,6 +67,11 @@ public abstract class AbstractListFragment<T> extends Fragment {
   public final void refresh() {
     ArrayAdapter<T> adapter = createAdapter();
     listView.setAdapter(adapter);
+    addButton.setVisibility(isAddButtonVisible() ? View.VISIBLE : View.INVISIBLE);
+  }
+
+  protected boolean isAddButtonVisible() {
+    return false;
   }
 
   protected abstract void configureListView(ListView listView);

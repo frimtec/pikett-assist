@@ -163,4 +163,9 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
     }
     return list;
   }
+
+  @Override
+  protected boolean isAddButtonVisible() {
+    return true;
+  }
 }

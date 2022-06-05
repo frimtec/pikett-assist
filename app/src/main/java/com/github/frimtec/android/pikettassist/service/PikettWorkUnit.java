@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.work.Data;
+
 import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
@@ -21,7 +23,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Optional;
 
-class PikettServiceWorkUnit implements ServiceWorkUnit {
+class PikettWorkUnit implements WorkUnit {
 
   private static final String TAG = "PikettService";
   private static final Duration MAX_SLEEP = Duration.ofHours(24);
@@ -36,7 +38,7 @@ class PikettServiceWorkUnit implements ServiceWorkUnit {
   private final Runnable jobTrigger;
   private final Context context;
 
-  public PikettServiceWorkUnit(
+  public PikettWorkUnit(
       ApplicationState applicationState,
       ApplicationPreferences applicationPreferences,
       ShiftService shiftService,
@@ -54,7 +56,7 @@ class PikettServiceWorkUnit implements ServiceWorkUnit {
   }
 
   @Override
-  public Optional<ScheduleInfo> apply(Intent intent) {
+  public Optional<ScheduleInfo> apply(Data inputData) {
     context.sendBroadcast(new Intent(Action.REFRESH.getId()));
     if (Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)

@@ -11,10 +11,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.action.JobService;
-import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
-import com.github.frimtec.android.pikettassist.service.LowSignalService;
-import com.github.frimtec.android.pikettassist.service.PikettService;
-import com.github.frimtec.android.pikettassist.service.TestAlarmService;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker;
+import com.github.frimtec.android.pikettassist.service.LowSignalWorker;
+import com.github.frimtec.android.pikettassist.service.PikettWorker;
+import com.github.frimtec.android.pikettassist.service.TestAlarmWorker;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -62,16 +62,17 @@ public class AlarmService {
         String target = action.substring(BASE_ACTION.length());
         switch (JobService.valueOf(target)) {
           case LOW_SIGNAL_SERVICE:
-            LowSignalService.enqueueWork(context, intent);
+            LowSignalWorker.enqueueWork(context, intent);
             break;
           case PIKETT_SERVICE:
-            PikettService.enqueueWork(context, intent);
+            PikettWorker.enqueueWork(context, intent);
             break;
           case TEST_ALARM_SERVICE:
-            TestAlarmService.enqueueWork(context, intent);
+            TestAlarmWorker.enqueueWork(context, intent);
             break;
           case BOGUS_ALARM_SERVICE:
-            BogusAlarmService.enqueueWork(context, intent);
+            BogusAlarmWorker.enqueueWork(context, intent);
+            break;
           default:
             Log.w(TAG, "Unknown target in action: " + target);
         }

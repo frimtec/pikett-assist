@@ -12,6 +12,8 @@ import static org.mockito.Mockito.when;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.work.Data;
+
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
@@ -27,7 +29,7 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Optional;
 
-class PikettServiceWorkUnitTest {
+class PikettWorkerWorkUnitTest {
 
   private static final Duration ROUNDING_ERROR = Duration.ofSeconds(1);
   private static final Duration PRE_POST_RUN_TIME = Duration.ofMinutes(5);
@@ -50,7 +52,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -61,7 +63,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);
@@ -99,7 +101,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -110,7 +112,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);
@@ -148,7 +150,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -159,7 +161,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);
@@ -196,7 +198,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -207,7 +209,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);
@@ -244,7 +246,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -255,7 +257,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     Duration expectedDelay = Duration.ofDays(1).minus(Duration.ofMinutes(2)).plus(SECURE_DELAY);
@@ -285,7 +287,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -296,7 +298,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     Duration expectedDelay = PRE_POST_RUN_TIME.plusSeconds(60).plus(SECURE_DELAY);
@@ -326,7 +328,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -337,7 +339,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     Duration expectedDelay = PRE_POST_RUN_TIME.plusSeconds(60).plus(SECURE_DELAY);
@@ -367,7 +369,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -378,7 +380,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     Duration expectedDelay = Duration.ofSeconds(1).plus(SECURE_DELAY);
@@ -408,7 +410,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -419,7 +421,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(Duration.ofMinutes(1));
@@ -447,7 +449,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -458,7 +460,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);
@@ -486,7 +488,7 @@ class PikettServiceWorkUnitTest {
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -497,7 +499,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);
@@ -529,7 +531,7 @@ class PikettServiceWorkUnitTest {
     when(volumeService.getVolume()).thenReturn(currentVolume);
     Runnable jobTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new PikettServiceWorkUnit(
+    WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
@@ -540,7 +542,7 @@ class PikettServiceWorkUnitTest {
     );
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(mock(Intent.class));
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(new Data.Builder().build());
 
     // assert
     assertThat(scheduleInfo.orElseGet(() -> new ScheduleInfo(Duration.ZERO)).getScheduleDelay()).isEqualTo(MAX_SLEEP);

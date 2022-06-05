@@ -6,7 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.work.Data;
+import androidx.work.WorkerParameters;
+
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.action.JobService;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
@@ -18,9 +23,9 @@ import java.time.Duration;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class BogusAlarmService extends ReScheduleJobIntentService {
+public class BogusAlarmWorker extends ReScheduledWorker {
 
-  public static final String INTENT_EXTRA_ALARM_TYPE = "alarm_type";
+  public static final String ALARM_TYPE_PARAMETER_KEY = "alarm_type";
 
   public enum AlarmType {
     ALERT,
@@ -28,29 +33,45 @@ public class BogusAlarmService extends ReScheduleJobIntentService {
     MISSING_TEST_ALARM
   }
 
-  public BogusAlarmService() {
-    super(BOGUS_ALARM_SERVICE);
+  public BogusAlarmWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    super(context, workerParams);
   }
 
   @Override
-  protected ServiceWorkUnit createWorkUnit(Context context, AlarmService alarmService) {
+  protected JobService getJobService() {
+    return BOGUS_ALARM_SERVICE;
+  }
+
+  @Override
+  protected WorkUnit geServiceWorkUnit(Context context, AlarmService alarmService) {
     Map<AlarmType, Runnable> alarmTriggers = new EnumMap<>(AlarmType.class);
     alarmTriggers.put(AlarmType.ALERT, () -> AlertActivity.trigger(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, null, context));
     alarmTriggers.put(AlarmType.LOW_SIGNAL, () -> LowSignalAlarmActivity.trigger(context, alarmService, false));
     alarmTriggers.put(AlarmType.MISSING_TEST_ALARM, () -> MissingTestAlarmAlarmActivity.trigger(context, alarmService));
-    return new BogusAlarmServiceWorkUnit(alarmTriggers);
+    return new BogusAlarmWorkUnit(alarmTriggers);
   }
 
   public static void enqueueWork(Context context, Intent intent) {
-    ReScheduleJobIntentService.enqueueWork(context, BOGUS_ALARM_SERVICE, BogusAlarmService.class, intent);
+    ReScheduledWorker.enqueueWork(
+        context,
+        BOGUS_ALARM_SERVICE,
+        BogusAlarmWorker.class,
+        new Data.Builder()
+            .putString(ALARM_TYPE_PARAMETER_KEY, intent.getStringExtra(ALARM_TYPE_PARAMETER_KEY))
+            .build()
+    );
   }
 
   public static void scheduleBogusAlarm(Context context, AlarmType alarmType) {
-    new AlarmService(context).setAlarmForJob(new ScheduleInfo(
-        Duration.ofSeconds(10),
-        intent -> intent.putExtra(INTENT_EXTRA_ALARM_TYPE, alarmType.name())
-    ), BOGUS_ALARM_SERVICE);
-    Toast.makeText(context, R.string.toast_bogus_alarm, Toast.LENGTH_SHORT).show();
+    new AlarmService(context).setAlarmForJob(
+        new ScheduleInfo(
+            Duration.ofSeconds(10),
+            intent -> intent.putExtra(ALARM_TYPE_PARAMETER_KEY, alarmType.name())
+        ),
+        BOGUS_ALARM_SERVICE
+    );
+    Toast.makeText(context, R.string.toast_bogus_alarm, Toast.LENGTH_SHORT)
+        .show();
   }
 
 }

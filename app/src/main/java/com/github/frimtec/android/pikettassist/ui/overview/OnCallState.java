@@ -10,8 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.service.LowSignalService;
-import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.service.LowSignalWorker;
+import com.github.frimtec.android.pikettassist.service.PikettWorker;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 
 import java.util.Calendar;
@@ -48,14 +48,14 @@ class OnCallState extends State {
     switch (item.getItemId()) {
       case MENU_CONTEXT_SET_MANUALLY_ON:
         ApplicationState.instance().setPikettStateManuallyOn(true);
-        LowSignalService.enqueueWork(context);
-        PikettService.enqueueWork(context);
+        LowSignalWorker.enqueueWork(context);
+        PikettWorker.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_RESET:
         ApplicationState.instance().setPikettStateManuallyOn(false);
-        LowSignalService.enqueueWork(context);
-        PikettService.enqueueWork(context);
+        LowSignalWorker.enqueueWork(context);
+        PikettWorker.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
       default:

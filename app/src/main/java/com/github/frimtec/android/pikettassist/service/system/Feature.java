@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.service.PikettWorker;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import java.util.Collections;
@@ -116,7 +116,7 @@ public enum Feature {
           result -> {
             Context context = fragment.getContext();
             if (context != null && SETTING_DRAW_OVERLAYS.isAllowed(context)) {
-              PikettService.enqueueWork(context);
+              PikettWorker.enqueueWork(context);
             }
           }
       );

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.work.Data;
+
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
@@ -20,11 +22,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
+public class TestAlarmWorkUnit implements WorkUnit {
 
   private static final String TAG = "TestAlarmService";
 
-  private static final String PARAM_INITIAL = "initial";
+  static final String PARAM_INITIAL = "initial";
 
   private final ApplicationPreferences applicationPreferences;
   private final TestAlarmDao testAlarmDao;
@@ -33,7 +35,7 @@ public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
   private final Runnable alarmTrigger;
   private final Context context;
 
-  public TestAlarmServiceWorkUnit(
+  public TestAlarmWorkUnit(
       ApplicationPreferences applicationPreferences,
       TestAlarmDao testAlarmDao,
       ShiftService shiftService,
@@ -49,8 +51,8 @@ public class TestAlarmServiceWorkUnit implements ServiceWorkUnit {
   }
 
   @Override
-  public Optional<ScheduleInfo> apply(Intent intent) {
-    boolean initial = intent.getBooleanExtra(PARAM_INITIAL, true);
+  public Optional<ScheduleInfo> apply(Data inputData) {
+    boolean initial = inputData.getBoolean(PARAM_INITIAL, true);
     OnOffState shiftState = this.shiftService.getShiftState().getState();
     Log.i(TAG, "Service cycle; shift state: " + shiftState + "; initial: " + initial);
     boolean testAlarmEnabled = this.applicationPreferences.getTestAlarmEnabled(context);

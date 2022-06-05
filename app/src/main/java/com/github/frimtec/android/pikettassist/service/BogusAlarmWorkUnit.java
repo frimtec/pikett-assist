@@ -1,29 +1,30 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import android.content.Intent;
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.ALARM_TYPE_PARAMETER_KEY;
+
 import android.util.Log;
 
-import com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType;
+import androidx.work.Data;
+
+import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.INTENT_EXTRA_ALARM_TYPE;
-
-class BogusAlarmServiceWorkUnit implements ServiceWorkUnit {
+class BogusAlarmWorkUnit implements WorkUnit {
 
   private static final String TAG = "BogusAlarmServiceWorkUnit";
 
   private final Map<AlarmType, Runnable> alarmTriggers;
 
-  public BogusAlarmServiceWorkUnit(Map<AlarmType, Runnable> alarmTriggers) {
+  public BogusAlarmWorkUnit(Map<AlarmType, Runnable> alarmTriggers) {
     this.alarmTriggers = alarmTriggers;
   }
 
   @Override
-  public Optional<ScheduleInfo> apply(Intent intent) {
-    AlarmType type = AlarmType.valueOf(intent.getStringExtra(INTENT_EXTRA_ALARM_TYPE));
+  public Optional<ScheduleInfo> apply(Data inputData) {
+    AlarmType type = AlarmType.valueOf(inputData.getString(ALARM_TYPE_PARAMETER_KEY));
     Log.i(TAG, "Trigger bogus alarm for " + type);
     alarmTriggers.getOrDefault(type, () -> Log.e(TAG, "Unknown type " + type)).run();
     return Optional.empty();

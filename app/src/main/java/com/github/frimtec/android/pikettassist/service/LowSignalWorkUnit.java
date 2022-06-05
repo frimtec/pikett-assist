@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.util.Log;
 
+import androidx.work.Data;
+
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
@@ -25,11 +27,11 @@ import java.time.LocalTime;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
+final class LowSignalWorkUnit implements WorkUnit {
 
   private static final String TAG = "LowSignalValidator";
 
-  private static final String EXTRA_FILTER_STATE = "FILTER_STATE";
+  static final String EXTRA_FILTER_STATE = "FILTER_STATE";
   private static final Duration CHECK_INTERVAL = Duration.ofSeconds(90);
   private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(15);
   private static final int BATTERY_LOW_LIMIT = 10;
@@ -44,7 +46,7 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   private final Runnable alarmTrigger;
   private final Context context;
 
-  LowSignalServiceWorkUnit(
+  LowSignalWorkUnit(
       ApplicationPreferences applicationPreferences,
       AudioManager audioManager,
       AlertDao alertDao,
@@ -66,8 +68,8 @@ final class LowSignalServiceWorkUnit implements ServiceWorkUnit {
   }
 
   @Override
-  public Optional<ScheduleInfo> apply(Intent intent) {
-    int currentFilterState = intent.getIntExtra(EXTRA_FILTER_STATE, 0);
+  public Optional<ScheduleInfo> apply(Data inputData) {
+    int currentFilterState = inputData.getInt(EXTRA_FILTER_STATE, 0);
     boolean pikettState = this.shiftService.getShiftState().isOn();
     SignalLevel level = this.signalStrengthService.getSignalStrength();
     if (pikettState && this.applicationPreferences.getSuperviseSignalStrength(context) && !isInCall() && !isAlarmStateOn() && isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context))) {

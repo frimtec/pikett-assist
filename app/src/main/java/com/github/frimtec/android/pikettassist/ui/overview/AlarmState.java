@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.ALERT;
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.ALERT;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
@@ -24,7 +24,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
-import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertDetailActivity;
 
 import java.time.Instant;
@@ -133,7 +133,7 @@ class AlarmState extends State {
         builder.show();
         return true;
       case MENU_CONTEXT_BOGUS_ALARM:
-        BogusAlarmService.scheduleBogusAlarm(context, ALERT);
+        BogusAlarmWorker.scheduleBogusAlarm(context, ALERT);
         return true;
       default:
         return false;

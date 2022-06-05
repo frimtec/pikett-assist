@@ -34,8 +34,8 @@ import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
-import com.github.frimtec.android.pikettassist.service.LowSignalService;
-import com.github.frimtec.android.pikettassist.service.PikettService;
+import com.github.frimtec.android.pikettassist.service.LowSignalWorker;
+import com.github.frimtec.android.pikettassist.service.PikettWorker;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
       registerOnSmsAdapter();
     }
     loadFragment(savedFragmentPosition);
-    PikettService.enqueueWork(this);
+    PikettWorker.enqueueWork(this);
   }
 
   private void registerOnSmsAdapter() {
@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     refresh();
-    PikettService.enqueueWork(this);
+    PikettWorker.enqueueWork(this);
   }
 
   @Override
@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
           if (Intent.ACTION_AIRPLANE_MODE_CHANGED.equals(intent.getAction()) &&
               new ShiftService(context).getShiftState().isOn()) {
-            LowSignalService.enqueueWork(context);
+            LowSignalWorker.enqueueWork(context);
           }
           refresh();
         }

@@ -33,7 +33,6 @@ public class DonationFragment extends DialogFragment {
 
   private RecyclerView recyclerView;
   private ArticleAdapter adapter;
-  private View loadingView;
   private TextView errorTextView;
   private BillingProvider billingProvider;
 
@@ -50,7 +49,6 @@ public class DonationFragment extends DialogFragment {
     View root = inflater.inflate(R.layout.acquire_fragment, container, false);
     errorTextView = root.findViewById(R.id.error_textview);
     recyclerView = root.findViewById(R.id.list);
-    loadingView = root.findViewById(R.id.screen_wait);
     if (billingProvider != null) {
       handleManagerAndUiReady();
     }
@@ -79,13 +77,7 @@ public class DonationFragment extends DialogFragment {
     }
   }
 
-  private void setWaitScreen(boolean set) {
-    recyclerView.setVisibility(set ? View.GONE : View.VISIBLE);
-    loadingView.setVisibility(set ? View.VISIBLE : View.GONE);
-  }
-
   private void handleManagerAndUiReady() {
-    setWaitScreen(true);
     queryProductDetails();
   }
 
@@ -93,8 +85,6 @@ public class DonationFragment extends DialogFragment {
     if (getActivity() == null || getActivity().isFinishing()) {
       return;
     }
-
-    loadingView.setVisibility(View.GONE);
     errorTextView.setVisibility(View.VISIBLE);
     int billingResponseCode = billingProvider.getBillingManager().getBillingClientResponseCode();
 
@@ -145,7 +135,6 @@ public class DonationFragment extends DialogFragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                   }
                   adapter.updateData(inList);
-                  setWaitScreen(false);
                 }
               } else {
                 displayAnErrorIfNeeded();

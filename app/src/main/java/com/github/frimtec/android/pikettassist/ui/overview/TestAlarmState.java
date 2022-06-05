@@ -12,13 +12,13 @@ import android.widget.Button;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
-import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmDetailActivity;
 
 import java.util.function.Supplier;
 
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.MISSING_TEST_ALARM;
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.MISSING_TEST_ALARM;
 
 class TestAlarmState extends State {
 
@@ -70,7 +70,7 @@ class TestAlarmState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     if (item.getItemId() == MENU_CONTEXT_BOGUS_ALARM) {
-      BogusAlarmService.scheduleBogusAlarm(context, MISSING_TEST_ALARM);
+      BogusAlarmWorker.scheduleBogusAlarm(context, MISSING_TEST_ALARM);
       return true;
     }
     return false;

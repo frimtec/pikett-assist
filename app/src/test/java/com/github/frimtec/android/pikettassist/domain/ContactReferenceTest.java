@@ -83,7 +83,7 @@ class ContactReferenceTest {
   @Test
   void equalsForOtherClass() {
     ContactReference reference = new ContactReference(12, "key");
-    //noinspection AssertBetweenInconvertibleTypesk
+    //noinspection AssertBetweenInconvertibleTypes
     assertThat(reference).isNotEqualTo("any");
   }
 

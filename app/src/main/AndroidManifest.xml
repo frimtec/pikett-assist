@@ -117,20 +117,6 @@
                 <action android:name="com.github.frimtec.android.pikettassist.ALARM.*" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name=".service.PikettService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <service android:name=".service.TestAlarmService"
-            android:permission="android.permission.BIND_JOB_SERVICE"  />
-        <service
-            android:name=".service.LowSignalService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <service
-            android:name=".service.BogusAlarmService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

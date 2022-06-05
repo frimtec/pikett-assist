@@ -49,9 +49,6 @@
 
     <dimen name="about_sponsor_medals_size">100dp</dimen>
 
-    <item name="screen_wait" type="id" />
-
-
     <declare-styleable name="RegExpTextPreference">
         <attr format="integer" name="min_groups"/>
         <attr format="integer" name="max_groups"/>

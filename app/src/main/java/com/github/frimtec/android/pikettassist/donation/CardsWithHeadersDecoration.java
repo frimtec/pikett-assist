@@ -26,7 +26,7 @@ class CardsWithHeadersDecoration extends RecyclerView.ItemDecoration {
       @NonNull RecyclerView.State state) {
 
     int position = parent.getChildAdapterPosition(view);
-    SkuRowData data = rowDataProvider.getData(position);
+    ProductRowData data = rowDataProvider.getData(position);
 
     if (data.getRowType() == ArticleAdapter.TYPE_HEADER) {
       outRect.top = headerGap;

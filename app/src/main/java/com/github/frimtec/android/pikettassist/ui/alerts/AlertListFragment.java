@@ -23,13 +23,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
@@ -54,8 +55,6 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
-  private static final int REQUEST_CODE_NEW_FILE_SELECTED = 1213;
-  private static final int REQUEST_CODE_FILE_SELECTED = 1212;
   private final AlertDao alertDao;
 
   public AlertListFragment() {
@@ -66,9 +65,62 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   private TextView valueMonth;
   private TextView valueYear;
 
+  private ActivityResultLauncher<Intent> newFileSelectionActivityResultLauncher;
+  private ActivityResultLauncher<Intent> fileSelectionActivityResultLauncher;
+
   @SuppressLint("ValidFragment")
   AlertListFragment(AlertDao alertDao) {
     this.alertDao = alertDao;
+  }
+
+  @Override
+  public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    this.newFileSelectionActivityResultLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null) {
+              try {
+                String fileContent = new AlertService(getContext()).exportAllAlerts();
+                writeTextToUri(requireContext().getContentResolver(), data.getData(), fileContent);
+                Toast.makeText(getContext(), R.string.alert_log_export_success, Toast.LENGTH_LONG).show();
+              } catch (IOException e) {
+                Log.e(TAG, "Cannot store export in file", e);
+                Toast.makeText(getContext(), R.string.alert_log_export_failed, Toast.LENGTH_LONG).show();
+              }
+            }
+          }
+        }
+    );
+
+    this.fileSelectionActivityResultLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null) {
+              try {
+                Context context = requireContext();
+                String fileContent = readTextFromUri(context.getContentResolver(), data.getData());
+                DialogHelper.yesNoDialog(context, R.string.import_alert_log_are_you_sure, (dialog, which) -> {
+                  if (new AlertService(getContext()).importAllAlerts(fileContent)) {
+                    Toast.makeText(getContext(), R.string.alert_log_import_success, Toast.LENGTH_LONG).show();
+                  } else {
+                    Toast.makeText(getContext(), R.string.alert_log_import_failed_bad_format, Toast.LENGTH_LONG).show();
+                  }
+                  refresh();
+                }, (dialog, which) -> {
+                });
+              } catch (IOException e) {
+                Log.e(TAG, "Cannot load import from file", e);
+                Toast.makeText(getContext(), R.string.alert_log_import_failed, Toast.LENGTH_LONG).show();
+              }
+            }
+          }
+        }
+    );
   }
 
   @Override
@@ -86,7 +138,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       intent.addCategory(Intent.CATEGORY_OPENABLE);
       intent.setType("application/json");
       intent.putExtra(Intent.EXTRA_TITLE, "passist-alert-log-export.json");
-      startActivityForResult(intent, REQUEST_CODE_NEW_FILE_SELECTED);
+      newFileSelectionActivityResultLauncher.launch(intent);
     });
     this.valueMonth = headerView.findViewById(R.id.alert_statistic_value_month);
     this.valueYear = headerView.findViewById(R.id.alert_statistic_value_year);
@@ -96,7 +148,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
       intent.addCategory(Intent.CATEGORY_OPENABLE);
       intent.setType("application/json");
-      startActivityForResult(intent, REQUEST_CODE_FILE_SELECTED);
+      fileSelectionActivityResultLauncher.launch(intent);
     });
     listView.addHeaderView(headerView);
   }
@@ -188,41 +240,6 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       this.valueYear.setText(String.valueOf(countAlertsWithinLastDays(alertList, 365)));
     }
     return alertList;
-  }
-
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    Context context = getContext();
-    ContentResolver contentResolver = context != null ? context.getContentResolver() : null;
-    if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null && contentResolver != null) {
-      if (requestCode == REQUEST_CODE_NEW_FILE_SELECTED) {
-        try {
-          String fileContent = new AlertService(getContext()).exportAllAlerts();
-          writeTextToUri(contentResolver, data.getData(), fileContent);
-          Toast.makeText(getContext(), R.string.alert_log_export_success, Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-          Log.e(TAG, "Cannot store export in file", e);
-          Toast.makeText(getContext(), R.string.alert_log_export_failed, Toast.LENGTH_LONG).show();
-        }
-      } else if (requestCode == REQUEST_CODE_FILE_SELECTED) {
-        try {
-          String fileContent = readTextFromUri(contentResolver, data.getData());
-          DialogHelper.yesNoDialog(context, R.string.import_alert_log_are_you_sure, (dialog, which) -> {
-            if (new AlertService(getContext()).importAllAlerts(fileContent)) {
-              Toast.makeText(getContext(), R.string.alert_log_import_success, Toast.LENGTH_LONG).show();
-            } else {
-              Toast.makeText(getContext(), R.string.alert_log_import_failed_bad_format, Toast.LENGTH_LONG).show();
-            }
-            refresh();
-          }, (dialog, which) -> {
-          });
-        } catch (IOException e) {
-          Log.e(TAG, "Cannot load import from file", e);
-          Toast.makeText(getContext(), R.string.alert_log_import_failed, Toast.LENGTH_LONG).show();
-        }
-      }
-    }
   }
 
   private static void writeTextToUri(ContentResolver contentResolver, Uri uri, String fileContent) throws IOException {

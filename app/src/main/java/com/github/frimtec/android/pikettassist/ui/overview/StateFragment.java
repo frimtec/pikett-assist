@@ -3,7 +3,6 @@ package com.github.frimtec.android.pikettassist.ui.overview;
 import static android.app.Activity.RESULT_OK;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.RequestCodes.FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
@@ -26,6 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -40,7 +41,6 @@ import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.ContactPersonService;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
-import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
@@ -87,8 +87,6 @@ public class StateFragment extends AbstractListFragment<State> {
   private static final String DATE_TIME_FORMAT = "dd.MM.yy\nHH:mm:ss";
   private static final String TAG = "StateFragment";
 
-  static final int REQUEST_CODE_SELECT_PHONE_NUMBER = 111;
-
   private final Random random = new Random(System.currentTimeMillis());
 
   private AlertService alertService;
@@ -101,6 +99,8 @@ public class StateFragment extends AbstractListFragment<State> {
   private final TestAlarmDao testAlarmDao;
   private OperationsCenterContactService operationsCenterContactService;
   private ContactPersonService contactPersonService;
+
+  ActivityResultLauncher<Intent> phoneNumberSelectionLauncher;
 
   public StateFragment() {
     this(new AlertDao(), new TestAlarmDao());
@@ -126,6 +126,20 @@ public class StateFragment extends AbstractListFragment<State> {
     this.signalStrengthService = new SignalStrengthService(context);
     this.operationsCenterContactService = new OperationsCenterContactService(context);
     this.contactPersonService = new ContactPersonService(context);
+
+    Arrays.stream(Feature.values()).forEach(feature -> feature.registerFragment(this));
+    phoneNumberSelectionLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+          if (result.getResultCode() == RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null) {
+              Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
+              ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.getReference());
+            }
+          }
+        }
+    );
   }
 
   @Override
@@ -146,21 +160,6 @@ public class StateFragment extends AbstractListFragment<State> {
     registerForContextMenu(listView);
   }
 
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Context context = getContext();
-    if (requestCode == FROM_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
-      if (context != null && SETTING_DRAW_OVERLAYS.isAllowed(context)) {
-        PikettService.enqueueWork(context);
-      }
-    } else if (context != null && requestCode == REQUEST_CODE_SELECT_PHONE_NUMBER && resultCode == RESULT_OK) {
-      Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
-      ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.getReference());
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
-    }
-  }
-
   protected ArrayAdapter<State> createAdapter() {
     List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
@@ -175,11 +174,11 @@ public class StateFragment extends AbstractListFragment<State> {
         states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(permission.getNameResourceId()), null, RED) {
           @Override
           public void onClickAction(Context context) {
-            permission.request(context, StateFragment.this);
+            permission.request(context);
           }
         });
       } else {
-        permission.request(getContext(), this);
+        permission.request(getContext());
       }
     }
 
@@ -188,7 +187,7 @@ public class StateFragment extends AbstractListFragment<State> {
       states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED) {
         @Override
         public void onClickAction(Context context) {
-          SETTING_DRAW_OVERLAYS.request(context, StateFragment.this);
+          SETTING_DRAW_OVERLAYS.request(context);
         }
       });
     }
@@ -197,7 +196,7 @@ public class StateFragment extends AbstractListFragment<State> {
       states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW) {
         @Override
         public void onClickAction(Context context) {
-          SETTING_BATTERY_OPTIMIZATION_OFF.request(context, StateFragment.this);
+          SETTING_BATTERY_OPTIMIZATION_OFF.request(context);
         }
       });
     }
@@ -221,7 +220,6 @@ public class StateFragment extends AbstractListFragment<State> {
     Optional<Shift> currentOrNextShift = shiftService.findCurrentOrNextShift(now);
     StateContext stateContext = new StateContext(
         getContext(),
-        this::startActivityForResult,
         this::refresh,
         () -> this.s2msp.register(activity, REGISTER_SMS_ADAPTER_REQUEST_CODE, operationsCenterPhoneNumbers, SmsListener.class),
         () -> this.s2msp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), ApplicationState.instance().getSmsAdapterSecret()),
@@ -248,7 +246,7 @@ public class StateFragment extends AbstractListFragment<State> {
     if (shiftState.isOn() && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
       states.add(new DoNotDisturbState(stateContext));
     }
-    states.add(new OperationsCenterState(stateContext));
+    states.add(new OperationsCenterState(stateContext, phoneNumberSelectionLauncher));
     Optional<List<String>> partners = currentOrNextShift.map(Shift::getPartners);
     if (shiftState.isOn() && partners.isPresent()) {
       List<String> pairAliases = (List<String>) partners.get();

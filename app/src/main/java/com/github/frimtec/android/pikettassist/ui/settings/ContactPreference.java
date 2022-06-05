@@ -6,8 +6,11 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.AttributeSet;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 
 import com.github.frimtec.android.pikettassist.domain.Contact;
@@ -18,9 +21,9 @@ import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 public class ContactPreference extends Preference implements PreferenceActivityResultListener {
 
-  private static final int CONTACT_SELECTED = 42;
-
   private final OperationsCenterContactService operationsCenterContactService;
+
+  private ActivityResultLauncher<Intent> contactSelectionLauncher;
 
   public ContactPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
@@ -42,21 +45,30 @@ public class ContactPreference extends Preference implements PreferenceActivityR
     this.operationsCenterContactService = new OperationsCenterContactService(context);
   }
 
+  public void initLauncher(Fragment fragment) {
+    this.contactSelectionLauncher = fragment.registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+          if (result.getData() != null) {
+            Uri contactUri = result.getData().getData();
+            Contact contact = this.operationsCenterContactService.getContactFromUri(contactUri);
+            ApplicationPreferences.instance().setOperationsCenterContactReference(getContext(), contact.getReference());
+            notifyChanged();
+          }
+        }
+    );
+  }
+
   @Override
   public void onPreferenceClick(@NonNull PreferenceFragmentCompat fragment, @NonNull Preference preference) {
     Intent intent = new Intent(Intent.ACTION_PICK);
     intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-    fragment.startActivityForResult(intent, CONTACT_SELECTED);
+    contactSelectionLauncher.launch(intent);
   }
 
   @Override
-  public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    if (requestCode == CONTACT_SELECTED && data != null) {
-      Uri contactUri = data.getData();
-      Contact contact = this.operationsCenterContactService.getContactFromUri(contactUri);
-      ApplicationPreferences.instance().setOperationsCenterContactReference(getContext(), contact.getReference());
-      notifyChanged();
-    }
+  public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    throw new IllegalStateException("Must not be called");
   }
 
   @Override

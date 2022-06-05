@@ -22,13 +22,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<RowViewHolder> implemen
   static final int TYPE_NORMAL = 1;
 
   private UiManager uiManager;
-  private List<SkuRowData> listData;
+  private List<ProductRowData> listData;
 
   void setUiManager(UiManager uiManager) {
     this.uiManager = uiManager;
   }
 
-  void updateData(List<SkuRowData> data) {
+  void updateData(List<ProductRowData> data) {
     listData = data;
     notifyDataSetChanged();
   }
@@ -56,7 +56,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RowViewHolder> implemen
   }
 
   @Override
-  public SkuRowData getData(int position) {
+  public ProductRowData getData(int position) {
     return listData == null ? null : listData.get(position);
   }
 }

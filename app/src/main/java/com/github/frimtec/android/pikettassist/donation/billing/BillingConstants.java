@@ -1,15 +1,29 @@
 package com.github.frimtec.android.pikettassist.donation.billing;
 
-import java.util.Arrays;
+import static com.android.billingclient.api.BillingClient.ProductType.INAPP;
+
+import com.android.billingclient.api.QueryProductDetailsParams.Product;
+
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class BillingConstants {
 
-  public static final String SKU_SPONSOR_BRONZE = "sponsor_bronze";
-  public static final String SKU_SPONSOR_SILVER = "sponsor_silver";
-  public static final String SKU_SPONSOR_GOLD = "sponsor_gold";
+  public static final String SPONSOR_BRONZE_PRODUCT_ID = "sponsor_bronze";
+  public static final String SPONSOR_SILVER_PRODUCT_ID = "sponsor_silver";
+  public static final String SPONSOR_GOLD_PRODUCT_ID = "sponsor_gold";
 
-  private static final String[] IN_APP_SKUS = {SKU_SPONSOR_BRONZE, SKU_SPONSOR_SILVER, SKU_SPONSOR_GOLD};
+  private static final List<Product> PRODUCTS =
+      Stream.of(
+          SPONSOR_BRONZE_PRODUCT_ID,
+          SPONSOR_SILVER_PRODUCT_ID,
+          SPONSOR_GOLD_PRODUCT_ID
+      ).map(productId -> Product.newBuilder()
+          .setProductId(productId)
+          .setProductType(INAPP)
+          .build()
+      ).collect(Collectors.toList());
 
   private BillingConstants() {
   }
@@ -17,7 +31,7 @@ public final class BillingConstants {
   /**
    * Returns the list of all SKUs for the billing type specified
    */
-  public static List<String> getSkuList() {
-    return Arrays.asList(IN_APP_SKUS);
+  public static List<Product> getProductList() {
+    return PRODUCTS;
   }
 }

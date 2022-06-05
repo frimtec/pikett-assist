@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.donation;
 
+import com.android.billingclient.api.QueryProductDetailsParams.Product;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingConstants;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
@@ -15,23 +16,23 @@ final class ArticleFactory {
 
   ArticleFactory(BillingProvider provider) {
     articles = new HashMap<>();
-    articles.put(BillingConstants.SKU_SPONSOR_BRONZE, new Article(provider, BillingProvider::getBronzeSponsor, R.drawable.bronze_icon));
-    articles.put(BillingConstants.SKU_SPONSOR_SILVER, new Article(provider, BillingProvider::getSilverSponsor, R.drawable.silver_icon));
-    articles.put(BillingConstants.SKU_SPONSOR_GOLD, new Article(provider, BillingProvider::getGoldSponsor, R.drawable.gold_icon));
+    articles.put(BillingConstants.SPONSOR_BRONZE_PRODUCT_ID, new Article(provider, BillingProvider::getBronzeSponsor, R.drawable.bronze_icon));
+    articles.put(BillingConstants.SPONSOR_SILVER_PRODUCT_ID, new Article(provider, BillingProvider::getSilverSponsor, R.drawable.silver_icon));
+    articles.put(BillingConstants.SPONSOR_GOLD_PRODUCT_ID, new Article(provider, BillingProvider::getGoldSponsor, R.drawable.gold_icon));
   }
 
-  final List<String> getSkuList() {
-    return BillingConstants.getSkuList();
+  List<Product> getProductList() {
+    return BillingConstants.getProductList();
   }
 
-  void onBindViewHolder(SkuRowData data, RowViewHolder holder) {
-    Article article = articles.get(data.getSkuDetails().getSku());
+  void onBindViewHolder(ProductRowData data, RowViewHolder holder) {
+    Article article = articles.get(data.getProductDetails().getProductId());
     Objects.requireNonNull(article);
     article.onBindViewHolder(data, holder);
   }
 
-  void onButtonClicked(SkuRowData data) {
-    Article article = articles.get(data.getSkuDetails().getSku());
+  void onButtonClicked(ProductRowData data) {
+    Article article = articles.get(data.getProductDetails().getProductId());
     Objects.requireNonNull(article);
     article.onButtonClicked(data);
   }

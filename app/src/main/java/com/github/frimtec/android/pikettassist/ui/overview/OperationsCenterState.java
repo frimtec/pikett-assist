@@ -8,13 +8,13 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResultLauncher;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
-
-import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REQUEST_CODE_SELECT_PHONE_NUMBER;
 
 class OperationsCenterState extends State {
 
@@ -25,7 +25,9 @@ class OperationsCenterState extends State {
   private final StateContext stateContext;
   private final Contact operationCenter;
 
-  OperationsCenterState(StateContext stateContext) {
+  private final ActivityResultLauncher<Intent> phoneNumberSelectionLauncher;
+
+  OperationsCenterState(StateContext stateContext, ActivityResultLauncher<Intent> phoneNumberSelectionLauncher) {
     super(R.drawable.ic_phone_black_24dp,
         stateContext.getString(R.string.state_fragment_operations_center),
         getValue(stateContext),
@@ -33,12 +35,13 @@ class OperationsCenterState extends State {
         stateContext.getOperationCenter().isValid() && !stateContext.getOperationsCenterPhoneNumbers().isEmpty() ? TrafficLight.GREEN : TrafficLight.RED);
     this.stateContext = stateContext;
     this.operationCenter = stateContext.getOperationCenter();
+    this.phoneNumberSelectionLauncher = phoneNumberSelectionLauncher;
   }
 
   private static String getValue(StateContext stateContext) {
     Contact operationCenter = stateContext.getOperationCenter();
     String value = operationCenter.getName();
-    if(operationCenter.isValid() && stateContext.getOperationsCenterPhoneNumbers().isEmpty()) {
+    if (operationCenter.isValid() && stateContext.getOperationsCenterPhoneNumbers().isEmpty()) {
       value = value + "\n" + stateContext.getString(R.string.state_fragment_operations_center_no_number);
     }
     return value;
@@ -86,7 +89,7 @@ class OperationsCenterState extends State {
   private void actionSelectContact() {
     Intent intent = new Intent(Intent.ACTION_PICK);
     intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-    stateContext.startActivityForResultAction(intent, REQUEST_CODE_SELECT_PHONE_NUMBER);
+    phoneNumberSelectionLauncher.launch(intent);
   }
 
   private void actionViewContact() {

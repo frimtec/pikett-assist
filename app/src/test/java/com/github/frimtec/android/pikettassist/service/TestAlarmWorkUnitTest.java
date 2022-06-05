@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.ALARM_TYPE_PARAMETER_KEY;
+import static com.github.frimtec.android.pikettassist.service.TestAlarmWorkUnit.PARAM_INITIAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,6 +12,8 @@ import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.work.Data;
 
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.ShiftState;
@@ -33,7 +37,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-class TestAlarmServiceWorkUnitTest {
+class TestAlarmWorkUnitTest {
 
   public static final HashSet<String> WEEK_DAYS = new HashSet<>(Arrays.asList("1", "2", "3", "4", "5"));
   public static final HashSet<String> ALL_DAYS = new HashSet<>(Arrays.asList("1", "2", "3", "4", "5", "6", "7"));
@@ -61,7 +65,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -69,11 +73,12 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(initial);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, initial)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
 
     // assert
     assertThat(scheduleInfo).isEqualTo(Optional.empty());
@@ -106,7 +111,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -114,11 +119,12 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(initial);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, initial)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
 
     // assert
     assertThat(scheduleInfo).isEqualTo(Optional.empty());
@@ -151,7 +157,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -159,11 +165,12 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(initial);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, initial)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
 
     // assert
     assertThat(scheduleInfo).isEqualTo(Optional.empty());
@@ -198,7 +205,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -206,18 +213,19 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(true);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, true)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
     ScheduleInfo info = scheduleInfo.orElse(new ScheduleInfo(Duration.ZERO));
     Intent resultIntent = mock(Intent.class);
     info.getIntentExtrasSetter().accept(resultIntent);
 
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(11), Duration.ofDays(1).minusMinutes(10));
-    verify(resultIntent).putExtra("initial", false);
+    verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
     verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
@@ -249,7 +257,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -257,18 +265,19 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(true);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, true)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
     ScheduleInfo info = scheduleInfo.orElse(new ScheduleInfo(Duration.ZERO));
     Intent resultIntent = mock(Intent.class);
     info.getIntentExtrasSetter().accept(resultIntent);
 
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofMinutes(10), Duration.ofMinutes(11));
-    verify(resultIntent).putExtra("initial", false);
+    verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
     verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
@@ -304,7 +313,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -312,18 +321,19 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(true);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, true)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
     ScheduleInfo info = scheduleInfo.orElse(new ScheduleInfo(Duration.ZERO));
     Intent resultIntent = mock(Intent.class);
     info.getIntentExtrasSetter().accept(resultIntent);
 
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(2).plusMinutes(10), Duration.ofDays(2).plusMinutes(11));
-    verify(resultIntent).putExtra("initial", false);
+    verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
     verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
@@ -358,7 +368,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -366,18 +376,19 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(false);
+    Data inputData = new Data.Builder()
+        .putBoolean(PARAM_INITIAL, false)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
     ScheduleInfo info = scheduleInfo.orElse(new ScheduleInfo(Duration.ZERO));
     Intent resultIntent = mock(Intent.class);
     info.getIntentExtrasSetter().accept(resultIntent);
 
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(1), Duration.ofDays(1));
-    verify(resultIntent).putExtra("initial", false);
+    verify(resultIntent).putExtra(PARAM_INITIAL, false);
     verify(notificationService).notifyMissingTestAlarm(any(Intent.class), eq(new HashSet<>(Arrays.asList(tc1, tc3))));
     verify(testAlarmDao).updateAlertState(tc1, OnOffState.ON);
     verify(testAlarmDao, never()).updateAlertState(tc2, OnOffState.ON);
@@ -408,7 +419,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -416,18 +427,19 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(false);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, false)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
     ScheduleInfo info = scheduleInfo.orElse(new ScheduleInfo(Duration.ZERO));
     Intent resultIntent = mock(Intent.class);
     info.getIntentExtrasSetter().accept(resultIntent);
 
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(1), Duration.ofDays(1));
-    verify(resultIntent).putExtra("initial", false);
+    verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
     verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
     verify(testAlarmDao, never()).updateAlertState(any(TestAlarmContext.class), eq(OnOffState.ON));
@@ -462,7 +474,7 @@ class TestAlarmServiceWorkUnitTest {
 
     Runnable alarmTrigger = mock(Runnable.class);
 
-    ServiceWorkUnit workUnit = new TestAlarmServiceWorkUnit(
+    WorkUnit workUnit = new TestAlarmWorkUnit(
         applicationPreferences,
         testAlarmDao,
         shiftService,
@@ -470,18 +482,19 @@ class TestAlarmServiceWorkUnitTest {
         alarmTrigger,
         context
     );
-    Intent intent = mock(Intent.class);
-    when(intent.getBooleanExtra("initial", true)).thenReturn(false);
+    Data inputData = new Data.Builder()
+        .putBoolean(ALARM_TYPE_PARAMETER_KEY, false)
+        .build();
 
     // act
-    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(intent);
+    Optional<ScheduleInfo> scheduleInfo = workUnit.apply(inputData);
     ScheduleInfo info = scheduleInfo.orElse(new ScheduleInfo(Duration.ZERO));
     Intent resultIntent = mock(Intent.class);
     info.getIntentExtrasSetter().accept(resultIntent);
 
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(1), Duration.ofDays(1));
-    verify(resultIntent).putExtra("initial", false);
+    verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
     verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
     verify(testAlarmDao, never()).updateAlertState(any(TestAlarmContext.class), eq(OnOffState.ON));

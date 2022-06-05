@@ -1,5 +1,9 @@
 package com.github.frimtec.android.pikettassist.ui.settings;
 
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_BATTERY_WARN_LEVEL;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -23,10 +27,6 @@ import com.takisoft.preferencex.RingtonePreference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_BATTERY_WARN_LEVEL;
-import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -55,6 +55,12 @@ public class SettingsActivity extends AppCompatActivity {
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
       setPreferencesFromResource(R.xml.root_preferences, rootKey);
       Context context = getContext();
+
+      ContactPreference contactPreference = findPreference("alarm_operations_center_contact");
+      if (contactPreference != null) {
+        contactPreference.initLauncher(this);
+      }
+
       RingtonePreference alarmRingTone = findPreference("alarm_ring_tone");
       if (alarmRingTone != null) {
         alarmRingTone.setSummaryProvider(

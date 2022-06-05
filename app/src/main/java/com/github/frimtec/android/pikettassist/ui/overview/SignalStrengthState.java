@@ -9,11 +9,11 @@ import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.service.BogusAlarmService;
+import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmService.AlarmType.LOW_SIGNAL;
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.LOW_SIGNAL;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
@@ -90,7 +90,7 @@ class SignalStrengthState extends State {
         stateContext.refreshFragment();
         return true;
       case MENU_CONTEXT_BOGUS_ALARM:
-        BogusAlarmService.scheduleBogusAlarm(context, LOW_SIGNAL);
+        BogusAlarmWorker.scheduleBogusAlarm(context, LOW_SIGNAL);
         return true;
       default:
         return false;

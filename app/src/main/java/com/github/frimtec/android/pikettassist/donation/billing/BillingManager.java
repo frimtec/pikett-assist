@@ -12,16 +12,16 @@ import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClient.BillingResponseCode;
-import com.android.billingclient.api.BillingClient.SkuType;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.github.frimtec.android.pikettassist.BuildConfig;
 import com.github.frimtec.android.pikettassist.R;
 
@@ -105,10 +105,10 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
     }
   }
 
-  public void initiatePurchaseFlow(SkuDetails skuDetails) {
+  public void initiatePurchaseFlow(ProductDetailsParams productDetailsParams) {
     Runnable purchaseFlowRequest = () -> {
       BillingFlowParams purchaseParams = BillingFlowParams.newBuilder()
-          .setSkuDetails(skuDetails).build();
+          .setProductDetailsParamsList(List.of(productDetailsParams)).build();
       billingClient.launchBillingFlow(activity, purchaseParams);
     };
 
@@ -126,13 +126,16 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
     }
   }
 
-  public void querySkuDetailsAsync(@SkuType String itemType, List<String> skuList, SkuDetailsResponseListener listener) {
+  public void querySkuDetailsAsync(
+      List<QueryProductDetailsParams.Product> productList,
+      ProductDetailsResponseListener listener
+  ) {
     Runnable queryRequest = () -> {
-      SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-      params.setSkusList(skuList).setType(itemType);
-      billingClient.querySkuDetailsAsync(params.build(), listener);
+      QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+          .setProductList(productList)
+          .build();
+      billingClient.queryProductDetailsAsync(params, listener);
     };
-
     executeServiceRequest(queryRequest);
   }
 
@@ -157,14 +160,18 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
 
   public void queryPurchases() {
     executeServiceRequest(() ->
-        billingClient.queryPurchasesAsync(SkuType.INAPP, (billingResult, purchases) -> {
-          if (billingResult.getResponseCode() != BillingResponseCode.OK) {
-            Log.w(TAG, "Billing client result code for queryPurchasesAsync (" + billingResult.getResponseCode() + ") was bad - quitting");
-            return;
-          }
-          this.purchases.clear();
-          onPurchasesUpdated(billingResult, purchases);
-        }));
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
+            (billingResult, purchases) -> {
+              if (billingResult.getResponseCode() != BillingResponseCode.OK) {
+                Log.w(TAG, "Billing client result code for queryPurchasesAsync (" + billingResult.getResponseCode() + ") was bad - quitting");
+                return;
+              }
+              this.purchases.clear();
+              onPurchasesUpdated(billingResult, purchases);
+            }
+        )
+    );
   }
 
   private void startServiceConnection(Runnable executeOnSuccess) {

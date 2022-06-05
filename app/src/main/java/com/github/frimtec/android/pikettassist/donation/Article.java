@@ -1,8 +1,11 @@
 package com.github.frimtec.android.pikettassist.donation;
 
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+
 import androidx.annotation.DrawableRes;
 
-import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams;
 import com.android.billingclient.api.ProductDetails;
 import com.github.frimtec.android.pikettassist.R;
@@ -10,10 +13,6 @@ import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
 
 import java.util.function.Function;
-
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 
 final class Article {
 
@@ -32,13 +31,13 @@ final class Article {
     holder.price.setText(data.getPrice());
     holder.button.setEnabled(true);
     BillingState billingState = this.billingState.apply(billingProvider);
-    if(NOT_PURCHASED == billingState) {
+    if (NOT_PURCHASED == billingState) {
       holder.button.setEnabled(true);
       holder.button.setText(R.string.button_buy);
-    } else if(PURCHASED == billingState) {
+    } else if (PURCHASED == billingState) {
       holder.button.setEnabled(false);
       holder.button.setText(R.string.button_own);
-    } else if(PENDING == billingState) {
+    } else if (PENDING == billingState) {
       holder.button.setEnabled(false);
       holder.button.setText(R.string.button_pending);
     }

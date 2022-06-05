@@ -1,7 +1,5 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import android.content.Intent;
-
 import androidx.work.Data;
 
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;

@@ -51,6 +51,7 @@ import com.github.frimtec.android.pikettassist.service.system.NotificationServic
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
+import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
@@ -108,6 +109,7 @@ public class StateFragment extends AbstractListFragment<State> {
 
   @SuppressLint("ValidFragment")
   StateFragment(AlertDao alertDao, TestAlarmDao testAlarmDao) {
+    super(FragmentPosition.STATE);
     this.alertDao = alertDao;
     this.testAlarmDao = testAlarmDao;
   }
@@ -219,6 +221,7 @@ public class StateFragment extends AbstractListFragment<State> {
     Duration prePostRunTime = ApplicationPreferences.instance().getPrePostRunTime(getContext());
     Optional<Shift> currentOrNextShift = shiftService.findCurrentOrNextShift(now);
     StateContext stateContext = new StateContext(
+        this,
         getContext(),
         this::refresh,
         () -> this.s2msp.register(activity, REGISTER_SMS_ADAPTER_REQUEST_CODE, operationsCenterPhoneNumbers, SmsListener.class),
@@ -263,6 +266,7 @@ public class StateFragment extends AbstractListFragment<State> {
       ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
           .sorted(Comparator.comparing(TestAlarmContext::getContext))
           .forEach(testAlarmContext -> states.add(new TestAlarmState(
+              stateContext,
               this.testAlarmDao.loadDetails(testAlarmContext)
                   .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.getReceivedTime()), details.getAlertState()))
                   .orElse(new TestAlarmStateContext(stateContext, testAlarmContext, getString(R.string.state_fragment_test_alarm_never_received), OnOffState.OFF))
@@ -314,16 +318,11 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   @Override
-  public boolean onContextItemSelected(MenuItem item) {
+  public boolean onFragmentContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     ListView listView = getListView();
     State selectedItem = (State) listView.getItemAtPosition(info.position);
-    boolean selected = selectedItem.onContextItemSelected(getContext(), item);
-    if (selected) {
-      return true;
-    } else {
-      return super.onContextItemSelected(item);
-    }
+    return selectedItem.onContextItemSelected(getContext(), item);
   }
 
 }

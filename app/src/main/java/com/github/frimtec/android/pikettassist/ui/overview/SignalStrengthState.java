@@ -1,10 +1,15 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.LOW_SIGNAL;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -12,12 +17,6 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
-
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.LOW_SIGNAL;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
 class SignalStrengthState extends State {
 
@@ -66,13 +65,13 @@ class SignalStrengthState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view);
+    stateContext.addContextMenu(menu, MENU_CONTEXT_VIEW, R.string.list_item_menu_view);
     if (ApplicationPreferences.instance().getSuperviseSignalStrength(context)) {
-      menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE, Menu.NONE, R.string.list_item_menu_deactivate);
+      stateContext.addContextMenu(menu, MENU_CONTEXT_DEACTIVATE, R.string.list_item_menu_deactivate);
     } else {
-      menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE, Menu.NONE, R.string.list_item_menu_activate);
+      stateContext.addContextMenu(menu, MENU_CONTEXT_ACTIVATE, R.string.list_item_menu_activate);
     }
-    menu.add(Menu.NONE, MENU_CONTEXT_BOGUS_ALARM, Menu.NONE, R.string.list_item_menu_bogus_alarm);
+    stateContext.addContextMenu(menu, MENU_CONTEXT_BOGUS_ALARM, R.string.list_item_menu_bogus_alarm);
   }
 
   @Override

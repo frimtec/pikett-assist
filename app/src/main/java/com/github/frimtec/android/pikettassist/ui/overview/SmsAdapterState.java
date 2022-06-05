@@ -15,7 +15,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,9 +149,9 @@ class SmsAdapterState extends State {
   public void onCreateContextMenu(Context context, ContextMenu menu) {
     super.onCreateContextMenu(context, menu);
     boolean present = stateContext.getSmsAdapterInstallation().getAppVersion().isPresent();
-    menu.add(Menu.NONE, MENU_CONTEXT_VIEW, Menu.NONE, R.string.list_item_menu_view)
+    stateContext.addContextMenu(menu, MENU_CONTEXT_VIEW, R.string.list_item_menu_view)
         .setEnabled(present);
-    menu.add(Menu.NONE, SEND_TEST_SMS, Menu.NONE, R.string.list_item_menu_send_test_sms)
+    stateContext.addContextMenu(menu, SEND_TEST_SMS, R.string.list_item_menu_send_test_sms)
         .setEnabled(present && !TextUtils.isEmpty(ApplicationState.instance().getSmsAdapterSecret()));
   }
 

@@ -1,11 +1,12 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.MISSING_TEST_ALARM;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
@@ -18,21 +19,21 @@ import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmDetailActiv
 
 import java.util.function.Supplier;
 
-import static com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmType.MISSING_TEST_ALARM;
-
 class TestAlarmState extends State {
 
   private static final int MENU_CONTEXT_BOGUS_ALARM = 1;
 
+  private final StateContext stateContext;
   private final TestAlarmContext testAlarmContext;
 
-  TestAlarmState(TestAlarmStateContext testAlarmStateContext) {
+  TestAlarmState(StateContext stateContext, TestAlarmStateContext testAlarmStateContext) {
     super(
         R.drawable.ic_test_alarm,
         testAlarmStateContext.getTestAlarmContext().getContext(),
         testAlarmStateContext.getLastReceived(),
         getTestAlarmCloseButtonSupplier(testAlarmStateContext.getStateContext(), testAlarmStateContext.getTestAlarmContext(), testAlarmStateContext.getTestAlarmState()),
         testAlarmStateContext.getStateContext().getShiftState().isOn() ? (testAlarmStateContext.getTestAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF);
+    this.stateContext = stateContext;
     this.testAlarmContext = testAlarmStateContext.getTestAlarmContext();
   }
 
@@ -64,7 +65,7 @@ class TestAlarmState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    menu.add(Menu.NONE, MENU_CONTEXT_BOGUS_ALARM, Menu.NONE, R.string.list_item_menu_bogus_alarm);
+    stateContext.addContextMenu(menu, MENU_CONTEXT_BOGUS_ALARM, R.string.list_item_menu_bogus_alarm);
   }
 
   @Override

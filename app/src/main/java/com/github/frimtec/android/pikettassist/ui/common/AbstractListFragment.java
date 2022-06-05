@@ -1,16 +1,22 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Optional;
@@ -19,7 +25,10 @@ public abstract class AbstractListFragment<T> extends Fragment {
 
   private ListView listView;
 
-  protected AbstractListFragment() {
+  private final FragmentPosition fragmentPosition;
+
+  protected AbstractListFragment(FragmentPosition fragmentPosition) {
+    this.fragmentPosition = fragmentPosition;
   }
 
   @Override
@@ -67,5 +76,21 @@ public abstract class AbstractListFragment<T> extends Fragment {
 
   protected ListView getListView() {
     return listView;
+  }
+
+  @Override
+  public final boolean onContextItemSelected(MenuItem item) {
+    if (item.getGroupId() != fragmentPosition.ordinal()) {
+      return super.onContextItemSelected(item);
+    }
+    return onFragmentContextItemSelected(item);
+  }
+
+  protected boolean onFragmentContextItemSelected(MenuItem item) {
+    return false;
+  }
+
+  public final MenuItem addContextMenu(@NonNull ContextMenu menu, int id, @StringRes int text) {
+    return menu.add(fragmentPosition.ordinal(), id, Menu.NONE, text);
   }
 }

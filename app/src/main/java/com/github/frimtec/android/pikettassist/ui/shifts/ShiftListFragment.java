@@ -19,6 +19,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 
 import java.time.Duration;
@@ -30,6 +31,10 @@ import java.util.stream.Collectors;
 public class ShiftListFragment extends AbstractListFragment<Shift> {
 
   private View headerView;
+
+  public ShiftListFragment() {
+    super(FragmentPosition.SHIFTS);
+  }
 
   @Override
   protected void configureListView(ListView listView) {

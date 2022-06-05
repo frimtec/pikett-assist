@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -59,10 +58,10 @@ class OperationsCenterState extends State {
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
     if (operationCenter.isValid()) {
-      menu.add(Menu.NONE, MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_view);
+      stateContext.addContextMenu(menu, MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID, R.string.list_item_menu_view);
     }
-    menu.add(Menu.NONE, MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_select);
-    menu.add(Menu.NONE, MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID, Menu.NONE, R.string.list_item_menu_clear);
+    stateContext.addContextMenu(menu, MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID, R.string.list_item_menu_select);
+    stateContext.addContextMenu(menu, MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID, R.string.list_item_menu_clear);
   }
 
   @Override

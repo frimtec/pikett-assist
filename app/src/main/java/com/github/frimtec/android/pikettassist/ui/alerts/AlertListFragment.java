@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +34,7 @@ import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
@@ -70,6 +70,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
 
   @SuppressLint("ValidFragment")
   AlertListFragment(AlertDao alertDao) {
+    super(FragmentPosition.ALERT_LOG);
     this.alertDao = alertDao;
   }
 
@@ -164,13 +165,13 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
-    menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
-    menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.list_item_menu_delete);
+  public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
+    addContextMenu(menu, MENU_CONTEXT_VIEW_ID, R.string.list_item_menu_view);
+    addContextMenu(menu, MENU_CONTEXT_DELETE_ID, R.string.list_item_menu_delete);
   }
 
   @Override
-  public boolean onContextItemSelected(MenuItem item) {
+  public boolean onFragmentContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     ListView listView = getListView();
     Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
@@ -187,7 +188,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
         });
         return true;
       default:
-        return super.onContextItemSelected(item);
+        return false;
     }
   }
 

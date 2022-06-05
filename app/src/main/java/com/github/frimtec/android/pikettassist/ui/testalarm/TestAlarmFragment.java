@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +20,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
@@ -45,6 +45,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
 
   @SuppressLint("ValidFragment")
   TestAlarmFragment(TestAlarmDao testAlarmDao) {
+    super(FragmentPosition.TEST_ALARMS);
     this.testAlarmDao = testAlarmDao;
   }
 
@@ -64,20 +65,20 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
     TestAlarmContext selectedItem = (TestAlarmContext) getListView().getItemAtPosition(info.position);
-    menu.add(Menu.NONE, MENU_CONTEXT_VIEW_ID, Menu.NONE, R.string.list_item_menu_view);
+    addContextMenu(menu, MENU_CONTEXT_VIEW_ID, R.string.list_item_menu_view);
     if (ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
-      menu.add(Menu.NONE, MENU_CONTEXT_DEACTIVATE_ID, Menu.NONE, R.string.list_item_menu_deactivate);
+      addContextMenu(menu, MENU_CONTEXT_DEACTIVATE_ID, R.string.list_item_menu_deactivate);
     } else {
-      menu.add(Menu.NONE, MENU_CONTEXT_ACTIVATE_ID, Menu.NONE, R.string.list_item_menu_activate);
+      addContextMenu(menu, MENU_CONTEXT_ACTIVATE_ID, R.string.list_item_menu_activate);
     }
-    menu.add(Menu.NONE, MENU_CONTEXT_DELETE_ID, Menu.NONE, R.string.list_item_menu_delete);
+    addContextMenu(menu, MENU_CONTEXT_DELETE_ID, R.string.list_item_menu_delete);
   }
 
   @Override
-  public boolean onContextItemSelected(MenuItem item) {
+  public boolean onFragmentContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
     ListView listView = getListView();
     TestAlarmContext selectedItem = (TestAlarmContext) listView.getItemAtPosition(info.position);
@@ -108,7 +109,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
         Toast.makeText(getContext(), R.string.test_alarm_deactivated_toast, Toast.LENGTH_SHORT).show();
         return true;
       default:
-        return super.onContextItemSelected(item);
+        return false;
     }
   }
 

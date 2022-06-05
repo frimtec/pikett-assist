@@ -1,6 +1,8 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
 import android.content.Context;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 
 import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
@@ -18,6 +20,7 @@ import java.util.Set;
 
 class StateContext {
 
+  StateFragment stateFragment;
   private final Context context;
 
   private final Runnable fragmentRefreshAction;
@@ -47,6 +50,7 @@ class StateContext {
   private final BatteryStatus batteryStatus;
 
   StateContext(
+      StateFragment stateFragment,
       Context context,
       Runnable fragmentRefreshAction,
       Runnable registerPhoneNumberOnSmsAdapterAction,
@@ -69,6 +73,7 @@ class StateContext {
       Contact operationCenter,
       Set<String> operationsCenterPhoneNumbers,
       BatteryStatus batteryStatus) {
+    this.stateFragment = stateFragment;
     this.context = context;
     this.fragmentRefreshAction = fragmentRefreshAction;
     this.registerPhoneNumberOnSmsAdapterAction = registerPhoneNumberOnSmsAdapterAction;
@@ -183,5 +188,9 @@ class StateContext {
 
   public BatteryStatus getBatteryStatus() {
     return batteryStatus;
+  }
+
+  public MenuItem addContextMenu(ContextMenu menu, int id, @StringRes int text) {
+    return this.stateFragment.addContextMenu(menu, id, text);
   }
 }

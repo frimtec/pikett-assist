@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -37,9 +36,9 @@ class OnCallState extends State {
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
     if (ApplicationState.instance().getPikettStateManuallyOn()) {
-      menu.add(Menu.NONE, MENU_CONTEXT_RESET, Menu.NONE, R.string.list_item_menu_reset);
+      stateContext.addContextMenu(menu, MENU_CONTEXT_RESET, R.string.list_item_menu_reset);
     } else {
-      menu.add(Menu.NONE, MENU_CONTEXT_SET_MANUALLY_ON, Menu.NONE, R.string.list_item_menu_set_manually_on);
+      stateContext.addContextMenu(menu, MENU_CONTEXT_SET_MANUALLY_ON, R.string.list_item_menu_set_manually_on);
     }
   }
 

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -106,9 +105,9 @@ class AlarmState extends State {
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
     if (stateContext.getShiftState().isOn()) {
-      menu.add(Menu.NONE, MENU_CONTEXT_CREATE_ALARM_MANUALLY, Menu.NONE, R.string.menu_create_manually_alarm);
+      stateContext.addContextMenu(menu, MENU_CONTEXT_CREATE_ALARM_MANUALLY, R.string.menu_create_manually_alarm);
     }
-    menu.add(Menu.NONE, MENU_CONTEXT_BOGUS_ALARM, Menu.NONE, R.string.list_item_menu_bogus_alarm);
+    stateContext.addContextMenu(menu, MENU_CONTEXT_BOGUS_ALARM, R.string.list_item_menu_bogus_alarm);
   }
 
   @Override

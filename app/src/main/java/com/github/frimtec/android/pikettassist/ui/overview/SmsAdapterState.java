@@ -114,7 +114,7 @@ class SmsAdapterState extends State {
             openBrowserIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(openBrowserIntent);
           })
-          .setNegativeButton(R.string.general_cancel, (dialog, which) -> {
+          .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
           }).create();
       alertDialog.show();
       enableLinks(alertDialog);
@@ -131,7 +131,7 @@ class SmsAdapterState extends State {
       setButton(AlertDialog.BUTTON_POSITIVE, getContext().getString(R.string.general_install), (dialog, which) -> context.startActivity(
           Intent.createChooser(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.github.frimtec.android.securesmsproxy")), "Select F-Droid"))
       );
-      setButton(AlertDialog.BUTTON_NEGATIVE, getContext().getString(R.string.general_cancel), (dialog, which) -> {
+      setButton(AlertDialog.BUTTON_NEGATIVE, getContext().getString(android.R.string.cancel), (dialog, which) -> {
       });
     }
   }

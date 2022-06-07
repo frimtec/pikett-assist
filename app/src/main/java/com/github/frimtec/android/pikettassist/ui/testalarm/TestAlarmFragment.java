@@ -122,7 +122,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
       input.setInputType(InputType.TYPE_CLASS_TEXT);
       input.requestFocus();
       builder.setView(input);
-      builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+      builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
         dialog.dismiss();
         TestAlarmContext newTestAlarmContext = new TestAlarmContext(input.getText().toString());
         if (this.testAlarmDao.createNewContext(newTestAlarmContext, getString(R.string.test_alarm_message_empty))) {
@@ -135,7 +135,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
           Toast.makeText(getContext(), R.string.test_alarm_toast_added_duplicate, Toast.LENGTH_LONG).show();
         }
       });
-      builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+      builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
       builder.show();
     });
   }

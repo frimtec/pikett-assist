@@ -143,8 +143,6 @@
     <string name="about_documentation">&lt;h3&gt;Documentation&lt;/h3&gt;&lt;p&gt;A manual for the use of PAssist can be found here: &lt;a href=https://github.com/frimtec/pikett-assist/blob/master/README.md#passist&gt;Manual&lt;/a&gt;.&lt;/p&gt;</string>
     <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
     The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
-    <string name="general_ok">OK</string>
-    <string name="general_cancel">Cancel</string>
     <string name="general_download">Download</string>
     <string name="general_install">Install</string>
     <string name="general_no">No</string>

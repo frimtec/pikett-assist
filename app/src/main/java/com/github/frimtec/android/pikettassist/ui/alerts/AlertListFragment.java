@@ -202,14 +202,14 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       input.setText(R.string.manually_created_alarm_reason_default);
       input.requestFocus();
       builder.setView(input);
-      builder.setPositiveButton(R.string.general_ok, (dialog, which) -> {
+      builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
         dialog.dismiss();
         String comment = input.getText().toString();
         AlertService alertService = new AlertService(getContext());
         alertService.newManuallyAlert(Instant.now(), comment);
         refresh();
       });
-      builder.setNegativeButton(R.string.general_cancel, (dialog, which) -> dialog.cancel());
+      builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
       builder.show();
     });
   }

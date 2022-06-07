@@ -134,8 +134,6 @@
     <string name="contact_preference_empty_selection">Nicht ausgewählt</string>
     <string name="about_documentation">&lt;h3&gt;Dokumentation&lt;/h3&gt;&lt;p&gt;Eine Dokumentation für die Benutzung von PAssist findest Du hier: &lt;a href=https://github.com/frimtec/pikett-assist/blob/master/README.md#passist&gt;Anleitung&lt;/a&gt;.&lt;/p&gt;</string>
     <string name="about_disclaimer">&lt;h3&gt;Haftungsausschluss&lt;/h3&gt;&lt;p&gt;Der Autor übernimmt keine Verantwortung, gibt keinerlei Garantie bei der Nutzung der Anwendung.&lt;/p&gt;&lt;p&gt;Die Anwendung ist kostenlos. Der Quellcode steht als Open-Source unter der &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 Lizenz&lt;/a&gt; zur Verfügung.&lt;/p&gt;</string>
-    <string name="general_ok">Ok</string>
-    <string name="general_cancel">Abbruch</string>
     <string name="general_download">Herunterladen</string>
     <string name="general_install">Installieren</string>
     <string name="general_no">Nein</string>

@@ -12,7 +12,7 @@
     <string name="title_test_alarms">Test alarms</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about">About</string>
-    <string name="title_activity_logcat">Logcat</string>
+    <string name="title_activity_logcat" translatable="false">Logcat</string>
 
     <string name="main_state_button_confirm_alert">Confirm</string>
     <string name="main_state_button_close_alert">Close</string>
@@ -27,7 +27,7 @@
     <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
     <string name="pref_default_partner_search_pattern" translatable="false">Deputy:\\s([a-z,0-9]{5})(\\s|$)</string>
     <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
-    <string name="pref_default_pre_post_run_time_seconds">300</string>
+    <string name="pref_default_pre_post_run_time_seconds" translatable="false">300</string>
     <string name="pref_title_meta_sms_message_pattern">SMS ignore filter</string>
     <string name="pref_meta_sms_message_pattern">Enter a valid regexp that fully matches SMS to be ignored</string>
 
@@ -45,9 +45,9 @@
     <string name="pref_title_supervise_test_contexts">Test contexts to supervise</string>
     <string name="pref_title_test_alarm_check_time">Check time</string>
     <string name="pref_title_test_alarm_enabled">Use test alarms</string>
-    <string name="pref_default_test_alarm_check_time">12:00</string>
+    <string name="pref_default_test_alarm_check_time" translatable="false">12:00</string>
     <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window</string>
-    <string name="pref_default_test_alarm_accept_time_window_minutes">15</string>
+    <string name="pref_default_test_alarm_accept_time_window_minutes" translatable="false">15</string>
     <string name="pref_title_test_alarm_check_weekdays">Check days</string>
     <string name="weekdays_monday">Monday</string>
     <string name="weekdays_tuesday">Tuesday</string>
@@ -82,7 +82,7 @@
     <string name="pref_default_supervise_signal_strength_subscription" translatable="false">1</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_donate">Donate</string>
-    <string name="menu_logcat">Logcat</string>
+    <string name="menu_logcat" translatable="false">Logcat</string>
     <string name="menu_about">About</string>
     <string name="menu_logcat_refresh">Refresh</string>
     <string name="menu_logcat_clear">Clear</string>
@@ -226,9 +226,9 @@
     <string name="notification_volume_changed_text">Volume changed to %s.</string>
     <string name="pref_header_day_night_profile"><![CDATA[Day/night profile]]></string>
     <string name="pref_title_day_start_time">Day</string>
-    <string name="pref_default_day_start_time">07:00</string>
+    <string name="pref_default_day_start_time" translatable="false">07:00</string>
     <string name="pref_title_night_start_time">Night</string>
-    <string name="pref_default_night_start_time">22:00</string>
+    <string name="pref_default_night_start_time" translatable="false">22:00</string>
     <string name="pref_title_manage_volume">Control during on-call duty</string>
     <string name="pref_title_category_profile_start_times">Profile start times</string>
     <string name="pref_title_category_ringtone_volume">Ringtone volume</string>
@@ -237,7 +237,7 @@
     <string name="pref_title_category_battery_safer">Battery drain</string>
     <string name="pref_title_battery_safer_at_night">Minimize at night</string>
     <string name="pref_summary_battery_safer_at_night_enabled">The monitoring interval for the signal strength is reduced at night!</string>
-    <string name="pref_summary_battery_safer_at_night_disabled" />
+    <string name="pref_summary_battery_safer_at_night_disabled" translatable="false" />
     <string name="menu_create_manually_alarm">Create alert manually</string>
     <string name="manually_created_alarm_reason">Enter a reason</string>
     <string name="manually_created_alarm_reason_default">Phone call</string>

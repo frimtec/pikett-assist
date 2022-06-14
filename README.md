@@ -8,19 +8,30 @@
 [![Build Status][build-status-shield]][build-status]
 [![Deploy Status][deploy-status-shield]][deploy-status]
 
-PAssist is an Android application to assist you while doing on-call duties.
-The name PAssist is the short form of Pikett-Assist ('Pikett' is the Swiss German term for on-call).
+PAssist is an Android application to assist you while doing on-call duties. The name PAssist is the
+short form of Pikett-Assist ('Pikett' is the Swiss German term for on-call).
 
 PAssist works for SMS based alerting systems.
 
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>
+---
+
+<a href='https://lokalise.com'><img alt='lokalise logo' width='180' src='images/lokalise_logo.png'/></a>
+
+App language translations maintained with the great localization platform [Lokalise][lokalise].
+
+---
 
 ## Features
+
 ### PAssist is controlled by your calendar
-PAssist activates and deactivates itself based on your calendar. All supervision features are only running, when PAssist is activated.
-PAssist activates some time (configurable pre-/ post-run time) before and keeps activated some time after the events start and stop time. 
-This ensures you won't miss an alert in case of a small time discrepancy between the operations center time and your phone time.
+
+PAssist activates and deactivates itself based on your calendar. All supervision features are only
+running, when PAssist is activated. PAssist activates some time (configurable pre-/ post-run time)
+before and keeps activated some time after the events start and stop time. This ensures you won't
+miss an alert in case of a small time discrepancy between the operations center time and your phone
+time.
 All calendar events matching a configured title pattern are considered as on-call events. 
 PAssist shows you an overview with all future on-call events on the calendar tab.
 
@@ -219,9 +230,16 @@ Enable "Minimize at night" to reduce power drain at night by reducing the check 
 ![Overview](images/PAssist_20.png)
 
 ## Supported languages
-Currently the following languages are supported in PAssist:
+Currently, the following languages are supported in PAssist:
 * English
 * German
+
+In preparation are the additional languages:
+* French
+* Italien
+
+Translation support for any additional language is warmly welcome - just get in contact with me.
+PAssist is using [Lokalise][lokalise] to maintain language translations.
 
 ## Open-Source and free
 PAssist is Open-Source and available under Apache-2.0 licence.
@@ -248,6 +266,8 @@ Feedback, bug reports or feature requests are very welcome.
 You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub][issues].
 
 ## Credits
+
+* [Lokalise][lokalise]: For supporting Open-Source projects.
 * [bakito][github-bakito]: For implementing dual SIM support and excellent testing support.
 * [IzzySoft][github-izzysoft]: For offering PAssist on IzzyOnDroid F-Droid repository.
 
@@ -272,3 +292,4 @@ You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an iss
 [slide-to-act]: https://github.com/cortinico/slidetoact
 [preferencex-android]: https://github.com/takisoft/preferencex-android
 [secure-sms-proxy-api]: https://github.com/frimtec/secure-sms-proxy
+[lokalise]: https://lokalise.com/

@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
       switch (fragmentPosition) {
         case STATE:
           StateFragment stateFragment = new StateFragment();
-          stateFragment.setActivityFacade(MainActivity.this, new StateFragment.BillingAccess() {
+          stateFragment.setActivityFacade(new StateFragment.BillingAccess() {
             @Override
             public List<BillingProvider.BillingState> getProducts() {
               return MainActivity.this.billingAdapter.getAllProducts();

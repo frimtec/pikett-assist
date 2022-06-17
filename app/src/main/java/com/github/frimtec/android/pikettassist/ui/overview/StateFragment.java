@@ -11,7 +11,6 @@ import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficL
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -92,7 +91,6 @@ public class StateFragment extends AbstractListFragment<State> {
 
   private AlertService alertService;
   private SecureSmsProxyFacade s2msp;
-  private Activity activity;
   private BillingAccess billingAccess;
 
   private SignalStrengthService signalStrengthService;
@@ -114,8 +112,7 @@ public class StateFragment extends AbstractListFragment<State> {
     this.testAlarmDao = testAlarmDao;
   }
 
-  public void setActivityFacade(Activity parent, BillingAccess billingAccess) {
-    this.activity = parent;
+  public void setActivityFacade(BillingAccess billingAccess) {
     this.billingAccess = billingAccess;
   }
 
@@ -224,7 +221,7 @@ public class StateFragment extends AbstractListFragment<State> {
         this,
         getContext(),
         this::refresh,
-        () -> this.s2msp.register(activity, REGISTER_SMS_ADAPTER_REQUEST_CODE, operationsCenterPhoneNumbers, SmsListener.class),
+        () -> this.s2msp.register(getActivity(), REGISTER_SMS_ADAPTER_REQUEST_CODE, operationsCenterPhoneNumbers, SmsListener.class),
         () -> this.s2msp.sendSms(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, ":-)"), ApplicationState.instance().getSmsAdapterSecret()),
         () -> this.alertService.confirmAlert(),
         () -> this.alertService.closeAlert(),

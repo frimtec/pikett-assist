@@ -64,11 +64,18 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG = "MainActivity";
 
   private static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
-  public static final int[] TAB_ICONS = new int[]{
+  private static final int[] TAB_ICONS = new int[]{
       R.drawable.ic_home_black_24dp,
       R.drawable.ic_date_range_black_24dp,
       R.drawable.ic_siren,
       R.drawable.ic_test_alarm
+  };
+
+  private static final int[] TAB_DESCRIPTION = new int[]{
+      R.string.title_home,
+      R.string.title_shift_overview,
+      R.string.title_alert_log,
+      R.string.title_test_alarms
   };
 
   class SwipeFragmentStateAdapter extends FragmentStateAdapter {
@@ -153,7 +160,10 @@ public class MainActivity extends AppCompatActivity {
     ViewPager2Helper.reduceDragSensitivity(viewPager, 8);
 
     TabLayout tabLayout = findViewById(R.id.tab_layout);
-    tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setIcon(TAB_ICONS[position]));
+    tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+      tab.setIcon(TAB_ICONS[position]);
+      tab.setContentDescription(TAB_DESCRIPTION[position]);
+    });
     tabLayoutMediator.attach();
 
     this.billingAdapter = new BillingAdapter(this);

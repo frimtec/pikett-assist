@@ -233,10 +233,8 @@ Enable "Minimize at night" to reduce power drain at night by reducing the check 
 Currently, the following languages are supported in PAssist:
 * English
 * German
-
-In preparation are the additional languages:
 * French
-* Italien
+* Italian
 
 Translation support for any additional language is warmly welcome - just get in contact with me.
 PAssist is using [Lokalise][lokalise] to maintain language translations.

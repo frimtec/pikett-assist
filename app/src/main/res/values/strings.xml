@@ -1,285 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="app_name" translatable="false">PAssist</string>
-    <string name="channel_name_alarm">Alarms</string>
-    <string name="channel_description_alarm">Urgent alarms.</string>
-    <string name="channel_name_notification">Notifications</string>
-    <string name="channel_description_notification">Non urgent notifications like for example the on-call state.</string>
-    <string name="channel_name_change_system">System changes</string>
-    <string name="channel_description_change_system">Change of system settings.</string>
-    <string name="title_home">Overview</string>
-    <string name="title_shift_overview">Calendar</string>
-    <string name="title_alert_log">Alert log</string>
-    <string name="title_test_alarms">Test alarms</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_logcat" translatable="false">Logcat</string>
-
-    <string name="main_state_button_confirm_alert">Confirm</string>
-    <string name="main_state_button_close_alert">Close</string>
-
-    <!-- Strings related to Settings -->
-
-    <string name="pref_header_calendar">Calendar</string>
-    <string name="pref_title_calendar_selection">Calendar filter</string>
-    <string name="pref_title_calendar_event_pikett_title_pattern">Event filter</string>
-    <string name="pref_title_use_partner_contact_extraction">Extract partner contacts from events</string>
-    <string name="pref_title_partner_search_pattern">Extraction pattern for partner contacts</string>
-    <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
-    <string name="pref_default_partner_search_pattern" translatable="false">Deputy:\\s([a-z,0-9]{5})(\\s|$)</string>
-    <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
-    <string name="pref_default_pre_post_run_time_seconds" translatable="false">300</string>
-    <string name="pref_title_meta_sms_message_pattern">SMS ignore filter</string>
-    <string name="pref_meta_sms_message_pattern">Enter a valid regexp that fully matches SMS to be ignored</string>
-
-    <string name="pref_title_supervise_battery_level">Supervise battery level</string>
-    <string name="pref_title_battery_warn_level">Minimal battery level</string>
-
-    <string name="pref_title_alarm_operations_center_contact">Operations center</string>
-    <string name="pref_title_send_confirm_sms">Send confirmation replies</string>
-    <string name="pref_title_sms_confirm_text">Confirmation reply</string>
-    <string name="pref_default_sms_confirm_text">OK</string>
-
-    <string name="pref_header_test_alarm">Test alarm</string>
-    <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern</string>
-    <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
-    <string name="pref_title_supervise_test_contexts">Test contexts to supervise</string>
-    <string name="pref_title_test_alarm_check_time">Check time</string>
-    <string name="pref_title_test_alarm_enabled">Use test alarms</string>
-    <string name="pref_default_test_alarm_check_time" translatable="false">12:00</string>
-    <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window</string>
-    <string name="pref_default_test_alarm_accept_time_window_minutes" translatable="false">15</string>
-    <string name="pref_title_test_alarm_check_weekdays">Check days</string>
-    <string name="weekdays_monday">Monday</string>
-    <string name="weekdays_tuesday">Tuesday</string>
-    <string name="weekdays_wednesday">Wednesday</string>
-    <string name="weekdays_thursday">Thursday</string>
-    <string name="weekdays_friday">Friday</string>
-    <string name="weekdays_saturday">Saturday</string>
-    <string name="weekdays_sunday">Sunday</string>
-
-    <string name="signal_levels_off">Off</string>
-    <string name="signal_levels_none">None</string>
-    <string name="signal_levels_poor">Poor</string>
-    <string name="signal_levels_moderate">Moderate</string>
-    <string name="signal_levels_good">Good</string>
-    <string name="signal_levels_great">Great</string>
-
-    <string name="registration_errors_successful">Successful</string>
-    <string name="registration_errors_no_secret">Failed, no secret</string>
-    <string name="registration_errors_rejected">Rejected</string>
-    <string name="registration_errors_missing_sms_permissions">Failed, S2MSP is missing SMS permissions</string>
-    <string name="registration_errors_no_referrer">Failed, no referrer</string>
-    <string name="registration_errors_no_extras">Failed, no extras</string>
-    <string name="registration_errors_failed">Failed</string>
-
-    <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>
-    <string name="pref_title_test_alarm_ring_tone">Missing test alarm ringtone</string>
-    <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
-    <string name="pref_title_supervise_signal_strength_min_level">Minimal signal strength</string>
-    <string name="pref_default_supervise_signal_strength_min_level" translatable="false">2</string>
-    <string name="pref_title_supervise_signal_strength_subscription">Supervised subscription</string>
-    <string name="subscription">Subscription</string>
-    <string name="pref_default_supervise_signal_strength_subscription" translatable="false">1</string>
-    <string name="menu_settings">Settings</string>
-    <string name="menu_donate">Donate</string>
-    <string name="menu_logcat" translatable="false">Logcat</string>
-    <string name="menu_about">About</string>
-    <string name="menu_logcat_refresh">Refresh</string>
-    <string name="menu_logcat_clear">Clear</string>
-
-    <string name="preferences_calendar_all">All</string>
-    <string name="preferences_alarm_ringtone_default">Default ringtone</string>
-    <string name="alert_view_confirm_time">Time to confirm: %d seconds</string>
-    <string name="alert_view_duration">Duration: %.1f minutes</string>
-    <string name="alert_view_state_title">State</string>
-    <string name="alert_view_state_closed">Closed</string>
-    <string name="alert_view_state_wip">Work in progress</string>
-    <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
-    <string name="list_item_menu_view">View</string>
-    <string name="list_item_menu_delete">Delete</string>
-    <string name="list_item_menu_select">Select</string>
-    <string name="list_item_menu_clear">Clear</string>
-    <string name="list_item_menu_activate">Activate</string>
-    <string name="list_item_menu_bogus_alarm">Schedule bogus alarm</string>
-    <string name="toast_bogus_alarm">Bogus alarm will be triggered in 10 seconds …</string>
-    <string name="list_item_menu_deactivate">Deactivate</string>
-    <string name="list_item_menu_set_manually_on">Set manually on</string>
-    <string name="list_item_menu_reset">Reset</string>
-    <string name="test_alarm_context_general">General</string>
-    <string name="notification_low_signal_title">Low signal</string>
-    <string name="notification_low_signal_text">Signal level</string>
-    <string name="notification_low_battery_title">Low battery</string>
-    <string name="notification_low_battery_text">Battery level</string>
-    <string name="state_fragment_signal_level">Signal</string>
-    <string name="notification_pikett_on_title">On-call</string>
-    <string name="notification_pikett_on_text">You are on-call!</string>
-    <string name="notification_alert_title">On-call Alert</string>
-    <string name="notification_alert_text">Close alarm when all activities are finished.</string>
-    <string name="notification_missing_test_alert_title">Missing test alarm</string>
-    <string name="notification_missing_test_alert_text">Test contexts: </string>
-    <string name="notification_alert_confirm_button">Confirm</string>
-    <string name="notification_battery_optimization_title">Battery optimization is on!</string>
-    <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimization turned off. Battery consumption only increases slightly during active on-call duty.</string>
-    <string name="notification_draw_overlays_title">\'Display over other apps\' is deactivated!</string>
-    <string name="notification_draw_overlays_text">To show alerts even if PAssist is in the background, the \'Display over other apps\' setting must be active for PAssist.</string>
-    <string name="alert_action_close">Close</string>
-    <string name="state_fragment_operations_center">Op. center</string>
-    <string name="state_fragment_partner">Partner</string>
-    <string name="state_fragment_pikett_state">On-call state</string>
-    <string name="state_fragment_alarm_state">Alarm state</string>
-    <string name="general_enabled">Enabled</string>
-    <string name="general_disabled">Disabled</string>
-    <string name="state_on">On</string>
-    <string name="state_manually_on">On (manually)</string>
-    <string name="state_off">Off</string>
-    <string name="state_fragment_partner_not_found_clipboard_label">Partner nickname</string>
-
-    <string name="alarm_state_on">Unconfirmed</string>
-    <string name="alarm_state_on_confirmed">Confirmed</string>
-    <string name="alarm_state_off">Off</string>
-    <string name="state_fragment_test_alarm_never_received">Never received</string>
-    <string name="contact_helper_unknown_contact">Unknown</string>
-    <string name="contact_preference_empty_selection">No selection</string>
-    <string name="about_documentation">&lt;h3&gt;Documentation&lt;/h3&gt;&lt;p&gt;A manual for the use of PAssist can be found here: &lt;a href=https://github.com/frimtec/pikett-assist/blob/master/README.md#passist&gt;Manual&lt;/a&gt;.&lt;/p&gt;</string>
-    <string name="about_disclaimer">&lt;h3&gt;Disclaimer&lt;/h3&gt;&lt;p&gt;The author assumes no responsibility, gives no guarantee when using the application.&lt;/p&gt;&lt;p&gt;The application is free.
-    The source code is available as open source under the &lt;a href=https://opensource.org/licenses/Apache-2.0&gt;Apache 2.0 license&lt;/a&gt;.&lt;/p&gt;</string>
-    <string name="general_download">Download</string>
-    <string name="general_install">Install</string>
-    <string name="general_no">No</string>
-    <string name="general_yes">Yes</string>
-    <string name="general_are_you_sure">Are you sure?</string>
-    <string name="general_entry_deleted">Entry has been deleted.</string>
-    <string name="state_fragment_permissions">Permissions</string>
-    <string name="state_fragment_draw_overlays">Display over other apps</string>
-    <string name="state_fragment_battery_optimization">Battery Optimization</string>
-    <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
-    <string name="general_no_data">No data available yet.</string>
-
-    <string name="permission_required">Required permission:</string>
-    <string name="permission_contacts_title">Contacts</string>
-    <string name="permission_contacts_text">PAssist reads the phone number from the contact of the configured operations center. This is used to decide which SMS must be supervised during on-call duty. Without this permission PAssist does not work.</string>
-    <string name="permission_calendar_title">Calendar</string>
-    <string name="permission_calendar_text">PAssist reads the events from the calendar to determine whether on-call duty is active or not. Only in an active on-call state, the supervise functions of PAssist are enabled. Without this permission PAssist does not work.</string>
-    <string name="permission_write_external_storage_title">External storage</string>
-    <string name="permission_write_external_storage_text">To download an SMS adapter and to store backups of the alarm history, it is required that PAssist can write to the external storage.</string>
-    <string name="permission_location_title">Location</string>
-    <string name="permission_location_text">To supervise the phone signal strength during on-call duty, PAssist must access information from the phone cells in range. This data is protected by the permission coarse location. Without this permission PAssist does not work.</string>
-    <string name="send_log_title">PAssist crash report</string>
-    <string name="send_log_message">PAssist was crashed unexpectedly. To improve the stability of PAssist, please send the crash report to the author via e-mail.</string>
-    <string name="send_log_button_send">Send</string>
-    <string name="title_activity_test_alarm_details">Test alarm details</string>
-    <string name="test_alarm_details_alarm_state_label">Alarm state</string>
-    <string name="test_alarm_details_supervised_label">Supervised</string>
-    <string name="test_alarm_details_last_received_label">Last received</string>
-    <string name="test_alarm_details_message_label">Received message</string>
-    <string name="test_alarm_activated_toast">Test alarm activated.</string>
-    <string name="test_alarm_deactivated_toast">Test alarm deactivated.</string>
-    <string name="test_alarm_message_empty">Empty</string>
-    <string name="test_alarm_received_never">Never</string>
-    <string name="test_alarm_add_title">Enter new test alarm context</string>
-    <string name="test_alarm_toast_added_success">New test alarm context added.</string>
-    <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
-    <string name="state_fragment_sms_adapter">SMS adapter</string>
-    <string name="state_fragment_battery">Battery</string>
-    <string name="state_fragment_battery_charging">charging</string>
-    <string name="state_fragment_sms_adapter_not_installed">Not installed</string>
-    <string name="state_fragment_sms_adapter_no_sms_permissions">No SMS permission</string>
-    <string name="state_fragment_phone_numbers_blocked">Number blocked</string>
-    <string name="state_fragment_loopback_sms_sent">Test-SMS sent…</string>
-    <string name="sms_listener_loopback_sms_received">Test-SMS received!</string>
-    <string name="sms_listener_meta_sms_filtered">SMS received and filtered!</string>
-    <string name="state_fragment_s2msp_requires_update">Requires update</string>
-
-    <string name="permission_sms_title">SMS adapter installation</string>
-    <string name="permission_sms_text">
-        The main function of PAssist is to trigger an alarm when receiving an SMS from a configured operations center.
-        The necessary SMS authorizations are no longer granted by Google Play.
-        The SMS communication is therefore implemented with an adapter app (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;).
-    </string>
-    <string name="install_with_browser">
-        The SMS adapter is downloaded via browser. To install, \"Install unknown apps\" must be activated in the browser.
-    </string>
-    <string name="install_with_fdroid">
-        You can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; with F-Droid from the repo &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt;.
-    </string>
-    <string name="permission_sms_update_title">SMS adapter update</string>
-    <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; needs to be updated.</string>
-    <string name="list_item_menu_send_test_sms">Send test SMS</string>
-    <string name="sms_adapter_registration">S2MSP registration</string>
-    <string name="button_buy">Buy</string>
-    <string name="button_own">Bought</string>
-    <string name="button_pending">Pending</string>
-    <string name="header_inapp">PAssist donation articles</string>
-    <string name="error_billing_unavailable">Billing unavailable. Make sure your Google Play app is setup correctly.</string>
-    <string name="error_billing_default">Billing unavailable. Please check your device.</string>
-    <string name="about_no_sponsoring"><![CDATA[<h3>Sponsorship</h3>If you like PAssist, become a sponsor!]]></string>
-    <string name="about_sponsoring"><![CDATA[<h3>Sponsorship</h3>Thank you for your PAssist sponsorship:]]></string>
-    <string name="state_fragment_donation">Donation</string>
-    <string name="state_fragment_donation_value">How about a donation?</string>
-    <string name="purchase_acknowledged">The purchase is acknowledged. Many thanks for your donation.</string>
-    <string name="reduced">reduced</string>
-    <string name="increased">increased</string>
-    <string name="notification_volume_changed_title">Ringtone volume</string>
-    <string name="notification_volume_changed_text">Volume changed to %s.</string>
-    <string name="pref_header_day_night_profile"><![CDATA[Day/night profile]]></string>
-    <string name="pref_title_day_start_time">Day</string>
-    <string name="pref_default_day_start_time" translatable="false">07:00</string>
-    <string name="pref_title_night_start_time">Night</string>
-    <string name="pref_default_night_start_time" translatable="false">22:00</string>
-    <string name="pref_title_manage_volume">Control during on-call duty</string>
-    <string name="pref_title_category_profile_start_times">Profile start times</string>
-    <string name="pref_title_category_ringtone_volume">Ringtone volume</string>
-    <string name="pref_title_volume_day">Volume day</string>
-    <string name="pref_title_volume_night">Volume night</string>
-    <string name="pref_title_category_battery_safer">Battery drain</string>
-    <string name="pref_title_battery_safer_at_night">Minimize at night</string>
-    <string name="pref_summary_battery_safer_at_night_enabled">The monitoring interval for the signal strength is reduced at night!</string>
-    <string name="pref_summary_battery_safer_at_night_disabled" translatable="false" />
-    <string name="menu_create_manually_alarm">Create alert manually</string>
-    <string name="manually_created_alarm_reason">Enter a reason</string>
-    <string name="manually_created_alarm_reason_default">Phone call</string>
-    <string name="manually_created_alarm_reason_prefix">Manually created</string>
-    <string name="pref_title_notify_low_signal">Alert with notification</string>
-    <string name="pref_title_low_signal_filter">Signal filter</string>
-    <string name="general_seconds">seconds</string>
-    <string name="shift_header_column_title_entry">Calendar entry</string>
-    <string name="shift_header_column_title_duration">Duration in days</string>
-    <string name="shift_header_next_label_no_entry">No entry in calendar!</string>
-    <string name="shift_header_next_label_starts">Shift starts in:</string>
-    <string name="shift_header_next_label_ends">Shift ends in:</string>
-    <string name="shift_item_unconfirmed">unconfirmed</string>
-    <string name="units_days">days</string>
-    <string name="units_day">day</string>
-    <string name="units_hours">hours</string>
-    <string name="units_hour">hour</string>
-    <string name="units_minutes">minutes</string>
-    <string name="units_minute">minute</string>
-    <string name="units_seconds">seconds</string>
-    <string name="units_second">second</string>
-    <string name="error_regexp_pattern">Syntax error in regexp pattern!</string>
-    <string name="error_regexp_groups_min">Minimum of %d group(s) required in regexp pattern!</string>
-    <string name="error_regexp_groups_max">Maximum of %d group(s) allowed in regexp pattern!</string>
-    <string name="pref_message_test_alarm_message_pattern">Enter a valid regexp (use optionally a single group to select the test context)</string>
-    <string name="pref_message_calendar_event_pikett_title_pattern">Enter a valid regexp (case will be ignored)</string>
-    <string name="pref_message_partner_search_pattern">Enter a valid regexp with one single group that extracts a partner contact nickname from the event notes.</string>
-    <string name="button_regexp_help">RegExp help?</string>
-    <string name="contact_name_no_access">No contact read permission</string>
-    <string name="state_fragment_operations_center_no_number">No valid number!</string>
-    <string name="state_fragment_do_not_disturb">Do Not Disturb</string>
-    <string name="do_not_disturb_info_title">Do Not Disturb is active!</string>
-    <string name="do_not_disturb_info_text">During on-call duty you should disable the \"Do Not Disturb\" mode. Otherwise PAssist cannot control the ringtone volume. Important alerts and notifications are suppressed by the device.</string>
-    <string name="import_alert_log_are_you_sure">All existing alert log entries will be replaced, are you sure?</string>
-    <string name="general_export">Export</string>
-    <string name="general_import">Import</string>
-    <string name="alert_log_export_success">Export succeeded.</string>
-    <string name="alert_log_export_failed">Export failed!</string>
-    <string name="alert_log_import_success">Import succeeded.</string>
-    <string name="alert_log_import_failed_bad_format">Import failed due to bad file format!</string>
-    <string name="alert_log_import_failed">Import failed!</string>
-    <string name="alert_list_header_statistic_month_label">Last 30 days:</string>
-    <string name="alert_list_header_statistic_year_label">Last 365 days:</string>
-    <string name="partner_contact_unknown_info_title">Unknown contact</string>
-    <string name="partner_contact_unknown_info_text">No contact with given nickname exists.\nPlease add nickname to the corresponding contact (nickname was copied to the clipboard).</string>
-    <string name="button_rate">Rate app</string>
-
+  <string name="app_name" translatable="false">PAssist</string>
+  <string name="channel_name_alarm">Alarms</string>
+  <string name="channel_description_alarm">Urgent alarms.</string>
+  <string name="channel_name_notification">Notifications</string>
+  <string name="channel_description_notification">Non urgent notifications like for example the on-call state.</string>
+  <string name="channel_name_change_system">System changes</string>
+  <string name="channel_description_change_system">Change of system settings.</string>
+  <string name="title_home">Overview</string>
+  <string name="title_shift_overview">Calendar</string>
+  <string name="title_alert_log">Alert log</string>
+  <string name="title_test_alarms">Test alarms</string>
+  <string name="title_activity_settings">Settings</string>
+  <string name="title_activity_about">About</string>
+  <string name="title_activity_logcat" translatable="false">Logcat</string>
+  <string name="main_state_button_confirm_alert">Confirm</string>
+  <string name="main_state_button_close_alert">Close</string>
+  <string name="pref_header_calendar">Calendar</string>
+  <string name="pref_title_calendar_selection">Calendar filter</string>
+  <string name="pref_title_calendar_event_pikett_title_pattern">Event filter</string>
+  <string name="pref_title_use_partner_contact_extraction">Extract partner contacts from events</string>
+  <string name="pref_title_partner_search_pattern">Extraction pattern for partner contacts</string>
+  <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
+  <string name="pref_default_partner_search_pattern" translatable="false">Deputy:\\s([a-z,0-9]{5})(\\s|$)</string>
+  <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
+  <string name="pref_default_pre_post_run_time_seconds" translatable="false">300</string>
+  <string name="pref_title_meta_sms_message_pattern">SMS ignore filter</string>
+  <string name="pref_meta_sms_message_pattern">Enter a valid RegEx that fully matches SMS to be ignored</string>
+  <string name="pref_title_supervise_battery_level">Supervise battery level</string>
+  <string name="pref_title_battery_warn_level">Minimal battery level</string>
+  <string name="pref_title_alarm_operations_center_contact">Operations center</string>
+  <string name="pref_title_send_confirm_sms">Send confirmation replies</string>
+  <string name="pref_title_sms_confirm_text">Confirmation reply</string>
+  <string name="pref_default_sms_confirm_text">OK</string>
+  <string name="pref_header_test_alarm">Test alarm</string>
+  <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern</string>
+  <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
+  <string name="pref_title_supervise_test_contexts">Test contexts to supervise</string>
+  <string name="pref_title_test_alarm_check_time">Check time</string>
+  <string name="pref_title_test_alarm_enabled">Use test alarms</string>
+  <string name="pref_default_test_alarm_check_time" translatable="false">12:00</string>
+  <string name="pref_title_test_alarm_accept_time_window_minutes">Test alarm time window</string>
+  <string name="pref_default_test_alarm_accept_time_window_minutes" translatable="false">15</string>
+  <string name="pref_title_test_alarm_check_weekdays">Check days</string>
+  <string name="weekdays_monday">Monday</string>
+  <string name="weekdays_tuesday">Tuesday</string>
+  <string name="weekdays_wednesday">Wednesday</string>
+  <string name="weekdays_thursday">Thursday</string>
+  <string name="weekdays_friday">Friday</string>
+  <string name="weekdays_saturday">Saturday</string>
+  <string name="weekdays_sunday">Sunday</string>
+  <string name="signal_levels_off">Off</string>
+  <string name="signal_levels_none">None</string>
+  <string name="signal_levels_poor">Poor</string>
+  <string name="signal_levels_moderate">Moderate</string>
+  <string name="signal_levels_good">Good</string>
+  <string name="signal_levels_great">Great</string>
+  <string name="registration_errors_successful">Successful</string>
+  <string name="registration_errors_no_secret">Failed, no secret</string>
+  <string name="registration_errors_rejected">Rejected</string>
+  <string name="registration_errors_missing_sms_permissions">Failed, S2MSP is missing SMS permissions</string>
+  <string name="registration_errors_no_referrer">Failed, no referrer</string>
+  <string name="registration_errors_no_extras">Failed, no extras</string>
+  <string name="registration_errors_failed">Failed</string>
+  <string name="pref_title_alarm_ring_tone">On-call alarming ringtone</string>
+  <string name="pref_title_test_alarm_ring_tone">Ringtone for missing test alarm</string>
+  <string name="pref_title_supervise_signal_strength">Supervise signal strength</string>
+  <string name="pref_title_supervise_signal_strength_min_level">Minimal signal strength</string>
+  <string name="pref_default_supervise_signal_strength_min_level" translatable="false">2</string>
+  <string name="pref_title_supervise_signal_strength_subscription">Supervised subscription</string>
+  <string name="subscription">Subscription</string>
+  <string name="pref_default_supervise_signal_strength_subscription" translatable="false">1</string>
+  <string name="menu_settings">Settings</string>
+  <string name="menu_donate">Donate</string>
+  <string name="menu_logcat" translatable="false">Logcat</string>
+  <string name="menu_about">About</string>
+  <string name="menu_logcat_refresh">Refresh</string>
+  <string name="menu_logcat_clear">Clear</string>
+  <string name="preferences_calendar_all">All</string>
+  <string name="preferences_alarm_ringtone_default">Default ringtone</string>
+  <string name="alert_view_confirm_time">Time to confirm: %d seconds</string>
+  <string name="alert_view_duration">Duration: %.1f minutes</string>
+  <string name="alert_view_state_title">State</string>
+  <string name="alert_view_state_closed">Closed</string>
+  <string name="alert_view_state_wip">Work in progress</string>
+  <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
+  <string name="list_item_menu_view">View</string>
+  <string name="list_item_menu_delete">Delete</string>
+  <string name="list_item_menu_select">Select</string>
+  <string name="list_item_menu_clear">Clear</string>
+  <string name="list_item_menu_activate">Activate</string>
+  <string name="list_item_menu_bogus_alarm">Schedule bogus alarm</string>
+  <string name="toast_bogus_alarm">Bogus alarm will be triggered in 10 seconds …</string>
+  <string name="list_item_menu_deactivate">Deactivate</string>
+  <string name="list_item_menu_set_manually_on">Set manually on</string>
+  <string name="list_item_menu_reset">Reset</string>
+  <string name="test_alarm_context_general">General</string>
+  <string name="notification_low_signal_title">Low signal</string>
+  <string name="notification_low_signal_text">Signal level</string>
+  <string name="notification_low_battery_title">Low battery</string>
+  <string name="notification_low_battery_text">Battery level</string>
+  <string name="state_fragment_signal_level">Signal</string>
+  <string name="notification_pikett_on_title">On-call</string>
+  <string name="notification_pikett_on_text">You are on-call!</string>
+  <string name="notification_alert_title">On-call alert</string>
+  <string name="notification_alert_text">Close alarm when all activities are finished.</string>
+  <string name="notification_missing_test_alert_title">Missing test alarm</string>
+  <string name="notification_missing_test_alert_text">Test contexts:</string>
+  <string name="notification_alert_confirm_button">Confirm</string>
+  <string name="notification_battery_optimization_title">Battery optimization is on!</string>
+  <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimization turned off. Battery consumption only increases slightly during active on-call duty.</string>
+  <string name="notification_draw_overlays_title">\'Display over other apps\' is deactivated!</string>
+  <string name="notification_draw_overlays_text">To show alerts even if PAssist is in the background, the \"Display over other apps\" setting must be active for PAssist.</string>
+  <string name="alert_action_close">Close</string>
+  <string name="state_fragment_operations_center">Operations Center</string>
+  <string name="state_fragment_partner">Partner</string>
+  <string name="state_fragment_pikett_state">On-call state</string>
+  <string name="state_fragment_alarm_state">Alarm state</string>
+  <string name="general_enabled">Enabled</string>
+  <string name="general_disabled">Disabled</string>
+  <string name="state_on">On</string>
+  <string name="state_manually_on">On (manually)</string>
+  <string name="state_off">Off</string>
+  <string name="state_fragment_partner_not_found_clipboard_label">Partner nickname</string>
+  <string name="alarm_state_on">Unconfirmed</string>
+  <string name="alarm_state_on_confirmed">Confirmed</string>
+  <string name="alarm_state_off">Off</string>
+  <string name="state_fragment_test_alarm_never_received">Never received</string>
+  <string name="contact_helper_unknown_contact">Unknown</string>
+  <string name="contact_preference_empty_selection">No selection</string>
+  <string name="about_documentation"><![CDATA[<h3>Documentation</h3><p>A manual for the use of PAssist can be found here: <a href=https://github.com/frimtec/pikett-assist/blob/master/README.md#passist>Manual</a>.</p>]]></string>
+  <string name="about_disclaimer"><![CDATA[<h3>Disclaimer</h3><p>The author assumes no responsibility, gives no guarantee when using the application.</p><p>The application is free.
+    The source code is available as open source under the <a href=https://opensource.org/licenses/Apache-2.0>Apache 2.0 license</a>.</p>]]></string>
+  <string name="general_download">Download</string>
+  <string name="general_install">Install</string>
+  <string name="general_no">No</string>
+  <string name="general_yes">Yes</string>
+  <string name="general_are_you_sure">Are you sure?</string>
+  <string name="general_entry_deleted">Entry has been deleted.</string>
+  <string name="state_fragment_permissions">Permissions</string>
+  <string name="state_fragment_draw_overlays">Display over other apps</string>
+  <string name="state_fragment_battery_optimization">Battery Optimization</string>
+  <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
+  <string name="general_no_data">No data available yet.</string>
+  <string name="permission_required">Required permission:</string>
+  <string name="permission_contacts_title">Contacts</string>
+  <string name="permission_contacts_text">PAssist reads the phone number from the contact of the configured operations center. This is used to decide which SMS must be supervised during on-call duty. Without this permission PAssist does not work!</string>
+  <string name="permission_calendar_title">Calendar</string>
+  <string name="permission_calendar_text">PAssist reads the events from the calendar to determine whether on-call duty is active or not. Only in an active on-call state, the supervise functions of PAssist are enabled. Without this permission PAssist does not work!</string>
+  <string name="permission_write_external_storage_title">External storage</string>
+  <string name="permission_write_external_storage_text">To download an SMS adapter and to store backups of the alarm history, it is required that PAssist can write to the external storage.</string>
+  <string name="permission_location_title">Location</string>
+  <string name="permission_location_text">To supervise the phone signal strength during on-call duty, PAssist must access information from the phone cells in range. This data is protected by the permission coarse location. Without this permission PAssist does not work.</string>
+  <string name="send_log_title">PAssist crash report</string>
+  <string name="send_log_message">PAssist was crashed unexpectedly. To improve the stability of PAssist, please send the crash report to the author via e-mail.</string>
+  <string name="send_log_button_send">Send</string>
+  <string name="title_activity_test_alarm_details">Test alarm details</string>
+  <string name="test_alarm_details_alarm_state_label">Alarm state</string>
+  <string name="test_alarm_details_supervised_label">Supervised</string>
+  <string name="test_alarm_details_last_received_label">Last received</string>
+  <string name="test_alarm_details_message_label">Received message</string>
+  <string name="test_alarm_activated_toast">Test alarm activated.</string>
+  <string name="test_alarm_deactivated_toast">Test alarm deactivated.</string>
+  <string name="test_alarm_message_empty">Empty</string>
+  <string name="test_alarm_received_never">Never</string>
+  <string name="test_alarm_add_title">Enter new test alarm context</string>
+  <string name="test_alarm_toast_added_success">New test alarm context added.</string>
+  <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
+  <string name="state_fragment_sms_adapter">SMS adapter</string>
+  <string name="state_fragment_battery">Battery</string>
+  <string name="state_fragment_battery_charging">charging</string>
+  <string name="state_fragment_sms_adapter_not_installed">Not installed</string>
+  <string name="state_fragment_sms_adapter_no_sms_permissions">No SMS permission</string>
+  <string name="state_fragment_phone_numbers_blocked">Number blocked</string>
+  <string name="state_fragment_loopback_sms_sent">Test-SMS sent…</string>
+  <string name="sms_listener_loopback_sms_received">Test-SMS received!</string>
+  <string name="sms_listener_meta_sms_filtered">SMS received and filtered!</string>
+  <string name="state_fragment_s2msp_requires_update">Requires update</string>
+  <string name="permission_sms_title">SMS adapter installation</string>
+  <string name="permission_sms_text">The main function of PAssist is to trigger an alarm when receiving an SMS from a configured operations center.
+The necessary SMS authorizations are no longer granted by Google Play.
+The SMS communication is therefore implemented with an adapter app (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;).</string>
+  <string name="install_with_browser">The SMS adapter is downloaded via browser. To install, \"Install unknown apps\" must be activated in the browser.</string>
+  <string name="install_with_fdroid">You can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; with F-Droid from the repo &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt;.</string>
+  <string name="permission_sms_update_title">SMS adapter update</string>
+  <string name="permission_sms_update_text">The SMS adapter application &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; needs to be updated.</string>
+  <string name="list_item_menu_send_test_sms">Send test SMS</string>
+  <string name="sms_adapter_registration">S2MSP registration</string>
+  <string name="button_buy">Buy</string>
+  <string name="button_own">Bought</string>
+  <string name="button_pending">Pending</string>
+  <string name="header_inapp">PAssist donation articles</string>
+  <string name="error_billing_unavailable">Billing unavailable. Make sure your Google Play app is setup correctly.</string>
+  <string name="error_billing_default">Billing unavailable. Please check your device.</string>
+  <string name="about_no_sponsoring"><![CDATA[<h3>Sponsorship</h3>If you like PAssist, become a sponsor!]]></string>
+  <string name="about_sponsoring"><![CDATA[<h3>Sponsorship</h3>Thank you for your PAssist sponsorship:]]></string>
+  <string name="state_fragment_donation">Donation</string>
+  <string name="state_fragment_donation_value">How about a donation?</string>
+  <string name="purchase_acknowledged">The purchase is acknowledged. Many thanks for your donation.</string>
+  <string name="reduced">reduced</string>
+  <string name="increased">increased</string>
+  <string name="notification_volume_changed_title">Ringtone volume</string>
+  <string name="notification_volume_changed_text">Volume changed to %s.</string>
+  <string name="pref_header_day_night_profile"><![CDATA[Day/night profile]]></string>
+  <string name="pref_title_day_start_time">Day</string>
+  <string name="pref_default_day_start_time" translatable="false">07:00</string>
+  <string name="pref_title_night_start_time">Night</string>
+  <string name="pref_default_night_start_time" translatable="false">22:00</string>
+  <string name="pref_title_manage_volume">Control during on-call duty</string>
+  <string name="pref_title_category_profile_start_times">Profile start times</string>
+  <string name="pref_title_category_ringtone_volume">Ringtone volume</string>
+  <string name="pref_title_volume_day">Volume day</string>
+  <string name="pref_title_volume_night">Volume night</string>
+  <string name="pref_title_category_battery_safer">Battery drain</string>
+  <string name="pref_title_battery_safer_at_night">Minimize at night</string>
+  <string name="pref_summary_battery_safer_at_night_enabled">The monitoring interval for the signal strength is reduced at night!</string>
+  <string name="pref_summary_battery_safer_at_night_disabled" translatable="false"></string>
+  <string name="menu_create_manually_alarm">Create alert manually</string>
+  <string name="manually_created_alarm_reason">Enter a reason</string>
+  <string name="manually_created_alarm_reason_default">Phone call</string>
+  <string name="manually_created_alarm_reason_prefix">Manually created</string>
+  <string name="pref_title_notify_low_signal">Alert with notification</string>
+  <string name="pref_title_low_signal_filter">Signal filter</string>
+  <string name="general_seconds">seconds</string>
+  <string name="shift_header_column_title_entry">Calendar entry</string>
+  <string name="shift_header_column_title_duration">Duration in days</string>
+  <string name="shift_header_next_label_no_entry">No entry in calendar!</string>
+  <string name="shift_header_next_label_starts">Shift starts in:</string>
+  <string name="shift_header_next_label_ends">Shift ends in:</string>
+  <string name="shift_item_unconfirmed">unconfirmed</string>
+  <string name="units_days">days</string>
+  <string name="units_day">day</string>
+  <string name="units_hours">hours</string>
+  <string name="units_hour">hour</string>
+  <string name="units_minutes">minutes</string>
+  <string name="units_minute">minute</string>
+  <string name="units_seconds">seconds</string>
+  <string name="units_second">second</string>
+  <string name="error_regexp_pattern">Syntax error in RegEx pattern!</string>
+  <string name="error_regexp_groups_min">Minimum of %d group(s) required in RegEx pattern!</string>
+  <string name="error_regexp_groups_max">Maximum of %d group(s) allowed in RegEx pattern!</string>
+  <string name="pref_message_test_alarm_message_pattern">Enter a valid RegEx (use optionally a single group to select the test context)</string>
+  <string name="pref_message_calendar_event_pikett_title_pattern">Enter a valid RegEx (case will be ignored)</string>
+  <string name="pref_message_partner_search_pattern">Enter a valid RegEx with one single group that extracts a partner contact nickname from the event notes.</string>
+  <string name="button_regexp_help">RegEx help?</string>
+  <string name="contact_name_no_access">No contact read permission</string>
+  <string name="state_fragment_operations_center_no_number">No valid number!</string>
+  <string name="state_fragment_do_not_disturb">Do Not Disturb</string>
+  <string name="do_not_disturb_info_title">\"Do Not Disturb\" is active!</string>
+  <string name="do_not_disturb_info_text">During on-call duty you should disable the \"Do Not Disturb\" mode. Otherwise PAssist cannot control the ringtone volume. Important alerts and notifications are suppressed by the device.</string>
+  <string name="import_alert_log_are_you_sure">All existing alert log entries will be replaced, are you sure?</string>
+  <string name="general_export">Export</string>
+  <string name="general_import">Import</string>
+  <string name="alert_log_export_success">Export succeeded.</string>
+  <string name="alert_log_export_failed">Export failed!</string>
+  <string name="alert_log_import_success">Import succeeded.</string>
+  <string name="alert_log_import_failed_bad_format">Import failed due to bad file format!</string>
+  <string name="alert_log_import_failed">Import failed!</string>
+  <string name="alert_list_header_statistic_month_label">Last 30 days:</string>
+  <string name="alert_list_header_statistic_year_label">Last 365 days:</string>
+  <string name="partner_contact_unknown_info_title">Unknown contact</string>
+  <string name="partner_contact_unknown_info_text">No contact with given nickname exists.
+Please add nickname to the corresponding contact (nickname was copied to the clipboard).</string>
+  <string name="button_rate">Rate app</string>
 </resources>

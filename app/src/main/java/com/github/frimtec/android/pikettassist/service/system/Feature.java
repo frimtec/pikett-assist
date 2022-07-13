@@ -13,6 +13,7 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -58,6 +59,24 @@ public enum Feature {
           R.string.permission_calendar_title,
           R.string.permission_calendar_text
       );
+    }
+  },
+  PERMISSION_POST_NOTIFICATIONS(
+      true,
+      true,
+      R.string.permission_post_notifications_title,
+      context -> Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || allPermissionsGranted(context, PermissionSets.POST_NOTIFICATIONS.getPermissions())
+  ) {
+    @Override
+    public void request(Context context) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        requestPermissionsWithExplanation(
+            context,
+            PermissionSets.POST_NOTIFICATIONS.getPermissions(),
+            R.string.permission_post_notifications_title,
+            R.string.permission_post_notifications_text
+        );
+      }
     }
   },
   PERMISSION_WRITE_EXTERNAL_STORAGE(
@@ -236,6 +255,7 @@ public enum Feature {
   private enum PermissionSets {
     CONTACTS_READ(Collections.singleton(Manifest.permission.READ_CONTACTS)),
     CALENDAR_READ(Collections.singleton(Manifest.permission.READ_CALENDAR)),
+    @RequiresApi(api = 33) POST_NOTIFICATIONS(Collections.singleton(Manifest.permission.POST_NOTIFICATIONS)),
     WRITE_EXTERNAL_STORAGE(Collections.singleton(Manifest.permission.WRITE_EXTERNAL_STORAGE)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),
     NON_CRITICAL(

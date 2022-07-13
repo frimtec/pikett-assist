@@ -46,11 +46,11 @@ tasks.withType(Test) {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.github.frimtec.android.pikettassist"
         minSdkVersion 26
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode vcode
         versionName vname
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

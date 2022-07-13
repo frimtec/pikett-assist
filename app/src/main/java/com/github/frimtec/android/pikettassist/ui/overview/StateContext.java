@@ -20,7 +20,7 @@ import java.util.Set;
 
 class StateContext {
 
-  StateFragment stateFragment;
+  private final StateFragment stateFragment;
   private final Context context;
 
   private final Runnable fragmentRefreshAction;

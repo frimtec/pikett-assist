@@ -141,7 +141,7 @@
   <string name="permission_write_external_storage_title">Externen Speicher</string>
   <string name="permission_write_external_storage_text">Um einen SMS-Adapter herunterzuladen zu können, sowie das Erstellen von Backups der Alarmhistorie ist es notwendig, dass PAssist auf den externen Speicher schreiben darf.</string>
   <string name="permission_location_title">Position</string>
-  <string name="permission_location_text">Um die Telefonempfangsqualität während des Bereitschaftsdienstes zu überwachen, muss auf die Telefonzelleninformation zugegriffen werden. Diese Daten werden mit dem Recht Gerätestandort geschützt, da mit diesen Daten auch die grobe Position ermittelt werden könnte. Ohne dieses Recht ist PAssist nicht funktionsfähig.</string>
+  <string name="permission_location_text">Um die Telefonempfangsqualität während des Bereitschaftsdienstes zu überwachen, muss auf die Telefonzelleninformation zugegriffen werden. Diese Daten werden mit dem Recht Gerätestandort geschützt, da mit diesen Daten auch die grobe Position ermittelt werden könnte. Ohne dieses Recht ist PAssist nicht funktionsfähig!</string>
   <string name="send_log_title">PAssist Crash-Report</string>
   <string name="send_log_message">PAssist wurde unerwarteterweise beendet. Bitte sende den Crash-Report via E-Mail an den Autor, um die Stabilität von PAssist zu erhöhen.</string>
   <string name="send_log_button_send">Senden</string>
@@ -168,7 +168,7 @@
   <string name="sms_listener_meta_sms_filtered">SMS empfangen und gefiltert!</string>
   <string name="state_fragment_s2msp_requires_update">Benötigt Update</string>
   <string name="permission_sms_title">SMS-Adapter Installation</string>
-  <string name="permission_sms_text">Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfiguriertten Zentrale.
+  <string name="permission_sms_text">Die Hauptfunktion von PAssist ist das Alarmieren beim Empfang einer SMS von der konfigurierten Zentrale.
 Die dazu notwendigen SMS Berechtigungen werden von Google-Play nicht mehr gewährt.
 Die SMS-Kommunikation wird deshalb mit einer Adapter-App (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;) umgesetzt.</string>
   <string name="install_with_browser">Der SMS-Adapter wird via Browser heruntergeladen. Zur Installation muss \"Installieren unbekannter Apps\" im Browser aktiviert sein.</string>
@@ -251,4 +251,6 @@ mit einer Spende?</string>
   <string name="partner_contact_unknown_info_text">Es existiert kein Kontakt mit dem entsprechendern Spitznamen.
 Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in die Zwischenablage kopiert) .</string>
   <string name="button_rate">App bewerten</string>
+  <string name="permission_post_notifications_title">Benachrichtigungen anzeigen</string>
+  <string name="permission_post_notifications_text">PAssist zeigt wichtige Zustände per Benachrichtigung an. Ohne diese Berechtigung funktioniert PAssist nicht!</string>
 </resources>

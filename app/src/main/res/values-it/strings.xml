@@ -136,13 +136,13 @@
   <string name="general_no_data">Nessun dato ancora disponibile.</string>
   <string name="permission_required">Permesso richiesto:</string>
   <string name="permission_contacts_title">Contatti</string>
-  <string name="permission_contacts_text">PAssist legge il numero di telefono dal contatto della centrale operativa configurata. Viene utilizzato per decidere quale SMS deve essere supervisionato durante il servizio di guardia. Senza questa autorizzazione PAssist non funziona!</string>
+  <string name="permission_contacts_text">PAssist legge il numero di telefono dal contatto della centrale operativa configurata. Viene utilizzato per decidere quale SMS deve essere supervisionato durante il servizio di guardia. PAssist non funziona senza questa autorizzazione!</string>
   <string name="permission_calendar_title">Calendario</string>
-  <string name="permission_calendar_text">PAssist legge gli eventi dal calendario per determinare se il servizio di guardia è attivo o meno. Solo in uno stato di chiamata attivo, le funzioni di supervisione di PAssist sono abilitate. Senza questa autorizzazione PAssist non funziona!</string>
+  <string name="permission_calendar_text">PAssist legge gli eventi dal calendario per determinare se il servizio di guardia è attivo o meno. Solo in uno stato di chiamata attivo, le funzioni di supervisione di PAssist sono abilitate. PAssist non funziona senza questa autorizzazione!</string>
   <string name="permission_write_external_storage_title">Archiviazione esterna</string>
   <string name="permission_write_external_storage_text">Per scaricare un adattatore SMS e memorizzare i backup della cronologia allarmi, è necessario che PAssist possa scrivere nella memoria esterna.</string>
   <string name="permission_location_title">Posizione</string>
-  <string name="permission_location_text">Per controllare la potenza del segnale del telefono durante il servizio di guardia, PAssist deve accedere alle informazioni dalle celle del telefono nel raggio d\'azione. Questi dati sono protetti dalla posizione grossolana dell\'autorizzazione. Senza questa autorizzazione PAssist non funziona.</string>
+  <string name="permission_location_text">Per controllare la potenza del segnale del telefono durante il servizio di guardia, PAssist deve accedere alle informazioni dalle celle del telefono nel raggio d\'azione. Questi dati sono protetti dalla posizione grossolana dell\'autorizzazione. PAssist non funziona senza questa autorizzazione!</string>
   <string name="send_log_title">Rapporto sull\'arresto anomalo di PAssist</string>
   <string name="send_log_message">PAssist si è arrestato in modo imprevisto. Per migliorare la stabilità di PAssist, inviare il rapporto di arresto anomalo all\'autore via email.</string>
   <string name="send_log_button_send">Inviare</string>
@@ -251,4 +251,6 @@
   <string name="partner_contact_unknown_info_text">Non esiste alcun contatto con il soprannome specificato.
 Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiato negli appunti).</string>
   <string name="button_rate">Valuta app</string>
+  <string name="permission_post_notifications_title">Pubblica notifiche</string>
+  <string name="permission_post_notifications_text">PAssist mostra gli stati importanti tramite notifica. PAssist non funziona senza questa autorizzazione!</string>
 </resources>

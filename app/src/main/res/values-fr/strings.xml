@@ -143,7 +143,7 @@
   <string name="permission_write_external_storage_title">Stockage externe</string>
   <string name="permission_write_external_storage_text">Pour télécharger un adaptateur SMS et stocker des sauvegardes de l\'historique des alarmes, il est nécessaire que PAssist puisse écrire sur le stockage externe.</string>
   <string name="permission_location_title">Emplacement</string>
-  <string name="permission_location_text">Pour superviser la force du signal téléphonique pendant le service de garde, PAssist doit accéder aux informations des cellules téléphoniques à portée. Ces données sont protégées par la permission localisation grossière. Sans cette autorisation, PAssist ne fonctionne pas.</string>
+  <string name="permission_location_text">Pour superviser la force du signal téléphonique pendant le service de garde, PAssist doit accéder aux informations des cellules téléphoniques à portée. Ces données sont protégées par la permission localisation grossière. Sans cette autorisation, PAssist ne fonctionne pas!</string>
   <string name="send_log_title">Rapport de plantage PAssist</string>
   <string name="send_log_message">PAssist a planté de manière inattendue. Pour améliorer la stabilité de PAssist, veuillez envoyer le rapport de plantage à l\'auteur par courriel.</string>
   <string name="send_log_button_send">Envoyer</string>
@@ -252,4 +252,6 @@
   <string name="partner_contact_unknown_info_text">Aucun contact avec le pseudo donné n\'existe.
 Veuillez ajouter un surnom au contact correspondant (le surnom a été copié dans le presse-papiers).</string>
   <string name="button_rate">Application de taux</string>
+  <string name="permission_post_notifications_title">Publier des notifications</string>
+  <string name="permission_post_notifications_text">PAssist affiche les états importants via une notification. Sans cette autorisation, PAssist ne fonctionne pas!</string>
 </resources>

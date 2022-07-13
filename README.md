@@ -250,8 +250,8 @@ The use of PAssist is at your own risk. The author assumes no liability for malf
 Any warranty claims are excluded.
 
 ## Development
-PAssist is developed with [Android-Studio][android-studio] with Java 11.
-The current Android target SDK is 32 (Android 13) and the minimal SDK is 26 (Android 8.0-Oreo).
+PAssist is developed with [Android-Studio][android-studio] with Java 11. The current Android target
+SDK is 32 (Android 12 / S_V2 - Snow Cone) and the minimal SDK is 26 (Android 8.0-Oreo).
 
 ## Used libraries
 * [SlideToAct][slide-to-act]

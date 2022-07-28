@@ -4,6 +4,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -153,6 +154,35 @@ public enum Feature {
                   Uri.parse("package:" + context.getPackageName())
               )
           )
+      );
+    }
+  },
+  SETTING_SCHEDULE_EXACT_ALARM(
+      false,
+      false,
+      R.string.notification_schedule_exact_alarm_title,
+      context -> Build.VERSION.SDK_INT < Build.VERSION_CODES.S || context.getSystemService(AlarmManager.class).canScheduleExactAlarms()
+  ) {
+    @Override
+    protected ActivityResultLauncher<Intent> registerActivityLauncher(Fragment fragment) {
+      return fragment.registerForActivityResult(
+          new ActivityResultContracts.StartActivityForResult(),
+          result -> Log.i(TAG, "Return from grant schedule exact alarm activity; result=" + result.getResultCode())
+      );
+    }
+
+    @Override
+    public void request(Context context) {
+      DialogHelper.infoDialog(
+          context,
+          R.string.notification_schedule_exact_alarm_title,
+          R.string.notification_schedule_exact_alarm_text,
+          (dialogInterface, integer) -> {
+            @SuppressLint("InlinedApi")
+            Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+            intent.setData(Uri.parse("package:" + context.getPackageName()));
+            getActivityLauncher().launch(intent);
+          }
       );
     }
   },

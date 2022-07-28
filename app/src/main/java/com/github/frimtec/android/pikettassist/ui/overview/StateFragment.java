@@ -5,6 +5,7 @@ import static com.github.frimtec.android.pikettassist.donation.billing.BillingPr
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_SCHEDULE_EXACT_ALARM;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
 import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
@@ -191,6 +192,16 @@ public class StateFragment extends AbstractListFragment<State> {
       });
     }
 
+    boolean canScheduleExactAlarms = SETTING_SCHEDULE_EXACT_ALARM.isAllowed(getContext());
+    if (!canScheduleExactAlarms) {
+      states.add(new State(R.drawable.ic_baseline_access_alarm_24, getString(R.string.state_fragment_schedule_exact_alarm), getString(R.string.state_off), null, RED) {
+        @Override
+        public void onClickAction(Context context) {
+          SETTING_SCHEDULE_EXACT_ALARM.request(context);
+        }
+      });
+    }
+
     if (!SETTING_BATTERY_OPTIMIZATION_OFF.isAllowed(getContext())) {
       states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW) {
         @Override
@@ -200,7 +211,7 @@ public class StateFragment extends AbstractListFragment<State> {
       });
     }
 
-    if (!missingPermissions && canDrawOverlays) {
+    if (!missingPermissions && canDrawOverlays && canScheduleExactAlarms) {
       regularStates(states);
     }
     return new StateArrayAdapter(getContext(), new ArrayList<>(states));

@@ -253,4 +253,7 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="button_rate">App bewerten</string>
   <string name="permission_post_notifications_title">Benachrichtigungen anzeigen</string>
   <string name="permission_post_notifications_text">PAssist zeigt wichtige Zustände per Benachrichtigung an. Ohne diese Berechtigung funktioniert PAssist nicht!</string>
+  <string name="notification_schedule_exact_alarm_title">Erlauben, Wecker und Erinnerungen einzurichten!</string>
+  <string name="notification_schedule_exact_alarm_text">PAssist muss in der Lage sein, genaue Alarme einzurichten, um rechtzeitig bereit zu sein.</string>
+  <string name="state_fragment_schedule_exact_alarm">Wecker und Erinnerungen</string>
 </resources>

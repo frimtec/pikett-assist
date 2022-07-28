@@ -110,8 +110,6 @@
   <string name="notification_alert_confirm_button">Confirm</string>
   <string name="notification_battery_optimization_title">Battery optimization is on!</string>
   <string name="notification_battery_optimization_text">To work reliable, PAssist must run with battery optimization turned off. Battery consumption only increases slightly during active on-call duty.</string>
-  <string name="notification_schedule_exact_alarm_title">\'Schedule exact alarms\' is deactivated!</string>
-  <string name="notification_schedule_exact_alarm_text">PAssist must be able to set exact alarms to be ready on time.</string>
   <string name="notification_draw_overlays_title">\'Display over other apps\' is deactivated!</string>
   <string name="notification_draw_overlays_text">To show alerts even if PAssist is in the background, the \"Display over other apps\" setting must be active for PAssist.</string>
   <string name="alert_action_close">Close</string>
@@ -142,7 +140,6 @@
   <string name="general_entry_deleted">Entry has been deleted.</string>
   <string name="state_fragment_permissions">Permissions</string>
   <string name="state_fragment_draw_overlays">Display over other apps</string>
-  <string name="state_fragment_schedule_exact_alarm">Schedule exact alarms</string>
   <string name="state_fragment_battery_optimization">Battery Optimization</string>
   <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
   <string name="general_no_data">No data available yet.</string>
@@ -268,4 +265,7 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="button_rate">Rate app</string>
   <string name="permission_post_notifications_title">Post notifications</string>
   <string name="permission_post_notifications_text">PAssist shows important states via notification. Without this permission PAssist does not work!</string>
+  <string name="notification_schedule_exact_alarm_title">Allow setting alarms and reminders!</string>
+  <string name="notification_schedule_exact_alarm_text">PAssist must be able to set exact alarms to be ready on time.</string>
+  <string name="state_fragment_schedule_exact_alarm">Alarms and reminders</string>
 </resources>

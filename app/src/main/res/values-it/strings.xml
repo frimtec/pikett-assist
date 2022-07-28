@@ -253,4 +253,7 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="button_rate">Valuta app</string>
   <string name="permission_post_notifications_title">Pubblica notifiche</string>
   <string name="permission_post_notifications_text">PAssist mostra gli stati importanti tramite notifica. PAssist non funziona senza questa autorizzazione!</string>
+  <string name="notification_schedule_exact_alarm_title">Consenti l\'impostazione di sveglie e promemoria!</string>
+  <string name="notification_schedule_exact_alarm_text">PAssist deve essere in grado di impostare allarmi esatti per essere pronto in tempo.</string>
+  <string name="state_fragment_schedule_exact_alarm">Sveglie e promemoria</string>
 </resources>

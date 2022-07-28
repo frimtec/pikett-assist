@@ -254,4 +254,7 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="button_rate">Application de taux</string>
   <string name="permission_post_notifications_title">Publier des notifications</string>
   <string name="permission_post_notifications_text">PAssist affiche les états importants via une notification. Sans cette autorisation, PAssist ne fonctionne pas!</string>
+  <string name="notification_schedule_exact_alarm_title">Autoriser à définir des alarmes et des rappels!</string>
+  <string name="notification_schedule_exact_alarm_text">PAssist doit pouvoir définir des alarmes précises pour être prêt à temps.</string>
+  <string name="state_fragment_schedule_exact_alarm">Alarmes et rappels</string>
 </resources>

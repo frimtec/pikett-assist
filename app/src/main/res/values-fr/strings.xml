@@ -262,4 +262,5 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="german">Allemand</string>
   <string name="french">Français</string>
   <string name="italian">Italien</string>
+  <string name="system_language">Défaut du système</string>
 </resources>

@@ -261,4 +261,5 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="german">Deutsch</string>
   <string name="french">Französisch</string>
   <string name="italian">Italienisch</string>
+  <string name="system_language">Systemstandard</string>
 </resources>

@@ -261,4 +261,5 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="german">Tedesco</string>
   <string name="french">Francese</string>
   <string name="italian">Italiano</string>
+  <string name="system_language">Default del sistema</string>
 </resources>

@@ -1,0 +1,1 @@
+- Improve app language via device/application settings for android 13+

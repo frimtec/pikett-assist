@@ -52,6 +52,20 @@
         <item>@string/signal_levels_great</item>
     </string-array>
 
+    <string-array name="languages">
+        <item>@string/english</item>
+        <item>@string/german</item>
+        <item>@string/french</item>
+        <item>@string/italian</item>
+    </string-array>
+
+    <string-array name="languages_values">
+        <item>en</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>it</item>
+    </string-array>
+
     <string-array name="registration_errors">
         <item>@string/registration_errors_successful</item>
         <item>@string/registration_errors_no_secret</item>

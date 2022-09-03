@@ -28,8 +28,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.support.SendLogActivity"
+        android:theme="@style/AppTheme"
+        android:localeConfig="@xml/locales_config">
+        <activity
+            android:name=".ui.support.SendLogActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.github.frimtec.android.pikettassist.SEND_LOG" />

@@ -257,4 +257,5 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="notification_schedule_exact_alarm_text">PAssist deve essere in grado di impostare allarmi esatti per essere pronto in tempo.</string>
   <string name="state_fragment_schedule_exact_alarm">Sveglie e promemoria</string>
   <string name="pref_title_app_language">Lingua delle app</string>
+  <string name="system_language">Predefinita di sistema</string>
 </resources>

@@ -269,6 +269,7 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="notification_schedule_exact_alarm_text">PAssist must be able to set exact alarms to be ready on time.</string>
   <string name="state_fragment_schedule_exact_alarm">Alarms and reminders</string>
   <string name="pref_title_app_language">Application language</string>
+  <string name="system_language">System default</string>
   <string name="english">English</string>
   <string name="german">German</string>
   <string name="french">French</string>

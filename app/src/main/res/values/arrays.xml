@@ -53,6 +53,7 @@
     </string-array>
 
     <string-array name="languages">
+        <item>@string/system_language</item>
         <item>@string/english</item>
         <item>@string/german</item>
         <item>@string/french</item>
@@ -60,6 +61,7 @@
     </string-array>
 
     <string-array name="languages_values">
+        <item />
         <item>en</item>
         <item>de</item>
         <item>fr</item>

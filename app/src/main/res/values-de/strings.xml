@@ -257,4 +257,5 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="notification_schedule_exact_alarm_text">PAssist muss in der Lage sein, genaue Alarme einzurichten, um rechtzeitig bereit zu sein.</string>
   <string name="state_fragment_schedule_exact_alarm">Wecker und Erinnerungen</string>
   <string name="pref_title_app_language">App-Sprache</string>
+  <string name="system_language">Systemstandard</string>
 </resources>

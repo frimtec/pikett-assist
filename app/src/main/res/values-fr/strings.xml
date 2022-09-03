@@ -258,4 +258,5 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="notification_schedule_exact_alarm_text">PAssist doit pouvoir définir des alarmes précises pour être prêt à temps.</string>
   <string name="state_fragment_schedule_exact_alarm">Alarmes et rappels</string>
   <string name="pref_title_app_language">Langue de l\'appli</string>
+  <string name="system_language">Défaut du système</string>
 </resources>

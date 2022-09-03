@@ -5,8 +5,11 @@ import static com.github.frimtec.android.pikettassist.state.ApplicationPreferenc
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 
 import android.annotation.SuppressLint;
+import android.app.LocaleManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.LocaleList;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -163,6 +166,23 @@ public class SettingsActivity extends AppCompatActivity {
           if (entries.size() < 2) {
             superviseSignalStrengthSubscription.setVisible(false);
           }
+        }
+      }
+      if (Build.VERSION.SDK_INT >= 33) {
+        ListPreference appLanguage = findPreference("app_language");
+        if (appLanguage != null) {
+          appLanguage.setVisible(true);
+          LocaleManager localeManager = context.getSystemService(LocaleManager.class);
+          String currentAppLocales = localeManager.getApplicationLocales().toLanguageTags();
+          appLanguage.setValue(currentAppLocales.split("-")[0]);
+
+          appLanguage.setOnPreferenceChangeListener(
+              (preference, newValue) -> {
+                localeManager.setApplicationLocales(
+                    LocaleList.forLanguageTags(newValue.toString())
+                );
+                return true;
+              });
         }
       }
     }

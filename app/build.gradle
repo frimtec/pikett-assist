@@ -9,6 +9,7 @@ def slidetoact_version = '0.10.0'
 def takisoft_preferencex_version = '1.1.0'
 def junit_version = '5.9.0'
 def work_version = "2.7.1"
+def lifecycle_version = "2.5.1"
 
 jacoco {
     toolVersion = "0.8.4"
@@ -86,6 +87,7 @@ dependencies {
     implementation "com.takisoft.preferencex:preferencex-datetimepicker:$takisoft_preferencex_version"
     implementation "com.android.billingclient:billing:$android_billingclient_version"
     implementation "com.github.frimtec:secure-sms-proxy-api:$secure_sms_proxy_api_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"

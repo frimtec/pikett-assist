@@ -223,6 +223,7 @@ public class StateFragment extends AbstractListFragment<State> {
     Set<String> operationsCenterPhoneNumbers = this.operationsCenterContactService.getPhoneNumbers(operationsCenterContact);
     ShiftService shiftService = new ShiftService(getContext());
     BatteryService batteryService = new BatteryService(getContext());
+    NotificationService notificationService = new NotificationService(getContext());
     boolean pikettStateManuallyOn = ApplicationState.instance().getPikettStateManuallyOn();
     ShiftState shiftState = shiftService.getShiftState();
     Instant now = Shift.now();
@@ -254,13 +255,13 @@ public class StateFragment extends AbstractListFragment<State> {
         batteryService.batteryStatus()
     );
     states.add(new SmsAdapterState(stateContext));
-    if (shiftState.isOn() && new NotificationService(getContext()).isDoNotDisturbEnabled()) {
+    if (notificationService.isDoNotDisturbEnabled()) {
       states.add(new DoNotDisturbState(stateContext));
     }
     states.add(new OperationsCenterState(stateContext, phoneNumberSelectionLauncher));
     Optional<List<String>> partners = currentOrNextShift.map(Shift::getPartners);
     if (shiftState.isOn() && partners.isPresent()) {
-      List<String> pairAliases = (List<String>) partners.get();
+      List<String> pairAliases = partners.get();
       Map<String, ContactPerson> contactPersonsByAliases = this.contactPersonService.findContactPersonsByAliases(new HashSet<>(pairAliases));
       pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair)))));
     }

@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.github.frimtec.android.pikettassist.ui.settings.ContactPreference
-        app:icon="@drawable/ic_phone_black_24dp"
+        app:icon="@drawable/ic_phone_24dp"
         app:key="alarm_operations_center_contact"
         app:title="@string/pref_title_alarm_operations_center_contact">
     </com.github.frimtec.android.pikettassist.ui.settings.ContactPreference>
@@ -10,7 +10,7 @@
     <SwitchPreference
         app:defaultValue="true"
         app:key="send_confirm_sms"
-        app:icon="@drawable/ic_message_black_24dp"
+        app:icon="@drawable/ic_message_24dp"
         app:title="@string/pref_title_send_confirm_sms" />
 
     <EditTextPreference
@@ -34,7 +34,7 @@
 
     <RingtonePreference
         android:dialogTitle="@string/pref_title_alarm_ring_tone"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_notifications_24dp"
         android:key="alarm_ring_tone"
         android:persistent="true"
         android:ringtoneType="ringtone"
@@ -45,7 +45,7 @@
         app:pref_summaryHasRingtone="%s" />
 
     <PreferenceCategory
-        app:icon="@drawable/ic_date_range_black_24dp"
+        app:icon="@drawable/ic_date_range_24dp"
         app:title="@string/pref_header_calendar">
 
         <ListPreference
@@ -167,6 +167,14 @@
             app:useSimpleSummaryProvider="true"
             app:title="@string/pref_title_app_language"
             app:isPreferenceVisible="false" />
+        <ListPreference
+            app:icon="@drawable/ic_baseline_color_lens_24"
+            app:key="app_theme"
+            app:entries="@array/themes"
+            app:entryValues="@array/theme_values"
+            app:defaultValue="@integer/default_app_theme"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/pref_title_app_theme" />
     </PreferenceCategory>
 
 </PreferenceScreen>

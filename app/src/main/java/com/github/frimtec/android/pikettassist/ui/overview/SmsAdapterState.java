@@ -39,7 +39,7 @@ class SmsAdapterState extends State {
 
   SmsAdapterState(StateContext stateContext) {
     super(
-        R.drawable.ic_message_black_24dp,
+        R.drawable.ic_message_24dp,
         stateContext.getString(R.string.state_fragment_sms_adapter),
         getSmsAdapterValue(stateContext, stateContext.isSmsAdapterPermissionsGranted()),
         null,

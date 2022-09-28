@@ -46,6 +46,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_ON_CALL_NIGHT_VOLUME = "on_call_night_volume";
   private static final String PREF_KEY_DAY_START_TIME = "day_start_time";
   private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
+  private static final String PREF_APP_THEME = "app_theme";
 
   public static final SharedPreferencesApplicationPreferences INSTANCE = new SharedPreferencesApplicationPreferences();
 
@@ -203,6 +204,11 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public int getTestAlarmAcceptTimeWindowMinutes(Context context) {
     return Integer.parseInt(getSharedPreferences(context, PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES, context.getString(R.string.pref_default_test_alarm_accept_time_window_minutes)));
+  }
+
+  @Override
+  public int getAppTheme(Context context) {
+    return Integer.parseInt(getSharedPreferences(context, PREF_APP_THEME, String.valueOf(context.getResources().getInteger(R.integer.default_app_theme))));
   }
 
   @Override

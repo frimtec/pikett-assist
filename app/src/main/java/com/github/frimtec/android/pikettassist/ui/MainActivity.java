@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String ACTIVE_FRAGMENT_STATE = "ACTIVE_FRAGMENT";
   private static final int[] TAB_ICONS = new int[]{
-      R.drawable.ic_home_black_24dp,
-      R.drawable.ic_date_range_black_24dp,
+      R.drawable.ic_home_24dp,
+      R.drawable.ic_date_range_24dp,
       R.drawable.ic_siren,
       R.drawable.ic_test_alarm
   };
@@ -147,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    AppCompatDelegate.setDefaultNightMode(ApplicationPreferences.instance().getAppTheme(this));
 
     this.s2msp = SecureSmsProxyFacade.instance(this);
     registerBroadcastReceiver();

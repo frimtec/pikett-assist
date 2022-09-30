@@ -25,7 +25,7 @@
 
     <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
         app:defaultValue="@string/pref_default_test_alarm_message_pattern"
-        app:icon="@drawable/ic_message_black_24dp"
+        app:icon="@drawable/ic_message_24dp"
         app:dependency="test_alarm_enabled"
         app:key="test_alarm_message_pattern"
         app:singleLine="true"
@@ -38,14 +38,14 @@
 
     <MultiSelectListPreference
         app:dependency="test_alarm_enabled"
-        app:icon="@drawable/ic_toc_black_24dp"
+        app:icon="@drawable/ic_toc_24dp"
         app:key="supervise_test_contexts"
         app:title="@string/pref_title_supervise_test_contexts" />
 
     <TimePickerPreference
         app:dependency="test_alarm_enabled"
         app:defaultValue="@string/pref_default_test_alarm_check_time"
-        app:icon="@drawable/ic_watch_later_black_24dp"
+        app:icon="@drawable/ic_watch_later_24dp"
         app:key="test_alarm_check_time"
         app:title="@string/pref_title_test_alarm_check_time" />
 
@@ -59,7 +59,7 @@
         app:title="@string/pref_title_test_alarm_accept_time_window_minutes" />
 
     <MultiSelectListPreference
-        app:icon="@drawable/ic_date_range_black_24dp"
+        app:icon="@drawable/ic_date_range_24dp"
         app:defaultValue="@array/default_weekdays"
         app:dependency="test_alarm_enabled"
         app:entries="@array/weekdays"
@@ -69,7 +69,7 @@
 
     <RingtonePreference
         android:dialogTitle="@string/pref_title_alarm_ring_tone"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_notifications_24dp"
         android:key="test_alarm_ring_tone"
         android:persistent="true"
         android:ringtoneType="ringtone"

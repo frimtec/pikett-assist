@@ -171,7 +171,7 @@ public class StateFragment extends AbstractListFragment<State> {
     if (missingPermissions) {
       Feature permission = missingPermission.get();
       if (permission.isSensitive()) {
-        states.add(new State(R.drawable.ic_warning_black_24dp, getString(R.string.state_fragment_permissions), getString(permission.getNameResourceId()), null, RED) {
+        states.add(new State(R.drawable.ic_warning_24dp, getString(R.string.state_fragment_permissions), getString(permission.getNameResourceId()), null, RED) {
           @Override
           public void onClickAction(Context context) {
             permission.request(context);
@@ -184,7 +184,7 @@ public class StateFragment extends AbstractListFragment<State> {
 
     boolean canDrawOverlays = SETTING_DRAW_OVERLAYS.isAllowed(getContext());
     if (!canDrawOverlays) {
-      states.add(new State(R.drawable.ic_settings_black_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED) {
+      states.add(new State(R.drawable.ic_settings_24dp, getString(R.string.state_fragment_draw_overlays), getString(R.string.state_off), null, RED) {
         @Override
         public void onClickAction(Context context) {
           SETTING_DRAW_OVERLAYS.request(context);

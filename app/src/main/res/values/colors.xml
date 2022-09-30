@@ -3,17 +3,14 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#1D887A</color>
+    <color name="windowTitle">#FFFFFF</color>
     <color name="tabBackground">#EEEEEE</color>
 
     <color name="swipeButtonBackground">#4C6070</color>
 
     <color name="black">#000000</color>
-    <color name="lightGray">#BBBBBB</color>
-    <color name="white">#FFFFFF</color>
-
-    <color name="list_bg_color">#EEEEEE</color>
-    <color name="row_header_bg_color">#FFFFFF</color>
-    <color name="row_bg_color">#FFFFFF</color>
+    <color name="textDeactivated">#BBBBBB</color>
 
     <color name="unconfirmedShift">#DDDDDD</color>
+    <color name="notificationIcon">#FF000000</color>
 </resources>

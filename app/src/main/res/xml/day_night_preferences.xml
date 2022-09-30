@@ -18,7 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        app:icon="@drawable/ic_access_time_black_24dp"
+        app:icon="@drawable/ic_access_time_24dp"
         app:title="@string/pref_title_category_profile_start_times">
         <TimePickerPreference
             app:defaultValue="@string/pref_default_day_start_time"
@@ -34,7 +34,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:icon="@drawable/ic_volume_up_black_24dp"
+        app:icon="@drawable/ic_volume_up_24dp"
         app:title="@string/pref_title_category_ringtone_volume">
         <SwitchPreference
             app:defaultValue="false"

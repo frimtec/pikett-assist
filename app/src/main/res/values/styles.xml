@@ -1,15 +1,21 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="titleTextColor">@color/windowTitle</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_baseline_arrow_back_24</item>
+        <item name="actionOverflowButtonStyle">@style/ActionMode.OverFlow</item>
+    </style>
+
+    <style name="ActionMode.OverFlow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/windowTitle</item>
     </style>
 
     <style name="deactivatedItem">
-        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:textColor">@color/textDeactivated</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -27,7 +33,7 @@
 
     <!-- ToolBar -->
     <style name="ToolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="titleTextColor">@android:color/white</item>
+        <item name="titleTextColor">@color/windowTitle</item>
     </style>
 
 
@@ -50,8 +56,7 @@
     <dimen name="about_sponsor_medals_size">100dp</dimen>
 
     <declare-styleable name="RegExpTextPreference">
-        <attr format="integer" name="min_groups"/>
-        <attr format="integer" name="max_groups"/>
+        <attr name="min_groups" format="integer" />
+        <attr name="max_groups" format="integer" />
     </declare-styleable>
-
 </resources>

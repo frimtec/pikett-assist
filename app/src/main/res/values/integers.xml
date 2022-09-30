@@ -5,4 +5,5 @@
     <integer name="default_volume_night">1</integer>
     <integer name="default_low_signal_filter">2</integer>
     <integer name="default_battery_warn_level">15</integer>
+    <integer name="default_app_theme">-1</integer>
 </resources>

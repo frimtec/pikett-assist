@@ -24,7 +24,7 @@
         android:layout_below="@id/alarm_logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="24sp" />
 
     <com.ncorti.slidetoact.SlideToActView
@@ -69,10 +69,12 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:visibility="invisible"
+        app:inner_color="@android:color/white"
         app:slider_icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
         app:slider_icon_color="@color/black"
         app:outer_color="@color/swipeButtonBackground"
         app:text="@string/notification_alert_confirm_button"
+        app:text_color="@android:color/white"
         app:text_size="20sp"
         app:area_margin="0dp"/>
 

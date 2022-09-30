@@ -27,7 +27,7 @@ class OperationsCenterState extends State {
   private final ActivityResultLauncher<Intent> phoneNumberSelectionLauncher;
 
   OperationsCenterState(StateContext stateContext, ActivityResultLauncher<Intent> phoneNumberSelectionLauncher) {
-    super(R.drawable.ic_phone_black_24dp,
+    super(R.drawable.ic_phone_24dp,
         stateContext.getString(R.string.state_fragment_operations_center),
         getValue(stateContext),
         null,

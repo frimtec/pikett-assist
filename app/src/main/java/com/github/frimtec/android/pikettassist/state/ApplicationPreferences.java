@@ -95,6 +95,8 @@ public interface ApplicationPreferences {
 
   int getTestAlarmAcceptTimeWindowMinutes(Context context);
 
+  int getAppTheme(Context context);
+
   void setSuperviseTestContexts(Context context, Set<TestAlarmContext> values);
 
   boolean getManageVolumeEnabled(Context context);

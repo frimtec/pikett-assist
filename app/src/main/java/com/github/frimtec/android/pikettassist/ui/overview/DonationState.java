@@ -10,7 +10,7 @@ class DonationState extends State {
 
   DonationState(StateContext stateContext) {
     super(
-        R.drawable.ic_monetization_on_black_24dp,
+        R.drawable.ic_monetization_on_24dp,
         stateContext.getString(R.string.state_fragment_donation),
         stateContext.getString(R.string.state_fragment_donation_value),
         null,

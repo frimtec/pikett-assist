@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.SeekBarPreference;
@@ -185,7 +186,17 @@ public class SettingsActivity extends AppCompatActivity {
               });
         }
       }
+
+      ListPreference appTheme = findPreference("app_theme");
+      if (appTheme != null) {
+        appTheme.setOnPreferenceChangeListener(
+            (preference, newValue) -> {
+              AppCompatDelegate.setDefaultNightMode(Integer.parseInt(String.valueOf(newValue)));
+              return true;
+            });
+      }
     }
+
 
     private String enabledOrDisabled(boolean flag) {
       return getString(flag ? R.string.general_enabled : R.string.general_disabled);

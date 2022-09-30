@@ -68,6 +68,18 @@
         <item>it</item>
     </string-array>
 
+    <string-array name="themes">
+        <item>@string/theme_follow_system</item>
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>-1</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="registration_errors">
         <item>@string/registration_errors_successful</item>
         <item>@string/registration_errors_no_secret</item>

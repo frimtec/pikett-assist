@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     style="@style/CardViewStyle"
     android:layout_height="@dimen/sku_details_row_header_height"
-    android:focusable="true"
-    app:cardBackgroundColor="@color/row_header_bg_color">
+    android:focusable="true">
 
     <TextView
         android:id="@+id/title"

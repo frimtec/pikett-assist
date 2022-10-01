@@ -258,4 +258,8 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="state_fragment_schedule_exact_alarm">Wecker und Erinnerungen</string>
   <string name="pref_title_app_language">App-Sprache</string>
   <string name="system_language">Systemstandard</string>
+  <string name="pref_title_app_theme">Anzeige</string>
+  <string name="theme_follow_system">System folgen</string>
+  <string name="theme_light">Hell</string>
+  <string name="theme_dark">Dunkel</string>
 </resources>

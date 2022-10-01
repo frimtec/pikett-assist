@@ -259,4 +259,8 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="state_fragment_schedule_exact_alarm">Alarmes et rappels</string>
   <string name="pref_title_app_language">Langue de l\'appli</string>
   <string name="system_language">Défaut du système</string>
+  <string name="pref_title_app_theme">Affichage</string>
+  <string name="theme_follow_system">Suivre le système</string>
+  <string name="theme_light">Lumineux</string>
+  <string name="theme_dark">Sombre</string>
 </resources>

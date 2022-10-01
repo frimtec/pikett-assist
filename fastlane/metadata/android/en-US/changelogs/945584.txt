@@ -1,0 +1,6 @@
+- Support day/night themes
+- Show do not disturb warning independent of the current on-call state
+- Migrate to android studio dolphin
+- Bump minimal S2MSP version from 2.3.0 to 2.5.1
+- Bump r0adkll/upload-google-play from 1.0.17 to 1.0.18
+- Bump slidetoact from 0.9.0 to 0.10.0

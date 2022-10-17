@@ -37,10 +37,12 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:visibility="invisible"
+        app:inner_color="@android:color/white"
         app:slider_icon="@drawable/ic_siren"
         app:slider_icon_color="@color/black"
         app:outer_color="@color/swipeButtonBackground"
         app:text="@string/notification_alert_confirm_button"
+        app:text_color="@android:color/white"
         app:text_size="20sp"
         app:area_margin="0dp"/>
     <com.ncorti.slidetoact.SlideToActView
@@ -53,10 +55,12 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="60dp"
         android:visibility="invisible"
+        app:inner_color="@android:color/white"
         app:slider_icon="@drawable/ic_test_alarm"
         app:slider_icon_color="@color/black"
         app:outer_color="@color/swipeButtonBackground"
         app:text="@string/notification_alert_confirm_button"
+        app:text_color="@android:color/white"
         app:text_size="20sp"
         app:area_margin="0dp"/>
     <com.ncorti.slidetoact.SlideToActView

@@ -1,0 +1,2 @@
+- Fix night theme colors in some alert sliders
+- Bump gradle from 7.3.0 to 7.3.1

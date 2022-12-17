@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.service;
 
 import static com.github.frimtec.android.pikettassist.service.system.NotificationService.BATTERY_NOTIFICATION_ID;
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.SHIFT_NOTIFICATION_ID;
 import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
 
@@ -13,6 +14,7 @@ import androidx.work.Data;
 
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
+import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;
@@ -23,9 +25,12 @@ import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 final class LowSignalWorkUnit implements WorkUnit {
 
@@ -35,6 +40,8 @@ final class LowSignalWorkUnit implements WorkUnit {
   private static final Duration CHECK_INTERVAL = Duration.ofSeconds(90);
   private static final Duration CHECK_INTERVAL_BATTERY_SAFER = Duration.ofMinutes(15);
   private static final int BATTERY_LOW_LIMIT = 10;
+
+  private static final AtomicInteger CALL_COUNTER = new AtomicInteger(0);
 
   private final ApplicationPreferences applicationPreferences;
   private final AudioManager audioManager;
@@ -106,6 +113,7 @@ final class LowSignalWorkUnit implements WorkUnit {
   }
 
   private Optional<ScheduleInfo> reSchedule(int currentFilterState, boolean pikettState) {
+    int callCount = CALL_COUNTER.getAndIncrement();
     if (pikettState) {
       LocalTime now = LocalTime.now();
       if (this.applicationPreferences.getManageVolumeEnabled(context)) {
@@ -121,6 +129,9 @@ final class LowSignalWorkUnit implements WorkUnit {
       } else {
         notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
       }
+      if (callCount % 15 == 0) {
+        updateShiftProgress();
+      }
       Consumer<Intent> intentExtrasSetter;
       Duration nextRunIn = isBatterySaferOn(now) || batteryStatus.getLevel() < BATTERY_LOW_LIMIT ? getBatterySaferInterval(now) : CHECK_INTERVAL;
       if (currentFilterState > 0) {
@@ -134,9 +145,23 @@ final class LowSignalWorkUnit implements WorkUnit {
       }
       return Optional.of(new ScheduleInfo(nextRunIn, intentExtrasSetter));
     } else {
-      notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
+      Stream.of(
+          BATTERY_NOTIFICATION_ID,
+          SHIFT_NOTIFICATION_ID
+      ).forEach(notificationService::cancelNotification);
       return Optional.empty();
     }
+  }
+
+  private void updateShiftProgress() {
+    Instant nowInstant = Shift.now();
+    Optional<Shift> optionalShift = this.shiftService.findCurrentOrNextShift(nowInstant);
+    optionalShift.ifPresent(shift -> {
+      if (shift.isNow(nowInstant, Duration.ZERO)) {
+        Log.d(TAG, "Update shift progress");
+        notificationService.notifyShiftOn(calculateProgress(shift, nowInstant));
+      }
+    });
   }
 
   private Duration getBatterySaferInterval(LocalTime now) {
@@ -146,4 +171,13 @@ final class LowSignalWorkUnit implements WorkUnit {
   private boolean isBatterySaferOn(LocalTime now) {
     return this.applicationPreferences.getBatterySaferAtNightEnabled(this.context) && !this.applicationPreferences.isDayProfile(context, now);
   }
+
+  private NotificationService.Progress calculateProgress(Shift shift, Instant now) {
+    long startTime = shift.getStartTime().getEpochSecond();
+    return new NotificationService.Progress(
+        shift.getEndTime().getEpochSecond() - startTime,
+        now.getEpochSecond() - startTime
+    );
+  }
+
 }

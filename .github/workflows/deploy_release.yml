@@ -100,6 +100,7 @@ jobs:
           releaseFiles: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
           track: ${{ steps.get_track.outputs.TRACK }}
           whatsNewDirectory: google-play/whatsnew
+          status: completed
 
   update-repo:
 

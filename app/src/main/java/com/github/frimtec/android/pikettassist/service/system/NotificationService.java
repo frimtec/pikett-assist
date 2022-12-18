@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -50,6 +51,29 @@ public class NotificationService {
 
   private final Context context;
 
+  public static class Progress {
+
+    private final int max;
+    private final int progress;
+
+    public Progress(long max, long progress) {
+      while (max > Integer.MAX_VALUE) {
+        max = max / 10;
+        progress = progress / 10;
+      }
+      this.max = (int) max;
+      this.progress = (int) Math.min(Math.max(progress, 0), max);
+    }
+
+    public int getMax() {
+      return max;
+    }
+
+    public int getProgress() {
+      return progress;
+    }
+  }
+
   public NotificationService(Context context) {
     this.context = context;
   }
@@ -80,7 +104,7 @@ public class NotificationService {
     );
 
     String message = context.getString(R.string.notification_alert_text);
-    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
+    Notification notification = new Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
         .setContentText(message)
@@ -102,7 +126,7 @@ public class NotificationService {
         context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
     String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testAlarmContexts);
-    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
+    Notification notification = new Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_missing_test_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
         .setContentText(message)
@@ -118,10 +142,14 @@ public class NotificationService {
   }
 
   public void notifyShiftOn() {
+    notifyShiftOn(null);
+  }
+
+  public void notifyShiftOn(Progress progress) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
-    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_NOTIFICATION)
+    Builder notificationBuilder = new Builder(context, CHANNEL_ID_NOTIFICATION)
         .setContentTitle(context.getString(R.string.notification_pikett_on_title))
         .setContentText(context.getString(R.string.notification_pikett_on_text))
         .setSmallIcon(R.drawable.ic_eye_notification)
@@ -129,17 +157,18 @@ public class NotificationService {
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setOngoing(true)
-        .setContentIntent(notifyPendingIntent)
-        .build();
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(SHIFT_NOTIFICATION_ID, notification);
+        .setContentIntent(notifyPendingIntent);
+    if (progress != null) {
+      notificationBuilder.setProgress(progress.getMax(), progress.getProgress(), false);
+    }
+    NotificationManagerCompat.from(context).notify(SHIFT_NOTIFICATION_ID, notificationBuilder.build());
   }
 
   public void notifySignalLow(SignalLevel level) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
-    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_NOTIFICATION)
+    Notification notification = new Builder(context, CHANNEL_ID_NOTIFICATION)
         .setContentTitle(context.getString(R.string.notification_low_signal_title))
         .setContentText(String.format("%s: %s", context.getString(R.string.notification_low_signal_text), level.toString(context)))
         .setSmallIcon(R.drawable.ic_signal_cellular_notification)
@@ -159,7 +188,7 @@ public class NotificationService {
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
     @SuppressLint("DefaultLocale")
-    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_ALARM)
+    Notification notification = new Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_low_battery_title))
         .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.getLevel()))
         .setSmallIcon(R.drawable.ic_battery_alert_notification)
@@ -180,7 +209,7 @@ public class NotificationService {
     );
 
     String change = oldLevel > newLevel ? context.getString(R.string.reduced) : context.getString(R.string.increased);
-    Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID_CHANGE_SYSTEM)
+    Notification notification = new Builder(context, CHANNEL_ID_CHANGE_SYSTEM)
         .setContentTitle(context.getString(R.string.notification_volume_changed_title) + " " + change)
         .setContentText(String.format(context.getString(R.string.notification_volume_changed_text), levelText(newLevel)))
         .setSmallIcon(R.drawable.ic_volume_notification)

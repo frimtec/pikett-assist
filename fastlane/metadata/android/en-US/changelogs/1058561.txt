@@ -1,0 +1,4 @@
+- Shift progress in notification
+- Bump material from 1.6.1 to 1.7.0
+- Bump gson from 2.9.1 to 2.10
+- Bump billing from 5.0.0 to 5.1.0

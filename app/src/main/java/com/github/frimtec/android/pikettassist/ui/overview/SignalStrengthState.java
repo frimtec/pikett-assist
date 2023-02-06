@@ -29,7 +29,7 @@ class SignalStrengthState extends State {
 
   SignalStrengthState(StateContext stateContext) {
     super(
-        R.drawable.ic_signal_cellular_connected_no_internet_1_bar_black_24dp,
+        R.drawable.ic_signal_cellular,
         stateContext.getNetworkOperatorName() != null ? String.format("%s %s", stateContext.getString(R.string.state_fragment_signal_level), stateContext.getNetworkOperatorName()) : stateContext.getString(R.string.state_fragment_signal_level),
         stateContext.isSuperviseSignalStrength() ? (stateContext.getShiftState().isOn() ? getSignalStrength(stateContext) : stateContext.getString(R.string.general_enabled)) : stateContext.getString(R.string.general_disabled),
         null,

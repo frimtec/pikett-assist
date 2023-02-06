@@ -91,7 +91,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:icon="@drawable/ic_signal_cellular_connected_no_internet_1_bar_black_24dp"
+        app:icon="@drawable/ic_signal_cellular"
         app:title="@string/pref_title_supervise_signal_strength">
 
         <SwitchPreference

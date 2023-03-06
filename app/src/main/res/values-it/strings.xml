@@ -262,4 +262,5 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="theme_follow_system">Segui il sistema</string>
   <string name="theme_light">Luminoso</string>
   <string name="theme_dark">Scuro</string>
+  <string name="toast_calendar_activity_not_found">Impossibile aprire l\'app del calendario!</string>
 </resources>

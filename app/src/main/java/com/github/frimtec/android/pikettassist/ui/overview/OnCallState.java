@@ -1,12 +1,15 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.LowSignalWorker;
@@ -16,6 +19,8 @@ import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import java.util.Calendar;
 
 class OnCallState extends State {
+
+  private static final String TAG = "OnCallState";
 
   private static final int MENU_CONTEXT_SET_MANUALLY_ON = 1;
   private static final int MENU_CONTEXT_RESET = 2;
@@ -64,10 +69,17 @@ class OnCallState extends State {
 
   @Override
   public void onClickAction(Context context) {
-    Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-    builder.appendPath("time");
+    Uri.Builder builder = CalendarContract.CONTENT_URI
+        .buildUpon()
+        .appendPath("time");
     ContentUris.appendId(builder, Calendar.getInstance().getTimeInMillis());
-    Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
-    stateContext.getContext().startActivity(intent);
+    try {
+      stateContext.getContext().startActivity(
+          new Intent(Intent.ACTION_VIEW).setData(builder.build())
+      );
+    } catch (ActivityNotFoundException e) {
+      Log.e(TAG, "Cannot open calendar app with parameter time", e);
+      Toast.makeText(context, R.string.toast_calendar_activity_not_found, Toast.LENGTH_LONG).show();
+    }
   }
 }

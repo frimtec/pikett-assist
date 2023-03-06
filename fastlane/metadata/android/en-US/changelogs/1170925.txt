@@ -1,0 +1,4 @@
+- Fix ActivityNotFoundException
+- Bump androidx.work:work-runtime from 2.7.1 to 2.8.0
+- Bump r0adkll/upload-google-play from 1.0.19 to 1.1.1
+- Bump com.android.tools.build:gradle from 7.4.1 to 7.4.2

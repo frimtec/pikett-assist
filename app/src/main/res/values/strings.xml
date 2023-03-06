@@ -278,5 +278,4 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="theme_follow_system">Follow system</string>
   <string name="theme_light">Light</string>
   <string name="theme_dark">Dark</string>
-  <string name="toast_calendar_activity_not_found">Cannot open calendar app!</string>
 </resources>

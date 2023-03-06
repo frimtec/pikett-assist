@@ -262,4 +262,5 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="theme_follow_system">System folgen</string>
   <string name="theme_light">Hell</string>
   <string name="theme_dark">Dunkel</string>
+  <string name="toast_calendar_activity_not_found">Kalender-App kann nicht geöffnet werden!</string>
 </resources>

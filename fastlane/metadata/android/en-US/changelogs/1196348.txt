@@ -1,0 +1,2 @@
+- Update S2MSP to 2.7.0 to support carriers sending local SMS numbers
+- Bump org.mockito:mockito-core from 5.1.1 to 5.2.0

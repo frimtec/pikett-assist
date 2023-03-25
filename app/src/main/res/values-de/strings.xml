@@ -263,6 +263,6 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="theme_light">Hell</string>
   <string name="theme_dark">Dunkel</string>
   <string name="toast_calendar_activity_not_found">Kalender-App kann nicht geöffnet werden!</string>
-  <string name="alternative_donation_text">PAssist ist Open Source und kostenlos. Wenn Sie PAssist nützlich finden und regelmäßig für Ihre Bereitschaftsdienste nutzen, ist eine freiwillige Spende herzlich willkommen.</string>
-  <string name="alternative_donation_thanks">Vielen Dank für deine Unterstützung!</string>
+  <string name="alternative_donation_text">PAssist ist Open Source und kostenlos. Wenn Sie PAssist nützlich finden und regelmäßig für ihren Bereitschaftsdienst nutzen, ist eine freiwillige Spende herzlich willkommen.</string>
+  <string name="alternative_donation_thanks">Vielen Dank für Ihre Unterstützung!</string>
 </resources>

@@ -29,7 +29,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.android.billingclient.api.BillingClient;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
@@ -305,9 +304,18 @@ public class MainActivity extends AppCompatActivity {
     if (!isAcquireFragmentShown()) {
       donationFragment.show(getSupportFragmentManager(), BILLING_DIALOG_TAG);
 
-      if (billingAdapter != null &&
-          this.billingAdapter.getBillingManager().getBillingClientResponseCode() > BillingClient.BillingResponseCode.SERVICE_DISCONNECTED) {
-        donationFragment.onManagerReady(this.billingAdapter);
+      if (billingAdapter != null) {
+        int billingClientResponseCode = this.billingAdapter.getBillingManager().getBillingClientResponseCode();
+        switch (billingClientResponseCode) {
+          case BillingResponseCode.BILLING_UNAVAILABLE:
+            donationFragment.onManagerReady(null);
+            break;
+          case BillingResponseCode.OK:
+            donationFragment.onManagerReady(this.billingAdapter);
+            break;
+          default:
+            Log.w(TAG, "Unhandled billing client response code: " + billingClientResponseCode);
+        }
       }
     }
   }

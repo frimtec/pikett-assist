@@ -264,4 +264,6 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="theme_light">Lumineux</string>
   <string name="theme_dark">Sombre</string>
   <string name="toast_calendar_activity_not_found">Impossible d\'ouvrir l\'application calendrier!</string>
+  <string name="alternative_donation_text">PAssist est Open-Source et gratuit. Si vous trouvez PAssist utile et que vous l\'utilisez régulièrement pour vos tâches de garde, un don volontaire est le bienvenu.</string>
+  <string name="alternative_donation_thanks">Merci beaucoup pour votre soutien!</string>
 </resources>

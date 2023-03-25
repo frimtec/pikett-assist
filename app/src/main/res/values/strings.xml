@@ -279,4 +279,6 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="theme_light">Light</string>
   <string name="theme_dark">Dark</string>
   <string name="toast_calendar_activity_not_found">Cannot open calendar app!</string>
+  <string name="alternative_donation_text">PAssist is Open-Source and free. If you find PAssist useful and use it on a regular basis for your on-call duties, a voluntary donation is warmly welcome.</string>
+  <string name="alternative_donation_thanks">Many thanks for your support!</string>
 </resources>

@@ -57,6 +57,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -169,7 +170,13 @@ public class MainActivity extends AppCompatActivity {
 
     this.billingAdapter = new BillingAdapter(this);
 
-    FragmentPosition savedFragmentPosition = FragmentPosition.STATE;
+    FragmentPosition savedFragmentPosition = Arrays.stream(FragmentPosition.values())
+        .map(Enum::name)
+        .filter(value -> value.equals(getIntent().getAction()))
+        .findFirst()
+        .map(FragmentPosition::valueOf)
+        .orElse(FragmentPosition.STATE);
+
     if (savedInstanceState != null) {
       savedFragmentPosition = ensureValidFragmentPosition(savedInstanceState.getInt(ACTIVE_FRAGMENT_STATE, savedFragmentPosition.ordinal()));
     } else {

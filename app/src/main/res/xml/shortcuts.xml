@@ -1,0 +1,38 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_home_24dp_black"
+        android:shortcutDisabledMessage="@string/title_home"
+        android:shortcutId="overview"
+        android:shortcutLongLabel="@string/title_home"
+        android:shortcutShortLabel="@string/title_home">
+        <intent
+            android:action="STATE"
+            android:targetClass="com.github.frimtec.android.pikettassist.ui.MainActivity"
+            android:targetPackage="com.github.frimtec.android.pikettassist" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_event_black"
+        android:shortcutDisabledMessage="@string/title_shift_overview"
+        android:shortcutId="calendar"
+        android:shortcutLongLabel="@string/title_shift_overview"
+        android:shortcutShortLabel="@string/title_shift_overview">
+        <intent
+            android:action="SHIFTS"
+            android:targetClass="com.github.frimtec.android.pikettassist.ui.MainActivity"
+            android:targetPackage="com.github.frimtec.android.pikettassist" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_siren_black"
+        android:shortcutDisabledMessage="@string/title_alert_log"
+        android:shortcutId="alert_log"
+        android:shortcutLongLabel="@string/title_alert_log"
+        android:shortcutShortLabel="@string/title_alert_log">
+        <intent
+            android:action="ALERT_LOG"
+            android:targetClass="com.github.frimtec.android.pikettassist.ui.MainActivity"
+            android:targetPackage="com.github.frimtec.android.pikettassist" />
+    </shortcut>
+</shortcuts>

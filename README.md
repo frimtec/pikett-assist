@@ -255,6 +255,7 @@ SDK is 33 (Android 13-Tiramisu) and the minimal SDK is 26 (Android 8.0-Oreo).
 * [SlideToAct][slide-to-act]
 * [preferencex-android][preferencex-android]
 * [Secure-SMS-Proxy API][secure-sms-proxy-api]
+* [semver4j][semver4j]
 
 ## Devices compatibility
 * [Devices compatibility][devices-compatibility]
@@ -292,3 +293,4 @@ You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an iss
 [preferencex-android]: https://github.com/takisoft/preferencex-android
 [secure-sms-proxy-api]: https://github.com/frimtec/secure-sms-proxy
 [lokalise]: https://lokalise.com/
+[semver4j]: https://github.com/vdurmont/semver4j

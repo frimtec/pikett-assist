@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
+import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation.AppCompatibility;
 
 class SmsAdapterState extends State {
 
@@ -50,32 +51,52 @@ class SmsAdapterState extends State {
   }
 
   private static State.TrafficLight getSmsAdapterState(StateContext stateContext, boolean smsAdapterSmsPermission) {
-    if (stateContext.isSmsAdapterMissing() || !smsAdapterSmsPermission || stateContext.isOperationsCenterPhoneNumbersBlocked()) {
+    AppCompatibility compatibility = getAppCompatibility(stateContext);
+    if (!compatibility.isSupported() || !smsAdapterSmsPermission || stateContext.isOperationsCenterPhoneNumbersBlocked()) {
       return RED;
-    } else if (stateContext.isSmsAdapterVersionOutdated()) {
+    } else if (compatibility == AppCompatibility.UPDATE_RECOMMENDED) {
       return YELLOW;
     } else {
       return GREEN;
     }
   }
 
+  private static AppCompatibility getAppCompatibility(StateContext stateContext) {
+    return stateContext.getSmsAdapterInstallation().getAppCompatibility();
+  }
+
   private static String getSmsAdapterValue(StateContext stateContext, boolean smsAdapterSmsPermission) {
-    if (stateContext.isSmsAdapterMissing()) {
-      return stateContext.getString(R.string.state_fragment_sms_adapter_not_installed);
-    } else if (!smsAdapterSmsPermission) {
+    switch (getAppCompatibility(stateContext)) {
+      case NOT_INSTALLED:
+        return stateContext.getString(R.string.state_fragment_sms_adapter_not_installed);
+      case NOT_YET_SUPPORTED:
+        return "Not yet supported" + "\n" + getVersionUpdate(stateContext);
+      case NO_MORE_SUPPORTED:
+        return stateContext.getString(R.string.state_fragment_s2msp_requires_update) + "\n" + getVersionUpdate(stateContext);
+      case UPDATE_RECOMMENDED:
+        return "Update recommended\n" + getVersionUpdate(stateContext);
+    }
+    if (!smsAdapterSmsPermission) {
       return stateContext.getString(R.string.state_fragment_sms_adapter_no_sms_permissions);
     } else if (stateContext.isOperationsCenterPhoneNumbersBlocked()) {
       return stateContext.getString(R.string.state_fragment_phone_numbers_blocked);
-    } else if (stateContext.isSmsAdapterVersionOutdated()) {
-      return stateContext.getString(R.string.state_fragment_s2msp_requires_update);
     } else {
-      return "S2MSP V" + stateContext.getSmsAdapterInstallation().getAppVersion().orElse("?.?");
+      return "S2MSP V" + getAppVersion(stateContext);
     }
+  }
+
+  private static String getAppVersion(StateContext stateContext) {
+    return stateContext.getSmsAdapterInstallation().getAppVersion().orElse("?.?");
+  }
+
+  private static String getVersionUpdate(StateContext stateContext) {
+    return String.format("Version %s -> %s", getAppVersion(stateContext), stateContext.getSmsAdapterInstallation().getApiVersion());
   }
 
   @Override
   public void onClickAction(Context context) {
-    if (stateContext.isSmsAdapterMissing()) {
+    AppCompatibility appCompatibility = getAppCompatibility(stateContext);
+    if (appCompatibility == AppCompatibility.NOT_INSTALLED) {
       openDownloadDialog(context, R.string.permission_sms_text, R.string.permission_sms_title, stateContext.getSmsAdapterInstallation());
       return;
     }
@@ -84,7 +105,7 @@ class SmsAdapterState extends State {
         stateContext.registerPhoneNumberOnSmsAdapter();
         return;
       }
-      if (stateContext.isSmsAdapterVersionOutdated()) {
+      if (appCompatibility == AppCompatibility.UPDATE_RECOMMENDED || appCompatibility == AppCompatibility.NO_MORE_SUPPORTED) {
         openDownloadDialog(context, R.string.permission_sms_update_text, R.string.permission_sms_update_title, stateContext.getSmsAdapterInstallation());
         return;
       }

@@ -1,0 +1,2 @@
+- Add use of s2msp compatibility API
+- Migrate to android studio flamingo

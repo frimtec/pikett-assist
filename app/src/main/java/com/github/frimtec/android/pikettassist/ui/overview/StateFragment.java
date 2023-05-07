@@ -239,8 +239,6 @@ public class StateFragment extends AbstractListFragment<State> {
         () -> this.alertService.closeAlert(),
         () -> this.billingAccess.showDonationDialog(),
         smsAdapterInstallation,
-        !smsAdapterInstallation.getAppVersion().isPresent(),
-        smsAdapterInstallation.getAppVersion().isPresent() && smsAdapterInstallation.getApiVersion().compareTo(smsAdapterInstallation.getAppVersion().get()) > 0,
         s2msp.areSmsPermissionsGranted(),
         shiftState,
         currentOrNextShift.map(shift -> toDuration(pikettStateManuallyOn, shiftState, shift, now, prePostRunTime)).orElse(""),

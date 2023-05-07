@@ -37,8 +37,6 @@ class StateContext {
   private final boolean operationsCenterPhoneNumbersBlocked;
 
   private final Installation smsAdapterInstallation;
-  private final boolean smsAdapterMissing;
-  private final boolean smsAdapterVersionOutdated;
   private final boolean smsAdapterPermissionsGranted;
 
   private final SignalLevel signalStrengthLevel;
@@ -59,8 +57,6 @@ class StateContext {
       Runnable closeAlertAction,
       Runnable showDonationDialogAction,
       Installation smsAdapterInstallation,
-      boolean smsAdapterMissing,
-      boolean smsAdapterVersionOutdated,
       boolean smsAdapterPermissionsGranted,
       ShiftState shiftState,
       String pikettStateDuration,
@@ -82,8 +78,6 @@ class StateContext {
     this.closeAlertAction = closeAlertAction;
     this.showDonationDialogAction = showDonationDialogAction;
     this.smsAdapterInstallation = smsAdapterInstallation;
-    this.smsAdapterMissing = smsAdapterMissing;
-    this.smsAdapterVersionOutdated = smsAdapterVersionOutdated;
     this.smsAdapterPermissionsGranted = smsAdapterPermissionsGranted;
     this.shiftState = shiftState;
     this.pikettStateDuration = pikettStateDuration;
@@ -128,14 +122,6 @@ class StateContext {
 
   Installation getSmsAdapterInstallation() {
     return smsAdapterInstallation;
-  }
-
-  boolean isSmsAdapterMissing() {
-    return smsAdapterMissing;
-  }
-
-  boolean isSmsAdapterVersionOutdated() {
-    return smsAdapterVersionOutdated;
   }
 
   boolean isSmsAdapterPermissionsGranted() {

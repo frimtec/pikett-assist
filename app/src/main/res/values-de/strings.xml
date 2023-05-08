@@ -265,4 +265,6 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="toast_calendar_activity_not_found">Kalender-App kann nicht geöffnet werden!</string>
   <string name="alternative_donation_text">PAssist ist Open Source und kostenlos. Wenn Sie PAssist nützlich finden und regelmäßig für ihren Bereitschaftsdienst nutzen, ist eine freiwillige Spende herzlich willkommen.</string>
   <string name="alternative_donation_thanks">Vielen Dank für Ihre Unterstützung!</string>
+  <string name="state_fragment_sms_adapter_not_yet_supported">Noch nicht unterstützt</string>
+  <string name="state_fragment_sms_adapter_update_recommended">Aktualisierung empfohlen</string>
 </resources>

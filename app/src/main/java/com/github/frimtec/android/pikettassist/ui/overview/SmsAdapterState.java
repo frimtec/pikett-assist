@@ -66,21 +66,32 @@ class SmsAdapterState extends State {
   }
 
   private static String getSmsAdapterValue(StateContext stateContext, boolean smsAdapterSmsPermission) {
-    switch (getAppCompatibility(stateContext)) {
-      case NOT_INSTALLED:
-        return stateContext.getString(R.string.state_fragment_sms_adapter_not_installed);
-      case NOT_YET_SUPPORTED:
-        return "Not yet supported" + "\n" + getVersionUpdate(stateContext);
-      case NO_MORE_SUPPORTED:
-        return stateContext.getString(R.string.state_fragment_s2msp_requires_update) + "\n" + getVersionUpdate(stateContext);
-      case UPDATE_RECOMMENDED:
-        return "Update recommended\n" + getVersionUpdate(stateContext);
-    }
-    if (!smsAdapterSmsPermission) {
+    AppCompatibility compatibility = getAppCompatibility(stateContext);
+    if (compatibility == AppCompatibility.NOT_INSTALLED) {
+      // RED
+      return stateContext.getString(R.string.state_fragment_sms_adapter_not_installed);
+    } else if (!smsAdapterSmsPermission) {
+      // RED
       return stateContext.getString(R.string.state_fragment_sms_adapter_no_sms_permissions);
     } else if (stateContext.isOperationsCenterPhoneNumbersBlocked()) {
+      // RED
       return stateContext.getString(R.string.state_fragment_phone_numbers_blocked);
     } else {
+      switch (compatibility) {
+        case NOT_YET_SUPPORTED:
+          // RED
+          return stateContext.getString(R.string.state_fragment_sms_adapter_not_yet_supported)
+              + "\n" + getVersionUpdate(stateContext);
+        case NO_MORE_SUPPORTED:
+          // RED
+          return stateContext.getString(R.string.state_fragment_s2msp_requires_update)
+              + "\n" + getVersionUpdate(stateContext);
+        case UPDATE_RECOMMENDED:
+          // YELLOW
+          return stateContext.getString(R.string.state_fragment_sms_adapter_update_recommended)
+              + "\n" + getVersionUpdate(stateContext);
+      }
+      // GREEN
       return "S2MSP V" + getAppVersion(stateContext);
     }
   }
@@ -155,6 +166,7 @@ class SmsAdapterState extends State {
       setButton(AlertDialog.BUTTON_NEGATIVE, getContext().getString(android.R.string.cancel), (dialog, which) -> {
       });
     }
+
   }
 
   private boolean isFDroidAvailable(Context context) {

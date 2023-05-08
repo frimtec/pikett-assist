@@ -1,0 +1,1 @@
+- Fix and localize SMS adapter state text

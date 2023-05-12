@@ -127,6 +127,11 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   }
 
   @Override
+  public void setSuperviseSignalStrengthSubscription(Context context, int subscriptionId) {
+    setSharedPreferences(context, setter -> setter.putString(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION, String.valueOf(subscriptionId)));
+  }
+
+  @Override
   public void setSuperviseSignalStrength(Context context, boolean supervise) {
     setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_SUPERVISE_SIGNAL_STRENGTH, supervise));
   }

@@ -1,0 +1,2 @@
+- Improve multi SIM support
+- Bump com.google.android.material:material from 1.8.0 to 1.9.0

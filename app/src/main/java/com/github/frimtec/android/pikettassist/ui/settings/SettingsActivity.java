@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsFragment";
 
-    private static final int MAX_SUPPORTED_SIMS = 2;
+    private static final int MAX_SUPPORTED_SIMS = 3;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -150,12 +150,13 @@ public class SettingsActivity extends AppCompatActivity {
           List<CharSequence> entriesValues = new ArrayList<>();
 
           if (context != null) {
-            for (int i = 0; i < MAX_SUPPORTED_SIMS; i++) {
+            // Subscription are mostly counted starting from 1 therefor lets check for one more
+            for (int i = 0; i < MAX_SUPPORTED_SIMS + 1; i++) {
               SignalStrengthService signalStrengthService = new SignalStrengthService(context, i);
               String networkOperatorName = signalStrengthService.getNetworkOperatorName();
               if (networkOperatorName != null) {
                 entriesValues.add(String.valueOf(i));
-                entries.add(String.format(Locale.getDefault(), "%s %d: %s", getString(R.string.subscription), i + 1, networkOperatorName));
+                entries.add(String.format(Locale.getDefault(), "%s %d: %s", getString(R.string.subscription), i, networkOperatorName));
               } else {
                 Log.d(TAG, "No phone manager for subscriptionId " + i);
               }
@@ -166,6 +167,14 @@ public class SettingsActivity extends AppCompatActivity {
           superviseSignalStrengthSubscription.setDefaultValue(getString(R.string.pref_default_supervise_signal_strength_subscription));
           if (entries.size() < 2) {
             superviseSignalStrengthSubscription.setVisible(false);
+          }
+          if (entries.size() == 1) {
+            int subscriptionId = Integer.parseInt(String.valueOf(entriesValues.get(0)));
+            ApplicationPreferences.instance().setSuperviseSignalStrengthSubscription(
+                context,
+                subscriptionId
+            );
+            Log.d(TAG, "Setting rest to one and only subscriptionId: " + subscriptionId);
           }
         }
       }

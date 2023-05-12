@@ -67,6 +67,8 @@ public interface ApplicationPreferences {
 
   int getSuperviseSignalStrengthSubscription(Context context);
 
+  void setSuperviseSignalStrengthSubscription(Context context, int subscriptionId);
+
   void setSuperviseSignalStrength(Context context, boolean supervise);
 
   boolean getNotifyLowSignal(Context context);

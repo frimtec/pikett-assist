@@ -71,7 +71,7 @@ dependencies {
     implementation "com.takisoft.preferencex:preferencex-ringtone:$takisoft_preferencex_version"
     implementation "com.takisoft.preferencex:preferencex-datetimepicker:$takisoft_preferencex_version"
     implementation "com.android.billingclient:billing:$android_billingclient_version"
-    implementation "com.github.frimtec:secure-sms-proxy-api:$secure_sms_proxy_api_version"
+    implementation "com.github.frimtec:secure-sms-proxy-api:$secure_sms_proxy_api_version@aar"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"

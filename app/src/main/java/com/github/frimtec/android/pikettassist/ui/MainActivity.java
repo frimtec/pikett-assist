@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -363,7 +364,11 @@ public class MainActivity extends AppCompatActivity {
       filter.addAction(Intent.ACTION_BATTERY_CHANGED);
       filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
       filter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
-      registerReceiver(broadcastReceiver, filter);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        registerReceiver(broadcastReceiver, filter, RECEIVER_EXPORTED);
+      } else {
+        registerReceiver(broadcastReceiver, filter);
+      }
     }
   }
 

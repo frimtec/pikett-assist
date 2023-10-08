@@ -97,21 +97,16 @@ public class SignalStrengthService {
       if (level == null) {
         return OFF;
       }
-      switch (level) {
-        case 0:
-          return NONE;
-        case 1:
-          return POOR;
-        case 2:
-          return MODERATE;
-        case 3:
-          return GOOD;
-        case 4:
-          return GREAT;
-        default:
+      return switch (level) {
+        case 0 -> NONE;
+        case 1 -> POOR;
+        case 2 -> MODERATE;
+        case 3 -> GOOD;
+        case 4 -> GREAT;
+        default ->
           // Workaround for Huawei CLT-L29
-          return level > 4 ? GREAT : OFF;
-      }
+            level > 4 ? GREAT : OFF;
+      };
     }
 
     public String toString(Context context) {

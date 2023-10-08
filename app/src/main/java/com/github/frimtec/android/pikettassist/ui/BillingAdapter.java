@@ -71,17 +71,10 @@ class BillingAdapter implements BillingUpdatesListener, BillingProvider {
       BillingState state = getBillingState(purchase);
       for (String productId : purchase.getProducts()) {
         switch (productId) {
-          case BillingConstants.SPONSOR_BRONZE_PRODUCT_ID:
-            bronzeSponsor = state;
-            break;
-          case BillingConstants.SPONSOR_SILVER_PRODUCT_ID:
-            silverSponsor = state;
-            break;
-          case BillingConstants.SPONSOR_GOLD_PRODUCT_ID:
-            goldSponsor = state;
-            break;
-          default:
-            Log.e(TAG, "Has unknown product: " + productId);
+          case BillingConstants.SPONSOR_BRONZE_PRODUCT_ID -> bronzeSponsor = state;
+          case BillingConstants.SPONSOR_SILVER_PRODUCT_ID -> silverSponsor = state;
+          case BillingConstants.SPONSOR_GOLD_PRODUCT_ID -> goldSponsor = state;
+          default -> Log.e(TAG, "Has unknown product: " + productId);
         }
       }
     }
@@ -92,15 +85,11 @@ class BillingAdapter implements BillingUpdatesListener, BillingProvider {
   }
 
   private BillingState getBillingState(Purchase purchase) {
-    switch (purchase.getPurchaseState()) {
-      case Purchase.PurchaseState.PURCHASED:
-        return PURCHASED;
-      case Purchase.PurchaseState.PENDING:
-        return PENDING;
-      case Purchase.PurchaseState.UNSPECIFIED_STATE:
-      default:
-        return NOT_PURCHASED;
-    }
+    return switch (purchase.getPurchaseState()) {
+      case Purchase.PurchaseState.PURCHASED -> PURCHASED;
+      case Purchase.PurchaseState.PENDING -> PENDING;
+      default -> NOT_PURCHASED;
+    };
   }
 
   void destroy() {

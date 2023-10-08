@@ -77,22 +77,23 @@ class SmsAdapterState extends State {
       // RED
       return stateContext.getString(R.string.state_fragment_phone_numbers_blocked);
     } else {
-      switch (compatibility) {
-        case NOT_YET_SUPPORTED:
+      return switch (compatibility) {
+        case NOT_YET_SUPPORTED ->
           // RED
-          return stateContext.getString(R.string.state_fragment_sms_adapter_not_yet_supported)
-              + "\n" + getVersionUpdate(stateContext);
-        case NO_MORE_SUPPORTED:
+            stateContext.getString(R.string.state_fragment_sms_adapter_not_yet_supported)
+                + "\n" + getVersionUpdate(stateContext);
+        case NO_MORE_SUPPORTED ->
           // RED
-          return stateContext.getString(R.string.state_fragment_s2msp_requires_update)
-              + "\n" + getVersionUpdate(stateContext);
-        case UPDATE_RECOMMENDED:
+            stateContext.getString(R.string.state_fragment_s2msp_requires_update)
+                + "\n" + getVersionUpdate(stateContext);
+        case UPDATE_RECOMMENDED ->
           // YELLOW
-          return stateContext.getString(R.string.state_fragment_sms_adapter_update_recommended)
-              + "\n" + getVersionUpdate(stateContext);
-      }
-      // GREEN
-      return "S2MSP V" + getAppVersion(stateContext);
+            stateContext.getString(R.string.state_fragment_sms_adapter_update_recommended)
+                + "\n" + getVersionUpdate(stateContext);
+        default ->
+          // GREEN
+            "S2MSP V" + getAppVersion(stateContext);
+      };
     }
   }
 
@@ -191,18 +192,21 @@ class SmsAdapterState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONTEXT_VIEW:
+      case MENU_CONTEXT_VIEW -> {
         Intent launchIntent = packageManager.getLaunchIntentForPackage(S2MSP_PACKAGE_NAME);
         if (launchIntent != null) {
           stateContext.getContext().startActivity(launchIntent);
         }
         return true;
-      case SEND_TEST_SMS:
+      }
+      case SEND_TEST_SMS -> {
         stateContext.sendLoopbackSms();
         Toast.makeText(context, R.string.state_fragment_loopback_sms_sent, Toast.LENGTH_SHORT).show();
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 

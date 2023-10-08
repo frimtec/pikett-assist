@@ -87,19 +87,23 @@ class BatteryState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONTEXT_VIEW:
+      case MENU_CONTEXT_VIEW -> {
         onClickAction(context);
         return true;
-      case MENU_CONTEXT_DEACTIVATE:
+      }
+      case MENU_CONTEXT_DEACTIVATE -> {
         ApplicationPreferences.instance().setSuperviseBatteryLevel(context, false);
         stateContext.refreshFragment();
         return true;
-      case MENU_CONTEXT_ACTIVATE:
+      }
+      case MENU_CONTEXT_ACTIVATE -> {
         ApplicationPreferences.instance().setSuperviseBatteryLevel(context, true);
         stateContext.refreshFragment();
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 

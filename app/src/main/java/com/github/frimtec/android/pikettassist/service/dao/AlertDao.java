@@ -163,20 +163,20 @@ public class AlertDao {
   public void saveImportedAlert(Alert alert) {
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
     ContentValues contentValues = new ContentValues();
-    contentValues.put(TABLE_ALERT_COLUMN_START_TIME, alert.getStartTime().toEpochMilli());
-    contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, alert.isConfirmed() ? BOOLEAN_TRUE : BOOLEAN_FALSE);
-    if (alert.isConfirmed()) {
-      contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, alert.getConfirmTime().toEpochMilli());
+    contentValues.put(TABLE_ALERT_COLUMN_START_TIME, alert.startTime().toEpochMilli());
+    contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, alert.confirmed() ? BOOLEAN_TRUE : BOOLEAN_FALSE);
+    if (alert.confirmed()) {
+      contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, alert.confirmTime().toEpochMilli());
     }
-    if (alert.getEndTime() != null) {
-      contentValues.put(TABLE_ALERT_COLUMN_END_TIME, alert.getEndTime().toEpochMilli());
+    if (alert.endTime() != null) {
+      contentValues.put(TABLE_ALERT_COLUMN_END_TIME, alert.endTime().toEpochMilli());
     }
     Long alertId = db.insert(TABLE_ALERT, null, contentValues);
-    for (AlertCall call : alert.getCalls()) {
+    for (AlertCall call : alert.calls()) {
       contentValues = new ContentValues();
       contentValues.put(TABLE_ALERT_CALL_COLUMN_ALERT_ID, alertId);
-      contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, call.getTime().toEpochMilli());
-      contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, call.getMessage());
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, call.time().toEpochMilli());
+      contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, call.message());
       db.insert(TABLE_ALERT_CALL, null, contentValues);
     }
   }
@@ -212,7 +212,7 @@ public class AlertDao {
 
   public void delete(Alert alert) {
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
-    db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alert.getId())});
+    db.delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alert.id())});
   }
 
 }

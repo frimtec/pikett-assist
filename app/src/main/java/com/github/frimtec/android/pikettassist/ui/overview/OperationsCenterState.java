@@ -67,21 +67,25 @@ class OperationsCenterState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID:
+      case MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID -> {
         actionViewContact();
         return true;
-      case MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID:
+      }
+      case MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID -> {
         actionSelectContact();
         return true;
-      case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID:
+      }
+      case MENU_CONTEXT_CLEAR_OPERATIONS_CENTER_ID -> {
         DialogHelper.areYouSure(stateContext.getContext(), (dialog, which) -> {
           ApplicationPreferences.instance().setOperationsCenterContactReference(context, ContactReference.NO_SELECTION);
           stateContext.refreshFragment();
         }, (dialog, which) -> {
         });
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 

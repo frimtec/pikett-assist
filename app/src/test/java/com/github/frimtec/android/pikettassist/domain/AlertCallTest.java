@@ -14,20 +14,20 @@ class AlertCallTest {
   void getTime() {
     Instant time = Instant.now().minusSeconds(10);
     AlertCall alertCall = new AlertCall(time, "message");
-    assertThat(alertCall.getTime()).isEqualTo(time);
+    assertThat(alertCall.time()).isEqualTo(time);
   }
 
   @Test
   void getMessage() {
     String message = "message";
     AlertCall alertCall = new AlertCall(Instant.now(), message);
-    assertThat(alertCall.getMessage()).isEqualTo(message);
+    assertThat(alertCall.message()).isEqualTo(message);
   }
 
   @Test
   void testToString() {
     Instant now = Instant.now();
     AlertCall alertCall = new AlertCall(now, "message");
-    assertThat(alertCall.toString()).matches("AlertCall\\{time=.*, message='message'}");
+    assertThat(alertCall.toString()).matches("AlertCall\\[time=.*, message=message]");
   }
 }

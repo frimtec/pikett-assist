@@ -156,7 +156,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
 
   private long countAlertsWithinLastDays(List<Alert> alertList, int days) {
     Instant lastDaysStart = Instant.now().minus(days, DAYS);
-    return alertList.stream().filter(alert -> alert.getStartTime().isAfter(lastDaysStart)).count();
+    return alertList.stream().filter(alert -> alert.startTime().isAfter(lastDaysStart)).count();
   }
 
   @Override
@@ -176,19 +176,24 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
     ListView listView = getListView();
     Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
     switch (item.getItemId()) {
-      case MENU_CONTEXT_VIEW_ID:
+      case MENU_CONTEXT_VIEW_ID -> {
         showAlertDetails(selectedAlert);
         return true;
-      case MENU_CONTEXT_DELETE_ID:
-        DialogHelper.areYouSure(getContext(), (dialog, which) -> {
-          this.alertDao.delete(selectedAlert);
-          refresh();
-          Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();
-        }, (dialog, which) -> {
-        });
+      }
+      case MENU_CONTEXT_DELETE_ID -> {
+        DialogHelper.areYouSure(
+            getContext(), (dialog, which) -> {
+              this.alertDao.delete(selectedAlert);
+              refresh();
+              Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();
+            }, (dialog, which) -> {
+            }
+        );
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 
@@ -217,7 +222,7 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   private void showAlertDetails(Alert selectedAlert) {
     Intent intent = new Intent(this.getContext(), AlertDetailActivity.class);
     Bundle bundle = new Bundle();
-    bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, selectedAlert.getId());
+    bundle.putLong(AlertDetailActivity.EXTRA_ALERT_ID, selectedAlert.id());
     intent.putExtras(bundle);
     startActivity(intent);
   }

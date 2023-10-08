@@ -22,23 +22,24 @@ class GsonHelperTest {
         new Alert.AlertCall(startTime.plusSeconds(20), "Message 2")
     ));
     String jsonString = GsonHelper.GSON.toJson(alert);
-    assertThat(jsonString).isEqualTo("{\n" +
-        "  \"id\": 5,\n" +
-        "  \"startTime\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "  \"confirmTime\": \"2020-04-26T18:11:18.641Z\",\n" +
-        "  \"confirmed\": true,\n" +
-        "  \"endTime\": \"2020-04-26T18:14:26.641Z\",\n" +
-        "  \"calls\": [\n" +
-        "    {\n" +
-        "      \"time\": \"2020-04-26T18:11:06.621Z\",\n" +
-        "      \"message\": \"Message 1\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"time\": \"2020-04-26T18:11:26.641Z\",\n" +
-        "      \"message\": \"Message 2\"\n" +
-        "    }\n" +
-        "  ]\n" +
-        "}");
+    assertThat(jsonString).isEqualTo("""
+        {
+          "id": 5,
+          "startTime": "2020-04-26T18:11:06.641Z",
+          "confirmTime": "2020-04-26T18:11:18.641Z",
+          "confirmed": true,
+          "endTime": "2020-04-26T18:14:26.641Z",
+          "calls": [
+            {
+              "time": "2020-04-26T18:11:06.621Z",
+              "message": "Message 1"
+            },
+            {
+              "time": "2020-04-26T18:11:26.641Z",
+              "message": "Message 2"
+            }
+          ]
+        }""");
 
     Alert alertDeserialized = GsonHelper.GSON.fromJson(jsonString, Alert.class);
     assertThat(alertDeserialized.toString()).isEqualTo(alert.toString());

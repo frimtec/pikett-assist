@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     public Fragment createFragment(int position) {
       FragmentPosition fragmentPosition = ensureValidFragmentPosition(position);
       switch (fragmentPosition) {
-        case STATE:
+        case STATE -> {
           StateFragment stateFragment = new StateFragment();
           stateFragment.setActivityFacade(new StateFragment.BillingAccess() {
             @Override
@@ -108,12 +108,16 @@ public class MainActivity extends AppCompatActivity {
             }
           });
           return stateFragment;
-        case SHIFTS:
+        }
+        case SHIFTS -> {
           return new ShiftListFragment();
-        case ALERT_LOG:
+        }
+        case ALERT_LOG -> {
           return new AlertListFragment();
-        case TEST_ALARMS:
+        }
+        case TEST_ALARMS -> {
           return new TestAlarmFragment();
+        }
       }
       throw new IllegalStateException("Unknown fragment: " + fragmentPosition);
     }
@@ -315,14 +319,10 @@ public class MainActivity extends AppCompatActivity {
       if (billingAdapter != null) {
         int billingClientResponseCode = this.billingAdapter.getBillingManager().getBillingClientResponseCode();
         switch (billingClientResponseCode) {
-          case BillingResponseCode.BILLING_UNAVAILABLE:
-            donationFragment.onManagerReady(null);
-            break;
-          case BillingResponseCode.OK:
-            donationFragment.onManagerReady(this.billingAdapter);
-            break;
-          default:
-            Log.w(TAG, "Unhandled billing client response code: " + billingClientResponseCode);
+          case BillingResponseCode.BILLING_UNAVAILABLE -> donationFragment.onManagerReady(null);
+          case BillingResponseCode.OK -> donationFragment.onManagerReady(this.billingAdapter);
+          default ->
+              Log.w(TAG, "Unhandled billing client response code: " + billingClientResponseCode);
         }
       }
     }

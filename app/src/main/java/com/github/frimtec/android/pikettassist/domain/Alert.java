@@ -1,7 +1,5 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import androidx.annotation.NonNull;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,16 +7,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class Alert {
+public record Alert(
+    long id,
+    Instant startTime,
+    Instant confirmTime,
+    boolean confirmed,
+    Instant endTime,
+    List<AlertCall> calls
+) {
 
-  private final long id;
-  private final Instant startTime;
-  private final Instant confirmTime;
-  private final boolean confirmed;
-  private final Instant endTime;
-  private final List<AlertCall> calls;
-
-  public Alert(long id, Instant startTime, Instant confirmTime, boolean confirmed, Instant endTime, List<AlertCall> calls) {
+  public Alert(
+      long id,
+      Instant startTime,
+      Instant confirmTime,
+      boolean confirmed,
+      Instant endTime,
+      List<AlertCall> calls
+  ) {
     this.id = id;
     Objects.requireNonNull(startTime);
     Objects.requireNonNull(calls);
@@ -27,77 +32,23 @@ public class Alert {
     this.confirmed = confirmed;
     this.endTime = endTime;
     this.calls = new LinkedList<>(calls);
-    this.calls.sort(Comparator.comparing(AlertCall::getTime));
+    this.calls.sort(Comparator.comparing(AlertCall::time));
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public Instant getStartTime() {
-    return startTime;
-  }
-
-  public Instant getConfirmTime() {
-    return confirmTime;
-  }
-
-  public Instant getEndTime() {
-    return endTime;
-  }
-
-  public List<AlertCall> getCalls() {
+  @Override
+  public List<AlertCall> calls() {
     return Collections.unmodifiableList(calls);
-  }
-
-  public boolean isConfirmed() {
-    return confirmed;
   }
 
   public boolean isClosed() {
     return endTime != null;
   }
 
-  @NonNull
-  @Override
-  public String toString() {
-    return "Alert{" +
-        "id=" + id +
-        ", startTime=" + startTime +
-        ", confirmTime=" + confirmTime +
-        ", confirmed=" + confirmed +
-        ", endTime=" + endTime +
-        ", calls=" + calls +
-        '}';
-  }
+  public record AlertCall(Instant time, String message) {
 
-  public static class AlertCall {
-
-    private final Instant time;
-    private final String message;
-
-    public AlertCall(Instant time, String message) {
+    public AlertCall {
       Objects.requireNonNull(time);
       Objects.requireNonNull(message);
-      this.time = time;
-      this.message = message;
-    }
-
-    public Instant getTime() {
-      return time;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-      return "AlertCall{" +
-          "time=" + time +
-          ", message='" + message + '\'' +
-          '}';
     }
   }
 }

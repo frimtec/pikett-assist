@@ -61,20 +61,11 @@ public class AlarmService {
       if (action != null && action.startsWith(BASE_ACTION)) {
         String target = action.substring(BASE_ACTION.length());
         switch (JobService.valueOf(target)) {
-          case LOW_SIGNAL_SERVICE:
-            LowSignalWorker.enqueueWork(context, intent);
-            break;
-          case PIKETT_SERVICE:
-            PikettWorker.enqueueWork(context, intent);
-            break;
-          case TEST_ALARM_SERVICE:
-            TestAlarmWorker.enqueueWork(context, intent);
-            break;
-          case BOGUS_ALARM_SERVICE:
-            BogusAlarmWorker.enqueueWork(context, intent);
-            break;
-          default:
-            Log.w(TAG, "Unknown target in action: " + target);
+          case LOW_SIGNAL_SERVICE -> LowSignalWorker.enqueueWork(context, intent);
+          case PIKETT_SERVICE -> PikettWorker.enqueueWork(context, intent);
+          case TEST_ALARM_SERVICE -> TestAlarmWorker.enqueueWork(context, intent);
+          case BOGUS_ALARM_SERVICE -> BogusAlarmWorker.enqueueWork(context, intent);
+          default -> Log.w(TAG, "Unknown target in action: " + target);
         }
       }
     }

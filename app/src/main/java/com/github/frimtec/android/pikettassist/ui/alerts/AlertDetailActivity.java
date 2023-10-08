@@ -39,7 +39,7 @@ public class AlertDetailActivity extends AppCompatActivity {
     if (b != null) {
       Alert alert = this.alertDao.load(b.getLong(EXTRA_ALERT_ID));
       ListView listView = findViewById(R.id.alert_call_list);
-      ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
+      ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.calls());
 
       View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, listView, false);
 

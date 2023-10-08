@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -75,15 +74,6 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
 
   private String getOnOffText(OnOffState state) {
     return state == OnOffState.ON ? getString(R.string.state_on) : getString(R.string.state_off);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   private String formatDateTime(Instant time) {

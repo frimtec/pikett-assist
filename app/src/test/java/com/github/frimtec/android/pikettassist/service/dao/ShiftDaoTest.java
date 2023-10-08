@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 class ShiftDaoTest {
 
@@ -204,14 +203,14 @@ class ShiftDaoTest {
       if (moveResults.length > 1) {
         moveResults[moveResults.length - 1] = false;
       }
-      List<Long> ids = shifts.stream().map(Shift::getId).collect(Collectors.toList());
-      List<String> titles = shifts.stream().map(Shift::getTitle).collect(Collectors.toList());
-      List<Long> startTimes = shifts.stream().map(Shift::getStartTime).map(Instant::toEpochMilli).collect(Collectors.toList());
-      List<Long> endTimes = shifts.stream().map(Shift::getEndTime).map(Instant::toEpochMilli).collect(Collectors.toList());
+      List<Long> ids = shifts.stream().map(Shift::getId).toList();
+      List<String> titles = shifts.stream().map(Shift::getTitle).toList();
+      List<Long> startTimes = shifts.stream().map(Shift::getStartTime).map(Instant::toEpochMilli).toList();
+      List<Long> endTimes = shifts.stream().map(Shift::getEndTime).map(Instant::toEpochMilli).toList();
 
       AtomicInteger index = new AtomicInteger(0);
       int[] confirmedStates = new int[]{0, 1};
-      List<Integer> attendeeStatus = shifts.stream().map(Shift::isConfirmed).map(confirmed -> confirmed ? confirmedStates[index.getAndIncrement() % 2] : 4).collect(Collectors.toList());
+      List<Integer> attendeeStatus = shifts.stream().map(Shift::isConfirmed).map(confirmed -> confirmed ? confirmedStates[index.getAndIncrement() % 2] : 4).toList();
 
       when(cursor.moveToNext()).thenReturn(shifts.size() > 1, moveResults);
       when(cursor.getLong(0)).thenReturn(ids.get(0), ids.subList(1, ids.size()).toArray(new Long[0]));

@@ -135,7 +135,7 @@ public class StateFragment extends AbstractListFragment<State> {
             Intent data = result.getData();
             if (data != null) {
               Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
-              ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.getReference());
+              ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.reference());
             }
           }
         }
@@ -271,11 +271,11 @@ public class StateFragment extends AbstractListFragment<State> {
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
       ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
-          .sorted(Comparator.comparing(TestAlarmContext::getContext))
+          .sorted(Comparator.comparing(TestAlarmContext::context))
           .forEach(testAlarmContext -> states.add(new TestAlarmState(
               stateContext,
               this.testAlarmDao.loadDetails(testAlarmContext)
-                  .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.getReceivedTime()), details.getAlertState()))
+                  .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.receivedTime()), details.alertState()))
                   .orElse(new TestAlarmStateContext(stateContext, testAlarmContext, getString(R.string.state_fragment_test_alarm_never_received), OnOffState.OFF))
           )));
     }

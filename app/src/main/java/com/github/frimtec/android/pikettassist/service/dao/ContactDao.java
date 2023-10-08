@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static java.util.stream.Collectors.joining;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,8 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import static java.util.stream.Collectors.joining;
 
 public class ContactDao {
 
@@ -109,7 +109,7 @@ public class ContactDao {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-        new String[]{String.valueOf(contact.getReference().getId())}, null)) {
+        new String[]{String.valueOf(contact.reference().id())}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         Set<String> phoneNumbers = new HashSet<>();
         do {

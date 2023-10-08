@@ -1,11 +1,8 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-public class ContactReference {
+public record ContactReference(long id, String lookupKey) {
 
   public static final ContactReference NO_SELECTION = ContactReference.fromSerializedString("-1;NOT_SET");
-
-  private final long id;
-  private final String lookupKey;
 
   public ContactReference(long id, String lookupKey) {
     this.id = id;
@@ -25,39 +22,7 @@ public class ContactReference {
     return !lookupKey.isEmpty();
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public String getLookupKey() {
-    return lookupKey;
-  }
-
   public String getSerializedString() {
     return id + ";" + lookupKey;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    ContactReference reference = (ContactReference) o;
-
-    if (id != reference.id) {
-      return false;
-    }
-    return lookupKey.equals(reference.lookupKey);
-  }
-
-  @Override
-  public int hashCode() {
-    int result = (int) (id ^ (id >>> 32));
-    result = 31 * result + lookupKey.hashCode();
-    return result;
   }
 }

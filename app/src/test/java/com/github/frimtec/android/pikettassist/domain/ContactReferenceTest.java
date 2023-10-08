@@ -10,56 +10,56 @@ class ContactReferenceTest {
   void fromSerializedStringForCompleteReference() {
     ContactReference reference = ContactReference.fromSerializedString("12;key");
     assertThat(reference.isComplete()).isTrue();
-    assertThat(reference.getId()).isEqualTo(12);
-    assertThat(reference.getLookupKey()).isEqualTo("key");
+    assertThat(reference.id()).isEqualTo(12);
+    assertThat(reference.lookupKey()).isEqualTo("key");
   }
 
   @Test
   void fromSerializedStringForIncompleteReferenceNoSeparator() {
     ContactReference reference = ContactReference.fromSerializedString("12");
     assertThat(reference.isComplete()).isFalse();
-    assertThat(reference.getId()).isEqualTo(12);
-    assertThat(reference.getLookupKey()).isEmpty();
+    assertThat(reference.id()).isEqualTo(12);
+    assertThat(reference.lookupKey()).isEmpty();
   }
 
   @Test
   void fromSerializedStringForIncompleteReferenceEmptyLookupKey() {
     ContactReference reference = ContactReference.fromSerializedString("12;");
     assertThat(reference.isComplete()).isFalse();
-    assertThat(reference.getId()).isEqualTo(12);
-    assertThat(reference.getLookupKey()).isEmpty();
+    assertThat(reference.id()).isEqualTo(12);
+    assertThat(reference.lookupKey()).isEmpty();
   }
 
   @Test
   void gettersForCompleteReference() {
     ContactReference reference = new ContactReference(12, "key");
     assertThat(reference.isComplete()).isTrue();
-    assertThat(reference.getId()).isEqualTo(12);
-    assertThat(reference.getLookupKey()).isEqualTo("key");
+    assertThat(reference.id()).isEqualTo(12);
+    assertThat(reference.lookupKey()).isEqualTo("key");
   }
 
   @Test
   void gettersForNullLookupKey() {
     ContactReference reference = new ContactReference(12, null);
     assertThat(reference.isComplete()).isFalse();
-    assertThat(reference.getId()).isEqualTo(12);
-    assertThat(reference.getLookupKey()).isEmpty();
+    assertThat(reference.id()).isEqualTo(12);
+    assertThat(reference.lookupKey()).isEmpty();
   }
 
   @Test
   void gettersForEmptyLookupKey() {
     ContactReference reference = new ContactReference(12, "");
     assertThat(reference.isComplete()).isFalse();
-    assertThat(reference.getId()).isEqualTo(12);
-    assertThat(reference.getLookupKey()).isEmpty();
+    assertThat(reference.id()).isEqualTo(12);
+    assertThat(reference.lookupKey()).isEmpty();
   }
 
   @Test
   void gettersForNoSelection() {
     ContactReference reference = ContactReference.NO_SELECTION;
     assertThat(reference.isComplete()).isTrue();
-    assertThat(reference.getId()).isEqualTo(-1);
-    assertThat(reference.getLookupKey()).isEqualTo("NOT_SET");
+    assertThat(reference.id()).isEqualTo(-1);
+    assertThat(reference.lookupKey()).isEqualTo("NOT_SET");
   }
 
   @Test

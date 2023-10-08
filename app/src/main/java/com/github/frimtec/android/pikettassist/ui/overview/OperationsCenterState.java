@@ -31,7 +31,7 @@ class OperationsCenterState extends State {
         stateContext.getString(R.string.state_fragment_operations_center),
         getValue(stateContext),
         null,
-        stateContext.getOperationCenter().isValid() && !stateContext.getOperationsCenterPhoneNumbers().isEmpty() ? TrafficLight.GREEN : TrafficLight.RED);
+        stateContext.getOperationCenter().valid() && !stateContext.getOperationsCenterPhoneNumbers().isEmpty() ? TrafficLight.GREEN : TrafficLight.RED);
     this.stateContext = stateContext;
     this.operationCenter = stateContext.getOperationCenter();
     this.phoneNumberSelectionLauncher = phoneNumberSelectionLauncher;
@@ -39,8 +39,8 @@ class OperationsCenterState extends State {
 
   private static String getValue(StateContext stateContext) {
     Contact operationCenter = stateContext.getOperationCenter();
-    String value = operationCenter.getName();
-    if (operationCenter.isValid() && stateContext.getOperationsCenterPhoneNumbers().isEmpty()) {
+    String value = operationCenter.name();
+    if (operationCenter.valid() && stateContext.getOperationsCenterPhoneNumbers().isEmpty()) {
       value = value + "\n" + stateContext.getString(R.string.state_fragment_operations_center_no_number);
     }
     return value;
@@ -48,7 +48,7 @@ class OperationsCenterState extends State {
 
   @Override
   public void onClickAction(Context context) {
-    if (operationCenter.isValid()) {
+    if (operationCenter.valid()) {
       actionViewContact();
     } else {
       actionSelectContact();
@@ -57,7 +57,7 @@ class OperationsCenterState extends State {
 
   @Override
   public void onCreateContextMenu(Context context, ContextMenu menu) {
-    if (operationCenter.isValid()) {
+    if (operationCenter.valid()) {
       stateContext.addContextMenu(menu, MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID, R.string.list_item_menu_view);
     }
     stateContext.addContextMenu(menu, MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID, R.string.list_item_menu_select);
@@ -97,7 +97,7 @@ class OperationsCenterState extends State {
 
   private void actionViewContact() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(this.operationCenter.getReference().getId()));
+    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(this.operationCenter.reference().id()));
     intent.setData(uri);
     stateContext.getContext().startActivity(intent);
   }

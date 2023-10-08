@@ -66,9 +66,9 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
       TextView message = findViewById(R.id.test_alarm_details_message);
 
       this.testAlarmDao.loadDetails(testAlarm).ifPresent(details -> {
-        lastReceived.setText(formatDateTime(details.getReceivedTime()));
-        alarmState.setText(getOnOffText(details.getAlertState()));
-        message.setText(details.getMessage());
+        lastReceived.setText(formatDateTime(details.receivedTime()));
+        alarmState.setText(getOnOffText(details.alertState()));
+        message.setText(details.message());
       });
     }
   }

@@ -135,8 +135,8 @@ public class SettingsActivity extends AppCompatActivity {
           entriesValues.add(CALENDAR_FILTER_ALL);
           if (context != null) {
             new CalendarDao(context).all().forEach(calendar -> {
-              entries.add(calendar.getName());
-              entriesValues.add(String.valueOf(calendar.getId()));
+              entries.add(calendar.name());
+              entriesValues.add(String.valueOf(calendar.id()));
             });
           }
           calendarSelection.setEntries(entries.toArray(new CharSequence[]{}));

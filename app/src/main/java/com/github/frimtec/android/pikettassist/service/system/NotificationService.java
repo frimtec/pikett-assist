@@ -188,7 +188,7 @@ public class NotificationService {
     @SuppressLint("DefaultLocale")
     Notification notification = new Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_low_battery_title))
-        .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.getLevel()))
+        .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.level()))
         .setSmallIcon(R.drawable.ic_battery_alert_notification)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)

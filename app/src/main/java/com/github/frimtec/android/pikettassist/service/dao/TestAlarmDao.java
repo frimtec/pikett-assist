@@ -51,7 +51,7 @@ public class TestAlarmDao {
 
   public Optional<TestAlarm> loadDetails(TestAlarmContext testAlarmContext) {
     SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null)) {
+    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         return Optional.of(new TestAlarm(
             testAlarmContext,
@@ -66,10 +66,10 @@ public class TestAlarmDao {
 
   public boolean createNewContext(TestAlarmContext testAlarmContext, String message) {
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
-    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null)) {
+    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null)) {
       if (cursor.getCount() == 0) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TABLE_TEST_ALARM_STATE_COLUMN_ID, testAlarmContext.getContext());
+        contentValues.put(TABLE_TEST_ALARM_STATE_COLUMN_ID, testAlarmContext.context());
         contentValues.put(TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, 0);
         contentValues.put(TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE, message);
         db.insert(TABLE_TEST_ALARM_STATE, null, contentValues);
@@ -83,7 +83,7 @@ public class TestAlarmDao {
   public boolean updateReceivedTestAlert(TestAlarmContext testAlarm, Instant time, String text) {
     boolean newTestAlarm;
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
-    String testAlarmContext = testAlarm.getContext();
+    String testAlarmContext = testAlarm.context();
     try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext}, null, null, null)) {
       long timeEpochMillis = time.toEpochMilli();
       if (cursor.getCount() == 0) {
@@ -108,12 +108,12 @@ public class TestAlarmDao {
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
     ContentValues contentValues = new ContentValues();
     contentValues.put(TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, state.name());
-    db.update(TABLE_TEST_ALARM_STATE, contentValues, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()});
+    db.update(TABLE_TEST_ALARM_STATE, contentValues, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()});
   }
 
   public boolean isTestAlarmReceived(TestAlarmContext testAlarmContext, Instant messageAcceptedTime) {
     SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY);
-    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null)) {
+    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null)) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         return Instant.ofEpochMilli(cursor.getLong(0))
             .isAfter(messageAcceptedTime);
@@ -124,6 +124,6 @@ public class TestAlarmDao {
 
   public void delete(TestAlarmContext testAlarmContext) {
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
-    db.delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()});
+    db.delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{testAlarmContext.context()});
   }
 }

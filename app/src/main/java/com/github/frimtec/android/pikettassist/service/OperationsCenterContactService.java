@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static com.github.frimtec.android.pikettassist.domain.ContactReference.NO_SELECTION;
+
 import android.content.Context;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -13,8 +15,6 @@ import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.Set;
-
-import static com.github.frimtec.android.pikettassist.domain.ContactReference.NO_SELECTION;
 
 public class OperationsCenterContactService extends AbstractContactService {
 
@@ -38,12 +38,12 @@ public class OperationsCenterContactService extends AbstractContactService {
     if (NO_SELECTION.equals(contactReference)) {
       return invalidContact(R.string.contact_preference_empty_selection);
     }
-    Uri lookupUri = ContactsContract.Contacts.getLookupUri(contactReference.getId(), contactReference.getLookupKey());
+    Uri lookupUri = ContactsContract.Contacts.getLookupUri(contactReference.id(), contactReference.lookupKey());
     Contact contact = getContactDao().getContact(lookupUri)
         .orElseGet(() -> invalidContact(R.string.contact_helper_unknown_contact));
-    if (contact.isValid()) {
-      if (!contact.getReference().equals(contactReference)) {
-        ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.getReference());
+    if (contact.valid()) {
+      if (!contact.reference().equals(contactReference)) {
+        ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.reference());
         Log.w(TAG, "Alarm operations center contact reference changed and updated.");
       }
     } else {
@@ -58,12 +58,12 @@ public class OperationsCenterContactService extends AbstractContactService {
   }
 
   public boolean isContactsPhoneNumber(Contact contact, String number) {
-    if (!contact.isValid()) {
+    if (!contact.valid()) {
       Log.e(TAG, "SMS received but no valid operations center defined.");
       return false;
     }
     Set<Long> contactIds = getContactDao().lookupContactIdsByPhoneNumber(number);
-    return contactIds.contains(contact.getReference().getId());
+    return contactIds.contains(contact.reference().id());
   }
 
   public Set<String> getPhoneNumbers(Contact contact) {
@@ -71,8 +71,8 @@ public class OperationsCenterContactService extends AbstractContactService {
   }
 
   private ContactReference migrateToFullReference(ContactReference contactReference) {
-    ContactReference migratedReference = getContactDao().getContact(contactReference.getId())
-        .map(Contact::getReference)
+    ContactReference migratedReference = getContactDao().getContact(contactReference.id())
+        .map(Contact::reference)
         .orElse(NO_SELECTION);
     ApplicationPreferences.instance().setOperationsCenterContactReference(this.context, migratedReference);
     if (migratedReference != NO_SELECTION) {

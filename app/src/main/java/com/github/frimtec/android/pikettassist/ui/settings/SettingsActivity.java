@@ -60,6 +60,11 @@ public class SettingsActivity extends AppCompatActivity {
       setPreferencesFromResource(R.xml.root_preferences, rootKey);
       Context context = getContext();
 
+      if (context == null) {
+        Log.e(TAG, "Context was null");
+        return;
+      }
+
       ContactPreference contactPreference = findPreference("alarm_operations_center_contact");
       if (contactPreference != null) {
         contactPreference.initLauncher(this);
@@ -133,12 +138,10 @@ public class SettingsActivity extends AppCompatActivity {
           List<CharSequence> entriesValues = new ArrayList<>();
           entries.add(getString(R.string.preferences_calendar_all));
           entriesValues.add(CALENDAR_FILTER_ALL);
-          if (context != null) {
-            new CalendarDao(context).all().forEach(calendar -> {
-              entries.add(calendar.name());
-              entriesValues.add(String.valueOf(calendar.id()));
-            });
-          }
+          new CalendarDao(context).all().forEach(calendar -> {
+            entries.add(calendar.name());
+            entriesValues.add(String.valueOf(calendar.id()));
+          });
           calendarSelection.setEntries(entries.toArray(new CharSequence[]{}));
           calendarSelection.setEntryValues(entriesValues.toArray(new CharSequence[]{}));
           calendarSelection.setDefaultValue(CALENDAR_FILTER_ALL);
@@ -149,17 +152,15 @@ public class SettingsActivity extends AppCompatActivity {
           List<CharSequence> entries = new ArrayList<>();
           List<CharSequence> entriesValues = new ArrayList<>();
 
-          if (context != null) {
-            // Subscription are mostly counted starting from 1 therefor lets check for one more
-            for (int i = 0; i < MAX_SUPPORTED_SIMS + 1; i++) {
-              SignalStrengthService signalStrengthService = new SignalStrengthService(context, i);
-              String networkOperatorName = signalStrengthService.getNetworkOperatorName();
-              if (networkOperatorName != null) {
-                entriesValues.add(String.valueOf(i));
-                entries.add(String.format(Locale.getDefault(), "%s %d: %s", getString(R.string.subscription), i, networkOperatorName));
-              } else {
-                Log.d(TAG, "No phone manager for subscriptionId " + i);
-              }
+          // Subscription are mostly counted starting from 1 therefor lets check for one more
+          for (int i = 0; i < MAX_SUPPORTED_SIMS + 1; i++) {
+            SignalStrengthService signalStrengthService = new SignalStrengthService(context, i);
+            String networkOperatorName = signalStrengthService.getNetworkOperatorName();
+            if (networkOperatorName != null) {
+              entriesValues.add(String.valueOf(i));
+              entries.add(String.format(Locale.getDefault(), "%s %d: %s", getString(R.string.subscription), i, networkOperatorName));
+            } else {
+              Log.d(TAG, "No phone manager for subscriptionId " + i);
             }
           }
           superviseSignalStrengthSubscription.setEntries(entries.toArray(new CharSequence[]{}));

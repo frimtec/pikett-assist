@@ -51,7 +51,7 @@ import java.util.Optional;
 
 public class AlertListFragment extends AbstractListFragment<Alert> {
 
-  private static final String TAG = "AlertActivity";
+  private static final String TAG = "AlertListFragment";
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
@@ -173,6 +173,10 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    if (info == null) {
+      Log.w(TAG, "No menu item was selected");
+      return false;
+    }
     ListView listView = getListView();
     Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
     switch (item.getItemId()) {

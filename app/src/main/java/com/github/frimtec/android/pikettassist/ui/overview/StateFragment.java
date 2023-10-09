@@ -70,6 +70,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -135,7 +136,7 @@ public class StateFragment extends AbstractListFragment<State> {
             Intent data = result.getData();
             if (data != null) {
               Contact contact = this.operationsCenterContactService.getContactFromUri(data.getData());
-              ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.getReference());
+              ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.reference());
             }
           }
         }
@@ -261,7 +262,7 @@ public class StateFragment extends AbstractListFragment<State> {
     if (shiftState.isOn() && partners.isPresent()) {
       List<String> pairAliases = partners.get();
       Map<String, ContactPerson> contactPersonsByAliases = this.contactPersonService.findContactPersonsByAliases(new HashSet<>(pairAliases));
-      pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair)))));
+      pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, Objects.requireNonNull(contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair))))));
     }
     states.addAll(Arrays.asList(
         new OnCallState(stateContext),
@@ -271,11 +272,11 @@ public class StateFragment extends AbstractListFragment<State> {
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
       ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
-          .sorted(Comparator.comparing(TestAlarmContext::getContext))
+          .sorted(Comparator.comparing(TestAlarmContext::context))
           .forEach(testAlarmContext -> states.add(new TestAlarmState(
               stateContext,
               this.testAlarmDao.loadDetails(testAlarmContext)
-                  .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.getReceivedTime()), details.getAlertState()))
+                  .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.receivedTime()), details.alertState()))
                   .orElse(new TestAlarmStateContext(stateContext, testAlarmContext, getString(R.string.state_fragment_test_alarm_never_received), OnOffState.OFF))
           )));
     }
@@ -327,6 +328,11 @@ public class StateFragment extends AbstractListFragment<State> {
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    if (info == null) {
+      Log.w(TAG, "No menu item was selected");
+      return false;
+    }
+
     ListView listView = getListView();
     State selectedItem = (State) listView.getItemAtPosition(info.position);
     return selectedItem.onContextItemSelected(getContext(), item);

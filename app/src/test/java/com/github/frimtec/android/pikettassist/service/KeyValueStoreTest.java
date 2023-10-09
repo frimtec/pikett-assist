@@ -1,11 +1,11 @@
 package com.github.frimtec.android.pikettassist.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class KeyValueStoreTest {
 
@@ -32,13 +32,9 @@ class KeyValueStoreTest {
     assertThat(store.get("key.new", "X")).isEqualTo("new");
   }
 
-  private static class TestBackend implements KeyValueStore.KeyValueBacked {
-
-    private final Map<String, String> backendState;
-
-    TestBackend(Map<String, String> backendState) {
-      this.backendState = backendState;
-    }
+  private record TestBackend(
+      Map<String, String> backendState
+  ) implements KeyValueStore.KeyValueBacked {
 
     @Override
     public Map<String, String> load() {
@@ -47,14 +43,14 @@ class KeyValueStoreTest {
 
     @Override
     public void insert(String key, String value) {
-      if(this.backendState.put(key, value) != null) {
+      if (this.backendState.put(key, value) != null) {
         throw new IllegalStateException("Insert called but key already available");
       }
     }
 
     @Override
     public void update(String key, String value) {
-      if(this.backendState.put(key, value) == null) {
+      if (this.backendState.put(key, value) == null) {
         throw new IllegalStateException("Update called but key not yet available");
       }
     }

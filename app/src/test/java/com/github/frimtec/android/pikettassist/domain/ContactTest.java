@@ -1,8 +1,8 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class ContactTest {
 
@@ -10,8 +10,8 @@ class ContactTest {
   void getter() {
     ContactReference reference = new ContactReference(12, "key");
     Contact contact = new Contact(reference, true, "test");
-    assertThat(contact.getReference()).isEqualTo(reference);
-    assertThat(contact.isValid()).isTrue();
-    assertThat(contact.getName()).isEqualTo("test");
+    assertThat(contact.reference()).isEqualTo(reference);
+    assertThat(contact.valid()).isTrue();
+    assertThat(contact.name()).isEqualTo("test");
   }
 }

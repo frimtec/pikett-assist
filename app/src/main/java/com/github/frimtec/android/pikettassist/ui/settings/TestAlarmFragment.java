@@ -56,7 +56,7 @@ public class TestAlarmFragment extends PreferenceFragmentCompat {
       if (!filteredEntries.containsAll(persistedEntries)) {
         ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), filteredEntries);
       }
-      Set<CharSequence> validEntries = testAlarmContexts.stream().map(TestAlarmContext::getContext).collect(Collectors.toSet());
+      Set<CharSequence> validEntries = testAlarmContexts.stream().map(TestAlarmContext::context).collect(Collectors.toSet());
       superviseTestContexts.setEntries(validEntries.toArray(new CharSequence[]{}));
       superviseTestContexts.setEntryValues(validEntries.toArray(new CharSequence[]{}));
 

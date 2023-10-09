@@ -4,17 +4,10 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class TestAlarmContext {
+public record TestAlarmContext(String context) {
 
-  private final String context;
-
-  public TestAlarmContext(String context) {
+  public TestAlarmContext {
     Objects.nonNull(context);
-    this.context = context;
-  }
-
-  public String getContext() {
-    return context;
   }
 
   @Override
@@ -27,11 +20,6 @@ public class TestAlarmContext {
     }
     TestAlarmContext testAlarmContext = (TestAlarmContext) o;
     return Objects.equals(context, testAlarmContext.context);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(context);
   }
 
   @NonNull

@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static java.util.stream.Collectors.joining;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,8 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import static java.util.stream.Collectors.joining;
 
 public class ContactDao {
 
@@ -97,7 +97,12 @@ public class ContactDao {
       if (cursor != null && cursor.moveToFirst()) {
         Set<Long> contactIds = new HashSet<>();
         do {
-          contactIds.add(cursor.getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)));
+          int columnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID);
+          if (columnIndex >= 0) {
+            contactIds.add(cursor.getLong(columnIndex));
+          } else {
+            Log.e(TAG, "Column CONTACT_ID not found in cursor");
+          }
         } while (cursor.moveToNext());
         return contactIds;
       }
@@ -109,15 +114,22 @@ public class ContactDao {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-        new String[]{String.valueOf(contact.getReference().getId())}, null)) {
+        new String[]{String.valueOf(contact.reference().id())}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         Set<String> phoneNumbers = new HashSet<>();
         do {
-          String normalizedNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
+          int columnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER);
+          String normalizedNumber = null;
+          if (columnIndex >= 0) {
+            normalizedNumber = cursor.getString(columnIndex);
+          } else {
+            Log.e(TAG, "Column NORMALIZED_NUMBER not found in cursor");
+          }
           if (normalizedNumber != null) {
             phoneNumbers.add(normalizedNumber);
           } else {
-            Log.w(TAG, "Skipping phone number as normalized number is null for number: " + cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+            int columnIndexNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            Log.e(TAG, "Skipping phone number as normalized number is null for number: " + (columnIndexNumber >= 0 ? cursor.getString(columnIndexNumber) : "???"));
           }
         } while (cursor.moveToNext());
         return phoneNumbers;

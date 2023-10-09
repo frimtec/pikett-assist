@@ -190,9 +190,7 @@ public enum Feature {
       false,
       false,
       R.string.notification_battery_optimization_title,
-      context -> {
-        return new PowerService(context).isIgnoringBatteryOptimizations(context.getPackageName());
-      }
+      context -> new PowerService(context).isIgnoringBatteryOptimizations(context.getPackageName())
   ) {
     @Override
     protected ActivityResultLauncher<Intent> registerActivityLauncher(Fragment fragment) {

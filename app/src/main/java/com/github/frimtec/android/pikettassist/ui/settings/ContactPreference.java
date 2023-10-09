@@ -52,7 +52,7 @@ public class ContactPreference extends Preference implements PreferenceActivityR
           if (result.getData() != null) {
             Uri contactUri = result.getData().getData();
             Contact contact = this.operationsCenterContactService.getContactFromUri(contactUri);
-            ApplicationPreferences.instance().setOperationsCenterContactReference(getContext(), contact.getReference());
+            ApplicationPreferences.instance().setOperationsCenterContactReference(getContext(), contact.reference());
             notifyChanged();
           }
         }
@@ -74,6 +74,6 @@ public class ContactPreference extends Preference implements PreferenceActivityR
   @Override
   public CharSequence getSummary() {
     Contact contact = this.operationsCenterContactService.getOperationsCenterContact();
-    return contact.getName();
+    return contact.name();
   }
 }

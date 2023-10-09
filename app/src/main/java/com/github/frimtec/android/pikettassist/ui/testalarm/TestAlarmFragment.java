@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +32,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
+
+  private static final String TAG = "TestAlarmFragment";
 
   private static final int MENU_CONTEXT_VIEW_ID = 1;
   private static final int MENU_CONTEXT_DELETE_ID = 2;
@@ -80,6 +83,10 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    if (info == null) {
+      Log.w(TAG, "No menu item was selected");
+      return false;
+    }
     ListView listView = getListView();
     TestAlarmContext selectedItem = (TestAlarmContext) listView.getItemAtPosition(info.position);
     switch (item.getItemId()) {
@@ -143,7 +150,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
   private void showTestAlarmDetails(TestAlarmContext selectedAlert) {
     Intent intent = new Intent(this.getContext(), TestAlarmDetailActivity.class);
     Bundle bundle = new Bundle();
-    bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, selectedAlert.getContext());
+    bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, selectedAlert.context());
     intent.putExtras(bundle);
     startActivity(intent);
   }
@@ -157,7 +164,7 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
 
   private List<TestAlarmContext> loadTestAlarmList() {
     List<TestAlarmContext> list = new ArrayList<>(this.testAlarmDao.loadAllContexts());
-    list.sort(Comparator.comparing(TestAlarmContext::getContext));
+    list.sort(Comparator.comparing(TestAlarmContext::context));
     if (list.isEmpty()) {
       Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
     }

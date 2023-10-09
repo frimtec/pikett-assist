@@ -1,7 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -39,7 +38,7 @@ public class AlertDetailActivity extends AppCompatActivity {
     if (b != null) {
       Alert alert = this.alertDao.load(b.getLong(EXTRA_ALERT_ID));
       ListView listView = findViewById(R.id.alert_call_list);
-      ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.getCalls());
+      ArrayAdapter<AlertCall> adapter = new AlertCallArrayAdapter(this, alert.calls());
 
       View headerView = getLayoutInflater().inflate(R.layout.activity_alert_detail_header, listView, false);
 
@@ -57,15 +56,5 @@ public class AlertDetailActivity extends AppCompatActivity {
       listView.addHeaderView(headerView);
       listView.setAdapter(adapter);
     }
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      // Override home navigation button to call onBackPressed (b/35152749).
-      onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 }

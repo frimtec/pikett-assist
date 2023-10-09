@@ -77,7 +77,7 @@ class TestAlarmDaoTest {
     when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(0);
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -98,15 +98,15 @@ class TestAlarmDaoTest {
     when(cursor.getLong(1)).thenReturn(now.toEpochMilli());
     when(cursor.getString(2)).thenReturn(OnOffState.ON.name());
     when(cursor.getString(3)).thenReturn("message");
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
     Optional<TestAlarm> testAlarm = dao.loadDetails(testAlarmContext);
     assertThat(testAlarm).isNotEmpty();
-    assertThat(testAlarm.get().getReceivedTime()).isEqualTo(now);
-    assertThat(testAlarm.get().getAlertState()).isEqualTo(OnOffState.ON);
-    assertThat(testAlarm.get().getMessage()).isEqualTo("message");
+    assertThat(testAlarm.get().receivedTime()).isEqualTo(now);
+    assertThat(testAlarm.get().alertState()).isEqualTo(OnOffState.ON);
+    assertThat(testAlarm.get().message()).isEqualTo("message");
   }
 
   @Test
@@ -117,7 +117,7 @@ class TestAlarmDaoTest {
     when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(0);
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -134,7 +134,7 @@ class TestAlarmDaoTest {
     when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(1);
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -152,7 +152,7 @@ class TestAlarmDaoTest {
 
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(0);
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -170,13 +170,13 @@ class TestAlarmDaoTest {
 
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(1);
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
     boolean newlyCreated = dao.updateReceivedTestAlert(testAlarmContext, Instant.now(), "text");
     assertThat(newlyCreated).isFalse();
-    verify(db).update(eq(TABLE_TEST_ALARM_STATE), notNull(), eq(TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?"), eq(new String[]{testAlarmContext.getContext()}));
+    verify(db).update(eq(TABLE_TEST_ALARM_STATE), notNull(), eq(TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?"), eq(new String[]{testAlarmContext.context()}));
   }
 
   @Test
@@ -188,7 +188,7 @@ class TestAlarmDaoTest {
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
     dao.updateAlertState(testAlarmContext, OnOffState.ON);
 
-    verify(db).update(eq(TABLE_TEST_ALARM_STATE), notNull(), eq(TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?"), eq(new String[]{testAlarmContext.getContext()}));
+    verify(db).update(eq(TABLE_TEST_ALARM_STATE), notNull(), eq(TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?"), eq(new String[]{testAlarmContext.context()}));
   }
 
   @Test
@@ -202,7 +202,7 @@ class TestAlarmDaoTest {
     when(cursor.getCount()).thenReturn(1);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(0)).thenReturn(messageAcceptedTime.toEpochMilli());
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -221,7 +221,7 @@ class TestAlarmDaoTest {
     when(cursor.getCount()).thenReturn(1);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(0)).thenReturn(messageAcceptedTime.toEpochMilli());
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -237,7 +237,7 @@ class TestAlarmDaoTest {
     when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
     Cursor cursor = mock(Cursor.class);
     when(cursor.getCount()).thenReturn(0);
-    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()}, null, null, null))
+    when(db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null))
         .thenReturn(cursor);
 
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
@@ -254,7 +254,7 @@ class TestAlarmDaoTest {
     TestAlarmDao dao = new TestAlarmDao(dbFactory);
     dao.delete(testAlarmContext);
 
-    verify(db).delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{testAlarmContext.getContext()});
+    verify(db).delete(TABLE_TEST_ALARM_STATE, TABLE_ALERT_COLUMN_ID + "=?", new String[]{testAlarmContext.context()});
   }
 
   private Cursor createTestAlertContextCursor(List<String> contexts) {

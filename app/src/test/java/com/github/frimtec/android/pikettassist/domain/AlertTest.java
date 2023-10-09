@@ -17,47 +17,47 @@ class AlertTest {
   void getId() {
     long id = 12L;
     Alert alert = new Alert(id, Instant.now(), Instant.now(), true, Instant.now(), Collections.emptyList());
-    assertThat(alert.getId()).isEqualTo(id);
+    assertThat(alert.id()).isEqualTo(id);
   }
 
   @Test
   void getStartTime() {
     Instant startTime = Instant.now().minusSeconds(10);
     Alert alert = new Alert(12L, startTime, Instant.now(), true, Instant.now(), Collections.emptyList());
-    assertThat(alert.getStartTime()).isEqualTo(startTime);
+    assertThat(alert.startTime()).isEqualTo(startTime);
   }
 
   @Test
   void getConfirmTime() {
     Instant confirmTime = Instant.now().minusSeconds(10);
     Alert alert = new Alert(12L, Instant.now(), confirmTime, true, Instant.now(), Collections.emptyList());
-    assertThat(alert.getConfirmTime()).isEqualTo(confirmTime);
+    assertThat(alert.confirmTime()).isEqualTo(confirmTime);
   }
 
   @Test
   void isConfirmed() {
     boolean confirmed = true;
     Alert alert = new Alert(12L, Instant.now(), Instant.now(), confirmed, Instant.now(), Collections.emptyList());
-    assertThat(alert.isConfirmed()).isEqualTo(confirmed);
+    assertThat(alert.confirmed()).isEqualTo(confirmed);
   }
 
   @Test
   void getEndTime() {
     Instant endTime = Instant.now().minusSeconds(10);
     Alert alert = new Alert(12L, Instant.now(), Instant.now(), true, endTime, Collections.emptyList());
-    assertThat(alert.getEndTime()).isEqualTo(endTime);
+    assertThat(alert.endTime()).isEqualTo(endTime);
   }
 
   @Test
   void getCalls() {
     AlertCall msg1 = new AlertCall(Instant.now(), "msg1");
-    AlertCall msg2 = new AlertCall(msg1.getTime().plusMillis(1), "msg2");
+    AlertCall msg2 = new AlertCall(msg1.time().plusMillis(1), "msg2");
     List<AlertCall> calls = Arrays.asList(
         msg2,
         msg1
     );
     Alert alert = new Alert(12L, Instant.now(), Instant.now(), true, Instant.now(), calls);
-    assertThat(alert.getCalls()).isEqualTo(Arrays.asList(msg1, msg2));
+    assertThat(alert.calls()).isEqualTo(Arrays.asList(msg1, msg2));
   }
 
   @Test
@@ -80,6 +80,6 @@ class AlertTest {
         new AlertCall(now.plusMillis(1), "msg2"),
         new AlertCall(now, "msg1")
     ));
-    assertThat(alert.toString()).matches("Alert\\{id=12, startTime=.*, confirmTime=.*, confirmed=true, endTime=.*, calls=\\[AlertCall\\{time=.*, message='msg1'}, AlertCall\\{time=.*, message='msg2'}]}");
+    assertThat(alert.toString()).matches("Alert\\[id=12, startTime=.*, confirmTime=.*, confirmed=true, endTime=.*, calls=\\[AlertCall\\[time=.*, message=msg1], AlertCall\\[time=.*, message=msg2]]]");
   }
 }

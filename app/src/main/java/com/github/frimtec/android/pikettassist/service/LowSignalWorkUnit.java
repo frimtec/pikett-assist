@@ -121,7 +121,7 @@ final class LowSignalWorkUnit implements WorkUnit {
       }
       BatteryStatus batteryStatus = new BatteryService(context).batteryStatus();
       if (this.applicationPreferences.getSuperviseBatteryLevel(context)) {
-        if (batteryStatus.getLevel() <= this.applicationPreferences.getBatteryWarnLevel(context)) {
+        if (batteryStatus.level() <= this.applicationPreferences.getBatteryWarnLevel(context)) {
           notificationService.notifyBatteryLow(batteryStatus);
         } else {
           notificationService.cancelNotification(BATTERY_NOTIFICATION_ID);
@@ -133,7 +133,7 @@ final class LowSignalWorkUnit implements WorkUnit {
         updateShiftProgress();
       }
       Consumer<Intent> intentExtrasSetter;
-      Duration nextRunIn = isBatterySaferOn(now) || batteryStatus.getLevel() < BATTERY_LOW_LIMIT ? getBatterySaferInterval(now) : CHECK_INTERVAL;
+      Duration nextRunIn = isBatterySaferOn(now) || batteryStatus.level() < BATTERY_LOW_LIMIT ? getBatterySaferInterval(now) : CHECK_INTERVAL;
       if (currentFilterState > 0) {
         intentExtrasSetter = intent -> intent.putExtra(EXTRA_FILTER_STATE, currentFilterState);
         if (currentFilterState <= this.applicationPreferences.getLowSignalFilterSeconds(context)) {

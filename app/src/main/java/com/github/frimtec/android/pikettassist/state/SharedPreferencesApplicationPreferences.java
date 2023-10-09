@@ -219,7 +219,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public void setSuperviseTestContexts(Context context, Set<TestAlarmContext> values) {
     setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_SUPERVISE_TEST_CONTEXTS, values.stream()
-        .map(TestAlarmContext::getContext)
+        .map(TestAlarmContext::context)
         .collect(Collectors.toSet())));
   }
 

@@ -113,7 +113,7 @@ class AlarmState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONTEXT_CREATE_ALARM_MANUALLY:
+      case MENU_CONTEXT_CREATE_ALARM_MANUALLY -> {
         AlertDialog.Builder builder = new AlertDialog.Builder(stateContext.getContext());
         builder.setTitle(stateContext.getString(R.string.manually_created_alarm_reason));
         EditText input = new EditText(stateContext.getContext());
@@ -131,11 +131,14 @@ class AlarmState extends State {
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
         builder.show();
         return true;
-      case MENU_CONTEXT_BOGUS_ALARM:
+      }
+      case MENU_CONTEXT_BOGUS_ALARM -> {
         BogusAlarmWorker.scheduleBogusAlarm(context, ALERT);
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 }

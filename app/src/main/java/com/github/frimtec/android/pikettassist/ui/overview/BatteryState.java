@@ -36,9 +36,9 @@ class BatteryState extends State {
 
   private static int getBatteryIcon(StateContext stateContext) {
     BatteryStatus batteryStatus = stateContext.getBatteryStatus();
-    if (batteryStatus.getCharging().isCharging()) {
+    if (batteryStatus.charging().isCharging()) {
       return R.drawable.ic_baseline_battery_charging_full_24;
-    } else if (batteryStatus.getLevel() <= ApplicationPreferences.instance().getBatteryWarnLevel(stateContext.getContext())) {
+    } else if (batteryStatus.level() <= ApplicationPreferences.instance().getBatteryWarnLevel(stateContext.getContext())) {
       return R.drawable.ic_battery_alert_black_24dp;
     }
     return R.drawable.ic_baseline_battery_std_24;
@@ -51,7 +51,7 @@ class BatteryState extends State {
     if (stateContext.getShiftState().getState() == OnOffState.OFF) {
       return TrafficLight.OFF;
     }
-    int level = stateContext.getBatteryStatus().getLevel();
+    int level = stateContext.getBatteryStatus().level();
     int warnLevel = ApplicationPreferences.instance().getBatteryWarnLevel(stateContext.getContext());
     if (level <= warnLevel) {
       return RED;
@@ -64,9 +64,9 @@ class BatteryState extends State {
     if (!ApplicationPreferences.instance().getSuperviseBatteryLevel(stateContext.getContext())) {
       return stateContext.getString(R.string.general_disabled);
     }
-    BatteryStatus.Charging charging = stateContext.getBatteryStatus().getCharging();
+    BatteryStatus.Charging charging = stateContext.getBatteryStatus().charging();
     String chargingText = charging.isCharging() ? String.format("(%s - %s)", stateContext.getString(R.string.state_fragment_battery_charging), charging.name()) : "";
-    return String.format("%d%% %s", stateContext.getBatteryStatus().getLevel(), chargingText);
+    return String.format("%d%% %s", stateContext.getBatteryStatus().level(), chargingText);
   }
 
   @Override
@@ -87,19 +87,23 @@ class BatteryState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONTEXT_VIEW:
+      case MENU_CONTEXT_VIEW -> {
         onClickAction(context);
         return true;
-      case MENU_CONTEXT_DEACTIVATE:
+      }
+      case MENU_CONTEXT_DEACTIVATE -> {
         ApplicationPreferences.instance().setSuperviseBatteryLevel(context, false);
         stateContext.refreshFragment();
         return true;
-      case MENU_CONTEXT_ACTIVATE:
+      }
+      case MENU_CONTEXT_ACTIVATE -> {
         ApplicationPreferences.instance().setSuperviseBatteryLevel(context, true);
         stateContext.refreshFragment();
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 

@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.view.MenuItem;
 import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,19 +40,10 @@ public class AboutActivity extends AppCompatActivity {
     rate.setOnClickListener(event -> startActivity(rateIntentForPlayStore()));
   }
 
-  private Intent rateIntentForPlayStore()  {
+  private Intent rateIntentForPlayStore() {
     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", "https://play.google.com/store/apps/details", getPackageName())));
     intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK | Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
     return intent;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == android.R.id.home) {
-      onBackPressed();
-      return true;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   private void setupAppInfo() {

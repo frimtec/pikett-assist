@@ -6,6 +6,9 @@ public interface ApplicationState {
 
   int DEFAULT_VOLUME_NOT_SET = -1;
 
+  /**
+   * @noinspection SameReturnValue
+   */
   static ApplicationState instance() {
     return KeyValueStoreApplicationState.INSTANCE;
   }

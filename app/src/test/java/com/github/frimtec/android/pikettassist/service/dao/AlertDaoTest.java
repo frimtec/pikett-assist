@@ -42,7 +42,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class AlertDaoTest {
 
@@ -478,7 +477,7 @@ class AlertDaoTest {
     AlertDao dao = new AlertDao(dbFactory);
     dao.delete(alert);
 
-    verify(db).delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alert.getId())});
+    verify(db).delete(TABLE_ALERT, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alert.id())});
   }
 
   private Cursor createCursor(List<Pair<Long, Boolean>> alertStates) {
@@ -490,8 +489,8 @@ class AlertDaoTest {
       moveResults[moveResults.length - 1] = false;
       when(cursor.moveToNext()).thenReturn(alertStates.size() > 1, moveResults);
 
-      List<Long> ids = alertStates.stream().map(pair -> pair.first).collect(Collectors.toList());
-      List<Integer> confirmedStates = alertStates.stream().map(pair -> pair.second ? 1 : 0).collect(Collectors.toList());
+      List<Long> ids = alertStates.stream().map(pair -> pair.first).toList();
+      List<Integer> confirmedStates = alertStates.stream().map(pair -> pair.second ? 1 : 0).toList();
 
       when(cursor.getLong(0)).thenReturn(ids.get(0), ids.subList(1, ids.size()).toArray(new Long[0]));
       when(cursor.getInt(1)).thenReturn(confirmedStates.get(0), confirmedStates.subList(1, confirmedStates.size()).toArray(new Integer[0]));
@@ -511,11 +510,11 @@ class AlertDaoTest {
       }
       when(cursor.moveToNext()).thenReturn(alerts.size() > 1, moveResults);
 
-      List<Long> ids = alerts.stream().map(Alert::getId).collect(Collectors.toList());
-      List<Long> startTimes = alerts.stream().map(Alert::getStartTime).map(Instant::toEpochMilli).collect(Collectors.toList());
-      List<Long> confirmTimes = alerts.stream().map(Alert::getConfirmTime).map(instant -> instant != null ? instant.toEpochMilli() : 0).collect(Collectors.toList());
-      List<Integer> confirmedStates = alerts.stream().map(alert -> alert.isConfirmed() ? 1 : 0).collect(Collectors.toList());
-      List<Long> endTimes = alerts.stream().map(Alert::getEndTime).map(instant -> instant != null ? instant.toEpochMilli() : 0).collect(Collectors.toList());
+      List<Long> ids = alerts.stream().map(Alert::id).toList();
+      List<Long> startTimes = alerts.stream().map(Alert::startTime).map(Instant::toEpochMilli).toList();
+      List<Long> confirmTimes = alerts.stream().map(Alert::confirmTime).map(instant -> instant != null ? instant.toEpochMilli() : 0).toList();
+      List<Integer> confirmedStates = alerts.stream().map(alert -> alert.confirmed() ? 1 : 0).toList();
+      List<Long> endTimes = alerts.stream().map(Alert::endTime).map(instant -> instant != null ? instant.toEpochMilli() : 0).toList();
 
       when(cursor.getLong(0)).thenReturn(ids.get(0), ids.subList(1, ids.size()).toArray(new Long[0]));
       when(cursor.getLong(1)).thenReturn(startTimes.get(0), startTimes.subList(1, confirmedStates.size()).toArray(new Long[0]));
@@ -536,8 +535,8 @@ class AlertDaoTest {
       moveResults[moveResults.length - 1] = false;
       when(cursor.moveToNext()).thenReturn(alertCalls.size() > 1, moveResults);
 
-      List<Long> times = alertCalls.stream().map(AlertCall::getTime).map(Instant::toEpochMilli).collect(Collectors.toList());
-      List<String> messages = alertCalls.stream().map(AlertCall::getMessage).collect(Collectors.toList());
+      List<Long> times = alertCalls.stream().map(AlertCall::time).map(Instant::toEpochMilli).toList();
+      List<String> messages = alertCalls.stream().map(AlertCall::message).toList();
 
       when(cursor.getLong(0)).thenReturn(times.get(0), times.subList(1, times.size()).toArray(new Long[0]));
       when(cursor.getString(1)).thenReturn(messages.get(0), messages.subList(1, messages.size()).toArray(new String[0]));

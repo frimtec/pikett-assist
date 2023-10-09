@@ -29,12 +29,12 @@ class TestAlarmState extends State {
   TestAlarmState(StateContext stateContext, TestAlarmStateContext testAlarmStateContext) {
     super(
         R.drawable.ic_test_alarm,
-        testAlarmStateContext.getTestAlarmContext().getContext(),
-        testAlarmStateContext.getLastReceived(),
-        getTestAlarmCloseButtonSupplier(testAlarmStateContext.getStateContext(), testAlarmStateContext.getTestAlarmContext(), testAlarmStateContext.getTestAlarmState()),
-        testAlarmStateContext.getStateContext().getShiftState().isOn() ? (testAlarmStateContext.getTestAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF);
+        testAlarmStateContext.testAlarmContext().context(),
+        testAlarmStateContext.lastReceived(),
+        getTestAlarmCloseButtonSupplier(testAlarmStateContext.stateContext(), testAlarmStateContext.testAlarmContext(), testAlarmStateContext.testAlarmState()),
+        testAlarmStateContext.stateContext().getShiftState().isOn() ? (testAlarmStateContext.testAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF);
     this.stateContext = stateContext;
-    this.testAlarmContext = testAlarmStateContext.getTestAlarmContext();
+    this.testAlarmContext = testAlarmStateContext.testAlarmContext();
   }
 
   private static Supplier<Button> getTestAlarmCloseButtonSupplier(StateContext stateContext, TestAlarmContext testAlarmContext, OnOffState testAlarmState) {
@@ -58,7 +58,7 @@ class TestAlarmState extends State {
   public void onClickAction(Context context) {
     Intent intent = new Intent(context, TestAlarmDetailActivity.class);
     Bundle bundle = new Bundle();
-    bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testAlarmContext.getContext());
+    bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, testAlarmContext.context());
     intent.putExtras(bundle);
     context.startActivity(intent);
   }

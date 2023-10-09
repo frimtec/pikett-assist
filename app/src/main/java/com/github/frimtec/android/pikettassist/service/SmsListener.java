@@ -61,7 +61,7 @@ public class SmsListener extends BroadcastReceiver {
           Matcher matcher = testSmsPattern.matcher(sms.getText());
           if (ApplicationPreferences.instance().getTestAlarmEnabled(context) && matcher.matches()) {
             TestAlarmContext testAlarmContext = new TestAlarmContext(matcher.groupCount() > 0 ? matcher.group(1) : context.getString(R.string.test_alarm_context_general));
-            Log.i(TAG, "TEST alarm with context: " + testAlarmContext.getContext());
+            Log.i(TAG, "TEST alarm with context: " + testAlarmContext.context());
             smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
             if (this.testAlarmDao.updateReceivedTestAlert(testAlarmContext, Instant.now(), sms.getText())) {
               Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(context);

@@ -1,8 +1,8 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import org.junit.jupiter.api.Test;
 
 class TestAlarmContextTest {
 
@@ -10,7 +10,7 @@ class TestAlarmContextTest {
   void getContext() {
     String context = "context";
     TestAlarmContext testAlarmContext = new TestAlarmContext(context);
-    assertThat(testAlarmContext.getContext()).isSameAs(context);
+    assertThat(testAlarmContext.context()).isSameAs(context);
   }
 
   @Test

@@ -1,10 +1,12 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static android.app.Notification.CATEGORY_ALARM;
 import static android.app.Notification.CATEGORY_EVENT;
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 import static android.app.NotificationManager.IMPORTANCE_LOW;
 import static android.app.NotificationManager.IMPORTANCE_MAX;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -18,6 +20,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
@@ -115,9 +119,7 @@ public class NotificationService {
         .setContentIntent(notifyPendingIntent)
         .setOnlyAlertOnce(true)
         .build();
-
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(ALERT_NOTIFICATION_ID, notification);
+    notifyIfAllowed(context, ALERT_NOTIFICATION_ID, notification);
   }
 
   public void notifyMissingTestAlarm(Intent notifyIntent, Set<TestAlarmContext> testAlarmContexts) {
@@ -136,9 +138,7 @@ public class NotificationService {
         .setContentIntent(notifyPendingIntent)
         .setOnlyAlertOnce(true)
         .build();
-
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(MISSING_TEST_ALARM_NOTIFICATION_ID, notification);
+    notifyIfAllowed(context, MISSING_TEST_ALARM_NOTIFICATION_ID, notification);
   }
 
   public void notifyShiftOn() {
@@ -161,7 +161,7 @@ public class NotificationService {
     if (progress != null) {
       notificationBuilder.setProgress(progress.getMax(), progress.getProgress(), false);
     }
-    NotificationManagerCompat.from(context).notify(SHIFT_NOTIFICATION_ID, notificationBuilder.build());
+    notifyIfAllowed(context, SHIFT_NOTIFICATION_ID, notificationBuilder.build());
   }
 
   public void notifySignalLow(SignalLevel level) {
@@ -178,9 +178,7 @@ public class NotificationService {
         .setContentIntent(notifyPendingIntent)
         .setAutoCancel(true)
         .build();
-
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
+    notifyIfAllowed(context, SIGNAL_NOTIFICATION_ID, notification);
   }
 
   public void notifyBatteryLow(BatteryStatus batteryStatus) {
@@ -190,7 +188,7 @@ public class NotificationService {
     @SuppressLint("DefaultLocale")
     Notification notification = new Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_low_battery_title))
-        .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.getLevel()))
+        .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.level()))
         .setSmallIcon(R.drawable.ic_battery_alert_notification)
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
@@ -198,9 +196,7 @@ public class NotificationService {
         .setOngoing(true)
         .setContentIntent(notifyPendingIntent)
         .build();
-
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(BATTERY_NOTIFICATION_ID, notification);
+    notifyIfAllowed(context, BATTERY_NOTIFICATION_ID, notification);
   }
 
   void notifyVolumeChanged(int oldLevel, int newLevel) {
@@ -219,9 +215,7 @@ public class NotificationService {
         .setContentIntent(notifyPendingIntent)
         .setAutoCancel(true)
         .build();
-
-    NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-    notificationManagerCompat.notify(SIGNAL_NOTIFICATION_ID, notification);
+    notifyIfAllowed(context, SIGNAL_NOTIFICATION_ID, notification);
   }
 
   public boolean isDoNotDisturbEnabled() {
@@ -238,31 +232,31 @@ public class NotificationService {
   }
 
   private static String levelText(int level) {
-    switch (level) {
-      case 0:
-        return "0%";
-      case 1:
-        return "15%";
-      case 2:
-        return "30%";
-      case 3:
-        return "45%";
-      case 4:
-        return "60%";
-      case 5:
-        return "75%";
-      case 6:
-        return "90%";
-      case 7:
-        return "100%";
-      default:
-        return level < 0 ? "0%" : "100%";
-    }
+    return switch (level) {
+      case 0 -> "0%";
+      case 1 -> "15%";
+      case 2 -> "30%";
+      case 3 -> "45%";
+      case 4 -> "60%";
+      case 5 -> "75%";
+      case 6 -> "90%";
+      case 7 -> "100%";
+      default -> level < 0 ? "0%" : "100%";
+    };
   }
 
   public void cancelNotification(int id) {
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.cancel(id);
+  }
+
+
+  private void notifyIfAllowed(Context context, int id, @NonNull Notification notification) {
+    if (ActivityCompat.checkSelfPermission(context, POST_NOTIFICATIONS) == PERMISSION_GRANTED) {
+      NotificationManagerCompat.from(context).notify(id, notification);
+    } else {
+      Log.w(TAG, "Notification suppressed as permission is missing");
+    }
   }
 
 }

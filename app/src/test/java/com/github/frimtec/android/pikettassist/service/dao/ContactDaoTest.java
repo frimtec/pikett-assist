@@ -1,5 +1,12 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static com.github.frimtec.android.pikettassist.service.dao.ContactDao.PROJECTION_URI;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,13 +22,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
-import static com.github.frimtec.android.pikettassist.service.dao.ContactDao.PROJECTION_URI;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class ContactDaoTest {
 
@@ -43,8 +43,8 @@ class ContactDaoTest {
 
     Optional<Contact> contact = dao.getContact(12L);
     assertThat(contact).isNotEmpty();
-    assertThat(contact.get().getName()).isEqualTo("name");
-    assertThat(contact.get().getReference()).isEqualTo(new ContactReference(12L, "lookupKey"));
+    assertThat(contact.get().name()).isEqualTo("name");
+    assertThat(contact.get().reference()).isEqualTo(new ContactReference(12L, "lookupKey"));
   }
 
   @Test
@@ -98,8 +98,8 @@ class ContactDaoTest {
 
     Optional<Contact> contact = dao.getContact(uri);
     assertThat(contact).isNotEmpty();
-    assertThat(contact.get().getName()).isEqualTo("name");
-    assertThat(contact.get().getReference()).isEqualTo(new ContactReference(12L, "lookupKey"));
+    assertThat(contact.get().name()).isEqualTo("name");
+    assertThat(contact.get().reference()).isEqualTo(new ContactReference(12L, "lookupKey"));
   }
 
   @Test
@@ -205,7 +205,7 @@ class ContactDaoTest {
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-        new String[]{String.valueOf(contact.getReference().getId())}, null))
+        new String[]{String.valueOf(contact.reference().id())}, null))
         .thenReturn(cursor);
 
     Set<String> contactIds = dao.getPhoneNumbers(contact);
@@ -225,7 +225,7 @@ class ContactDaoTest {
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-        new String[]{String.valueOf(contact.getReference().getId())}, null))
+        new String[]{String.valueOf(contact.reference().id())}, null))
         .thenReturn(null);
 
     Set<String> contactIds = dao.getPhoneNumbers(contact);
@@ -244,7 +244,7 @@ class ContactDaoTest {
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-        new String[]{String.valueOf(contact.getReference().getId())}, null))
+        new String[]{String.valueOf(contact.reference().id())}, null))
         .thenReturn(cursor);
 
     Set<String> contactIds = dao.getPhoneNumbers(contact);

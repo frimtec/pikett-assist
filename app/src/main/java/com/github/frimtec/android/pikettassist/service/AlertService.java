@@ -89,7 +89,7 @@ public class AlertService {
   public String exportAllAlerts() {
     return GSON.toJson(
         alertDao.loadAll().stream()
-            .map(alert -> alertDao.load(alert.getId()))
+            .map(alert -> alertDao.load(alert.id()))
             .collect(Collectors.toList())
     );
   }

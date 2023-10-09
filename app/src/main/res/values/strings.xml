@@ -215,7 +215,7 @@ The SMS communication is therefore implemented with an adapter app (&lt;a href=h
   <string name="pref_title_category_battery_safer">Battery drain</string>
   <string name="pref_title_battery_safer_at_night">Minimize at night</string>
   <string name="pref_summary_battery_safer_at_night_enabled">The monitoring interval for the signal strength is reduced at night!</string>
-  <string name="pref_summary_battery_safer_at_night_disabled" translatable="false"></string>
+  <string name="pref_summary_battery_safer_at_night_disabled" translatable="false" />
   <string name="menu_create_manually_alarm">Create alert manually</string>
   <string name="manually_created_alarm_reason">Enter a reason</string>
   <string name="manually_created_alarm_reason_default">Phone call</string>

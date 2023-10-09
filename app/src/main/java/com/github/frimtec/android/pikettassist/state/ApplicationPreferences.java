@@ -35,6 +35,9 @@ public interface ApplicationPreferences {
       40 * PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR
   });
 
+  /**
+   * @noinspection SameReturnValue
+   */
   static ApplicationPreferences instance() {
     return SharedPreferencesApplicationPreferences.INSTANCE;
   }

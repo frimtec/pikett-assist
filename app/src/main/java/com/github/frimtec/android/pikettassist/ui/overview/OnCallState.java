@@ -50,20 +50,23 @@ class OnCallState extends State {
   @Override
   public boolean onContextItemSelected(Context context, MenuItem item) {
     switch (item.getItemId()) {
-      case MENU_CONTEXT_SET_MANUALLY_ON:
+      case MENU_CONTEXT_SET_MANUALLY_ON -> {
         ApplicationState.instance().setPikettStateManuallyOn(true);
         LowSignalWorker.enqueueWork(context);
         PikettWorker.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
-      case MENU_CONTEXT_RESET:
+      }
+      case MENU_CONTEXT_RESET -> {
         ApplicationState.instance().setPikettStateManuallyOn(false);
         LowSignalWorker.enqueueWork(context);
         PikettWorker.enqueueWork(context);
         stateContext.refreshFragment();
         return true;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 

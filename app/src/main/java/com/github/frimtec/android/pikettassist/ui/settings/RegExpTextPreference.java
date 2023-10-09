@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -57,10 +58,23 @@ public class RegExpTextPreference extends EditTextPreference {
   }
 
   private void configureAttributes(Context context, AttributeSet attrs, int defStyleAttr) {
-    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RegExpTextPreference, defStyleAttr, 0);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      try (TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RegExpTextPreference, defStyleAttr, 0)) {
+        extractedGroups(a);
+      }
+    } else {
+      TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RegExpTextPreference, defStyleAttr, 0);
+      try {
+        extractedGroups(a);
+      } finally {
+        a.recycle();
+      }
+    }
+  }
+
+  private void extractedGroups(TypedArray a) {
     minGroups = a.getInteger(R.styleable.RegExpTextPreference_min_groups, NO_GROUP_MIN_COUNT_CHECK);
     maxGroups = a.getInteger(R.styleable.RegExpTextPreference_max_groups, NO_GROUP_MAX_COUNT_CHECK);
-    a.recycle();
   }
 
   private void setupView(Context context) {
@@ -128,10 +142,15 @@ public class RegExpTextPreference extends EditTextPreference {
   }
 
   private String encoded(String text) {
-    try {
-      return URLEncoder.encode(text, StandardCharsets.UTF_8.name());
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException("Cannot encode text", e);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      return URLEncoder.encode(text, StandardCharsets.UTF_8);
+    } else {
+      try {
+        //noinspection CharsetObjectCanBeUsed
+        return URLEncoder.encode(text, StandardCharsets.UTF_8.name());
+      } catch (UnsupportedEncodingException e) {
+        throw new RuntimeException("Cannot encode text", e);
+      }
     }
   }
 }

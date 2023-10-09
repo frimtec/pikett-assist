@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-public final class BatteryStatus {
+public record BatteryStatus(int level, Charging charging) {
 
   public enum Charging {
     NO(false),
@@ -19,19 +19,4 @@ public final class BatteryStatus {
     }
   }
 
-  private final int level;
-  private final Charging charging;
-
-  public BatteryStatus(int level, Charging charging) {
-    this.level = level;
-    this.charging = charging;
-  }
-
-  public int getLevel() {
-    return level;
-  }
-
-  public Charging getCharging() {
-    return charging;
-  }
 }

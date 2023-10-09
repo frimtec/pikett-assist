@@ -1,5 +1,13 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static com.github.frimtec.android.pikettassist.service.dao.CalendarDao.PROJECTION;
+import static com.github.frimtec.android.pikettassist.service.dao.CalendarDao.SELECTION;
+import static com.github.frimtec.android.pikettassist.service.dao.CalendarDao.SELECTION_ARGS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,14 +18,6 @@ import com.github.frimtec.android.pikettassist.domain.Calendar;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static com.github.frimtec.android.pikettassist.service.dao.CalendarDao.PROJECTION;
-import static com.github.frimtec.android.pikettassist.service.dao.CalendarDao.SELECTION;
-import static com.github.frimtec.android.pikettassist.service.dao.CalendarDao.SELECTION_ARGS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 class CalendarDaoTest {
 
@@ -94,7 +94,7 @@ class CalendarDaoTest {
   }
 
   private void assertCalendar(Calendar calendar, int expectedId, String expectedName) {
-    assertThat(calendar.getId()).isEqualTo(expectedId);
-    assertThat(calendar.getName()).isEqualTo(expectedName);
+    assertThat(calendar.id()).isEqualTo(expectedId);
+    assertThat(calendar.name()).isEqualTo(expectedName);
   }
 }

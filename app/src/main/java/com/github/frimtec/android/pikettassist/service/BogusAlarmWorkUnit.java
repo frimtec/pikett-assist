@@ -10,6 +10,7 @@ import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker.AlarmTyp
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 class BogusAlarmWorkUnit implements WorkUnit {
@@ -26,7 +27,7 @@ class BogusAlarmWorkUnit implements WorkUnit {
   public Optional<ScheduleInfo> apply(Data inputData) {
     AlarmType type = AlarmType.valueOf(inputData.getString(ALARM_TYPE_PARAMETER_KEY));
     Log.i(TAG, "Trigger bogus alarm for " + type);
-    alarmTriggers.getOrDefault(type, () -> Log.e(TAG, "Unknown type " + type)).run();
+    Objects.requireNonNull(alarmTriggers.getOrDefault(type, () -> Log.e(TAG, "Unknown type " + type))).run();
     return Optional.empty();
   }
 }

@@ -35,25 +35,26 @@ class AlertServiceTest {
     when(dao.load(1L)).thenReturn(new Alert(1L, startTime, null, false, null, Collections.singletonList(new Alert.AlertCall(startTime, "message"))));
     when(dao.load(2L)).thenReturn(new Alert(2L, startTime, null, false, null, Collections.emptyList()));
     String exportedAlerts = alertService.exportAllAlerts();
-    assertThat(exportedAlerts).isEqualTo("[\n" +
-        "  {\n" +
-        "    \"id\": 1,\n" +
-        "    \"startTime\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "    \"confirmed\": false,\n" +
-        "    \"calls\": [\n" +
-        "      {\n" +
-        "        \"time\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "        \"message\": \"message\"\n" +
-        "      }\n" +
-        "    ]\n" +
-        "  },\n" +
-        "  {\n" +
-        "    \"id\": 2,\n" +
-        "    \"startTime\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "    \"confirmed\": false,\n" +
-        "    \"calls\": []\n" +
-        "  }\n" +
-        "]");
+    assertThat(exportedAlerts).isEqualTo("""
+        [
+          {
+            "id": 1,
+            "startTime": "2020-04-26T18:11:06.641Z",
+            "confirmed": false,
+            "calls": [
+              {
+                "time": "2020-04-26T18:11:06.641Z",
+                "message": "message"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "startTime": "2020-04-26T18:11:06.641Z",
+            "confirmed": false,
+            "calls": []
+          }
+        ]""");
   }
 
   @Test
@@ -72,25 +73,26 @@ class AlertServiceTest {
         )
     );
 
-    boolean success = alertService.importAllAlerts("[\n" +
-        "  {\n" +
-        "    \"id\": 1,\n" +
-        "    \"startTime\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "    \"confirmed\": false,\n" +
-        "    \"calls\": [\n" +
-        "      {\n" +
-        "        \"time\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "        \"message\": \"message\"\n" +
-        "      }\n" +
-        "    ]\n" +
-        "  },\n" +
-        "  {\n" +
-        "    \"id\": 2,\n" +
-        "    \"startTime\": \"2020-04-26T18:11:06.641Z\",\n" +
-        "    \"confirmed\": false,\n" +
-        "    \"calls\": []\n" +
-        "  }\n" +
-        "]");
+    boolean success = alertService.importAllAlerts("""
+        [
+          {
+            "id": 1,
+            "startTime": "2020-04-26T18:11:06.641Z",
+            "confirmed": false,
+            "calls": [
+              {
+                "time": "2020-04-26T18:11:06.641Z",
+                "message": "message"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "startTime": "2020-04-26T18:11:06.641Z",
+            "confirmed": false,
+            "calls": []
+          }
+        ]""");
     assertThat(success).isTrue();
     verify(dao).loadAll();
     verify(dao).delete(oldAlert1);

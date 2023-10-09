@@ -26,6 +26,9 @@ public class NonLinearNumericSeries {
     this.valueSeries = Arrays.copyOf(valueSeries, valueSeries.length);
   }
 
+  /**
+   * @noinspection SameReturnValue
+   */
   public int getMinIndex() {
     return 0;
   }

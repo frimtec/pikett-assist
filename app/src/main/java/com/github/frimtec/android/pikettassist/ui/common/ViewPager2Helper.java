@@ -16,9 +16,8 @@ public class ViewPager2Helper {
       RecyclerView recyclerView = (RecyclerView) getRecyclerViewField().get(viewPager);
 
       Field touchSlopField = getTouchSlopField();
-      //noinspection ConstantConditions
-      int touchSlop = (int) touchSlopField.get(recyclerView);
-      touchSlopField.set(recyclerView, touchSlop * sensitivity);
+      Integer touchSlop = (Integer) touchSlopField.get(recyclerView);
+      touchSlopField.set(recyclerView, (touchSlop != null ? touchSlop : 0) * sensitivity);
     } catch (NoSuchFieldException|IllegalAccessException e) {
       Log.e(TAG, "Cannot change drag sensibility", e);
     }

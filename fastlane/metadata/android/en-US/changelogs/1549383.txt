@@ -1,0 +1,2 @@
+- Bump com.android.tools.build:gradle from 8.1.2 to 8.1.4
+- Bump com.android.billingclient:billing from 6.0.1 to 6.1.0

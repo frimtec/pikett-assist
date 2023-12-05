@@ -8,7 +8,7 @@ def android_billingclient_version = '6.1.0'
 def slidetoact_version = '0.11.0'
 def takisoft_preferencex_version = '1.1.0'
 def junit_version = '5.10.1'
-def work_version = "2.8.1"
+def work_version = "2.9.0"
 
 System.setProperty("line.separator", "\n")
 Properties versionProps = new Properties()

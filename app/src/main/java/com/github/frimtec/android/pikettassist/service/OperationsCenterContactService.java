@@ -12,6 +12,7 @@ import androidx.annotation.StringRes;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
+import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.Set;
@@ -62,8 +63,22 @@ public class OperationsCenterContactService extends AbstractContactService {
       Log.e(TAG, "SMS received but no valid operations center defined.");
       return false;
     }
-    Set<Long> contactIds = getContactDao().lookupContactIdsByPhoneNumber(number);
+    ContactDao contactDao = getContactDao();
+    if (isAlphanumericShortCode(number)) {
+      return contactDao.getAlphanumericShortCodesFromContact(contact).contains(number);
+    }
+    Set<Long> contactIds = contactDao.lookupContactIdsByPhoneNumber(number);
     return contactIds.contains(contact.reference().id());
+  }
+
+  private static boolean isAlphanumericShortCode(String phoneNumber) {
+    for (int i = 0; i < phoneNumber.length(); i++) {
+      char ch = phoneNumber.charAt(i);
+      if (Character.isLetter(ch)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Set<String> getPhoneNumbers(Contact contact) {

@@ -121,6 +121,7 @@ As contacts in Android cannot use letters in phone numbers, such alphanumeric sh
 configured in the contact field "Company".
 It the operations centers uses several alphanumeric short codes, they can be comma separated in the
 contacts company field.
+
 ![Operations center contact with two alphanumeric short code SMS numbers](images/Contacts-with-alphanumeric-short-codes.png)
 
 Be aware that confirmation replies are not possible if alphanumeric short code SMS numbers are used.

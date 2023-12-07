@@ -268,4 +268,5 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="alternative_donation_thanks">Merci beaucoup pour votre soutien!</string>
   <string name="state_fragment_sms_adapter_not_yet_supported">Pas encore pris en charge</string>
   <string name="state_fragment_sms_adapter_update_recommended">Mise à jour recommandée</string>
+  <string name="pref_summary_send_confirm_sms">⚠️ Ignoré pour les numéros de téléphone à code court alphanumérique!</string>
 </resources>

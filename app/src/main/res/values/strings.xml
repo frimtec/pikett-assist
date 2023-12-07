@@ -31,7 +31,6 @@
   <string name="pref_title_battery_warn_level">Minimal battery level</string>
   <string name="pref_title_alarm_operations_center_contact">Operations center</string>
   <string name="pref_title_send_confirm_sms">Send confirmation replies</string>
-  <string name="pref_summary_send_confirm_sms">⚠️ Ignored for alphanumeric short code phone numbers!</string>
   <string name="pref_title_sms_confirm_text">Confirmation reply</string>
   <string name="pref_default_sms_confirm_text">OK</string>
   <string name="pref_header_test_alarm">Test alarm</string>
@@ -216,7 +215,7 @@ The SMS communication is therefore implemented with an adapter app (&lt;a href=h
   <string name="pref_title_category_battery_safer">Battery drain</string>
   <string name="pref_title_battery_safer_at_night">Minimize at night</string>
   <string name="pref_summary_battery_safer_at_night_enabled">The monitoring interval for the signal strength is reduced at night!</string>
-  <string name="pref_summary_battery_safer_at_night_disabled" translatable="false" />
+  <string name="pref_summary_battery_safer_at_night_disabled" translatable="false"></string>
   <string name="menu_create_manually_alarm">Create alert manually</string>
   <string name="manually_created_alarm_reason">Enter a reason</string>
   <string name="manually_created_alarm_reason_default">Phone call</string>
@@ -284,4 +283,5 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="alternative_donation_thanks">Many thanks for your support!</string>
   <string name="state_fragment_sms_adapter_not_yet_supported">Not yet supported</string>
   <string name="state_fragment_sms_adapter_update_recommended">Update recommended</string>
+  <string name="pref_summary_send_confirm_sms">⚠️ Ignored for alphanumeric short code phone numbers!</string>
 </resources>

@@ -267,4 +267,5 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="alternative_donation_thanks">Molte grazie per il vostro sostegno!</string>
   <string name="state_fragment_sms_adapter_not_yet_supported">Non ancora supportato</string>
   <string name="state_fragment_sms_adapter_update_recommended">Aggiornamento consigliato</string>
+  <string name="pref_summary_send_confirm_sms">⚠️ Ignorato per i numeri di telefono con codice breve alfanumerico!</string>
 </resources>

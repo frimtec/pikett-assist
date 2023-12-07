@@ -103,22 +103,36 @@ In order to perform the functions of PAssist, PAssist needs to be able to receiv
 As these SMS permissions are no more granted by Google, a compatible SMS adapter is required.
 
 Currently the only supported SMS adapter is [secure-sms-proxy][secure-sms-proxy-readme].
-PAssist will guide you to install this SMS adapter.  
- 
-## Configuration 
+PAssist will guide you to install this SMS adapter.
+
+## Configuration
+
 ![Settings](images/PAssist_10.png)
 
 ### Main settings
 
 #### Operations center
+
 Defines the contact of your operations center sending alarms via SMS.
-The SMS received from any phone number of this contact are supervised by PAssist. 
+The SMS received from any phone number of this contact are supervised by PAssist.
+
+PAssist also supports operations centers using alphanumeric short code SMS numbers.
+As contacts in Android cannot use letters in phone numbers, such alphanumeric short codes can be
+configured in the contact field "Company".
+It the operations centers uses several alphanumeric short codes, they can be comma separated in the
+contacts company field.
+![Operations center contact with two alphanumeric short code SMS numbers](images/Contacts-with-alphanumeric-short-codes.png)
+
+Be aware that confirmation replies are not possible if alphanumeric short code SMS numbers are used.
 
 #### Send confirmation replies
+
 Enable or disable whether confirmation replies should be sent back to the operations center.
-If the warning system of your operations center does not support confirmation messages, you can deactivate this setting to save the cost of sending the extra reply SMS.
+If the warning system of your operations center does not support confirmation messages, you can
+deactivate this setting to save the cost of sending the extra reply SMS.
 
 #### Confirmation reply
+
 Defines the text to send back as alarm acknowledgement to your operations center.
 
 #### SMS ignore filter

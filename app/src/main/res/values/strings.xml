@@ -31,6 +31,7 @@
   <string name="pref_title_battery_warn_level">Minimal battery level</string>
   <string name="pref_title_alarm_operations_center_contact">Operations center</string>
   <string name="pref_title_send_confirm_sms">Send confirmation replies</string>
+  <string name="pref_summary_send_confirm_sms">⚠️ Ignored for alphanumeric short code phone numbers!</string>
   <string name="pref_title_sms_confirm_text">Confirmation reply</string>
   <string name="pref_default_sms_confirm_text">OK</string>
   <string name="pref_header_test_alarm">Test alarm</string>

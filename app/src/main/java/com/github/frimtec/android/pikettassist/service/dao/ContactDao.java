@@ -7,18 +7,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ContactDao {
 
@@ -111,12 +115,14 @@ public class ContactDao {
   }
 
   public Set<String> getPhoneNumbers(Contact contact) {
+    Set<String> phoneNumbers = new HashSet<>();
+
+    // add real phone numbers
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
         new String[]{String.valueOf(contact.reference().id())}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
-        Set<String> phoneNumbers = new HashSet<>();
         do {
           int columnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER);
           String normalizedNumber = null;
@@ -132,9 +138,35 @@ public class ContactDao {
             Log.e(TAG, "Skipping phone number as normalized number is null for number: " + (columnIndexNumber >= 0 ? cursor.getString(columnIndexNumber) : "???"));
           }
         } while (cursor.moveToNext());
-        return phoneNumbers;
       }
-      return Collections.emptySet();
     }
+
+    // add alphanumeric short codes from contact organization field as comma separated list
+    phoneNumbers.addAll(getAlphanumericShortCodesFromContact(contact));
+    return phoneNumbers;
+  }
+
+  public Set<String> getAlphanumericShortCodesFromContact(Contact contact) {
+    try (Cursor cursor = this.contentResolver.query(ContactsContract.Data.CONTENT_URI,
+        null, ContactsContract.Data.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?", new String[]{String.valueOf(contact.reference().id()),
+            ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE}, null)) {
+      if (cursor == null) return Collections.emptySet();
+      if (cursor.moveToFirst()) {
+        int columnIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Organization.COMPANY);
+        if (columnIndex >= 0) {
+          String company = cursor.getString(columnIndex);
+          if (!TextUtils.isEmpty(company)) {
+            return Arrays.stream(company.split(","))
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(companyName -> companyName.length() > 0)
+                .collect(Collectors.toSet());
+          }
+        } else {
+          Log.e(TAG, "Column COMPANY not found in cursor");
+        }
+      }
+    }
+    return Collections.emptySet();
   }
 }

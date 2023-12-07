@@ -19,9 +19,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.SeekBarPreference;
+import androidx.preference.SwitchPreference;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
+import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.takisoft.preferencex.EditTextPreference;
@@ -75,6 +79,21 @@ public class SettingsActivity extends AppCompatActivity {
         alarmRingTone.setSummaryProvider(
             (Preference.SummaryProvider<RingtonePreference>) preference ->
                 preference.getRingtone() == null ? getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
+      }
+
+      SwitchPreference sendConfirmSms = findPreference("send_confirm_sms");
+      if (sendConfirmSms != null) {
+        sendConfirmSms.setSummaryProvider(
+            (Preference.SummaryProvider<SwitchPreference>) preference -> {
+              Contact contact = new OperationsCenterContactService(context).getOperationsCenterContact();
+              if (preference.isChecked() && contact.valid()) {
+                ContactDao contactDao = new ContactDao(context);
+                if (!contactDao.getAlphanumericShortCodesFromContact(contact).isEmpty()) {
+                  return getString(R.string.pref_summary_send_confirm_sms);
+                }
+              }
+              return null;
+            });
       }
 
       EditTextPreference proPostTimeSeconds = findPreference("pre_post_run_time_seconds");

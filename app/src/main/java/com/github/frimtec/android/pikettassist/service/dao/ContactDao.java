@@ -148,7 +148,7 @@ public class ContactDao {
 
   public Set<String> getAlphanumericShortCodesFromContact(Contact contact) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.Data.CONTENT_URI,
-        null, ContactsContract.Data.RAW_CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?", new String[]{String.valueOf(contact.reference().id()),
+        null, ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?", new String[]{String.valueOf(contact.reference().id()),
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE}, null)) {
       if (cursor == null) return Collections.emptySet();
       if (cursor.moveToFirst()) {

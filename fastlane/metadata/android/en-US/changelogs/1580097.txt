@@ -1,0 +1,2 @@
+- Workaround ongoing notifications that can be closed by user on android 14
+- Bump JetBrains/qodana-action from 2023.2.9 to 2023.3.0

@@ -29,6 +29,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.NotificationActionListener;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
@@ -47,6 +48,8 @@ public class NotificationService {
   public static final int BATTERY_NOTIFICATION_ID = 5;
 
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
+  public static final String ACTION_ON_CALL_NOTIFICATION_CLOSED_BY_USER = "com.github.frimtec.android.pikettassist.ON_CALL_NOTIFICATION_CLOSED_BY_USER";
+  public static final String ACTION_LOW_BATTERY_NOTIFICATION_CLOSED_BY_USER = "com.github.frimtec.android.pikettassist.LOW_BATTERY_NOTIFICATION_CLOSED_BY_USER";
 
   private static final String CHANNEL_ID_ALARM = "com.github.frimtec.android.pikettassist.alarm";
   private static final String CHANNEL_ID_NOTIFICATION = "com.github.frimtec.android.pikettassist.notification";
@@ -156,12 +159,19 @@ public class NotificationService {
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
+        .setContentIntent(notifyPendingIntent)
         .setOngoing(true)
-        .setContentIntent(notifyPendingIntent);
+        .setDeleteIntent(getDeleteIntent(ACTION_ON_CALL_NOTIFICATION_CLOSED_BY_USER));
     if (progress != null) {
       notificationBuilder.setProgress(progress.getMax(), progress.getProgress(), false);
     }
     notifyIfAllowed(context, SHIFT_NOTIFICATION_ID, notificationBuilder.build());
+  }
+
+  protected PendingIntent getDeleteIntent(String action) {
+    Intent intent = new Intent(context, NotificationActionListener.class);
+    intent.setAction(action);
+    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
   }
 
   public void notifySignalLow(SignalLevel level) {
@@ -193,8 +203,9 @@ public class NotificationService {
         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
-        .setOngoing(true)
         .setContentIntent(notifyPendingIntent)
+        .setOngoing(true)
+        .setDeleteIntent(getDeleteIntent(ACTION_LOW_BATTERY_NOTIFICATION_CLOSED_BY_USER))
         .build();
     notifyIfAllowed(context, BATTERY_NOTIFICATION_ID, notification);
   }

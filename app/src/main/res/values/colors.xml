@@ -13,4 +13,6 @@
 
     <color name="unconfirmedShift">#DDDDDD</color>
     <color name="notificationIcon">#FF000000</color>
+
+    <color name="tableGroupBackground">#EEEEEE</color>
 </resources>

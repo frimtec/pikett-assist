@@ -112,4 +112,8 @@ public interface ApplicationPreferences {
 
   boolean isDayProfile(Context context, LocalTime currentTime);
 
+  Set<Integer> getExpandedAlertLogGroups(Context context);
+
+  void setExpandedAlertLogGroups(Context context, Set<Integer> values);
+
 }

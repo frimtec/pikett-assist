@@ -19,7 +19,9 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 public abstract class AbstractListFragment extends Fragment {
 
@@ -66,7 +68,12 @@ public abstract class AbstractListFragment extends Fragment {
 
   public final void refresh() {
     listView.setAdapter(createAdapter());
+    getExpandedGroups(listView).forEach(groupPosition -> listView.expandGroup(groupPosition));
     addButton.setVisibility(isAddButtonVisible() ? View.VISIBLE : View.INVISIBLE);
+  }
+
+  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+    return Collections.emptySet();
   }
 
   protected boolean isAddButtonVisible() {

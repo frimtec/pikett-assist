@@ -47,6 +47,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_DAY_START_TIME = "day_start_time";
   private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
   private static final String PREF_APP_THEME = "app_theme";
+  private static final String PREF_KEY_ALERT_LOG_EXPANDED_GROUPS = "alert_log_expanded_groups";
 
   public static final SharedPreferencesApplicationPreferences INSTANCE = new SharedPreferencesApplicationPreferences();
 
@@ -248,6 +249,21 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public boolean isDayProfile(Context context, LocalTime currentTime) {
     return currentTime.isAfter(getDayProfileStartTime(context)) && currentTime.isBefore(getNightProfileStartTime(context));
+  }
+
+  @Override
+  public Set<Integer> getExpandedAlertLogGroups(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_ALERT_LOG_EXPANDED_GROUPS, Collections.emptySet()).stream()
+        .map(Integer::parseInt)
+        .collect(Collectors.toSet());
+  }
+
+  @Override
+  public void setExpandedAlertLogGroups(Context context, Set<Integer> values) {
+    setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_ALERT_LOG_EXPANDED_GROUPS, values.stream()
+        .map(String::valueOf)
+        .collect(Collectors.toSet())));
   }
 
   private static int getOnCallNightVolume(Context context) {

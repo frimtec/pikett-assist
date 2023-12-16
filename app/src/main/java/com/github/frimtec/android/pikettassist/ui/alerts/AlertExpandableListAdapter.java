@@ -11,37 +11,51 @@ import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 class AlertExpandableListAdapter extends BaseExpandableListAdapter {
 
   private final Context context;
-  private final List<Alert> alerts;
+  private final List<YearGroup> years;
 
   AlertExpandableListAdapter(Context context, List<Alert> alerts) {
     this.context = context;
-    this.alerts = alerts;
+    Map<Integer, List<Alert>> groupedAlerts = alerts.stream()
+        .collect(Collectors.groupingBy(
+            alert -> LocalDateTime.ofInstant(alert.startTime(), ZoneId.systemDefault()).getYear())
+        );
+    this.years = groupedAlerts.keySet()
+        .stream()
+        .sorted(Comparator.reverseOrder())
+        .map(year -> new YearGroup(year, groupedAlerts.get(year)))
+        .collect(Collectors.toList());
   }
 
   @Override
   public int getGroupCount() {
-    return this.alerts.size();
+    return this.years.size();
   }
 
   @Override
   public int getChildrenCount(int groupPosition) {
-    return 0;
+    return this.years.get(groupPosition).alerts().size();
   }
 
   @Override
   public Object getGroup(int groupPosition) {
-    return this.alerts.get(groupPosition);
+    return this.years.get(groupPosition);
   }
 
   @Override
   public Object getChild(int groupPosition, int childPosition) {
-    return null;
+    return this.years.get(groupPosition).alerts().get(childPosition);
   }
 
   @Override
@@ -61,7 +75,18 @@ class AlertExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-    Alert alert = this.alerts.get(groupPosition);
+    YearGroup yearGroup = this.years.get(groupPosition);
+    if (convertView == null) {
+      convertView = LayoutInflater.from(this.context).inflate(R.layout.alert_log_group, parent, false);
+    }
+    TextView yearText = convertView.findViewById(R.id.alert_log_group_year);
+    yearText.setText(String.format(Locale.getDefault(), "%d (%d)", yearGroup.year(), yearGroup.alerts().size()));
+    return convertView;
+  }
+
+  @Override
+  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    Alert alert = this.years.get(groupPosition).alerts().get(childPosition);
     Objects.requireNonNull(alert);
     if (convertView == null) {
       convertView = LayoutInflater.from(this.context).inflate(R.layout.alert_log_item, parent, false);
@@ -76,12 +101,7 @@ class AlertExpandableListAdapter extends BaseExpandableListAdapter {
   }
 
   @Override
-  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-    return null;
-  }
-
-  @Override
   public boolean isChildSelectable(int groupPosition, int childPosition) {
-    return false;
+    return true;
   }
 }

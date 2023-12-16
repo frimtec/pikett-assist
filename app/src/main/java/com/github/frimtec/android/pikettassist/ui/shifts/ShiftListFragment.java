@@ -40,7 +40,7 @@ public class ShiftListFragment extends AbstractListFragment {
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-      Shift selectedShift = (Shift) listView.getItemAtPosition(groupPosition + 1);
+      Shift selectedShift = (Shift) listView.getExpandableListAdapter().getGroup(groupPosition);
       if (selectedShift != null) {
         long eventId = selectedShift.getId();
         Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);

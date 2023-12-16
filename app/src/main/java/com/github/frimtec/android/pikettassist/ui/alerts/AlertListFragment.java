@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
+import static android.widget.ExpandableListView.getPackedPositionGroup;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import android.annotation.SuppressLint;
@@ -14,9 +15,10 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,7 +51,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-public class AlertListFragment extends AbstractListFragment<Alert> {
+public class AlertListFragment extends AbstractListFragment {
 
   private static final String TAG = "AlertListFragment";
 
@@ -125,11 +127,12 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   }
 
   @Override
-  protected void configureListView(ListView listView) {
+  protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      Alert selectedAlert = (Alert) listView.getItemAtPosition(position);
+    listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+      Alert selectedAlert = (Alert) listView.getItemAtPosition(groupPosition + 1);
       showAlertDetails(selectedAlert);
+      return true;
     });
     registerForContextMenu(listView);
     View headerView = getLayoutInflater().inflate(R.layout.alert_header, listView, false);
@@ -160,8 +163,8 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   }
 
   @Override
-  protected ArrayAdapter<Alert> createAdapter() {
-    return new AlertArrayAdapter(getContext(), loadAlertList());
+  protected ExpandableListAdapter createAdapter() {
+    return new AlertExpandableListAdapter(getContext(), loadAlertList());
   }
 
   @Override
@@ -172,13 +175,13 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
 
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
     if (info == null) {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
     ListView listView = getListView();
-    Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
+    Alert selectedAlert = (Alert) listView.getItemAtPosition(getPackedPositionGroup(info.packedPosition));
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID -> {
         showAlertDetails(selectedAlert);

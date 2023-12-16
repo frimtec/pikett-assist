@@ -11,14 +11,11 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 
@@ -27,26 +24,62 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-class StateArrayAdapter extends ArrayAdapter<State> {
+class StateExpandableListAdapter extends BaseExpandableListAdapter {
 
   private final Map<State.TrafficLight, Bitmap> ledBitmaps = new EnumMap<>(State.TrafficLight.class);
+  private final Context context;
+  private final List<State> states;
 
-  StateArrayAdapter(Context context, List<State> states) {
-    super(context, 0, states);
-    ledBitmaps.put(OFF, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_grey));
-    ledBitmaps.put(GREEN, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_green));
-    ledBitmaps.put(YELLOW, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_yellow));
-    ledBitmaps.put(RED, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.led_circle_red));
+  StateExpandableListAdapter(Context context, List<State> states) {
+    this.context = context;
+    this.states = states;
+    ledBitmaps.put(OFF, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_grey));
+    ledBitmaps.put(GREEN, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_green));
+    ledBitmaps.put(YELLOW, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_yellow));
+    ledBitmaps.put(RED, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_red));
   }
 
-
-  @NonNull
   @Override
-  public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    State state = getItem(position);
+  public int getGroupCount() {
+    return this.states.size();
+  }
+
+  @Override
+  public int getChildrenCount(int groupPosition) {
+    return 0;
+  }
+
+  @Override
+  public Object getGroup(int groupPosition) {
+    return this.states.get(groupPosition);
+  }
+
+  @Override
+  public Object getChild(int groupPosition, int childPosition) {
+    return null;
+  }
+
+  @Override
+  public long getGroupId(int groupPosition) {
+    return groupPosition;
+  }
+
+  @Override
+  public long getChildId(int groupPosition, int childPosition) {
+    return groupPosition * 1_000_000L + childPosition;
+  }
+
+  @Override
+  public boolean hasStableIds() {
+    return true;
+  }
+
+  @Override
+  public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    State state = this.states.get(groupPosition);
     Objects.requireNonNull(state);
     if (convertView == null) {
-      convertView = LayoutInflater.from(getContext()).inflate(R.layout.state_item, parent, false);
+      convertView = LayoutInflater.from(this.context).inflate(R.layout.state_item, parent, false);
     }
 
     ((ImageView) convertView.findViewById(R.id.state_item_image)).setImageResource(state.getIconResource());
@@ -95,5 +128,15 @@ class StateArrayAdapter extends ArrayAdapter<State> {
     }
 
     return convertView;
+  }
+
+  @Override
+  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    return null;
+  }
+
+  @Override
+  public boolean isChildSelectable(int groupPosition, int childPosition) {
+    return false;
   }
 }

@@ -5,12 +5,9 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
@@ -24,22 +21,59 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-class ShiftArrayAdapter extends ArrayAdapter<Shift> {
+class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
   private static final float HOURS_PER_DAY = 24;
+  private final Context context;
+  private final List<Shift> shifts;
 
-  ShiftArrayAdapter(Context context, List<Shift> shifts) {
-    super(context, 0, shifts);
+  ShiftExpandableListAdapter(Context context, List<Shift> shifts) {
+    this.context = context;
+    this.shifts = shifts;
   }
 
-  @NonNull
   @Override
-  public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-    Shift shift = getItem(position);
+  public int getGroupCount() {
+    return this.shifts.size();
+  }
+
+  @Override
+  public int getChildrenCount(int groupPosition) {
+    return 0;
+  }
+
+  @Override
+  public Object getGroup(int groupPosition) {
+    return this.shifts.get(groupPosition);
+  }
+
+  @Override
+  public Object getChild(int groupPosition, int childPosition) {
+    return null;
+  }
+
+  @Override
+  public long getGroupId(int groupPosition) {
+    return groupPosition;
+  }
+
+  @Override
+  public long getChildId(int groupPosition, int childPosition) {
+    return groupPosition * 1_000_000L + childPosition;
+  }
+
+  @Override
+  public boolean hasStableIds() {
+    return true;
+  }
+
+  @Override
+  public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    Shift shift = this.shifts.get(groupPosition);
     Objects.requireNonNull(shift);
     if (convertView == null) {
-      convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
+      convertView = LayoutInflater.from(this.context).inflate(R.layout.shift_item, parent, false);
     }
     TextView startTimeView = convertView.findViewById(R.id.shift_item_start_time);
     TextView endTimeView = convertView.findViewById(R.id.shift_item_end_time);
@@ -53,12 +87,22 @@ class ShiftArrayAdapter extends ArrayAdapter<Shift> {
     durationView.setText(String.valueOf(roundToDays(Duration.between(shift.getStartTime(), shift.getEndTime()))));
     ImageView unconfirmedIcon = convertView.findViewById(R.id.shift_item_image_unconfirmed);
     unconfirmedIcon.setVisibility(!shift.isConfirmed() ? View.VISIBLE : View.INVISIBLE);
-    if(!shift.isConfirmed()) {
-      titleView.setText(String.format("%s (%s)", titleView.getText(), getContext().getString(R.string.shift_item_unconfirmed)));
+    if (!shift.isConfirmed()) {
+      titleView.setText(String.format("%s (%s)", titleView.getText(), this.context.getString(R.string.shift_item_unconfirmed)));
       titleView.setTypeface(titleView.getTypeface(), Typeface.BOLD_ITALIC);
-      convertView.setBackgroundColor(getContext().getResources().getColor(R.color.unconfirmedShift, getDropDownViewTheme()));
+      convertView.setBackgroundColor(this.context.getResources().getColor(R.color.unconfirmedShift, context.getTheme()));
     }
     return convertView;
+  }
+
+  @Override
+  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    return null;
+  }
+
+  @Override
+  public boolean isChildSelectable(int groupPosition, int childPosition) {
+    return false;
   }
 
   static int roundToDays(Duration duration) {

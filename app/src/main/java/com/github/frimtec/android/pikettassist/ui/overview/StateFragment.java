@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
 import static android.app.Activity.RESULT_OK;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
@@ -21,8 +22,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ListView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -75,7 +77,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
-public class StateFragment extends AbstractListFragment<State> {
+public class StateFragment extends AbstractListFragment {
 
   public static final int REGISTER_SMS_ADAPTER_REQUEST_CODE = 1000;
 
@@ -152,16 +154,17 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   @Override
-  protected void configureListView(ListView listView) {
+  protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      State selectedState = (State) listView.getItemAtPosition(position);
+    listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+      State selectedState = (State) listView.getItemAtPosition(groupPosition);
       selectedState.onClickAction(getContext());
+      return true;
     });
     registerForContextMenu(listView);
   }
 
-  protected ArrayAdapter<State> createAdapter() {
+  protected ExpandableListAdapter createAdapter() {
     List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
@@ -215,7 +218,7 @@ public class StateFragment extends AbstractListFragment<State> {
     if (!missingPermissions && canDrawOverlays && canScheduleExactAlarms) {
       regularStates(states);
     }
-    return new StateArrayAdapter(getContext(), new ArrayList<>(states));
+    return new StateExpandableListAdapter(getContext(), new ArrayList<>(states));
   }
 
   private void regularStates(List<State> states) {
@@ -320,21 +323,21 @@ public class StateFragment extends AbstractListFragment<State> {
 
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    State selectedItem = (State) getListView().getItemAtPosition(info.position);
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
+    State selectedItem = (State) getListView().getItemAtPosition(getPackedPositionGroup(info.packedPosition));
     selectedItem.onCreateContextMenu(getContext(), menu);
   }
 
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
     if (info == null) {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
 
     ListView listView = getListView();
-    State selectedItem = (State) listView.getItemAtPosition(info.position);
+    State selectedItem = (State) listView.getItemAtPosition(getPackedPositionGroup(info.packedPosition));
     return selectedItem.onContextItemSelected(getContext(), item);
   }
 

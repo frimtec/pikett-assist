@@ -10,8 +10,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ShiftListFragment extends AbstractListFragment<Shift> {
+public class ShiftListFragment extends AbstractListFragment {
 
   private View headerView;
 
@@ -37,10 +37,10 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
   }
 
   @Override
-  protected void configureListView(ListView listView) {
+  protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      Shift selectedShift = (Shift) listView.getItemAtPosition(position);
+    listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+      Shift selectedShift = (Shift) listView.getItemAtPosition(groupPosition + 1);
       if (selectedShift != null) {
         long eventId = selectedShift.getId();
         Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
@@ -48,14 +48,17 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, selectedShift.getStartTime().toEpochMilli());
         intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, selectedShift.getEndTime().toEpochMilli());
         startActivity(intent);
+        return true;
       }
+      return false;
     });
+
     this.headerView = getLayoutInflater().inflate(R.layout.shift_header, listView, false);
     listView.addHeaderView(this.headerView);
   }
 
   @Override
-  protected ArrayAdapter<Shift> createAdapter() {
+  protected ExpandableListAdapter createAdapter() {
     List<Shift> shifts;
     Instant now = Shift.now();
     Context context = requireContext();
@@ -71,7 +74,7 @@ public class ShiftListFragment extends AbstractListFragment<Shift> {
       }
     }
     updateHeader(now, shifts);
-    return new ShiftArrayAdapter(context, shifts);
+    return new ShiftExpandableListAdapter(context, shifts);
   }
 
   private void updateHeader(Instant now, List<Shift> shifts) {

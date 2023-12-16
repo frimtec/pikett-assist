@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -21,9 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Optional;
 
-public abstract class AbstractListFragment<T> extends Fragment {
+public abstract class AbstractListFragment extends Fragment {
 
-  private ListView listView;
+  private ExpandableListView listView;
   private FloatingActionButton addButton;
 
   private final FragmentPosition fragmentPosition;
@@ -65,8 +65,7 @@ public abstract class AbstractListFragment<T> extends Fragment {
   }
 
   public final void refresh() {
-    ArrayAdapter<T> adapter = createAdapter();
-    listView.setAdapter(adapter);
+    listView.setAdapter(createAdapter());
     addButton.setVisibility(isAddButtonVisible() ? View.VISIBLE : View.INVISIBLE);
   }
 
@@ -74,12 +73,12 @@ public abstract class AbstractListFragment<T> extends Fragment {
     return false;
   }
 
-  protected abstract void configureListView(ListView listView);
+  protected abstract void configureListView(ExpandableListView listView);
 
-  protected abstract ArrayAdapter<T> createAdapter();
+  protected abstract ExpandableListAdapter createAdapter();
 
-  protected ListView getListView() {
-    return listView;
+  protected ExpandableListView getListView() {
+    return this.listView;
   }
 
   @Override

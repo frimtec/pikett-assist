@@ -7,6 +7,7 @@ import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.Set;
 
 public interface ApplicationPreferences {
@@ -111,5 +112,21 @@ public interface ApplicationPreferences {
   int getOnCallVolume(Context context, LocalTime currentTime);
 
   boolean isDayProfile(Context context, LocalTime currentTime);
+
+  Set<Integer> getExpandedAlertLogGroups(Context context);
+
+  void setExpandedAlertLogGroups(Context context, Set<Integer> values);
+
+  Set<YearMonth> getExpandedShiftGroups(Context context);
+
+  void setExpandedShiftGroups(Context context, Set<YearMonth> values);
+
+  Set<Boolean> getExpandedTestAlertGroups(Context context);
+
+  void setExpandedTestAlertGroups(Context context, Set<Boolean> values);
+
+  boolean isTestAlarmStatesExpanded(Context context);
+
+  void setTestAlarmStatesExpanded(Context context, boolean values);
 
 }

@@ -7,4 +7,5 @@
     <color name="textDeactivated">#888888</color>
 
     <color name="unconfirmedShift">#555555</color>
+    <color name="tableGroupBackground">#383838</color>
 </resources>

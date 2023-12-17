@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
+import static android.widget.ExpandableListView.getPackedPositionChild;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +11,10 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,11 +30,16 @@ import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
+public class TestAlarmFragment extends AbstractListFragment {
 
   private static final String TAG = "TestAlarmFragment";
 
@@ -53,24 +61,43 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
   }
 
   @Override
-  protected void configureListView(ListView listView) {
+  protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      TestAlarmContext selectedAlert = (TestAlarmContext) listView.getItemAtPosition(position);
-      showTestAlarmDetails(selectedAlert);
+    listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+      StateGroup selectedStateGroup = (StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition);
+      TestAlarmContext selectedTestAlarmContext = selectedStateGroup.testAlarmContexts().get(childPosition);
+      showTestAlarmDetails(selectedTestAlarmContext);
+      return true;
     });
     registerForContextMenu(listView);
+
+    listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedStates -> {
+      expandedStates.add(((StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).active());
+      return expandedStates;
+    }));
+    listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedStates -> {
+      expandedStates.remove(((StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).active());
+      return expandedStates;
+    }));
+  }
+
+  private void changeExpandedGroupsPreferences(ExpandableListView listView, Function<Set<Boolean>, Set<Boolean>> transformer) {
+    ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
+    applicationPreferences.setExpandedTestAlertGroups(getContext(), transformer.apply(applicationPreferences.getExpandedTestAlertGroups(getContext())));
   }
 
   @Override
-  protected ArrayAdapter<TestAlarmContext> createAdapter() {
-    return new TestAlarmArrayAdapter(getContext(), loadTestAlarmList());
+  protected ExpandableListAdapter createAdapter() {
+    return new TestAlarmExpandableListAdapter(getContext(), loadTestAlarmList());
   }
 
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    TestAlarmContext selectedItem = (TestAlarmContext) getListView().getItemAtPosition(info.position);
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
+    if (getPackedPositionChild(info.packedPosition) == -1) {
+      return;
+    }
+    TestAlarmContext selectedItem = (TestAlarmContext) getListView().getExpandableListAdapter().getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     addContextMenu(menu, MENU_CONTEXT_VIEW_ID, R.string.list_item_menu_view);
     if (ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
       addContextMenu(menu, MENU_CONTEXT_DEACTIVATE_ID, R.string.list_item_menu_deactivate);
@@ -80,15 +107,27 @@ public class TestAlarmFragment extends AbstractListFragment<TestAlarmContext> {
     addContextMenu(menu, MENU_CONTEXT_DELETE_ID, R.string.list_item_menu_delete);
   }
 
+  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+    Map<Boolean, Integer> stateToPosition = IntStream.range(0, adapter.getGroupCount())
+        .boxed()
+        .collect(Collectors.toMap(
+            i -> ((StateGroup) adapter.getGroup(i)).active(),
+            i -> i
+        ));
+    return ApplicationPreferences.instance().getExpandedTestAlertGroups(getContext()).stream()
+        .map(stateToPosition::get)
+        .collect(Collectors.toCollection(HashSet::new));
+  }
+
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
     if (info == null) {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-    ListView listView = getListView();
-    TestAlarmContext selectedItem = (TestAlarmContext) listView.getItemAtPosition(info.position);
+    TestAlarmContext selectedItem = (TestAlarmContext) getListView().getExpandableListAdapter().getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID:
         showTestAlarmDetails(selectedItem);

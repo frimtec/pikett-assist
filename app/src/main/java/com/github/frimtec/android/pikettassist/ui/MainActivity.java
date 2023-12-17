@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
   private void refresh() {
     refreshTabLabels();
     FragmentManager fm = getSupportFragmentManager();
-    var activeFragment = (AbstractListFragment<?>) fm.findFragmentByTag("f" + viewPager.getCurrentItem());
+    var activeFragment = (AbstractListFragment) fm.findFragmentByTag("f" + viewPager.getCurrentItem());
     if (activeFragment != null) {
       activeFragment.refresh();
     }

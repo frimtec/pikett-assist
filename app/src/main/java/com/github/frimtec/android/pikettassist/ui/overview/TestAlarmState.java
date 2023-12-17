@@ -17,6 +17,9 @@ import com.github.frimtec.android.pikettassist.service.BogusAlarmWorker;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmDetailActivity;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Supplier;
 
 class TestAlarmState extends State {
@@ -32,7 +35,25 @@ class TestAlarmState extends State {
         testAlarmStateContext.testAlarmContext().context(),
         testAlarmStateContext.lastReceived(),
         getTestAlarmCloseButtonSupplier(testAlarmStateContext.stateContext(), testAlarmStateContext.testAlarmContext(), testAlarmStateContext.testAlarmState()),
-        testAlarmStateContext.stateContext().getShiftState().isOn() ? (testAlarmStateContext.testAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF);
+        testAlarmStateContext.stateContext().getShiftState().isOn() ? (testAlarmStateContext.testAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF,
+        Collections.emptyList()
+    );
+    this.stateContext = stateContext;
+    this.testAlarmContext = testAlarmStateContext.testAlarmContext();
+  }
+
+  TestAlarmState(StateContext stateContext, TestAlarmStateContext testAlarmStateContext, List<TestAlarmState> childStates) {
+    super(
+        R.drawable.ic_test_alarm,
+        testAlarmStateContext.testAlarmContext().context(),
+        childStates.stream()
+            .map(State::getValue)
+            .min(Comparator.nullsLast(Comparator.reverseOrder()))
+            .orElse(""),
+        null,
+        childStates.stream().map(State::getState).anyMatch(trafficLight -> trafficLight == TrafficLight.RED) ? TrafficLight.RED : TrafficLight.GREEN,
+        childStates
+    );
     this.stateContext = stateContext;
     this.testAlarmContext = testAlarmStateContext.testAlarmContext();
   }

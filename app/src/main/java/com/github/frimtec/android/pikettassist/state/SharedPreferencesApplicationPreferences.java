@@ -11,6 +11,7 @@ import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Set;
@@ -47,6 +48,10 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_DAY_START_TIME = "day_start_time";
   private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
   private static final String PREF_APP_THEME = "app_theme";
+  private static final String PREF_KEY_ALERT_LOG_EXPANDED_GROUPS = "alert_log_expanded_groups";
+  private static final String PREF_KEY_SHIFT_EXPANDED_GROUPS = "shift_expanded_groups";
+  private static final String PREF_KEY_TEST_ALERT_EXPANDED_GROUPS = "test_alert_expanded_groups";
+  private static final String PREF_KEY_TEST_ALARM_EXPANDED_GROUP = "test_alarm_expanded_group";
 
   public static final SharedPreferencesApplicationPreferences INSTANCE = new SharedPreferencesApplicationPreferences();
 
@@ -248,6 +253,62 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public boolean isDayProfile(Context context, LocalTime currentTime) {
     return currentTime.isAfter(getDayProfileStartTime(context)) && currentTime.isBefore(getNightProfileStartTime(context));
+  }
+
+  @Override
+  public Set<Integer> getExpandedAlertLogGroups(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_ALERT_LOG_EXPANDED_GROUPS, Collections.emptySet()).stream()
+        .map(Integer::parseInt)
+        .collect(Collectors.toSet());
+  }
+
+  @Override
+  public void setExpandedAlertLogGroups(Context context, Set<Integer> values) {
+    setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_ALERT_LOG_EXPANDED_GROUPS, values.stream()
+        .map(String::valueOf)
+        .collect(Collectors.toSet())));
+  }
+
+  @Override
+  public Set<YearMonth> getExpandedShiftGroups(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_SHIFT_EXPANDED_GROUPS, Collections.emptySet()).stream()
+        .map(YearMonth::parse)
+        .collect(Collectors.toSet());
+  }
+
+  @Override
+  public void setExpandedShiftGroups(Context context, Set<YearMonth> values) {
+    setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_SHIFT_EXPANDED_GROUPS, values.stream()
+        .map(String::valueOf)
+        .collect(Collectors.toSet())));
+  }
+
+  @Override
+  public Set<Boolean> getExpandedTestAlertGroups(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_TEST_ALERT_EXPANDED_GROUPS, Set.of(String.valueOf(true), String.valueOf(false))).stream()
+        .map(Boolean::parseBoolean)
+        .collect(Collectors.toSet());
+  }
+
+  @Override
+  public void setExpandedTestAlertGroups(Context context, Set<Boolean> values) {
+    setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_TEST_ALERT_EXPANDED_GROUPS, values.stream()
+        .map(String::valueOf)
+        .collect(Collectors.toSet())));
+  }
+
+  @Override
+  public boolean isTestAlarmStatesExpanded(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_TEST_ALARM_EXPANDED_GROUP, false);
+  }
+
+  @Override
+  public void setTestAlarmStatesExpanded(Context context, boolean values) {
+    setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_TEST_ALARM_EXPANDED_GROUP, values));
   }
 
   private static int getOnCallNightVolume(Context context) {

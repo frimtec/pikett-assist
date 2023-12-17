@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
 import static android.app.Activity.RESULT_OK;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
 import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
@@ -21,8 +22,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ListView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -64,6 +66,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -74,10 +77,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class StateFragment extends AbstractListFragment<State> {
+public class StateFragment extends AbstractListFragment {
 
   public static final int REGISTER_SMS_ADAPTER_REQUEST_CODE = 1000;
+  private static final int NOT_FOUND = -1;
 
   public interface BillingAccess {
 
@@ -152,16 +158,47 @@ public class StateFragment extends AbstractListFragment<State> {
   }
 
   @Override
-  protected void configureListView(ListView listView) {
+  protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      State selectedState = (State) listView.getItemAtPosition(position);
+    listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
+      State selectedState = (State) listView.getItemAtPosition(groupPosition);
+      if (selectedState.getChildStates().size() > 0) {
+        return false;
+      }
       selectedState.onClickAction(getContext());
+      return true;
+    });
+    listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+      State selectedState = ((State) listView.getItemAtPosition(groupPosition)).getChildStates().get(childPosition);
+      selectedState.onClickAction(getContext());
+      return true;
     });
     registerForContextMenu(listView);
+    listView.setGroupIndicator(null);
+    listView.setOnGroupExpandListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), true));
+    listView.setOnGroupCollapseListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), false));
   }
 
-  protected ArrayAdapter<State> createAdapter() {
+  @Override
+  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+    if (!ApplicationPreferences.instance().isTestAlarmStatesExpanded(getContext())) {
+      return Collections.emptySet();
+    }
+
+    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+    int pos = IntStream.range(0, adapter.getGroupCount())
+        .boxed()
+        .filter(i -> {
+          State group = (State) adapter.getGroup(i);
+          return group.getClass().equals(TestAlarmState.class) && !group.getChildStates().isEmpty();
+        }).findFirst().orElse(NOT_FOUND);
+    if (pos == NOT_FOUND) {
+      return Collections.emptySet();
+    }
+    return Set.of(pos);
+  }
+
+  protected ExpandableListAdapter createAdapter() {
     List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
@@ -215,7 +252,7 @@ public class StateFragment extends AbstractListFragment<State> {
     if (!missingPermissions && canDrawOverlays && canScheduleExactAlarms) {
       regularStates(states);
     }
-    return new StateArrayAdapter(getContext(), new ArrayList<>(states));
+    return new StateExpandableListAdapter(getContext(), new ArrayList<>(states));
   }
 
   private void regularStates(List<State> states) {
@@ -271,14 +308,29 @@ public class StateFragment extends AbstractListFragment<State> {
         new BatteryState(stateContext)
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
-      ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
+      List<TestAlarmState> testAlarmStates = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
           .sorted(Comparator.comparing(TestAlarmContext::context))
-          .forEach(testAlarmContext -> states.add(new TestAlarmState(
+          .map(testAlarmContext -> new TestAlarmState(
               stateContext,
               this.testAlarmDao.loadDetails(testAlarmContext)
                   .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.receivedTime()), details.alertState()))
                   .orElse(new TestAlarmStateContext(stateContext, testAlarmContext, getString(R.string.state_fragment_test_alarm_never_received), OnOffState.OFF))
-          )));
+          )).collect(Collectors.toList());
+
+      if (testAlarmStates.size() == 1) {
+        states.addAll(testAlarmStates);
+      } else if (testAlarmStates.size() > 1) {
+        states.add(new TestAlarmState(
+            stateContext,
+            new TestAlarmStateContext(
+                stateContext,
+                new TestAlarmContext(String.format(Locale.getDefault(), getString(R.string.title_test_alarms) + " (%d)", testAlarmStates.size())),
+                "",
+                OnOffState.ON
+            ),
+            testAlarmStates
+        ));
+      }
     }
 
     if (billingAccess != null) {
@@ -320,21 +372,21 @@ public class StateFragment extends AbstractListFragment<State> {
 
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-    State selectedItem = (State) getListView().getItemAtPosition(info.position);
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
+    State selectedItem = (State) getListView().getItemAtPosition(getPackedPositionGroup(info.packedPosition));
     selectedItem.onCreateContextMenu(getContext(), menu);
   }
 
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
     if (info == null) {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
 
     ListView listView = getListView();
-    State selectedItem = (State) listView.getItemAtPosition(info.position);
+    State selectedItem = (State) listView.getItemAtPosition(getPackedPositionGroup(info.packedPosition));
     return selectedItem.onContextItemSelected(getContext(), item);
   }
 

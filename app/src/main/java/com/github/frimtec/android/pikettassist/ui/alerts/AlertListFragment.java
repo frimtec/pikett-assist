@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
+import static android.widget.ExpandableListView.getPackedPositionChild;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import android.annotation.SuppressLint;
@@ -14,11 +16,11 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
@@ -46,10 +49,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class AlertListFragment extends AbstractListFragment<Alert> {
+public class AlertListFragment extends AbstractListFragment {
 
   private static final String TAG = "AlertListFragment";
 
@@ -125,11 +134,13 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   }
 
   @Override
-  protected void configureListView(ListView listView) {
+  protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
-    listView.setOnItemClickListener((parent, view1, position, id) -> {
-      Alert selectedAlert = (Alert) listView.getItemAtPosition(position);
+    listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+      YearGroup selectedYearGroup = (YearGroup) listView.getExpandableListAdapter().getGroup(groupPosition);
+      Alert selectedAlert = selectedYearGroup.alerts().get(childPosition);
       showAlertDetails(selectedAlert);
+      return true;
     });
     registerForContextMenu(listView);
     View headerView = getLayoutInflater().inflate(R.layout.alert_header, listView, false);
@@ -152,6 +163,45 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
       fileSelectionActivityResultLauncher.launch(intent);
     });
     listView.addHeaderView(headerView);
+
+    listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedYears -> {
+      expandedYears.add(((YearGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).year());
+      return expandedYears;
+    }));
+    listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedYears -> {
+      expandedYears.remove(((YearGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).year());
+      return expandedYears;
+    }));
+  }
+
+  private void changeExpandedGroupsPreferences(ExpandableListView listView, Function<Set<Integer>, Set<Integer>> transformer) {
+    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+    Set<Integer> years = new HashSet<>();
+    IntStream.range(0, adapter.getGroupCount()).forEach(i -> {
+      YearGroup item = (YearGroup) adapter.getGroup(i);
+      years.add(item.year());
+    });
+    ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
+    Set<Integer> expandedAlertLogGroups = applicationPreferences.getExpandedAlertLogGroups(getContext());
+    expandedAlertLogGroups.retainAll(years);
+    applicationPreferences.setExpandedAlertLogGroups(getContext(), transformer.apply(expandedAlertLogGroups));
+  }
+
+  @Override
+  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+    Map<Integer, Integer> yearToPosition = IntStream.range(0, adapter.getGroupCount())
+        .boxed()
+        .collect(Collectors.toMap(
+            i -> ((YearGroup) adapter.getGroup(i)).year(),
+            i -> i
+        ));
+    HashSet<Integer> expandedGroups = ApplicationPreferences.instance().getExpandedAlertLogGroups(getContext()).stream()
+        .filter(yearToPosition::containsKey)
+        .map(yearToPosition::get)
+        .collect(Collectors.toCollection(HashSet::new));
+    expandedGroups.add(0);
+    return expandedGroups;
   }
 
   private long countAlertsWithinLastDays(List<Alert> alertList, int days) {
@@ -160,25 +210,28 @@ public class AlertListFragment extends AbstractListFragment<Alert> {
   }
 
   @Override
-  protected ArrayAdapter<Alert> createAdapter() {
-    return new AlertArrayAdapter(getContext(), loadAlertList());
+  protected ExpandableListAdapter createAdapter() {
+    return new AlertExpandableListAdapter(getContext(), loadAlertList());
   }
 
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
+    if (getPackedPositionChild(info.packedPosition) == -1) {
+      return;
+    }
     addContextMenu(menu, MENU_CONTEXT_VIEW_ID, R.string.list_item_menu_view);
     addContextMenu(menu, MENU_CONTEXT_DELETE_ID, R.string.list_item_menu_delete);
   }
 
   @Override
   public boolean onFragmentContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) item.getMenuInfo();
     if (info == null) {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-    ListView listView = getListView();
-    Alert selectedAlert = (Alert) listView.getItemAtPosition(info.position);
+    Alert selectedAlert = (Alert) getListView().getExpandableListAdapter().getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID -> {
         showAlertDetails(selectedAlert);

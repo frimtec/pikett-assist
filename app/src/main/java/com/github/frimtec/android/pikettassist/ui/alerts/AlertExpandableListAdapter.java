@@ -77,10 +77,10 @@ class AlertExpandableListAdapter extends BaseExpandableListAdapter {
   public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
     YearGroup yearGroup = this.years.get(groupPosition);
     if (convertView == null) {
-      convertView = LayoutInflater.from(this.context).inflate(R.layout.alert_log_group, parent, false);
+      convertView = LayoutInflater.from(this.context).inflate(R.layout.general_list_group_item, parent, false);
     }
-    TextView yearText = convertView.findViewById(R.id.alert_log_group_year);
-    yearText.setText(String.format(Locale.getDefault(), "%d (%d)", yearGroup.year(), yearGroup.alerts().size()));
+    TextView title = convertView.findViewById(R.id.general_list_group_item_title);
+    title.setText(String.format(Locale.getDefault(), "%d (%d)", yearGroup.year(), yearGroup.alerts().size()));
     return convertView;
   }
 

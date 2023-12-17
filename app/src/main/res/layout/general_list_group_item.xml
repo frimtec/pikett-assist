@@ -5,7 +5,7 @@
     android:background="@color/tableGroupBackground">
 
     <TextView
-        android:id="@+id/alert_log_group_year"
+        android:id="@+id/general_list_group_item_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="40dp"

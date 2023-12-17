@@ -50,7 +50,9 @@ public class PAssistApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
+    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
+    }
     openHelper = new DbHelper(this);
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");
     keyValueStore = new KeyValueStore(new KeyValueDao(DbFactory.instance()));

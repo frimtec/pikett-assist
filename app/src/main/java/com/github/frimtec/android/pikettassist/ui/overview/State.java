@@ -5,6 +5,8 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class State {
@@ -14,6 +16,8 @@ public class State {
   private final String value;
   private final Supplier<Button> buttonSupplier;
   private final TrafficLight state;
+
+  private final List<? extends State> childStates;
 
   public enum TrafficLight {
     OFF, RED, YELLOW, GREEN
@@ -25,6 +29,16 @@ public class State {
     this.value = value;
     this.buttonSupplier = buttonSupplier;
     this.state = state;
+    this.childStates = Collections.emptyList();
+  }
+
+  public State(int iconResource, String title, String value, Supplier<Button> buttonSupplier, TrafficLight state, List<? extends State> childStates) {
+    this.iconResource = iconResource;
+    this.title = title;
+    this.value = value;
+    this.buttonSupplier = buttonSupplier;
+    this.state = state;
+    this.childStates = childStates;
   }
 
   public int getIconResource() {
@@ -57,4 +71,7 @@ public class State {
     return false;
   }
 
+  public List<? extends State> getChildStates() {
+    return childStates;
+  }
 }

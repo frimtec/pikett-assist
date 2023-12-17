@@ -116,4 +116,8 @@ public interface ApplicationPreferences {
 
   void setExpandedAlertLogGroups(Context context, Set<Integer> values);
 
+  boolean isTestAlarmStatesExpanded(Context context);
+
+  void setTestAlarmStatesExpanded(Context context, boolean values);
+
 }

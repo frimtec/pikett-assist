@@ -48,6 +48,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
   private static final String PREF_APP_THEME = "app_theme";
   private static final String PREF_KEY_ALERT_LOG_EXPANDED_GROUPS = "alert_log_expanded_groups";
+  private static final String PREF_KEY_TEST_ALARM_EXPANDED_GROUP = "test_alarm_expanded_group";
 
   public static final SharedPreferencesApplicationPreferences INSTANCE = new SharedPreferencesApplicationPreferences();
 
@@ -264,6 +265,17 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
     setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_ALERT_LOG_EXPANDED_GROUPS, values.stream()
         .map(String::valueOf)
         .collect(Collectors.toSet())));
+  }
+
+  @Override
+  public boolean isTestAlarmStatesExpanded(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getBoolean(PREF_KEY_TEST_ALARM_EXPANDED_GROUP, false);
+  }
+
+  @Override
+  public void setTestAlarmStatesExpanded(Context context, boolean values) {
+    setSharedPreferences(context, setter -> setter.putBoolean(PREF_KEY_TEST_ALARM_EXPANDED_GROUP, values));
   }
 
   private static int getOnCallNightVolume(Context context) {

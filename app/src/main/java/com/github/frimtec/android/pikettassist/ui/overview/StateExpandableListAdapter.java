@@ -46,7 +46,7 @@ class StateExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public int getChildrenCount(int groupPosition) {
-    return 0;
+    return this.states.get(groupPosition).getChildStates().size();
   }
 
   @Override
@@ -56,7 +56,7 @@ class StateExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public Object getChild(int groupPosition, int childPosition) {
-    return null;
+    return this.states.get(groupPosition).getChildStates().get(childPosition);
   }
 
   @Override
@@ -76,12 +76,25 @@ class StateExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-    State state = this.states.get(groupPosition);
+    return getView(convertView, parent, this.states.get(groupPosition), false);
+  }
+
+  @Override
+  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    return getView(convertView, parent, this.states.get(groupPosition).getChildStates().get(childPosition), true);
+  }
+
+  private View getView(View convertView, ViewGroup parent, State state, boolean child) {
     Objects.requireNonNull(state);
     if (convertView == null) {
       convertView = LayoutInflater.from(this.context).inflate(R.layout.state_item, parent, false);
     }
 
+    if (!child && !state.getChildStates().isEmpty()) {
+      convertView.setBackgroundColor(context.getColor(R.color.tableGroupBackground));
+    } else if (child) {
+      convertView.setPadding(dpToPx(20), 0, dpToPx(10), 0);
+    }
     ((ImageView) convertView.findViewById(R.id.state_item_image)).setImageResource(state.getIconResource());
 
     switch (state.getState()) {
@@ -130,13 +143,13 @@ class StateExpandableListAdapter extends BaseExpandableListAdapter {
     return convertView;
   }
 
-  @Override
-  public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-    return null;
+  int dpToPx(int dp) {
+    float scale = context.getResources().getDisplayMetrics().density;
+    return Math.round(dp * scale + 0.5f);
   }
 
   @Override
   public boolean isChildSelectable(int groupPosition, int childPosition) {
-    return false;
+    return true;
   }
 }

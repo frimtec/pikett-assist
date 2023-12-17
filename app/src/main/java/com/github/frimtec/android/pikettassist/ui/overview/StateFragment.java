@@ -66,6 +66,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -76,10 +77,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class StateFragment extends AbstractListFragment {
 
   public static final int REGISTER_SMS_ADAPTER_REQUEST_CODE = 1000;
+  private static final int NOT_FOUND = -1;
 
   public interface BillingAccess {
 
@@ -158,10 +162,40 @@ public class StateFragment extends AbstractListFragment {
     listView.setClickable(true);
     listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
       State selectedState = (State) listView.getItemAtPosition(groupPosition);
+      if (selectedState.getChildStates().size() > 0) {
+        return false;
+      }
+      selectedState.onClickAction(getContext());
+      return true;
+    });
+    listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+      State selectedState = ((State) listView.getItemAtPosition(groupPosition)).getChildStates().get(childPosition);
       selectedState.onClickAction(getContext());
       return true;
     });
     registerForContextMenu(listView);
+    listView.setGroupIndicator(null);
+    listView.setOnGroupExpandListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), true));
+    listView.setOnGroupCollapseListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), false));
+  }
+
+  @Override
+  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+    if (!ApplicationPreferences.instance().isTestAlarmStatesExpanded(getContext())) {
+      return Collections.emptySet();
+    }
+
+    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+    int pos = IntStream.range(0, adapter.getGroupCount())
+        .boxed()
+        .filter(i -> {
+          State group = (State) adapter.getGroup(i);
+          return group.getClass().equals(TestAlarmState.class) && !group.getChildStates().isEmpty();
+        }).findFirst().orElse(NOT_FOUND);
+    if (pos == NOT_FOUND) {
+      return Collections.emptySet();
+    }
+    return Set.of(pos);
   }
 
   protected ExpandableListAdapter createAdapter() {
@@ -274,14 +308,29 @@ public class StateFragment extends AbstractListFragment {
         new BatteryState(stateContext)
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
-      ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
+      List<TestAlarmState> testAlarmStates = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
           .sorted(Comparator.comparing(TestAlarmContext::context))
-          .forEach(testAlarmContext -> states.add(new TestAlarmState(
+          .map(testAlarmContext -> new TestAlarmState(
               stateContext,
               this.testAlarmDao.loadDetails(testAlarmContext)
                   .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.receivedTime()), details.alertState()))
                   .orElse(new TestAlarmStateContext(stateContext, testAlarmContext, getString(R.string.state_fragment_test_alarm_never_received), OnOffState.OFF))
-          )));
+          )).collect(Collectors.toList());
+
+      if (testAlarmStates.size() == 1) {
+        states.addAll(testAlarmStates);
+      } else if (testAlarmStates.size() > 1) {
+        states.add(new TestAlarmState(
+            stateContext,
+            new TestAlarmStateContext(
+                stateContext,
+                new TestAlarmContext(String.format(Locale.getDefault(), getString(R.string.title_test_alarms) + " (%d)", testAlarmStates.size())),
+                "",
+                OnOffState.ON
+            ),
+            testAlarmStates
+        ));
+      }
     }
 
     if (billingAccess != null) {

@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -69,6 +70,20 @@ public class TestAlarmFragment extends AbstractListFragment {
       return true;
     });
     registerForContextMenu(listView);
+
+    listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedStates -> {
+      expandedStates.add(((StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).active());
+      return expandedStates;
+    }));
+    listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedStates -> {
+      expandedStates.remove(((StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).active());
+      return expandedStates;
+    }));
+  }
+
+  private void changeExpandedGroupsPreferences(ExpandableListView listView, Function<Set<Boolean>, Set<Boolean>> transformer) {
+    ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
+    applicationPreferences.setExpandedTestAlertGroups(getContext(), transformer.apply(applicationPreferences.getExpandedTestAlertGroups(getContext())));
   }
 
   @Override
@@ -100,7 +115,9 @@ public class TestAlarmFragment extends AbstractListFragment {
             i -> ((StateGroup) adapter.getGroup(i)).active(),
             i -> i
         ));
-    return new HashSet<>(stateToPosition.values());
+    return ApplicationPreferences.instance().getExpandedTestAlertGroups(getContext()).stream()
+        .map(stateToPosition::get)
+        .collect(Collectors.toCollection(HashSet::new));
   }
 
   @Override

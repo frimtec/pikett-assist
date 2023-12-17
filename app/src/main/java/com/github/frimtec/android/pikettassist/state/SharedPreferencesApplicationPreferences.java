@@ -48,6 +48,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_NIGHT_START_TIME = "night_start_time";
   private static final String PREF_APP_THEME = "app_theme";
   private static final String PREF_KEY_ALERT_LOG_EXPANDED_GROUPS = "alert_log_expanded_groups";
+  private static final String PREF_KEY_TEST_ALERT_EXPANDED_GROUPS = "test_alert_expanded_groups";
   private static final String PREF_KEY_TEST_ALARM_EXPANDED_GROUP = "test_alarm_expanded_group";
 
   public static final SharedPreferencesApplicationPreferences INSTANCE = new SharedPreferencesApplicationPreferences();
@@ -263,6 +264,21 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   @Override
   public void setExpandedAlertLogGroups(Context context, Set<Integer> values) {
     setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_ALERT_LOG_EXPANDED_GROUPS, values.stream()
+        .map(String::valueOf)
+        .collect(Collectors.toSet())));
+  }
+
+  @Override
+  public Set<Boolean> getExpandedTestAlertGroups(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return preferences.getStringSet(PREF_KEY_TEST_ALERT_EXPANDED_GROUPS, Set.of(String.valueOf(true), String.valueOf(false))).stream()
+        .map(Boolean::parseBoolean)
+        .collect(Collectors.toSet());
+  }
+
+  @Override
+  public void setExpandedTestAlertGroups(Context context, Set<Boolean> values) {
+    setSharedPreferences(context, setter -> setter.putStringSet(PREF_KEY_TEST_ALERT_EXPANDED_GROUPS, values.stream()
         .map(String::valueOf)
         .collect(Collectors.toSet())));
   }

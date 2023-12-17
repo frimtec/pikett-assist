@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
+import static android.widget.ExpandableListView.getPackedPositionChild;
 import static android.widget.ExpandableListView.getPackedPositionGroup;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -20,7 +21,6 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -216,6 +216,10 @@ public class AlertListFragment extends AbstractListFragment {
 
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
+    ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
+    if (getPackedPositionChild(info.packedPosition) == -1) {
+      return;
+    }
     addContextMenu(menu, MENU_CONTEXT_VIEW_ID, R.string.list_item_menu_view);
     addContextMenu(menu, MENU_CONTEXT_DELETE_ID, R.string.list_item_menu_delete);
   }
@@ -227,8 +231,7 @@ public class AlertListFragment extends AbstractListFragment {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-    ListView listView = getListView();
-    Alert selectedAlert = (Alert) listView.getItemAtPosition(getPackedPositionGroup(info.packedPosition));
+    Alert selectedAlert = (Alert) getListView().getExpandableListAdapter().getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID -> {
         showAlertDetails(selectedAlert);

@@ -1,0 +1,1 @@
+- Fix crash if shift or alert log list is empty

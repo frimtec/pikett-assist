@@ -51,7 +51,7 @@ class TestAlarmState extends State {
             .min(Comparator.nullsLast(Comparator.reverseOrder()))
             .orElse(""),
         null,
-        childStates.stream().map(State::getState).anyMatch(trafficLight -> trafficLight == TrafficLight.RED) ? TrafficLight.RED : TrafficLight.GREEN,
+        childStates.stream().map(State::getState).sorted().findFirst().orElse(TrafficLight.RED),
         childStates
     );
     this.stateContext = stateContext;

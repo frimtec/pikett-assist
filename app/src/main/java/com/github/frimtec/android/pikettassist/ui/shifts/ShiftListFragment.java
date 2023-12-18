@@ -98,7 +98,9 @@ public class ShiftListFragment extends AbstractListFragment {
         .filter(yearToPosition::containsKey)
         .map(yearToPosition::get)
         .collect(Collectors.toCollection(HashSet::new));
-    expandedGroups.add(0);
+    if (adapter.getGroupCount() > 0) {
+      expandedGroups.add(0);
+    }
     return expandedGroups;
   }
 

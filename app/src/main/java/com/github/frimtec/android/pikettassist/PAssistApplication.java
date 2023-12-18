@@ -4,7 +4,6 @@ import static android.content.Intent.EXTRA_BUG_REPORT;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
-import static com.github.frimtec.android.pikettassist.ui.support.SendLogActivity.ACTION_SEND_LOG;
 
 import android.app.Application;
 import android.content.Intent;
@@ -22,6 +21,7 @@ import com.github.frimtec.android.pikettassist.service.KeyValueStore;
 import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 import com.github.frimtec.android.pikettassist.state.DbHelper;
+import com.github.frimtec.android.pikettassist.ui.support.SendLogActivity;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -50,9 +50,7 @@ public class PAssistApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();
-    if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-      Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
-    }
+    Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
     openHelper = new DbHelper(this);
     getWritableDatabase().execSQL("PRAGMA foreign_keys=ON;");
     keyValueStore = new KeyValueStore(new KeyValueDao(DbFactory.instance()));
@@ -83,11 +81,11 @@ public class PAssistApplication extends Application {
 
   private void handleUncaughtException(Thread thread, Throwable e) {
     Log.e(TAG, "Unhandled exception occurred", e);
-    Intent intent = new Intent();
-    intent.setAction(ACTION_SEND_LOG);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    Application application = (Application) this.getApplicationContext();
+    Intent intent = new Intent(application, SendLogActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     intent.putExtra(EXTRA_BUG_REPORT, createReport(thread, e));
-    startActivity(intent);
+    application.startActivity(intent);
     Process.killProcess(Process.myPid());
   }
 

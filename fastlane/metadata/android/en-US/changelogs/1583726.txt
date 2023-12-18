@@ -1,0 +1,4 @@
+- Use expandable groups in all list views
+- Fix hanging crash report on android 14
+- Bump com.google.android.material:material from 1.10.0 to 1.11.0
+- Bump S2MSP SMS adapter from 3.2.1 to 3.2.2

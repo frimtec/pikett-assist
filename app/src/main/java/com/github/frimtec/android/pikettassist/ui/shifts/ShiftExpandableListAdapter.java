@@ -28,7 +28,6 @@ class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
   private static final float HOURS_PER_DAY = 24;
-  private static final DateTimeFormatter YEAR_MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMMM yyyy");
   private final Context context;
   private final List<YearMonthGroup> yearMonthGroups;
 
@@ -87,7 +86,14 @@ class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
       convertView = LayoutInflater.from(this.context).inflate(R.layout.general_list_group_item, parent, false);
     }
     TextView title = convertView.findViewById(R.id.general_list_group_item_title);
-    title.setText(String.format(Locale.getDefault(), "%s (%d)", YEAR_MONTH_FORMATTER.format(yearMonthGroup.yearMonth()), yearMonthGroup.shifts().size()));
+    title.setText(
+        String.format(
+            Locale.getDefault(), "%s (%d)", DateTimeFormatter.ofPattern(
+                "yyyy MMMM",
+                Locale.getDefault()
+            ).format(yearMonthGroup.yearMonth()), yearMonthGroup.shifts().size()
+        )
+    );
     return convertView;
   }
 

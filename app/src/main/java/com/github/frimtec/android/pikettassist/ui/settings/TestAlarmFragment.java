@@ -2,12 +2,11 @@ package com.github.frimtec.android.pikettassist.ui.settings;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
-
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
@@ -15,6 +14,9 @@ import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -46,23 +48,41 @@ public class TestAlarmFragment extends PreferenceFragmentCompat {
               preference.getRingtone() == null ? preference.getContext().getResources().getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
     }
 
-
     MultiSelectListPreference superviseTestContexts = findPreference("supervise_test_contexts");
     if (superviseTestContexts != null) {
       TestAlarmDao testAlarmDao = new TestAlarmDao();
-      Set<TestAlarmContext> testAlarmContexts = testAlarmDao.loadAllContexts();
+      Map<TestAlarmContext, TestAlarm> contextToTestAlarms = testAlarmDao.loadAll().stream().collect(Collectors.toMap(
+          TestAlarm::context,
+          testAlarm -> testAlarm
+      ));
       Set<TestAlarmContext> persistedEntries = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
-      Set<TestAlarmContext> filteredEntries = persistedEntries.stream().filter(testAlarmContexts::contains).collect(Collectors.toSet());
+      Set<TestAlarmContext> filteredEntries = persistedEntries.stream().filter(contextToTestAlarms::containsKey).collect(Collectors.toSet());
       if (!filteredEntries.containsAll(persistedEntries)) {
         ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), filteredEntries);
       }
-      Set<CharSequence> validEntries = testAlarmContexts.stream().map(TestAlarmContext::context).collect(Collectors.toSet());
-      superviseTestContexts.setEntries(validEntries.toArray(new CharSequence[]{}));
-      superviseTestContexts.setEntryValues(validEntries.toArray(new CharSequence[]{}));
 
+      record Entry(CharSequence key, CharSequence value) {
+
+      }
+
+      List<Entry> entries = contextToTestAlarms.values().stream()
+          .sorted(Comparator.comparing(TestAlarm::name))
+          .map(testAlarm -> new Entry(
+              testAlarm.context().context(),
+              testAlarm.name()
+          )).collect(Collectors.toList());
+      superviseTestContexts.setEntries(
+          entries.stream().map(Entry::value).collect(Collectors.toList()).toArray(new CharSequence[]{})
+      );
+      superviseTestContexts.setEntryValues(
+          entries.stream().map(Entry::key).collect(Collectors.toList()).toArray(new CharSequence[]{})
+      );
       superviseTestContexts.setSummaryProvider(
           (Preference.SummaryProvider<MultiSelectListPreference>) preference ->
-              TextUtils.join(", ", preference.getValues()));
+              TextUtils.join(", ", preference.getValues().stream().map(TestAlarmContext::new).map(context -> {
+                TestAlarm testAlarm = contextToTestAlarms.get(context);
+                return testAlarm != null ? testAlarm.name() : context.context();
+              }).sorted().collect(Collectors.toList())));
     }
   }
 

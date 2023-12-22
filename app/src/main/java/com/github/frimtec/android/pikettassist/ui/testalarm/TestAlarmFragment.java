@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
@@ -32,7 +34,7 @@ import java.util.stream.IntStream;
 import static android.widget.ExpandableListView.getPackedPositionChild;
 import static android.widget.ExpandableListView.getPackedPositionGroup;
 
-public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmContext> {
+public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarm> {
 
   private static final String TAG = "TestAlarmFragment";
 
@@ -40,6 +42,7 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
   private static final int MENU_CONTEXT_DELETE_ID = 2;
   private static final int MENU_CONTEXT_ACTIVATE_ID = 3;
   private static final int MENU_CONTEXT_DEACTIVATE_ID = 4;
+  private static final int MENU_CONTEXT_ALIAS_ID = 5;
 
   private final TestAlarmDao testAlarmDao;
 
@@ -57,8 +60,8 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-      Group<Boolean, TestAlarmContext> selectedStateGroup = getGroup(groupPosition);
-      TestAlarmContext selectedTestAlarmContext = selectedStateGroup.items().get(childPosition);
+      Group<Boolean, TestAlarm> selectedStateGroup = getGroup(groupPosition);
+      TestAlarm selectedTestAlarmContext = selectedStateGroup.items().get(childPosition);
       showTestAlarmDetails(selectedTestAlarmContext);
       return true;
     });
@@ -72,7 +75,7 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
   }
 
   @Override
-  protected AbstractExpandableListAdapter<Boolean, TestAlarmContext> createAdapter() {
+  protected AbstractExpandableListAdapter<Boolean, TestAlarm> createAdapter() {
     return new TestAlarmExpandableListAdapter(getContext(), loadTestAlarmList());
   }
 
@@ -82,13 +85,14 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
     if (getPackedPositionChild(info.packedPosition) == -1) {
       return;
     }
-    TestAlarmContext selectedItem = getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
+    TestAlarm selectedItem = getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     addContextMenu(menu, MENU_CONTEXT_VIEW_ID, R.string.list_item_menu_view);
-    if (ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).contains(selectedItem)) {
+    if (ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).contains(selectedItem.context())) {
       addContextMenu(menu, MENU_CONTEXT_DEACTIVATE_ID, R.string.list_item_menu_deactivate);
     } else {
       addContextMenu(menu, MENU_CONTEXT_ACTIVATE_ID, R.string.list_item_menu_activate);
     }
+    addContextMenu(menu, MENU_CONTEXT_ALIAS_ID, R.string.list_item_menu_alias);
     addContextMenu(menu, MENU_CONTEXT_DELETE_ID, R.string.list_item_menu_delete);
   }
 
@@ -113,15 +117,37 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-    TestAlarmContext selectedItem = getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
+    TestAlarm selectedItem = getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     return switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID -> {
         showTestAlarmDetails(selectedItem);
         yield true;
       }
+      case MENU_CONTEXT_ALIAS_ID -> {
+        Context context = getContext();
+        if (context != null) {
+          AlertDialog.Builder builder = new AlertDialog.Builder(context);
+          builder.setTitle(getString(R.string.test_alarm_alias_title));
+          EditText input = new EditText(getContext());
+          input.setInputType(InputType.TYPE_CLASS_TEXT);
+          if (selectedItem.alias() != null) {
+            input.setText(selectedItem.alias());
+          }
+          input.requestFocus();
+          builder.setView(input);
+          builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            dialog.dismiss();
+            this.testAlarmDao.updateAlias(selectedItem.context(), input.getText().toString().trim());
+            refresh();
+          });
+          builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+          builder.show();
+        }
+        yield true;
+      }
       case MENU_CONTEXT_DELETE_ID -> {
         DialogHelper.areYouSure(getContext(), (dialog, which) -> {
-          deleteTestAlarm(selectedItem);
+          deleteTestAlarm(selectedItem.context());
           refresh();
           Toast.makeText(getContext(), R.string.general_entry_deleted, Toast.LENGTH_SHORT).show();
         }, (dialog, which) -> {
@@ -130,7 +156,7 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
       }
       case MENU_CONTEXT_ACTIVATE_ID -> {
         Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
-        supervisedTestAlarmContexts.add(selectedItem);
+        supervisedTestAlarmContexts.add(selectedItem.context());
         ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
         refresh();
         Toast.makeText(getContext(), R.string.test_alarm_activated_toast, Toast.LENGTH_SHORT).show();
@@ -138,7 +164,7 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
       }
       case MENU_CONTEXT_DEACTIVATE_ID -> {
         Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext());
-        supervisedTestAlarmContexts.remove(selectedItem);
+        supervisedTestAlarmContexts.remove(selectedItem.context());
         ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
         refresh();
         Toast.makeText(getContext(), R.string.test_alarm_deactivated_toast, Toast.LENGTH_SHORT).show();
@@ -175,10 +201,10 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
     });
   }
 
-  private void showTestAlarmDetails(TestAlarmContext selectedAlert) {
+  private void showTestAlarmDetails(TestAlarm selectedTestAlarm) {
     Intent intent = new Intent(this.getContext(), TestAlarmDetailActivity.class);
     Bundle bundle = new Bundle();
-    bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, selectedAlert.context());
+    bundle.putString(TestAlarmDetailActivity.EXTRA_TEST_ALARM_CONTEXT, selectedTestAlarm.context().context());
     intent.putExtras(bundle);
     startActivity(intent);
   }
@@ -190,9 +216,9 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarmCo
     ApplicationPreferences.instance().setSuperviseTestContexts(getContext(), supervisedTestAlarmContexts);
   }
 
-  private List<TestAlarmContext> loadTestAlarmList() {
-    List<TestAlarmContext> list = new ArrayList<>(this.testAlarmDao.loadAllContexts());
-    list.sort(Comparator.comparing(TestAlarmContext::context));
+  private List<TestAlarm> loadTestAlarmList() {
+    List<TestAlarm> list = new ArrayList<>(this.testAlarmDao.loadAll());
+    list.sort(Comparator.comparing(o -> o.context().context()));
     if (list.isEmpty()) {
       Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
     }

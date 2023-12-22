@@ -32,20 +32,20 @@ class TestAlarmState extends State {
   TestAlarmState(StateContext stateContext, TestAlarmStateContext testAlarmStateContext) {
     super(
         R.drawable.ic_test_alarm,
-        testAlarmStateContext.testAlarmContext().context(),
+        testAlarmStateContext.testAlarm().name(),
         testAlarmStateContext.lastReceived(),
-        getTestAlarmCloseButtonSupplier(testAlarmStateContext.stateContext(), testAlarmStateContext.testAlarmContext(), testAlarmStateContext.testAlarmState()),
-        testAlarmStateContext.stateContext().getShiftState().isOn() ? (testAlarmStateContext.testAlarmState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF,
+        getTestAlarmCloseButtonSupplier(testAlarmStateContext.stateContext(), testAlarmStateContext.testAlarm().context(), testAlarmStateContext.testAlarm().alertState()),
+        testAlarmStateContext.stateContext().getShiftState().isOn() ? (testAlarmStateContext.testAlarm().alertState() == OnOffState.ON ? TrafficLight.RED : TrafficLight.GREEN) : TrafficLight.OFF,
         Collections.emptyList()
     );
     this.stateContext = stateContext;
-    this.testAlarmContext = testAlarmStateContext.testAlarmContext();
+    this.testAlarmContext = testAlarmStateContext.testAlarm().context();
   }
 
   TestAlarmState(StateContext stateContext, TestAlarmStateContext testAlarmStateContext, List<TestAlarmState> childStates) {
     super(
         R.drawable.ic_test_alarm,
-        testAlarmStateContext.testAlarmContext().context(),
+        testAlarmStateContext.testAlarm().context().context(),
         childStates.stream()
             .map(State::getValue)
             .min(Comparator.nullsLast(Comparator.reverseOrder()))
@@ -55,7 +55,7 @@ class TestAlarmState extends State {
         childStates
     );
     this.stateContext = stateContext;
-    this.testAlarmContext = testAlarmStateContext.testAlarmContext();
+    this.testAlarmContext = testAlarmStateContext.testAlarm().context();
   }
 
   private static Supplier<Button> getTestAlarmCloseButtonSupplier(StateContext stateContext, TestAlarmContext testAlarmContext, OnOffState testAlarmState) {

@@ -29,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME = "last_received_time";
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE = "message";
   public static final String TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE = "alert_state";
+  public static final String TABLE_TEST_ALARM_STATE_COLUMN_ALIAS = "alias";
 
   public static final String TABLE_KEY_VALUE = "t_key_value";
   public static final String TABLE_KEY_VALUE_COLUMN_ID = "_id";
@@ -38,7 +39,7 @@ public class DbHelper extends SQLiteOpenHelper {
   public static final int BOOLEAN_FALSE = 0;
   private static final String TAG = "DbHelper";
   private static final String DB_NAME = "PAssist.db";
-  private static final int DB_VERSION = 2;
+  private static final int DB_VERSION = 3;
 
   public DbHelper(@Nullable Context context) {
     super(context, DB_NAME, null, DB_VERSION);
@@ -75,6 +76,9 @@ public class DbHelper extends SQLiteOpenHelper {
     if (oldVersion < 2) {
       createVersion2Tables(db);
     }
+    if (oldVersion < 3) {
+      createVersion3Tables(db);
+    }
   }
 
   private void createVersion2Tables(SQLiteDatabase db) {
@@ -82,5 +86,9 @@ public class DbHelper extends SQLiteOpenHelper {
         "  " + TABLE_KEY_VALUE_COLUMN_ID + " TEXT PRIMARY KEY," +
         "  " + TABLE_KEY_VALUE_COLUMN_VALUE + " TEXT" +
         ");");
+  }
+
+  private void createVersion3Tables(SQLiteDatabase db) {
+    db.execSQL("ALTER TABLE " + TABLE_TEST_ALARM_STATE + " ADD COLUMN " + TABLE_TEST_ALARM_STATE_COLUMN_ALIAS + " TEXT");
   }
 }

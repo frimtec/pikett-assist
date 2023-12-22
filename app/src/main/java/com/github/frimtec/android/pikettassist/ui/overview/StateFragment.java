@@ -1,17 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
-import static android.app.Activity.RESULT_OK;
-import static android.widget.ExpandableListView.getPackedPositionGroup;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_SCHEDULE_EXACT_ALARM;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -22,29 +10,16 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
-import android.widget.ListView;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.Contact;
-import com.github.frimtec.android.pikettassist.domain.ContactPerson;
-import com.github.frimtec.android.pikettassist.domain.OnOffState;
-import com.github.frimtec.android.pikettassist.domain.Shift;
-import com.github.frimtec.android.pikettassist.domain.ShiftState;
-import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.domain.*;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
-import com.github.frimtec.android.pikettassist.service.AlertService;
-import com.github.frimtec.android.pikettassist.service.ContactPersonService;
-import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
-import com.github.frimtec.android.pikettassist.service.ShiftService;
-import com.github.frimtec.android.pikettassist.service.SmsListener;
+import com.github.frimtec.android.pikettassist.service.*;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;
@@ -54,6 +29,7 @@ import com.github.frimtec.android.pikettassist.service.system.SignalStrengthServ
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
@@ -64,23 +40,22 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class StateFragment extends AbstractListFragment {
+import static android.app.Activity.RESULT_OK;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
+import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.*;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+
+public class StateFragment extends AbstractListFragment<State, State> {
 
   public static final int REGISTER_SMS_ADAPTER_REQUEST_CODE = 1000;
   private static final int NOT_FOUND = -1;
@@ -161,35 +136,39 @@ public class StateFragment extends AbstractListFragment {
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-      State selectedState = (State) listView.getItemAtPosition(groupPosition);
-      if (selectedState.getChildStates().size() > 0) {
+      State selectedState = getGroup(groupPosition).key();
+      if (!selectedState.getChildStates().isEmpty()) {
         return false;
       }
       selectedState.onClickAction(getContext());
       return true;
     });
     listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-      State selectedState = ((State) listView.getItemAtPosition(groupPosition)).getChildStates().get(childPosition);
+      State selectedState = getGroup(groupPosition).items().get(childPosition);
       selectedState.onClickAction(getContext());
       return true;
     });
     registerForContextMenu(listView);
     listView.setGroupIndicator(null);
-    listView.setOnGroupExpandListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), true));
-    listView.setOnGroupCollapseListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), false));
   }
 
   @Override
-  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+  protected void changeExpandedGroupsPreferences(Function<Set<State>, Set<State>> transformer) {
+    Set<State> states = new HashSet<>();
+    transformer.apply(states);
+    ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), !states.isEmpty());
+  }
+
+  @Override
+  protected Set<Integer> getExpandedGroups() {
     if (!ApplicationPreferences.instance().isTestAlarmStatesExpanded(getContext())) {
       return Collections.emptySet();
     }
 
-    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
-    int pos = IntStream.range(0, adapter.getGroupCount())
+    int pos = IntStream.range(0, getGroupCount())
         .boxed()
         .filter(i -> {
-          State group = (State) adapter.getGroup(i);
+          State group = getGroup(i).key();
           return group.getClass().equals(TestAlarmState.class) && !group.getChildStates().isEmpty();
         }).findFirst().orElse(NOT_FOUND);
     if (pos == NOT_FOUND) {
@@ -198,7 +177,7 @@ public class StateFragment extends AbstractListFragment {
     return Set.of(pos);
   }
 
-  protected ExpandableListAdapter createAdapter() {
+  protected AbstractExpandableListAdapter<State, State> createAdapter() {
     List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
@@ -373,7 +352,7 @@ public class StateFragment extends AbstractListFragment {
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
     ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
-    State selectedItem = (State) getListView().getItemAtPosition(getPackedPositionGroup(info.packedPosition));
+    State selectedItem = getGroup(getPackedPositionGroup(info.packedPosition)).key();
     selectedItem.onCreateContextMenu(getContext(), menu);
   }
 
@@ -384,9 +363,7 @@ public class StateFragment extends AbstractListFragment {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-
-    ListView listView = getListView();
-    State selectedItem = (State) listView.getItemAtPosition(getPackedPositionGroup(info.packedPosition));
+    State selectedItem = getGroup(getPackedPositionGroup(info.packedPosition)).key();
     return selectedItem.onContextItemSelected(getContext(), item);
   }
 

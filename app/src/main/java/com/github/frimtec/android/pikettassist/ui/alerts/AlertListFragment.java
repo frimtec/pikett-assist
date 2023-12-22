@@ -1,9 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
-import static android.widget.ExpandableListView.getPackedPositionChild;
-import static android.widget.ExpandableListView.getPackedPositionGroup;
-import static java.time.temporal.ChronoUnit.DAYS;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -16,20 +12,13 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
+import android.widget.*;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.service.AlertService;
@@ -38,27 +27,23 @@ import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter.Group;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class AlertListFragment extends AbstractListFragment {
+import static android.widget.ExpandableListView.getPackedPositionChild;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
+import static java.time.temporal.ChronoUnit.DAYS;
+
+public class AlertListFragment extends AbstractListFragment<Integer, Alert> {
 
   private static final String TAG = "AlertListFragment";
 
@@ -137,8 +122,8 @@ public class AlertListFragment extends AbstractListFragment {
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-      YearGroup selectedYearGroup = (YearGroup) listView.getExpandableListAdapter().getGroup(groupPosition);
-      Alert selectedAlert = selectedYearGroup.alerts().get(childPosition);
+      Group<Integer, Alert> selectedYearGroup = getGroup(groupPosition);
+      Alert selectedAlert = selectedYearGroup.items().get(childPosition);
       showAlertDetails(selectedAlert);
       return true;
     });
@@ -163,24 +148,12 @@ public class AlertListFragment extends AbstractListFragment {
       fileSelectionActivityResultLauncher.launch(intent);
     });
     listView.addHeaderView(headerView);
-
-    listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedYears -> {
-      expandedYears.add(((YearGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).year());
-      return expandedYears;
-    }));
-    listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedYears -> {
-      expandedYears.remove(((YearGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).year());
-      return expandedYears;
-    }));
   }
 
-  private void changeExpandedGroupsPreferences(ExpandableListView listView, Function<Set<Integer>, Set<Integer>> transformer) {
-    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
+  @Override
+  protected void changeExpandedGroupsPreferences(Function<Set<Integer>, Set<Integer>> transformer) {
     Set<Integer> years = new HashSet<>();
-    IntStream.range(0, adapter.getGroupCount()).forEach(i -> {
-      YearGroup item = (YearGroup) adapter.getGroup(i);
-      years.add(item.year());
-    });
+    IntStream.range(0, getGroupCount()).forEach(i -> years.add(getGroup(i).key()));
     ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
     Set<Integer> expandedAlertLogGroups = applicationPreferences.getExpandedAlertLogGroups(getContext());
     expandedAlertLogGroups.retainAll(years);
@@ -188,19 +161,18 @@ public class AlertListFragment extends AbstractListFragment {
   }
 
   @Override
-  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
-    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
-    Map<Integer, Integer> yearToPosition = IntStream.range(0, adapter.getGroupCount())
+  protected Set<Integer> getExpandedGroups() {
+    Map<Integer, Integer> yearToPosition = IntStream.range(0, getGroupCount())
         .boxed()
         .collect(Collectors.toMap(
-            i -> ((YearGroup) adapter.getGroup(i)).year(),
+            i -> getGroup(i).key(),
             i -> i
         ));
     HashSet<Integer> expandedGroups = ApplicationPreferences.instance().getExpandedAlertLogGroups(getContext()).stream()
         .filter(yearToPosition::containsKey)
         .map(yearToPosition::get)
         .collect(Collectors.toCollection(HashSet::new));
-    if (adapter.getGroupCount() > 0) {
+    if (getGroupCount() > 0) {
       expandedGroups.add(0);
     }
     return expandedGroups;
@@ -212,7 +184,7 @@ public class AlertListFragment extends AbstractListFragment {
   }
 
   @Override
-  protected ExpandableListAdapter createAdapter() {
+  protected AbstractExpandableListAdapter<Integer, Alert> createAdapter() {
     return new AlertExpandableListAdapter(getContext(), loadAlertList());
   }
 
@@ -233,7 +205,7 @@ public class AlertListFragment extends AbstractListFragment {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-    Alert selectedAlert = (Alert) getListView().getExpandableListAdapter().getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
+    Alert selectedAlert = getChild(getPackedPositionGroup(info.packedPosition), getPackedPositionChild(info.packedPosition));
     switch (item.getItemId()) {
       case MENU_CONTEXT_VIEW_ID -> {
         showAlertDetails(selectedAlert);

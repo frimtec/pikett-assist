@@ -10,10 +10,8 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
-import android.widget.ListView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -31,7 +29,7 @@ import com.github.frimtec.android.pikettassist.service.system.SignalStrengthServ
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
-import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter.Group;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
@@ -43,6 +41,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -56,7 +55,7 @@ import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatte
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
 import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
-public class StateFragment extends AbstractListFragment {
+public class StateFragment extends AbstractListFragment<State, State> {
 
   public static final int REGISTER_SMS_ADAPTER_REQUEST_CODE = 1000;
   private static final int NOT_FOUND = -1;
@@ -137,7 +136,7 @@ public class StateFragment extends AbstractListFragment {
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnGroupClickListener((parent, v, groupPosition, id) -> {
-      State selectedState = ((Group<State, ? extends State>) listView.getItemAtPosition(groupPosition)).key();
+      State selectedState = getGroup(groupPosition).key();
       if (!selectedState.getChildStates().isEmpty()) {
         return false;
       }
@@ -145,27 +144,31 @@ public class StateFragment extends AbstractListFragment {
       return true;
     });
     listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-      State selectedState = ((Group<State, ? extends State>) listView.getItemAtPosition(groupPosition)).items().get(childPosition);
+      State selectedState = getGroup(groupPosition).items().get(childPosition);
       selectedState.onClickAction(getContext());
       return true;
     });
     registerForContextMenu(listView);
     listView.setGroupIndicator(null);
-    listView.setOnGroupExpandListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), true));
-    listView.setOnGroupCollapseListener(groupPosition -> ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), false));
   }
 
   @Override
-  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
+  protected void changeExpandedGroupsPreferences(Function<Set<State>, Set<State>> transformer) {
+    Set<State> states = new HashSet<>();
+    transformer.apply(states);
+    ApplicationPreferences.instance().setTestAlarmStatesExpanded(getContext(), !states.isEmpty());
+  }
+
+  @Override
+  protected Set<Integer> getExpandedGroups() {
     if (!ApplicationPreferences.instance().isTestAlarmStatesExpanded(getContext())) {
       return Collections.emptySet();
     }
 
-    ExpandableListAdapter adapter = listView.getExpandableListAdapter();
-    int pos = IntStream.range(0, adapter.getGroupCount())
+    int pos = IntStream.range(0, getGroupCount())
         .boxed()
         .filter(i -> {
-          State group = ((Group<State, ? extends State>) adapter.getGroup(i)).key();
+          State group = getGroup(i).key();
           return group.getClass().equals(TestAlarmState.class) && !group.getChildStates().isEmpty();
         }).findFirst().orElse(NOT_FOUND);
     if (pos == NOT_FOUND) {
@@ -174,7 +177,7 @@ public class StateFragment extends AbstractListFragment {
     return Set.of(pos);
   }
 
-  protected ExpandableListAdapter createAdapter() {
+  protected AbstractExpandableListAdapter<State, State> createAdapter() {
     List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
@@ -349,7 +352,7 @@ public class StateFragment extends AbstractListFragment {
   @Override
   public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View view, ContextMenu.ContextMenuInfo menuInfo) {
     ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuInfo;
-    State selectedItem = ((Group<State, ? extends State>) getListView().getItemAtPosition(getPackedPositionGroup(info.packedPosition))).key();
+    State selectedItem = getGroup(getPackedPositionGroup(info.packedPosition)).key();
     selectedItem.onCreateContextMenu(getContext(), menu);
   }
 
@@ -360,9 +363,7 @@ public class StateFragment extends AbstractListFragment {
       Log.w(TAG, "No menu item was selected");
       return false;
     }
-
-    ListView listView = getListView();
-    State selectedItem = ((Group<State, ? extends State>) listView.getItemAtPosition(getPackedPositionGroup(info.packedPosition))).key();
+    State selectedItem = getGroup(getPackedPositionGroup(info.packedPosition)).key();
     return selectedItem.onContextItemSelected(getContext(), item);
   }
 

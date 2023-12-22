@@ -1,29 +1,22 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
+import android.view.*;
 import android.widget.ExpandableListView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter.Group;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
-public abstract class AbstractListFragment extends Fragment {
+public abstract class AbstractListFragment<K extends Comparable<K>, I> extends Fragment {
 
   private ExpandableListView listView;
   private FloatingActionButton addButton;
@@ -50,11 +43,21 @@ public abstract class AbstractListFragment extends Fragment {
       addButton.setOnClickListener(onClickListener);
       return true;
     });
-
     configureListView(listView);
+    listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(expandedGroup -> {
+      expandedGroup.add(getGroup(groupPosition).key());
+      return expandedGroup;
+    }));
+    listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(expandedGroup -> {
+      expandedGroup.remove(getGroup(groupPosition).key());
+      return expandedGroup;
+    }));
+
     refresh();
     return view;
   }
+
+  protected abstract void changeExpandedGroupsPreferences(Function<Set<K>, Set<K>> transformer);
 
   @Override
   public void onResume() {
@@ -68,13 +71,15 @@ public abstract class AbstractListFragment extends Fragment {
 
   public final void refresh() {
     listView.setAdapter(createAdapter());
-    getExpandedGroups(listView).forEach(groupPosition -> listView.expandGroup(groupPosition));
+    getExpandedGroups().forEach(groupPosition -> {
+      if (groupPosition < getGroupCount()) {
+        listView.expandGroup(groupPosition);
+      }
+    });
     addButton.setVisibility(isAddButtonVisible() ? View.VISIBLE : View.INVISIBLE);
   }
 
-  protected Set<Integer> getExpandedGroups(ExpandableListView listView) {
-    return Collections.emptySet();
-  }
+  protected abstract Set<Integer> getExpandedGroups();
 
   protected boolean isAddButtonVisible() {
     return false;
@@ -82,11 +87,7 @@ public abstract class AbstractListFragment extends Fragment {
 
   protected abstract void configureListView(ExpandableListView listView);
 
-  protected abstract ExpandableListAdapter createAdapter();
-
-  protected ExpandableListView getListView() {
-    return this.listView;
-  }
+  protected abstract AbstractExpandableListAdapter<K, I> createAdapter();
 
   @Override
   public final boolean onContextItemSelected(MenuItem item) {
@@ -103,4 +104,19 @@ public abstract class AbstractListFragment extends Fragment {
   public final MenuItem addContextMenu(@NonNull ContextMenu menu, int id, @StringRes int text) {
     return menu.add(fragmentPosition.ordinal(), id, Menu.NONE, text);
   }
+
+  public final int getGroupCount() {
+    return this.listView.getExpandableListAdapter().getGroupCount();
+  }
+
+  public final Group<K, I> getGroup(int groupPosition) {
+    //noinspection unchecked
+    return (Group<K, I>) this.listView.getExpandableListAdapter().getGroup(groupPosition);
+  }
+
+  public final I getChild(int groupPosition, int childPosition) {
+    //noinspection unchecked
+    return (I) this.listView.getExpandableListAdapter().getChild(groupPosition, childPosition);
+  }
+
 }

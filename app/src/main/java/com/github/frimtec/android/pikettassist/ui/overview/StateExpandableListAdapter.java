@@ -1,38 +1,36 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-class StateExpandableListAdapter extends BaseExpandableListAdapter {
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.*;
+
+class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, State> {
 
   private final Map<State.TrafficLight, Bitmap> ledBitmaps = new EnumMap<>(State.TrafficLight.class);
-  private final Context context;
-  private final List<State> states;
 
-  StateExpandableListAdapter(Context context, List<State> states) {
-    this.context = context;
-    this.states = states;
+  StateExpandableListAdapter(Context context, List<? extends State> states) {
+    super(
+        context,
+        states,
+        State::getChildStates
+    );
+
     ledBitmaps.put(OFF, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_grey));
     ledBitmaps.put(GREEN, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_green));
     ledBitmaps.put(YELLOW, BitmapFactory.decodeResource(context.getResources(), R.drawable.led_circle_yellow));
@@ -40,58 +38,23 @@ class StateExpandableListAdapter extends BaseExpandableListAdapter {
   }
 
   @Override
-  public int getGroupCount() {
-    return this.states.size();
-  }
-
-  @Override
-  public int getChildrenCount(int groupPosition) {
-    return this.states.get(groupPosition).getChildStates().size();
-  }
-
-  @Override
-  public Object getGroup(int groupPosition) {
-    return this.states.get(groupPosition);
-  }
-
-  @Override
-  public Object getChild(int groupPosition, int childPosition) {
-    return this.states.get(groupPosition).getChildStates().get(childPosition);
-  }
-
-  @Override
-  public long getGroupId(int groupPosition) {
-    return groupPosition;
-  }
-
-  @Override
-  public long getChildId(int groupPosition, int childPosition) {
-    return groupPosition * 1_000_000L + childPosition;
-  }
-
-  @Override
-  public boolean hasStableIds() {
-    return true;
-  }
-
-  @Override
   public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-    return getView(convertView, parent, this.states.get(groupPosition), false);
+    return getView(convertView, parent, getGroupedItems().get(groupPosition).key(), false);
   }
 
   @Override
   public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-    return getView(convertView, parent, this.states.get(groupPosition).getChildStates().get(childPosition), true);
+    return getView(convertView, parent, getGroupedItems().get(groupPosition).items().get(childPosition), true);
   }
 
   private View getView(View convertView, ViewGroup parent, State state, boolean child) {
     Objects.requireNonNull(state);
     if (convertView == null) {
-      convertView = LayoutInflater.from(this.context).inflate(R.layout.state_item, parent, false);
+      convertView = LayoutInflater.from(getContext()).inflate(R.layout.state_item, parent, false);
     }
 
     if (!child && !state.getChildStates().isEmpty()) {
-      convertView.setBackgroundColor(context.getColor(R.color.tableGroupBackground));
+      convertView.setBackgroundColor(getContext().getColor(R.color.tableGroupBackground));
     } else if (child) {
       convertView.setPadding(dpToPx(20), 0, dpToPx(10), 0);
     }
@@ -144,12 +107,7 @@ class StateExpandableListAdapter extends BaseExpandableListAdapter {
   }
 
   int dpToPx(int dp) {
-    float scale = context.getResources().getDisplayMetrics().density;
+    float scale = getContext().getResources().getDisplayMetrics().density;
     return Math.round(dp * scale + 0.5f);
-  }
-
-  @Override
-  public boolean isChildSelectable(int groupPosition, int childPosition) {
-    return true;
   }
 }

@@ -1,8 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
-import static android.widget.ExpandableListView.getPackedPositionChild;
-import static android.widget.ExpandableListView.getPackedPositionGroup;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,28 +13,24 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter.Group;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static android.widget.ExpandableListView.getPackedPositionChild;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
 
 public class TestAlarmFragment extends AbstractListFragment {
 
@@ -64,19 +57,19 @@ public class TestAlarmFragment extends AbstractListFragment {
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-      StateGroup selectedStateGroup = (StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition);
-      TestAlarmContext selectedTestAlarmContext = selectedStateGroup.testAlarmContexts().get(childPosition);
+      Group<Boolean, TestAlarmContext> selectedStateGroup = (Group<Boolean, TestAlarmContext>) listView.getExpandableListAdapter().getGroup(groupPosition);
+      TestAlarmContext selectedTestAlarmContext = selectedStateGroup.items().get(childPosition);
       showTestAlarmDetails(selectedTestAlarmContext);
       return true;
     });
     registerForContextMenu(listView);
 
     listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedStates -> {
-      expandedStates.add(((StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).active());
+      expandedStates.add(((Group<Boolean, TestAlarmContext>) listView.getExpandableListAdapter().getGroup(groupPosition)).key());
       return expandedStates;
     }));
     listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedStates -> {
-      expandedStates.remove(((StateGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).active());
+      expandedStates.remove(((Group<Boolean, TestAlarmContext>) listView.getExpandableListAdapter().getGroup(groupPosition)).key());
       return expandedStates;
     }));
   }
@@ -112,10 +105,12 @@ public class TestAlarmFragment extends AbstractListFragment {
     Map<Boolean, Integer> stateToPosition = IntStream.range(0, adapter.getGroupCount())
         .boxed()
         .collect(Collectors.toMap(
-            i -> ((StateGroup) adapter.getGroup(i)).active(),
+            i -> ((Group<Boolean, TestAlarmContext>) adapter.getGroup(i)).key(),
             i -> i
         ));
+
     return ApplicationPreferences.instance().getExpandedTestAlertGroups(getContext()).stream()
+        .filter(stateToPosition::containsKey)
         .map(stateToPosition::get)
         .collect(Collectors.toCollection(HashSet::new));
   }

@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class State {
+public class State implements Comparable<State> {
 
   private final int iconResource;
   private final String title;
@@ -73,5 +73,10 @@ public class State {
 
   public List<? extends State> getChildStates() {
     return childStates;
+  }
+
+  @Override
+  public int compareTo(State o) {
+    return 0;
   }
 }

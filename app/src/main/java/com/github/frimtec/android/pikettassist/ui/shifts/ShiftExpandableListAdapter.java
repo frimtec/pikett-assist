@@ -5,85 +5,37 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
+class ShiftExpandableListAdapter extends AbstractExpandableListAdapter<YearMonth, Shift> {
 
   private static final String DATE_TIME_FORMAT = "EEEE, dd. MMMM HH:mm";
   private static final float HOURS_PER_DAY = 24;
-  private final Context context;
-  private final List<YearMonthGroup> yearMonthGroups;
 
   ShiftExpandableListAdapter(Context context, List<Shift> shifts) {
-    this.context = context;
-    Map<YearMonth, List<Shift>> groupedAlerts = shifts.stream()
-        .collect(Collectors.groupingBy(
-            shift -> YearMonth.from(LocalDateTime.ofInstant(shift.getStartTime(), ZoneId.systemDefault()))
-        ));
-    this.yearMonthGroups = groupedAlerts.keySet()
-        .stream()
-        .sorted()
-        .map(year -> new YearMonthGroup(year, groupedAlerts.get(year)))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public int getGroupCount() {
-    return this.yearMonthGroups.size();
-  }
-
-  @Override
-  public int getChildrenCount(int groupPosition) {
-    return this.yearMonthGroups.get(groupPosition).shifts().size();
-  }
-
-  @Override
-  public Object getGroup(int groupPosition) {
-    return this.yearMonthGroups.get(groupPosition);
-  }
-
-  @Override
-  public Object getChild(int groupPosition, int childPosition) {
-    return this.yearMonthGroups.get(groupPosition).shifts().get(childPosition);
-  }
-
-  @Override
-  public long getGroupId(int groupPosition) {
-    return groupPosition;
-  }
-
-  @Override
-  public long getChildId(int groupPosition, int childPosition) {
-    return groupPosition * 1_000_000L + childPosition;
-  }
-
-  @Override
-  public boolean hasStableIds() {
-    return true;
+    super(
+        context,
+        shifts,
+        shift -> YearMonth.from(LocalDateTime.ofInstant(shift.getStartTime(), ZoneId.systemDefault())), Comparator.naturalOrder()
+    );
   }
 
   @Override
   public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-    YearMonthGroup yearMonthGroup = this.yearMonthGroups.get(groupPosition);
+    Group<YearMonth, ? extends Shift> yearMonthGroup = getGroupedItems().get(groupPosition);
     if (convertView == null) {
-      convertView = LayoutInflater.from(this.context).inflate(R.layout.general_list_group_item, parent, false);
+      convertView = LayoutInflater.from(getContext()).inflate(R.layout.general_list_group_item, parent, false);
     }
     TextView title = convertView.findViewById(R.id.general_list_group_item_title);
     title.setText(
@@ -91,7 +43,7 @@ class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
             Locale.getDefault(), "%s (%d)", DateTimeFormatter.ofPattern(
                 "yyyy MMMM",
                 Locale.getDefault()
-            ).format(yearMonthGroup.yearMonth()), yearMonthGroup.shifts().size()
+            ).format(yearMonthGroup.key()), yearMonthGroup.items().size()
         )
     );
     return convertView;
@@ -99,10 +51,10 @@ class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
 
   @Override
   public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-    Shift shift = this.yearMonthGroups.get(groupPosition).shifts().get(childPosition);
+    Shift shift = this.getGroupedItems().get(groupPosition).items().get(childPosition);
     Objects.requireNonNull(shift);
     if (convertView == null) {
-      convertView = LayoutInflater.from(this.context).inflate(R.layout.shift_item, parent, false);
+      convertView = LayoutInflater.from(getContext()).inflate(R.layout.shift_item, parent, false);
     }
     TextView startTimeView = convertView.findViewById(R.id.shift_item_start_time);
     TextView endTimeView = convertView.findViewById(R.id.shift_item_end_time);
@@ -117,16 +69,11 @@ class ShiftExpandableListAdapter extends BaseExpandableListAdapter {
     ImageView unconfirmedIcon = convertView.findViewById(R.id.shift_item_image_unconfirmed);
     unconfirmedIcon.setVisibility(!shift.isConfirmed() ? View.VISIBLE : View.INVISIBLE);
     if (!shift.isConfirmed()) {
-      titleView.setText(String.format("%s (%s)", titleView.getText(), this.context.getString(R.string.shift_item_unconfirmed)));
+      titleView.setText(String.format("%s (%s)", titleView.getText(), getContext().getString(R.string.shift_item_unconfirmed)));
       titleView.setTypeface(titleView.getTypeface(), Typeface.BOLD_ITALIC);
-      convertView.setBackgroundColor(this.context.getResources().getColor(R.color.unconfirmedShift, context.getTheme()));
+      convertView.setBackgroundColor(getContext().getResources().getColor(R.color.unconfirmedShift, getContext().getTheme()));
     }
     return convertView;
-  }
-
-  @Override
-  public boolean isChildSelectable(int groupPosition, int childPosition) {
-    return true;
   }
 
   static int roundToDays(Duration duration) {

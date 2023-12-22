@@ -20,6 +20,8 @@ import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.FragmentPosition;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
+import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter.Group;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 
 import java.time.Duration;
@@ -46,8 +48,8 @@ public class ShiftListFragment extends AbstractListFragment {
   protected void configureListView(ExpandableListView listView) {
     listView.setClickable(true);
     listView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-      YearMonthGroup selectedGroup = (YearMonthGroup) listView.getExpandableListAdapter().getGroup(groupPosition);
-      Shift selectedShift = selectedGroup.shifts().get(childPosition);
+      Group<YearMonth, Shift> selectedGroup = (Group<YearMonth, Shift>) listView.getExpandableListAdapter().getGroup(groupPosition);
+      Shift selectedShift = selectedGroup.items().get(childPosition);
       if (selectedShift != null) {
         long eventId = selectedShift.getId();
         Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
@@ -63,11 +65,11 @@ public class ShiftListFragment extends AbstractListFragment {
     this.headerView = getLayoutInflater().inflate(R.layout.shift_header, listView, false);
     listView.addHeaderView(this.headerView);
     listView.setOnGroupExpandListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedGroup -> {
-      expandedGroup.add(((YearMonthGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).yearMonth());
+      expandedGroup.add(((Group<YearMonth, Shift>) listView.getExpandableListAdapter().getGroup(groupPosition)).key());
       return expandedGroup;
     }));
     listView.setOnGroupCollapseListener(groupPosition -> changeExpandedGroupsPreferences(listView, expandedGroup -> {
-      expandedGroup.remove(((YearMonthGroup) listView.getExpandableListAdapter().getGroup(groupPosition)).yearMonth());
+      expandedGroup.remove(((Group<YearMonth, Shift>) listView.getExpandableListAdapter().getGroup(groupPosition)).key());
       return expandedGroup;
     }));
   }
@@ -76,8 +78,8 @@ public class ShiftListFragment extends AbstractListFragment {
     ExpandableListAdapter adapter = listView.getExpandableListAdapter();
     Set<YearMonth> yearMonths = new HashSet<>();
     IntStream.range(0, adapter.getGroupCount()).forEach(i -> {
-      YearMonthGroup item = (YearMonthGroup) adapter.getGroup(i);
-      yearMonths.add(item.yearMonth());
+      Group<YearMonth, Shift> item = (Group<YearMonth, Shift>) adapter.getGroup(i);
+      yearMonths.add(item.key());
     });
     ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
     Set<YearMonth> expandedGroups = applicationPreferences.getExpandedShiftGroups(getContext());
@@ -91,7 +93,7 @@ public class ShiftListFragment extends AbstractListFragment {
     Map<YearMonth, Integer> yearToPosition = IntStream.range(0, adapter.getGroupCount())
         .boxed()
         .collect(Collectors.toMap(
-            i -> ((YearMonthGroup) adapter.getGroup(i)).yearMonth(),
+            i -> ((Group<YearMonth, Shift>) adapter.getGroup(i)).key(),
             i -> i
         ));
     HashSet<Integer> expandedGroups = ApplicationPreferences.instance().getExpandedShiftGroups(getContext()).stream()

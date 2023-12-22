@@ -86,6 +86,7 @@
   <string name="alert_view_state_wip">Work in progress</string>
   <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
   <string name="list_item_menu_view">View</string>
+  <string name="list_item_menu_alias">Set alias</string>
   <string name="list_item_menu_delete">Delete</string>
   <string name="list_item_menu_select">Select</string>
   <string name="list_item_menu_clear">Clear</string>
@@ -126,7 +127,6 @@
   <string name="alarm_state_on">Unconfirmed</string>
   <string name="alarm_state_on_confirmed">Confirmed</string>
   <string name="alarm_state_off">Off</string>
-  <string name="state_fragment_test_alarm_never_received">Never received</string>
   <string name="contact_helper_unknown_contact">Unknown</string>
   <string name="contact_preference_empty_selection">No selection</string>
   <string name="about_documentation"><![CDATA[<h3>Documentation</h3><p>A manual for the use of PAssist can be found here: <a href=https://github.com/frimtec/pikett-assist/blob/master/README.md#passist>Manual</a>.</p>]]></string>
@@ -165,6 +165,7 @@
   <string name="test_alarm_message_empty">Empty</string>
   <string name="test_alarm_received_never">Never</string>
   <string name="test_alarm_add_title">Enter new test alarm context</string>
+  <string name="test_alarm_alias_title">Enter test alarm alias</string>
   <string name="test_alarm_toast_added_success">New test alarm context added.</string>
   <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
   <string name="state_fragment_sms_adapter">SMS adapter</string>

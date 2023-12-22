@@ -1,27 +1,21 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
-import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_ALERT_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_ID;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME;
-import static com.github.frimtec.android.pikettassist.state.DbHelper.TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
+import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
+import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
+import static com.github.frimtec.android.pikettassist.state.DbHelper.*;
 
 public class TestAlarmDao {
 
@@ -35,30 +29,65 @@ public class TestAlarmDao {
     this.dbFactory = dbFactory;
   }
 
-  public Set<TestAlarmContext> loadAllContexts() {
-    Set<TestAlarmContext> allTestAlarmContexts = new HashSet<>();
+  public List<TestAlarm> loadAll() {
+    List<TestAlarm> allTestAlarms = new ArrayList<>();
     SQLiteDatabase db = this.dbFactory.getDatabase(READ_ONLY);
-    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID}, null, null, null, null, null)) {
+    try (Cursor cursor = db.query(
+        TABLE_TEST_ALARM_STATE,
+        new String[]{
+            TABLE_TEST_ALARM_STATE_COLUMN_ID,
+            TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME,
+            TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE,
+            TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE,
+            TABLE_TEST_ALARM_STATE_COLUMN_ALIAS
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+    )) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         do {
-          String context = cursor.getString(0);
-          allTestAlarmContexts.add(new TestAlarmContext(context));
+          long lastReceivedTime = cursor.getLong(1);
+          allTestAlarms.add(new TestAlarm(
+              new TestAlarmContext(cursor.getString(0)),
+              lastReceivedTime > 0 ? Instant.ofEpochMilli(lastReceivedTime) : null,
+              OnOffState.valueOf(cursor.getString(2)),
+              cursor.getString(3),
+              cursor.getString(4)
+          ));
         } while (cursor.moveToNext());
       }
     }
-    return allTestAlarmContexts;
+    return allTestAlarms;
   }
 
   public Optional<TestAlarm> loadDetails(TestAlarmContext testAlarmContext) {
     SQLiteDatabase db = dbFactory.getDatabase(READ_ONLY);
-    try (Cursor cursor = db.query(TABLE_TEST_ALARM_STATE, new String[]{TABLE_TEST_ALARM_STATE_COLUMN_ID, TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME, TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE, TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE}, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext.context()}, null, null, null)) {
+    try (Cursor cursor = db.query(
+        TABLE_TEST_ALARM_STATE,
+        new String[]{
+            TABLE_TEST_ALARM_STATE_COLUMN_ID,
+            TABLE_TEST_ALARM_STATE_COLUMN_LAST_RECEIVED_TIME,
+            TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE,
+            TABLE_TEST_ALARM_STATE_COLUMN_MESSAGE,
+            TABLE_TEST_ALARM_STATE_COLUMN_ALIAS
+        },
+        TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?",
+        new String[]{testAlarmContext.context()},
+        null,
+        null,
+        null
+    )) {
       if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
         return Optional.of(new TestAlarm(
             testAlarmContext,
             cursor.getLong(1) > 0 ? Instant.ofEpochMilli(cursor.getLong(1)) : null,
             OnOffState.valueOf(cursor.getString(2)),
-            cursor.getString(3))
-        );
+            cursor.getString(3),
+            cursor.getString(4)
+        ));
       }
     }
     return Optional.empty();
@@ -102,6 +131,14 @@ public class TestAlarmDao {
       }
       return newTestAlarm;
     }
+  }
+
+  public void updateAlias(TestAlarmContext testAlarm, String alias) {
+    SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
+    String testAlarmContext = testAlarm.context();
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(TABLE_TEST_ALARM_STATE_COLUMN_ALIAS, alias);
+    db.update(TABLE_TEST_ALARM_STATE, contentValues, TABLE_TEST_ALARM_STATE_COLUMN_ID + "=?", new String[]{testAlarmContext});
   }
 
   public void updateAlertState(TestAlarmContext testAlarmContext, OnOffState state) {

@@ -268,4 +268,6 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="state_fragment_sms_adapter_not_yet_supported">Pas encore pris en charge</string>
   <string name="state_fragment_sms_adapter_update_recommended">Mise à jour recommandée</string>
   <string name="pref_summary_send_confirm_sms">⚠️ Ignoré pour les numéros de téléphone à code court alphanumérique!</string>
+  <string name="list_item_menu_alias">Définir un alias</string>
+  <string name="test_alarm_alias_title">Entrez l\'alias de l\'alarme de test</string>
 </resources>

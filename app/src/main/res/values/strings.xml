@@ -86,7 +86,6 @@
   <string name="alert_view_state_wip">Work in progress</string>
   <string name="alert_view_state_to_be_confirmed">Awaiting confirmation</string>
   <string name="list_item_menu_view">View</string>
-  <string name="list_item_menu_alias">Set alias</string>
   <string name="list_item_menu_delete">Delete</string>
   <string name="list_item_menu_select">Select</string>
   <string name="list_item_menu_clear">Clear</string>
@@ -165,7 +164,6 @@
   <string name="test_alarm_message_empty">Empty</string>
   <string name="test_alarm_received_never">Never</string>
   <string name="test_alarm_add_title">Enter new test alarm context</string>
-  <string name="test_alarm_alias_title">Enter test alarm alias</string>
   <string name="test_alarm_toast_added_success">New test alarm context added.</string>
   <string name="test_alarm_toast_added_duplicate">Test alarm context already exists.</string>
   <string name="state_fragment_sms_adapter">SMS adapter</string>
@@ -285,4 +283,6 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="state_fragment_sms_adapter_not_yet_supported">Not yet supported</string>
   <string name="state_fragment_sms_adapter_update_recommended">Update recommended</string>
   <string name="pref_summary_send_confirm_sms">⚠️ Ignored for alphanumeric short code phone numbers!</string>
+  <string name="list_item_menu_alias">Set alias</string>
+  <string name="test_alarm_alias_title">Enter test alarm alias</string>
 </resources>

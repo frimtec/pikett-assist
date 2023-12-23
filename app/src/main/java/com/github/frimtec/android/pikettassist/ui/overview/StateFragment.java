@@ -287,14 +287,23 @@ public class StateFragment extends AbstractListFragment<State, State> {
         new BatteryState(stateContext)
     ));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
+      Map<TestAlarmContext, TestAlarm> allTestAlarms = this.testAlarmDao.loadAll().stream().collect(Collectors.toMap(
+          TestAlarm::context,
+          testAlarm -> testAlarm
+      ));
       List<TestAlarmState> testAlarmStates = ApplicationPreferences.instance().getSupervisedTestAlarms(getContext()).stream()
           .sorted(Comparator.comparing(TestAlarmContext::context))
-          .map(testAlarmContext -> new TestAlarmState(
-              stateContext,
-              this.testAlarmDao.loadDetails(testAlarmContext)
-                  .map(details -> new TestAlarmStateContext(stateContext, testAlarmContext, formatDateTime(details.receivedTime()), details.alertState()))
-                  .orElse(new TestAlarmStateContext(stateContext, testAlarmContext, getString(R.string.state_fragment_test_alarm_never_received), OnOffState.OFF))
-          )).collect(Collectors.toList());
+          .map(testAlarmContext -> {
+            TestAlarm testAlarm = Objects.requireNonNull(
+                allTestAlarms.getOrDefault(
+                    testAlarmContext,
+                    new TestAlarm(testAlarmContext, null, OnOffState.OFF, "", ""))
+            );
+            return new TestAlarmState(
+                stateContext,
+                new TestAlarmStateContext(stateContext, testAlarm, formatDateTime(testAlarm.receivedTime()))
+            );
+          }).collect(Collectors.toList());
 
       if (testAlarmStates.size() == 1) {
         states.addAll(testAlarmStates);
@@ -303,9 +312,14 @@ public class StateFragment extends AbstractListFragment<State, State> {
             stateContext,
             new TestAlarmStateContext(
                 stateContext,
-                new TestAlarmContext(String.format(Locale.getDefault(), getString(R.string.title_test_alarms) + " (%d)", testAlarmStates.size())),
-                "",
-                OnOffState.ON
+                new TestAlarm(
+                    new TestAlarmContext(String.format(Locale.getDefault(), getString(R.string.title_test_alarms) + " (%d)", testAlarmStates.size())),
+                    null,
+                    OnOffState.ON,
+                    "",
+                    null
+                ),
+                null
             ),
             testAlarmStates
         ));

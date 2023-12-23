@@ -1,12 +1,13 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
 
@@ -15,13 +16,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-class TestAlarmExpandableListAdapter extends AbstractExpandableListAdapter<Boolean, TestAlarmContext> {
+class TestAlarmExpandableListAdapter extends AbstractExpandableListAdapter<Boolean, TestAlarm> {
 
-  TestAlarmExpandableListAdapter(Context context, List<TestAlarmContext> testAlarmContexts) {
+  TestAlarmExpandableListAdapter(Context context, List<TestAlarm> testAlarmContexts) {
     super(
         context,
         testAlarmContexts,
-        testAlarmContext -> ApplicationPreferences.instance().getSupervisedTestAlarms(context).contains(testAlarmContext),
+        testAlarm -> ApplicationPreferences.instance().getSupervisedTestAlarms(context).contains(testAlarm.context()),
         Comparator.reverseOrder()
     );
   }
@@ -40,15 +41,14 @@ class TestAlarmExpandableListAdapter extends AbstractExpandableListAdapter<Boole
 
   @Override
   public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-    TestAlarmContext testAlarmContext = getGroupedItems().get(groupPosition).items().get(childPosition);
-    Objects.requireNonNull(testAlarmContext);
+    TestAlarm testAlarm = getGroupedItems().get(groupPosition).items().get(childPosition);
+    Objects.requireNonNull(testAlarm);
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.test_alarm_item, parent, false);
     }
 
     TextView textView = convertView.findViewById(R.id.test_alarm_item_context);
-    textView.setText(testAlarmContext.context());
-
+    textView.setText(TextUtils.isEmpty(testAlarm.alias()) ? testAlarm.context().context() : String.format(Locale.getDefault(), "%s / %s", testAlarm.context(), testAlarm.alias()));
     return convertView;
   }
 

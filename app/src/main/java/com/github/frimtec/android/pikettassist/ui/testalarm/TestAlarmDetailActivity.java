@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,6 +66,9 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
       TextView message = findViewById(R.id.test_alarm_details_message);
 
       this.testAlarmDao.loadDetails(testAlarm).ifPresent(details -> {
+        if (!TextUtils.isEmpty(details.alias())) {
+          contextText.setText(String.format("%s /\n%s", contextText.getText(), details.alias()));
+        }
         lastReceived.setText(formatDateTime(details.receivedTime()));
         alarmState.setText(getOnOffText(details.alertState()));
         message.setText(details.message());

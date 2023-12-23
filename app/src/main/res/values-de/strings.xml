@@ -267,4 +267,6 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="state_fragment_sms_adapter_not_yet_supported">Noch nicht unterstützt</string>
   <string name="state_fragment_sms_adapter_update_recommended">Aktualisierung empfohlen</string>
   <string name="pref_summary_send_confirm_sms">⚠️ Wird bei alphanumerischen Kurzwahl-Telefonnummern ignoriert!</string>
+  <string name="list_item_menu_alias">Alias festlegen</string>
+  <string name="test_alarm_alias_title">Alias für den Testalarm</string>
 </resources>

@@ -35,9 +35,9 @@ time.
 All calendar events matching a configured title pattern are considered as on-call events. 
 PAssist shows you an overview with all future on-call events on the calendar tab.
 
-![Deactivated PAssist](images/PAssist_17.png)
-![Calendar Tab](images/PAssist_01.png)
-![Activated PAssist](images/PAssist_07.png)
+![Deactivated PAssist](images/PAssist_overview_deactivated.png)
+![Calendar Tab](images/PAssist_calendar.png)
+![Activated PAssist](images/PAssist_overview_activated.png)
 
 ### Alarming
 If an SMS is received from your configured operations center, PAssist will race an alert. 

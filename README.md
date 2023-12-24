@@ -55,8 +55,8 @@ On the alert log tab you see all your passed alerts in an overview. Selecting an
 alert incident including current state, reaction time to confirm, duration from start to end and all received SMS messages.
 The alert log can be exported/imported from/to the external file system.    
 
-![Alert log tab](images/PAssist_18.png)
-![Alert details](images/PAssist_16.png)
+![Alert log tab](images/PAssist_alert_log_overview.png)
+![Alert details](images/PAssist_alert_log_detail.png)
 
 
 ### Phone signal strength

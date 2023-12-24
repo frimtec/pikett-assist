@@ -242,7 +242,7 @@ If activated, the ringtone volume is automatically restored to the former value,
 #### Battery drain
 Enable "Minimize at night" to reduce power drain at night by reducing the check interval for the signal strength monitoring.   
 
-![Overview](images/PAssist_20.png)
+![Overview](images/PAssist_settings_day_night_profile.png)
 
 ## Supported languages
 Currently, the following languages are supported in PAssist:

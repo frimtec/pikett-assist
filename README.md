@@ -45,7 +45,7 @@ It is playing a configured ringtone and starts a vibration pattern until you con
 When confirmed, an acknowledge SMS is send back to your operations center. 
 The alarm goes into the confirmed alarm state and can be finally closed when all your support activities are completed.
 
-![On-call alarm](images/PAssist_02.png)
+![On-call alarm](images/PAssist_on_call_alert.png)
 ![Confirmed alarm](images/PAssist_08.png)
 
 ### Alarm log
@@ -64,7 +64,7 @@ PAssist will supervise the phone signal strength and notifies you with a vibrati
 is bad or off (includes airplane mode). 
 This ensures that you won't stay in a dead spot without recognize it during on-call duties. 
 
-![Low/None signal alarm](images/PAssist_03.png)
+![Low/None signal alarm](images/PAssist_low_signal_alert.png)
 ![Low signal state info](images/PAssist_13.png)
 ![None signal state info](images/PAssist_04.png)
 
@@ -83,7 +83,7 @@ Test alarms can be configured for different contexts, as your alarming system ma
 that are under supervision.
 
 ![Missing test alarm detected](images/PAssist_09.png)
-![Alarm for missing test alarm](images/PAssist_05.png)
+![Alarm for missing test alarm](images/PAssist_missing_test_alarm_alert.png)
 ![Details to test alarm](images/PAssist_06.png)
 
 
@@ -228,7 +228,7 @@ Defines the weekdays on which the test alarms are checked.
 #### Missing test alarm ringtone
 Defines the ringtone that is used to alert for missing test alarms.
 
-![Test alarm settings](images/PAssist_14.png)
+![Test alarm settings](images/PAssist_settings_test_alarm.png)
 
 ### Day/night profile settings
 #### Profile start times

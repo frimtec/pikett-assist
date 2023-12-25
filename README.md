@@ -46,7 +46,7 @@ When confirmed, an acknowledge SMS is send back to your operations center.
 The alarm goes into the confirmed alarm state and can be finally closed when all your support activities are completed.
 
 ![On-call alarm](images/PAssist_on_call_alert.png)
-![Confirmed alarm](images/PAssist_08.png)
+![Confirmed alarm](images/PAssist_on_call_alert_open.png)
 
 ### Alarm log
 PAssist creates an alarm log with the start and end time of each incident. 
@@ -66,7 +66,7 @@ This ensures that you won't stay in a dead spot without recognize it during on-c
 
 ![Low/None signal alarm](images/PAssist_low_signal_alert.png)
 ![Low signal state info](images/PAssist_13.png)
-![None signal state info](images/PAssist_04.png)
+![None signal state info](images/PAssist_no_signal.png)
 
 ### Battery level
 PAssist will supervise the battery level and notifies if it is below a configured minimum level. 
@@ -107,7 +107,7 @@ PAssist will guide you to install this SMS adapter.
 
 ## Configuration
 
-![Settings](images/PAssist_10.png)
+![Settings](images/PAssist_settings.png)
 
 ### Main settings
 

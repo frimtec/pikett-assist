@@ -78,7 +78,10 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   }
 
   protected final void setRingtone(Ringtone ringtone) {
-    Objects.requireNonNull(ringtone);
+    if(ringtone == null) {
+      Log.w(tag, "Set ringtone is null");
+      return;
+    }
     this.ringtone = ringtone;
   }
 

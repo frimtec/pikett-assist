@@ -65,7 +65,7 @@ is bad or off (includes airplane mode).
 This ensures that you won't stay in a dead spot without recognize it during on-call duties. 
 
 ![Low/None signal alarm](images/PAssist_low_signal_alert.png)
-![Low signal state info](images/PAssist_13.png)
+![Low signal state info](images/PAssist_poor_signal.png)
 ![None signal state info](images/PAssist_no_signal.png)
 
 ### Battery level

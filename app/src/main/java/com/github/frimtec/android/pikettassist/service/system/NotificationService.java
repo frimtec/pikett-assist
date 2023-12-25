@@ -1,13 +1,5 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-import static android.app.Notification.CATEGORY_ALARM;
-import static android.app.Notification.CATEGORY_EVENT;
-import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
-import static android.app.NotificationManager.IMPORTANCE_LOW;
-import static android.app.NotificationManager.IMPORTANCE_MAX;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,21 +11,24 @@ import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
-import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.NotificationActionListener;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
-import java.util.Set;
+import java.util.List;
+
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+import static android.app.Notification.CATEGORY_ALARM;
+import static android.app.Notification.CATEGORY_EVENT;
+import static android.app.NotificationManager.*;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 
 public class NotificationService {
@@ -125,12 +120,12 @@ public class NotificationService {
     notifyIfAllowed(context, ALERT_NOTIFICATION_ID, notification);
   }
 
-  public void notifyMissingTestAlarm(Intent notifyIntent, Set<TestAlarmContext> testAlarmContexts) {
+  public void notifyMissingTestAlarm(Intent notifyIntent, List<String> testAlarms) {
     notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
-    String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testAlarmContexts);
+    String message = context.getString(R.string.notification_missing_test_alert_text) + TextUtils.join(", ", testAlarms);
     Notification notification = new Builder(context, CHANNEL_ID_ALARM)
         .setContentTitle(context.getString(R.string.notification_missing_test_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))

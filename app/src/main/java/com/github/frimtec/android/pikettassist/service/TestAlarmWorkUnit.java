@@ -3,10 +3,9 @@ package com.github.frimtec.android.pikettassist.service;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import androidx.work.Data;
-
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
@@ -18,6 +17,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,9 +76,18 @@ public class TestAlarmWorkUnit implements WorkUnit {
       });
 
       if (!missingTestAlarmContextContexts.isEmpty()) {
+        Map<TestAlarmContext, TestAlarm> testAlarmsByContext = this.testAlarmDao.loadAll().stream().collect(Collectors.toMap(
+            TestAlarm::context,
+            testAlarm -> testAlarm
+        ));
         this.notificationService.notifyMissingTestAlarm(
             new Intent(context, MainActivity.class),
-            missingTestAlarmContextContexts
+            missingTestAlarmContextContexts.stream()
+                .map(testAlarmContext -> {
+                  TestAlarm testAlarm = testAlarmsByContext.get(testAlarmContext);
+                  return testAlarm != null ? testAlarm.name() : testAlarmContext.context();
+                }).sorted()
+                .collect(Collectors.toList())
         );
         this.alarmTrigger.run();
       }

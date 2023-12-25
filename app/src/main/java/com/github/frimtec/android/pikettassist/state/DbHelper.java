@@ -1,13 +1,13 @@
 package com.github.frimtec.android.pikettassist.state;
 
+import static com.github.frimtec.android.pikettassist.domain.OnOffState.OFF;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-
-import static com.github.frimtec.android.pikettassist.domain.OnOffState.OFF;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -68,6 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
         "  " + TABLE_TEST_ALARM_STATE_COLUMN_ALERT_STATE + " TEXT DEFAULT '" + OFF + "' NOT NULL" +
         ");");
     createVersion2Tables(db);
+    createVersion3Tables(db);
   }
 
   @Override

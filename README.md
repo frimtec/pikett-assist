@@ -82,9 +82,9 @@ race an alert with a configured ringtone and starts a vibration pattern until yo
 Test alarms can be configured for different contexts, as your alarming system may send a test alarms for various systems 
 that are under supervision.
 
-![Missing test alarm detected](images/PAssist_09.png)
+![Missing test alarm detected](images/PAssist_missing_test_alarm.png)
 ![Alarm for missing test alarm](images/PAssist_missing_test_alarm_alert.png)
-![Details to test alarm](images/PAssist_06.png)
+![Details to test alarm](images/PAssist_test_alarm_details.png)
 
 
 ## Installation

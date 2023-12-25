@@ -31,11 +31,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 class TestAlarmWorkUnitTest {
 
@@ -83,7 +79,7 @@ class TestAlarmWorkUnitTest {
     // assert
     assertThat(scheduleInfo).isEqualTo(Optional.empty());
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
     verify(alarmTrigger, never()).run();
   }
@@ -129,7 +125,7 @@ class TestAlarmWorkUnitTest {
     // assert
     assertThat(scheduleInfo).isEqualTo(Optional.empty());
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
     verify(alarmTrigger, never()).run();
   }
@@ -175,7 +171,7 @@ class TestAlarmWorkUnitTest {
     // assert
     assertThat(scheduleInfo).isEqualTo(Optional.empty());
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
     verify(alarmTrigger, never()).run();
   }
@@ -227,7 +223,7 @@ class TestAlarmWorkUnitTest {
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(11), Duration.ofDays(1).minusMinutes(10));
     verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
     verify(alarmTrigger, never()).run();
   }
@@ -279,7 +275,7 @@ class TestAlarmWorkUnitTest {
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofMinutes(10), Duration.ofMinutes(11));
     verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
     verify(alarmTrigger, never()).run();
   }
@@ -335,7 +331,7 @@ class TestAlarmWorkUnitTest {
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(2).plusMinutes(10), Duration.ofDays(2).plusMinutes(11));
     verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(testAlarmContext, OnOffState.ON);
     verify(alarmTrigger, never()).run();
   }
@@ -389,7 +385,7 @@ class TestAlarmWorkUnitTest {
     // assert
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(1), Duration.ofDays(1));
     verify(resultIntent).putExtra(PARAM_INITIAL, false);
-    verify(notificationService).notifyMissingTestAlarm(any(Intent.class), eq(new HashSet<>(Arrays.asList(tc1, tc3))));
+    verify(notificationService).notifyMissingTestAlarm(any(Intent.class), eq(Arrays.asList(tc1.context(), tc3.context())));
     verify(testAlarmDao).updateAlertState(tc1, OnOffState.ON);
     verify(testAlarmDao, never()).updateAlertState(tc2, OnOffState.ON);
     verify(testAlarmDao).updateAlertState(tc3, OnOffState.ON);
@@ -441,7 +437,7 @@ class TestAlarmWorkUnitTest {
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(1), Duration.ofDays(1));
     verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(any(TestAlarmContext.class), eq(OnOffState.ON));
     verify(alarmTrigger, never()).run();
   }
@@ -496,7 +492,7 @@ class TestAlarmWorkUnitTest {
     assertThat(info.getScheduleDelay()).isBetween(Duration.ofDays(1).minusMinutes(1), Duration.ofDays(1));
     verify(resultIntent).putExtra(PARAM_INITIAL, false);
     //noinspection unchecked
-    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(Set.class));
+    verify(notificationService, never()).notifyMissingTestAlarm(any(Intent.class), any(List.class));
     verify(testAlarmDao, never()).updateAlertState(any(TestAlarmContext.class), eq(OnOffState.ON));
     verify(alarmTrigger, never()).run();
   }

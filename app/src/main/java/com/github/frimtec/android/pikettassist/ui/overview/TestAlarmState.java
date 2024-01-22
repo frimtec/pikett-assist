@@ -18,7 +18,6 @@ import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.ui.testalarm.TestAlarmDetailActivity;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -46,10 +45,7 @@ class TestAlarmState extends State {
     super(
         R.drawable.ic_test_alarm,
         testAlarmStateContext.testAlarm().context().context(),
-        childStates.stream()
-            .map(State::getValue)
-            .min(Comparator.nullsLast(Comparator.reverseOrder()))
-            .orElse(""),
+        testAlarmStateContext.lastReceived(),
         null,
         childStates.stream().map(State::getState).sorted().findFirst().orElse(TrafficLight.RED),
         childStates

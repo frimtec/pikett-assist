@@ -308,18 +308,23 @@ public class StateFragment extends AbstractListFragment<State, State> {
       if (testAlarmStates.size() == 1) {
         states.addAll(testAlarmStates);
       } else if (testAlarmStates.size() > 1) {
+        Instant oldestReceivedTime = allTestAlarms.values().stream()
+            .map(TestAlarm::receivedTime)
+            .filter(Objects::nonNull)
+            .min(Comparator.naturalOrder())
+            .orElse(null);
         states.add(new TestAlarmState(
             stateContext,
             new TestAlarmStateContext(
                 stateContext,
                 new TestAlarm(
                     new TestAlarmContext(String.format(Locale.getDefault(), getString(R.string.title_test_alarms) + " (%d)", testAlarmStates.size())),
-                    null,
+                    oldestReceivedTime,
                     OnOffState.ON,
                     "",
                     null
                 ),
-                null
+                formatDateTime(oldestReceivedTime)
             ),
             testAlarmStates
         ));

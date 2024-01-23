@@ -137,8 +137,6 @@
   <string name="permission_contacts_text">PAssist liest den konfigurierten Kontakt der Alarmierungszentrale, um zu ermitteln, von welcher Telefonnummer die zu überwachenden SMS gesendet werden. Ohne dieses Recht ist PAssist nicht funktionsfähig!</string>
   <string name="permission_calendar_title">Kalender</string>
   <string name="permission_calendar_text">PAssist liest den Kalender, um die Zeitfenster zu ermitteln, in denen der Bereitschaftsdienst stattfindet. Nur bei aktivem Bereitschaftsdienst ist die Überwachungsfunktion von PAssist aktiv. Ohne dieses Recht ist PAssist nicht funktionsfähig!</string>
-  <string name="permission_write_external_storage_title">Externen Speicher</string>
-  <string name="permission_write_external_storage_text">Um einen SMS-Adapter herunterzuladen zu können, sowie das Erstellen von Backups der Alarmhistorie ist es notwendig, dass PAssist auf den externen Speicher schreiben darf.</string>
   <string name="permission_location_title">Position</string>
   <string name="permission_location_text">Um die Telefonempfangsqualität während des Bereitschaftsdienstes zu überwachen, muss auf die Telefonzelleninformation zugegriffen werden. Diese Daten werden mit dem Recht Gerätestandort geschützt, da mit diesen Daten auch die grobe Position ermittelt werden könnte. Ohne dieses Recht ist PAssist nicht funktionsfähig!</string>
   <string name="send_log_title">PAssist Crash-Report</string>

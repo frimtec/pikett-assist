@@ -80,22 +80,6 @@ public enum Feature {
       }
     }
   },
-  PERMISSION_WRITE_EXTERNAL_STORAGE(
-      true,
-      true,
-      R.string.permission_write_external_storage_title,
-      context -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q || allPermissionsGranted(context, PermissionSets.WRITE_EXTERNAL_STORAGE.getPermissions())
-  ) {
-    @Override
-    public void request(Context context) {
-      requestPermissionsWithExplanation(
-          context,
-          PermissionSets.WRITE_EXTERNAL_STORAGE.getPermissions(),
-          R.string.permission_write_external_storage_title,
-          R.string.permission_write_external_storage_text
-      );
-    }
-  },
   PERMISSION_COARSE_LOCATION(
       true,
       true,
@@ -284,7 +268,6 @@ public enum Feature {
     CONTACTS_READ(Collections.singleton(Manifest.permission.READ_CONTACTS)),
     CALENDAR_READ(Collections.singleton(Manifest.permission.READ_CALENDAR)),
     @RequiresApi(api = 33) POST_NOTIFICATIONS(Collections.singleton(Manifest.permission.POST_NOTIFICATIONS)),
-    WRITE_EXTERNAL_STORAGE(Collections.singleton(Manifest.permission.WRITE_EXTERNAL_STORAGE)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),
     NON_CRITICAL(
         Set.of(

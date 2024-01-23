@@ -1,0 +1,1 @@
+- Remove unused permission WRITE_EXTERNAL_STORAGE

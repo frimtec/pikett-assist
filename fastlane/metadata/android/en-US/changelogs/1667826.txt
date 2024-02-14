@@ -1,0 +1,2 @@
+- Expand shift groups with unconfirmed shifts
+- Bump com.android.tools.build:gradle from 8.2.1 to 8.2.2

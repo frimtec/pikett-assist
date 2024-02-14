@@ -85,10 +85,20 @@ public class ShiftListFragment extends AbstractListFragment<YearMonth, Shift> {
         .filter(yearToPosition::containsKey)
         .map(yearToPosition::get)
         .collect(Collectors.toCollection(HashSet::new));
+    expandedGroups.addAll(
+        IntStream.range(0, getGroupCount())
+            .boxed()
+            .filter(i -> hasUnconfirmedShifts(getGroup(i).items()))
+            .collect(Collectors.toCollection(HashSet::new))
+    );
     if (getGroupCount() > 0) {
       expandedGroups.add(0);
     }
     return expandedGroups;
+  }
+
+  private boolean hasUnconfirmedShifts(List<? extends Shift> shifts) {
+    return shifts.stream().anyMatch(shift -> !shift.isConfirmed());
   }
 
   @Override

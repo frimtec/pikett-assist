@@ -77,6 +77,7 @@ class ContactReferenceTest {
   @Test
   void equalsForSameReference() {
     ContactReference reference = new ContactReference(12, "key");
+    //noinspection EqualsWithItself
     assertThat(reference).isEqualTo(reference);
   }
 

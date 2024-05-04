@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.frimtec.android.pikettassist.R;
 
-final class RowViewHolder extends RecyclerView.ViewHolder {
+public final class RowViewHolder extends RecyclerView.ViewHolder {
 
   final TextView title;
   final TextView price;

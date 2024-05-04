@@ -39,7 +39,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   public static final int ONE_SECOND_MILLIS = 1000;
   public static final int VIBRATION_START_DELAY_MS = 50;
 
-  protected enum SwipeButtonStyle {
+  public enum SwipeButtonStyle {
     ALARM, NO_SIGNAL, MISSING_TEST_ALARM
   }
 

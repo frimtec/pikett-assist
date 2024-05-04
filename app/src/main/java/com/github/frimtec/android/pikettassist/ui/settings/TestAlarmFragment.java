@@ -2,9 +2,11 @@ package com.github.frimtec.android.pikettassist.ui.settings;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import androidx.annotation.Nullable;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
@@ -22,6 +24,9 @@ import java.util.stream.Collectors;
 
 public class TestAlarmFragment extends PreferenceFragmentCompat {
 
+  /**
+   * @noinspection SimplifyStreamApiCallChains
+   */
   @Override
   public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
     setPreferencesFromResource(R.xml.test_alarm_preferences, rootKey);

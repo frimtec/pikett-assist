@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @FunctionalInterface
-interface WorkUnit extends Function<Data, Optional<ScheduleInfo>> {
+public interface WorkUnit extends Function<Data, Optional<ScheduleInfo>> {
 
   @Override
   Optional<ScheduleInfo> apply(Data intent);

@@ -3,7 +3,9 @@ package com.github.frimtec.android.pikettassist.service;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import androidx.work.Data;
+
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
@@ -15,7 +17,6 @@ import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
@@ -107,7 +108,7 @@ public class TestAlarmWorkUnit implements WorkUnit {
   private ZonedDateTime getTodaysCheckTime(ZonedDateTime now) {
     String[] testAlarmCheckTime = this.applicationPreferences.getTestAlarmCheckTime(context).split(":");
     return now.truncatedTo(ChronoUnit.MINUTES)
-        .with(ChronoField.HOUR_OF_DAY, Integer.parseInt(testAlarmCheckTime[0]))
-        .with(ChronoField.MINUTE_OF_HOUR, Integer.parseInt(testAlarmCheckTime[1]));
+        .withHour(Integer.parseInt(testAlarmCheckTime[0]))
+        .withMinute(Integer.parseInt(testAlarmCheckTime[1]));
   }
 }

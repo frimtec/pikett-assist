@@ -33,7 +33,6 @@
             android:name=".ui.support.SendLogActivity"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.github.frimtec.android.pikettassist.SEND_LOG" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

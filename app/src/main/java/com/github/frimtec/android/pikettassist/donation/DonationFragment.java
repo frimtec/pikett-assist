@@ -44,7 +44,7 @@ public class DonationFragment extends DialogFragment {
 
   private static final String PAYPAL_ME_BASE_LINK = "https://paypal.me/frimtec";
   private static final String PAYPAL_ME_LINK = PAYPAL_ME_BASE_LINK + "?country.x=CH&locale.x=de_DE";
-  private static final String ALTERNATIVE_DONATION_TEXT_TEMPLATE = "" +
+  private static final String ALTERNATIVE_DONATION_TEXT_TEMPLATE =
       "<h3>" +
       "%s" +
       "</h3>" +

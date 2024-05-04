@@ -1,0 +1,4 @@
+- Cleanup inspection warnings
+- Bump com.android.billingclient:billing from 6.1.0 to 6.2.1
+- Bump com.android.tools.build:gradle from 8.2.2 to 8.3.2
+- Bump com.google.android.material:material from 1.11.0 to 1.12.0

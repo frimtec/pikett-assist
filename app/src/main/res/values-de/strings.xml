@@ -160,7 +160,7 @@
   <string name="state_fragment_sms_adapter_not_installed">Nicht vorhanden</string>
   <string name="state_fragment_sms_adapter_no_sms_permissions">Kein SMS-Recht</string>
   <string name="state_fragment_phone_numbers_blocked">Nummer blockiert</string>
-  <string name="state_fragment_loopback_sms_sent">Test-SMS gesendet…</string>
+  <string name="state_fragment_loopback_sms_sent">Test-SMS gesendet …</string>
   <string name="sms_listener_loopback_sms_received">Test-SMS empfangen!</string>
   <string name="sms_listener_meta_sms_filtered">SMS empfangen und gefiltert!</string>
   <string name="state_fragment_s2msp_requires_update">Benötigt Update</string>
@@ -267,4 +267,6 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="pref_summary_send_confirm_sms">⚠️ Wird bei alphanumerischen Kurzwahl-Telefonnummern ignoriert!</string>
   <string name="list_item_menu_alias">Alias festlegen</string>
   <string name="test_alarm_alias_title">Alias für den Testalarm</string>
+  <string name="pref_title_auto_confirm_time">Zeitfenster für automatische Bestätigungen</string>
+  <string name="toast_alert_auto_confirm">Alarm empfangen und automatisch bestätigt!</string>
 </resources>

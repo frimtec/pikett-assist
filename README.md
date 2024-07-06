@@ -136,10 +136,10 @@ deactivate this setting to save the cost of sending the extra reply SMS.
 
 Defines the text to send back as alarm acknowledgement to your operations center.
 
-#### Auto confirm time window
+#### Auto confirm
 
-Time window since the last received alarm in which new received alerts are auto confirmed
-while still being in an confirmed alarm state.
+New alerts are automatically confirmed if received within the defined time window after the last
+alarm was received, while the app is still in a confirmed alert state.
 This feature ensures you can stay focused on your current case even with recurring alerts.
 If set to 0 (default), alarms are never auto confirmed.
 

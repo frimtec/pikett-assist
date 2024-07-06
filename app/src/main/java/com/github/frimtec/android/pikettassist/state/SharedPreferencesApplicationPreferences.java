@@ -85,6 +85,12 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   }
 
   @Override
+  public Duration getAutoConfirmTime(Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    return Duration.ofMinutes(preferences.getInt(PREF_KEY_AUTO_CONFIRM_TIME_MINUTES, context.getResources().getInteger(R.integer.default_auto_confirm_time_minutes)));
+  }
+
+  @Override
   public ContactReference getOperationsCenterContactReference(Context context) {
     return ContactReference.fromSerializedString(getSharedPreferences(context, PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT, ContactReference.NO_SELECTION.getSerializedString()));
   }

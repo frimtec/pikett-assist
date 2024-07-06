@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.settings;
 
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.CALENDAR_FILTER_ALL;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_AUTO_CONFIRM_TIME_MINUTES;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_BATTERY_WARN_LEVEL;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 
@@ -129,6 +130,21 @@ public class SettingsActivity extends AppCompatActivity {
             (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
               int value = preference.getValue();
               return value == 0 ? getString(R.string.state_off) : ApplicationPreferences.instance().convertLowSignalFilerToSeconds(value) + " " + getString(R.string.general_seconds);
+            });
+      }
+
+      SeekBarPreference autoConfirmTime = findPreference(PREF_KEY_AUTO_CONFIRM_TIME_MINUTES);
+      if (autoConfirmTime != null) {
+        autoConfirmTime.setMin(0);
+        autoConfirmTime.setMax(15);
+        autoConfirmTime.setOnPreferenceChangeListener((preference, newValue) -> {
+          ((SeekBarPreference) preference).setValue((int) newValue);
+          return true;
+        });
+        autoConfirmTime.setSummaryProvider(
+            (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
+              int value = preference.getValue();
+              return value == 0 ? getString(R.string.state_off) : String.format("%d", preference.getValue()) + " " + getString(R.string.units_minutes);
             });
       }
 

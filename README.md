@@ -136,6 +136,13 @@ deactivate this setting to save the cost of sending the extra reply SMS.
 
 Defines the text to send back as alarm acknowledgement to your operations center.
 
+#### Auto confirm time window
+
+Time window since the last received alarm in which new received alerts are auto confirmed
+while still being in an confirmed alarm state.
+This feature ensures you can stay focused on your current case even with recurring alerts.
+If set to 0 (default), alarms are never auto confirmed.
+
 #### SMS ignore filter
 [Regular expression][regular-expression] pattern to identify SMS messages
 to be ignored.

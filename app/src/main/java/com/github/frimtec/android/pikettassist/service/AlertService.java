@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
@@ -22,6 +23,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,13 +50,29 @@ public class AlertService {
 
   public void newAlert(Sms sms) {
     ApplicationState.instance().setLastAlarmSmsNumberWithSubscriptionId(sms.getNumber(), sms.getSubscriptionId());
-    if (this.alertDao.insertOrUpdateAlert(Instant.now(), sms.getText(), false)) {
-      AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
+    switch (
+        this.alertDao.insertOrUpdateAlert(
+            Instant.now(),
+            sms.getText(),
+            false,
+            ApplicationPreferences.instance().getAutoConfirmTime(context)
+        )
+    ) {
+      case TRIGGER -> AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
+      case UNCHANGED -> {
+        // nothing to do
+      }
+      case AUTO_CONFIRMED -> {
+        if (ApplicationPreferences.instance().getSendConfirmSms(context)) {
+          AlertService.this.smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
+        }
+        Toast.makeText(context, context.getText(R.string.toast_alert_auto_confirm), Toast.LENGTH_LONG).show();
+      }
     }
   }
 
   public void newManuallyAlert(Instant startTime, String reason) {
-    this.alertDao.insertOrUpdateAlert(startTime, String.format("%s: %s", context.getString(R.string.manually_created_alarm_reason_prefix), reason), true);
+    this.alertDao.insertOrUpdateAlert(startTime, String.format("%s: %s", context.getString(R.string.manually_created_alarm_reason_prefix), reason), true, Duration.ZERO);
     notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,

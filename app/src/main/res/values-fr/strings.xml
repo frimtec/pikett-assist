@@ -139,6 +139,8 @@
   <string name="permission_contacts_text">PAssist lit le numéro de téléphone du contact du centre d\'opérations configuré. Ceci est utilisé pour décider quel SMS doit être supervisé pendant l\'astreinte. Sans cette autorisation, PAssist ne fonctionne pas!</string>
   <string name="permission_calendar_title">Calendrier</string>
   <string name="permission_calendar_text">PAssist lit les événements du calendrier pour déterminer si l\'astreinte est active ou non. Uniquement dans un état d\'astreinte actif, les fonctions de supervision de PAssist sont activées. Sans cette autorisation, PAssist ne fonctionne pas!</string>
+  <string name="permission_write_external_storage_title">Stockage externe</string>
+  <string name="permission_write_external_storage_text">Pour télécharger un adaptateur SMS et stocker des sauvegardes de l\'historique des alarmes, il est nécessaire que PAssist puisse écrire sur le stockage externe.</string>
   <string name="permission_location_title">Emplacement</string>
   <string name="permission_location_text">Pour superviser la force du signal téléphonique pendant le service de garde, PAssist doit accéder aux informations des cellules téléphoniques à portée. Ces données sont protégées par la permission localisation grossière. Sans cette autorisation, PAssist ne fonctionne pas!</string>
   <string name="send_log_title">Rapport de plantage PAssist</string>

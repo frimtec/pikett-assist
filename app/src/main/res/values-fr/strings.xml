@@ -82,7 +82,7 @@
   <string name="list_item_menu_clear">Dégager</string>
   <string name="list_item_menu_activate">Activer</string>
   <string name="list_item_menu_bogus_alarm">Planifier une fausse alarme</string>
-  <string name="toast_bogus_alarm">La fausse alarme se déclenchera dans 10 secondes…</string>
+  <string name="toast_bogus_alarm">La fausse alarme se déclenchera dans 10 secondes …</string>
   <string name="list_item_menu_deactivate">Désactiver</string>
   <string name="list_item_menu_set_manually_on">Régler manuellement sur</string>
   <string name="list_item_menu_reset">Réinitialiser</string>
@@ -268,4 +268,6 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="pref_summary_send_confirm_sms">⚠️ Ignoré pour les numéros de téléphone à code court alphanumérique!</string>
   <string name="list_item_menu_alias">Définir un alias</string>
   <string name="test_alarm_alias_title">Entrez l\'alias de l\'alarme de test</string>
+  <string name="pref_title_auto_confirm_time">Fenêtre de temps de confirmation automatique</string>
+  <string name="toast_alert_auto_confirm">Alerte reçue et confirmée automatiquement!</string>
 </resources>

@@ -82,7 +82,7 @@
   <string name="list_item_menu_clear">Chiaro</string>
   <string name="list_item_menu_activate">Attivare</string>
   <string name="list_item_menu_bogus_alarm">Programma allarme falso</string>
-  <string name="toast_bogus_alarm">L\'allarme fasullo verrà attivato tra 10 secondi…</string>
+  <string name="toast_bogus_alarm">L\'allarme fasullo verrà attivato tra 10 secondi...</string>
   <string name="list_item_menu_deactivate">Disattivare</string>
   <string name="list_item_menu_set_manually_on">Attiva manualmente</string>
   <string name="list_item_menu_reset">Ripristina</string>
@@ -138,6 +138,8 @@
   <string name="permission_contacts_text">PAssist legge il numero di telefono dal contatto della centrale operativa configurata. Viene utilizzato per decidere quale SMS deve essere supervisionato durante il servizio di guardia. PAssist non funziona senza questa autorizzazione!</string>
   <string name="permission_calendar_title">Calendario</string>
   <string name="permission_calendar_text">PAssist legge gli eventi dal calendario per determinare se il servizio di guardia è attivo o meno. Solo in uno stato di chiamata attivo, le funzioni di supervisione di PAssist sono abilitate. PAssist non funziona senza questa autorizzazione!</string>
+  <string name="permission_write_external_storage_title">Archiviazione esterna</string>
+  <string name="permission_write_external_storage_text">Per scaricare un adattatore SMS e memorizzare i backup della cronologia allarmi, è necessario che PAssist possa scrivere nella memoria esterna.</string>
   <string name="permission_location_title">Posizione</string>
   <string name="permission_location_text">Per controllare la potenza del segnale del telefono durante il servizio di guardia, PAssist deve accedere alle informazioni dalle celle del telefono nel raggio d\'azione. Questi dati sono protetti dalla posizione grossolana dell\'autorizzazione. PAssist non funziona senza questa autorizzazione!</string>
   <string name="send_log_title">Rapporto sull\'arresto anomalo di PAssist</string>
@@ -161,7 +163,7 @@
   <string name="state_fragment_sms_adapter_not_installed">Non installato</string>
   <string name="state_fragment_sms_adapter_no_sms_permissions">Nessun permesso SMS</string>
   <string name="state_fragment_phone_numbers_blocked">Numero bloccato</string>
-    <string name="state_fragment_loopback_sms_sent">SMS di prova inviato…</string>
+  <string name="state_fragment_loopback_sms_sent">SMS di prova inviato...</string>
   <string name="sms_listener_loopback_sms_received">SMS di prova ricevuto!</string>
   <string name="sms_listener_meta_sms_filtered">SMS ricevuti e filtrati!</string>
   <string name="state_fragment_s2msp_requires_update">Richiede aggiornamento</string>
@@ -267,4 +269,6 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="pref_summary_send_confirm_sms">⚠️ Ignorato per i numeri di telefono con codice breve alfanumerico!</string>
   <string name="list_item_menu_alias">Imposta l\'alias</string>
   <string name="test_alarm_alias_title">Inserisci l\'alias dell\'allarme di prova</string>
+  <string name="pref_title_auto_confirm_time">Finestra temporale di conferma automatica</string>
+  <string name="toast_alert_auto_confirm">Avviso ricevuto e confermato automaticamente!</string>
 </resources>

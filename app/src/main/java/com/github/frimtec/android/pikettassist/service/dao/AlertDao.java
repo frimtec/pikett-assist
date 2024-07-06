@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange.AUTO_CONFIRMED;
+import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange.TRIGGER;
+import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange.UNCHANGED;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
 import static com.github.frimtec.android.pikettassist.state.DbHelper.BOOLEAN_FALSE;
@@ -27,6 +30,7 @@ import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,8 +127,14 @@ public class AlertDao {
     }
   }
 
-  public boolean insertOrUpdateAlert(Instant startTime, String text, boolean confirmed) {
-    boolean reTriggered;
+  public enum AlertStateChange {
+    TRIGGER,
+    AUTO_CONFIRMED,
+    UNCHANGED
+  }
+
+  public AlertStateChange insertOrUpdateAlert(Instant startTime, String text, boolean confirmed, Duration autoConfirmTime) {
+    AlertStateChange alertStateChange;
     SQLiteDatabase db = this.dbFactory.getDatabase(WRITABLE);
     Pair<AlertState, Long> alarmState = getAlertState(db);
     Long alertId;
@@ -139,25 +149,35 @@ public class AlertDao {
         contentValues.put(TABLE_ALERT_COLUMN_CONFIRM_TIME, startTimeEpochMillis);
       }
       alertId = db.insert(TABLE_ALERT, null, contentValues);
-      reTriggered = true;
+      alertStateChange = TRIGGER;
     } else if (alarmState.first == AlertState.ON_CONFIRMED) {
-      Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, confirmedDbValue);
       alertId = alarmState.second;
-      db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
-      reTriggered = true;
+      if (isAutoConfirmAllowed(autoConfirmTime, alertId)) {
+        Log.i(TAG, "Auto confirm alert");
+        alertStateChange = AUTO_CONFIRMED;
+      } else {
+        Log.i(TAG, "Alarm state ON_CONFIRMED -> ON");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TABLE_ALERT_COLUMN_IS_CONFIRMED, confirmedDbValue);
+        db.update(TABLE_ALERT, contentValues, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(alertId)});
+        alertStateChange = TRIGGER;
+      }
     } else {
       Log.i(TAG, "Alarm state ON -> ON");
       alertId = alarmState.second;
-      reTriggered = false;
+      alertStateChange = UNCHANGED;
     }
     ContentValues contentValues = new ContentValues();
     contentValues.put(TABLE_ALERT_CALL_COLUMN_ALERT_ID, alertId);
     contentValues.put(TABLE_ALERT_CALL_COLUMN_TIME, startTime.toEpochMilli());
     contentValues.put(TABLE_ALERT_CALL_COLUMN_MESSAGE, text);
     db.insert(TABLE_ALERT_CALL, null, contentValues);
-    return reTriggered;
+    return alertStateChange;
+  }
+
+  private boolean isAutoConfirmAllowed(Duration autoConfirmTime, Long alertId) {
+    long autoConfirmTimeMillis = autoConfirmTime.toMillis();
+    return autoConfirmTimeMillis > 0 && Instant.now().toEpochMilli() - load(alertId).calls().stream().map(AlertCall::time).mapToLong(Instant::toEpochMilli).max().orElse(0) <= autoConfirmTimeMillis;
   }
 
   public void saveImportedAlert(Alert alert) {

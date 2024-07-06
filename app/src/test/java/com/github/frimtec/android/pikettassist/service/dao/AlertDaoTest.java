@@ -1,6 +1,9 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
 import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.ALERT_COLUMNS;
+import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange.AUTO_CONFIRMED;
+import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange.TRIGGER;
+import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange.UNCHANGED;
 import static com.github.frimtec.android.pikettassist.service.dao.AlertDao.CALL_COLUMNS;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.READ_ONLY;
 import static com.github.frimtec.android.pikettassist.state.DbFactory.Mode.WRITABLE;
@@ -33,10 +36,12 @@ import androidx.core.util.Pair;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
+import com.github.frimtec.android.pikettassist.service.dao.AlertDao.AlertStateChange;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -228,14 +233,14 @@ class AlertDaoTest {
 
     AlertDao dao = new AlertDao(dbFactory);
     Instant startTime = Instant.now();
-    boolean reTriggered = dao.insertOrUpdateAlert(startTime, "text", false);
-    assertThat(reTriggered).isTrue();
+    AlertStateChange alertStateChange = dao.insertOrUpdateAlert(startTime, "text", false, Duration.ZERO);
+    assertThat(alertStateChange).isEqualTo(TRIGGER);
     verify(db).insert(eq(TABLE_ALERT), isNull(), notNull());
     verify(db).insert(eq(TABLE_ALERT_CALL), isNull(), notNull());
   }
 
   @Test
-  void insertOrUpdateAlertForAlarmStateOffConfirmedReturnsTrue() {
+  void insertOrUpdateAlertForAlarmStateOffConfirmedReturnsTrigger() {
     DbFactory dbFactory = mock(DbFactory.class);
     SQLiteDatabase db = mock(SQLiteDatabase.class);
     when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
@@ -246,14 +251,14 @@ class AlertDaoTest {
 
     AlertDao dao = new AlertDao(dbFactory);
     Instant startTime = Instant.now();
-    boolean reTriggered = dao.insertOrUpdateAlert(startTime, "text", true);
-    assertThat(reTriggered).isTrue();
+    AlertStateChange alertStateChange = dao.insertOrUpdateAlert(startTime, "text", true, Duration.ZERO);
+    assertThat(alertStateChange).isEqualTo(TRIGGER);
     verify(db).insert(eq(TABLE_ALERT), isNull(), notNull());
     verify(db).insert(eq(TABLE_ALERT_CALL), isNull(), notNull());
   }
 
   @Test
-  void insertOrUpdateAlertForAlarmStateOnConfirmedReturnsTrue() {
+  void insertOrUpdateAlertForAlarmStateOnConfirmedReturnsTrigger() {
     DbFactory dbFactory = mock(DbFactory.class);
     SQLiteDatabase db = mock(SQLiteDatabase.class);
     when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
@@ -264,14 +269,79 @@ class AlertDaoTest {
 
     AlertDao dao = new AlertDao(dbFactory);
     Instant startTime = Instant.now();
-    boolean reTriggered = dao.insertOrUpdateAlert(startTime, "text", false);
-    assertThat(reTriggered).isTrue();
+    AlertStateChange alertStateChange = dao.insertOrUpdateAlert(startTime, "text", false, Duration.ZERO);
+    assertThat(alertStateChange).isEqualTo(TRIGGER);
     verify(db).update(eq(TABLE_ALERT), notNull(), eq(TABLE_ALERT_COLUMN_ID + "=?"), eq(new String[]{String.valueOf(12L)}));
     verify(db).insert(eq(TABLE_ALERT_CALL), isNull(), notNull());
   }
 
   @Test
-  void insertOrUpdateAlertForAlarmStateOnReturnsFalse() {
+  void insertOrUpdateAlertForAlarmStateOnConfirmedWithAutoConfirmReturnsAutoConfirmed() {
+    DbFactory dbFactory = mock(DbFactory.class);
+    SQLiteDatabase db = mock(SQLiteDatabase.class);
+    when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
+    when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
+    when(db.update(eq(TABLE_ALERT), any(), eq(TABLE_ALERT_COLUMN_END_TIME + " IS NULL"), isNull())).thenReturn(1);
+    Cursor cursor = createCursor(Collections.singletonList(Pair.create(12L, true)));
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    List<AlertCall> calls = Arrays.asList(
+        new AlertCall(now.minusSeconds(5), "msg1"),
+        new AlertCall(now.minusSeconds(2), "msg2")
+    );
+    Cursor cursorAlertCalls = createAlertCallCursor(calls);
+    Alert expectedAlert = new Alert(12L, now.minusSeconds(3), now.minusSeconds(2), true, now.minusSeconds(1), calls);
+    Cursor cursorAlert = createAlertCursor(Collections.singletonList(expectedAlert));
+
+    when(db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_IS_CONFIRMED}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null))
+        .thenReturn(cursor);
+
+    when(db.query(TABLE_ALERT, ALERT_COLUMNS, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(12L)}, null, null, null))
+        .thenReturn(cursorAlert);
+    when(db.query(TABLE_ALERT_CALL, CALL_COLUMNS, TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=?", new String[]{String.valueOf(12L)}, null, null, TABLE_ALERT_CALL_COLUMN_TIME))
+        .thenReturn(cursorAlertCalls);
+
+    AlertDao dao = new AlertDao(dbFactory);
+    Instant startTime = Instant.now();
+    AlertStateChange alertStateChange = dao.insertOrUpdateAlert(startTime, "text", false, Duration.ofSeconds(5));
+    assertThat(alertStateChange).isEqualTo(AUTO_CONFIRMED);
+    verify(db).insert(eq(TABLE_ALERT_CALL), isNull(), notNull());
+  }
+
+  @Test
+  void insertOrUpdateAlertForAlarmStateOnConfirmedWithAutoConfirmButOutdatedReturnsTrigger() {
+    DbFactory dbFactory = mock(DbFactory.class);
+    SQLiteDatabase db = mock(SQLiteDatabase.class);
+    when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
+    when(dbFactory.getDatabase(READ_ONLY)).thenReturn(db);
+    when(db.update(eq(TABLE_ALERT), any(), eq(TABLE_ALERT_COLUMN_END_TIME + " IS NULL"), isNull())).thenReturn(1);
+    Cursor cursor = createCursor(Collections.singletonList(Pair.create(12L, true)));
+    Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    List<AlertCall> calls = Arrays.asList(
+        new AlertCall(now.minusSeconds(5), "msg1"),
+        new AlertCall(now.minusSeconds(2), "msg2")
+    );
+    Cursor cursorAlertCalls = createAlertCallCursor(calls);
+    Alert expectedAlert = new Alert(12L, now.minusSeconds(3), now.minusSeconds(2), true, now.minusSeconds(1), calls);
+    Cursor cursorAlert = createAlertCursor(Collections.singletonList(expectedAlert));
+
+    when(db.query(TABLE_ALERT, new String[]{TABLE_ALERT_COLUMN_ID, TABLE_ALERT_COLUMN_IS_CONFIRMED}, TABLE_ALERT_COLUMN_END_TIME + " is null", null, null, null, null))
+        .thenReturn(cursor);
+
+    when(db.query(TABLE_ALERT, ALERT_COLUMNS, TABLE_ALERT_COLUMN_ID + "=?", new String[]{String.valueOf(12L)}, null, null, null))
+        .thenReturn(cursorAlert);
+    when(db.query(TABLE_ALERT_CALL, CALL_COLUMNS, TABLE_ALERT_CALL_COLUMN_ALERT_ID + "=?", new String[]{String.valueOf(12L)}, null, null, TABLE_ALERT_CALL_COLUMN_TIME))
+        .thenReturn(cursorAlertCalls);
+
+    AlertDao dao = new AlertDao(dbFactory);
+    Instant startTime = Instant.now();
+    AlertStateChange alertStateChange = dao.insertOrUpdateAlert(startTime, "text", false, Duration.ofSeconds(1));
+    assertThat(alertStateChange).isEqualTo(TRIGGER);
+    verify(db).update(eq(TABLE_ALERT), notNull(), eq(TABLE_ALERT_COLUMN_ID + "=?"), eq(new String[]{String.valueOf(12L)}));
+    verify(db).insert(eq(TABLE_ALERT_CALL), isNull(), notNull());
+  }
+
+  @Test
+  void insertOrUpdateAlertForAlarmStateOnReturnsUnchanged() {
     DbFactory dbFactory = mock(DbFactory.class);
     SQLiteDatabase db = mock(SQLiteDatabase.class);
     when(dbFactory.getDatabase(WRITABLE)).thenReturn(db);
@@ -282,8 +352,8 @@ class AlertDaoTest {
 
     AlertDao dao = new AlertDao(dbFactory);
     Instant startTime = Instant.now();
-    boolean reTriggered = dao.insertOrUpdateAlert(startTime, "text", false);
-    assertThat(reTriggered).isFalse();
+    AlertStateChange alertStateChange = dao.insertOrUpdateAlert(startTime, "text", false, Duration.ZERO);
+    assertThat(alertStateChange).isEqualTo(UNCHANGED);
     verify(db).insert(eq(TABLE_ALERT_CALL), isNull(), notNull());
   }
 

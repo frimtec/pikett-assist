@@ -21,6 +21,11 @@
         app:title="@string/pref_title_sms_confirm_text"
         app:useSimpleSummaryProvider="true" />
 
+    <SeekBarPreference
+        app:defaultValue="@integer/default_auto_confirm_time_minutes"
+        app:key="auto_confirm_time_minutes"
+        app:title="@string/pref_title_auto_confirm_time" />
+
     <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
         app:defaultValue=""
         app:icon="@drawable/ic_baseline_filter_alt_24"

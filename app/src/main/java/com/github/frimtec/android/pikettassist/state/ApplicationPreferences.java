@@ -17,6 +17,7 @@ public interface ApplicationPreferences {
   String CALENDAR_FILTER_ALL = "-1";
   String PREF_KEY_BATTERY_SAFER_AT_NIGHT = "battery_safer_at_night";
   String PREF_KEY_BATTERY_WARN_LEVEL = "battery_warn_level";
+  String PREF_KEY_AUTO_CONFIRM_TIME_MINUTES = "auto_confirm_time_minutes";
 
   @SuppressWarnings("PointlessArithmeticExpression")
   NonLinearNumericSeries LOW_SIGNAL_FILTER_PREFERENCE = new NonLinearNumericSeries(new int[]{
@@ -129,4 +130,5 @@ public interface ApplicationPreferences {
 
   void setTestAlarmStatesExpanded(Context context, boolean values);
 
+  Duration getAutoConfirmTime(Context context);
 }

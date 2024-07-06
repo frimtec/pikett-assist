@@ -1,0 +1,3 @@
+- Add auto confirm feature (disabled per default)
+- Bump com.google.code.gson:gson from 2.10.1 to 2.11.0
+- Bump com.android.billingclient:billing from 6.2.1 to 7.0.0

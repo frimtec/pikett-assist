@@ -283,6 +283,6 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="pref_summary_send_confirm_sms">⚠️ Ignored for alphanumeric short code phone numbers!</string>
   <string name="list_item_menu_alias">Set alias</string>
   <string name="test_alarm_alias_title">Enter test alarm alias</string>
-  <string name="pref_title_auto_confirm_time">Auto confirm time window</string>
+  <string name="pref_title_auto_confirm_time">Auto confirm</string>
   <string name="toast_alert_auto_confirm">Alert received and auto confirmed!</string>
 </resources>

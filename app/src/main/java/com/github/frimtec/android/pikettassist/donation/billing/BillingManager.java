@@ -17,6 +17,7 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -64,7 +65,13 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
   public BillingManager(Activity activity, BillingUpdatesListener updatesListener) {
     this.activity = activity;
     this.billingUpdatesListener = updatesListener;
-    this.billingClient = BillingClient.newBuilder(this.activity).setListener(this).enablePendingPurchases().build();
+    this.billingClient = BillingClient.newBuilder(this.activity)
+        .setListener(this)
+        .enablePendingPurchases(
+            PendingPurchasesParams.newBuilder()
+                .enableOneTimeProducts()
+                .build()
+        ).build();
     startServiceConnection(() -> {
       this.billingUpdatesListener.onBillingClientSetupFinished();
       queryPurchases();

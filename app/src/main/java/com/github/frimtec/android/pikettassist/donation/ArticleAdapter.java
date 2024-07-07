@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.donation;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 import android.view.ViewGroup;
 
 import androidx.annotation.IntDef;
@@ -8,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.annotation.Retention;
 import java.util.List;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 public class ArticleAdapter extends RecyclerView.Adapter<RowViewHolder> implements RowDataProvider {
   /**
@@ -57,6 +57,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<RowViewHolder> implemen
 
   @Override
   public ProductRowData getData(int position) {
-    return listData == null ? null : listData.get(position);
+    return listData == null || position < 0 ? null : listData.get(position);
   }
 }

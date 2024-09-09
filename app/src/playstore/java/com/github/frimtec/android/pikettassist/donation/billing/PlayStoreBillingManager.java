@@ -25,18 +25,18 @@ import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.github.frimtec.android.pikettassist.BuildConfig;
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingManagerContract;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurchaseResponseListener {
+public class PlayStoreBillingManager implements BillingManagerContract, PurchasesUpdatedListener, AcknowledgePurchaseResponseListener {
 
   private static final String TAG = "BillingManager";
 
-  private static final Set<String> BLACKLIST = Collections.emptySet();
+  private static final Set<String> BLACKLIST = Set.of("GPA.3313-2805-6535-90633", "GPA.3361-8608-8510-17077");
 
   /**
    * A reference to BillingClient
@@ -62,7 +62,7 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
     void onPurchasesUpdated(List<Purchase> purchases);
   }
 
-  public BillingManager(Activity activity, BillingUpdatesListener updatesListener) {
+  public PlayStoreBillingManager(Activity activity, BillingUpdatesListener updatesListener) {
     this.activity = activity;
     this.billingUpdatesListener = updatesListener;
     this.billingClient = BillingClient.newBuilder(this.activity)
@@ -76,6 +76,11 @@ public class BillingManager implements PurchasesUpdatedListener, AcknowledgePurc
       this.billingUpdatesListener.onBillingClientSetupFinished();
       queryPurchases();
     });
+  }
+
+  @Override
+  public boolean isBillingClientReady() {
+    return getBillingClientResponseCode() == BillingResponseCode.OK;
   }
 
   @Override

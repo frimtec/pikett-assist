@@ -1,8 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui;
 
-import static com.android.billingclient.api.BillingClient.BillingResponseCode;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.ui.BillingAdapter.BILLING_DIALOG_TAG;
+import static com.github.frimtec.android.pikettassist.donation.BillingAdapter.BILLING_DIALOG_TAG;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.PURCHASED;
 import static com.github.frimtec.android.pikettassist.ui.overview.StateFragment.REGISTER_SMS_ADAPTER_REQUEST_CODE;
 
 import android.annotation.SuppressLint;
@@ -32,9 +31,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.donation.BillingAdapter;
 import com.github.frimtec.android.pikettassist.donation.DonationFragment;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.service.LowSignalWorker;
 import com.github.frimtec.android.pikettassist.service.PikettWorker;
 import com.github.frimtec.android.pikettassist.service.ShiftService;
@@ -44,6 +42,7 @@ import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingManagerContract;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.ViewPager2Helper;
 import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
@@ -98,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
           StateFragment stateFragment = new StateFragment();
           stateFragment.setActivityFacade(new StateFragment.BillingAccess() {
             @Override
-            public List<BillingProvider.BillingState> getProducts() {
-              return MainActivity.this.billingAdapter.getAllProducts();
+            public boolean isDonationReminderAppropriate() {
+              return billingAdapter.isDonationReminderAppropriate(getApplicationContext());
             }
 
             @Override
@@ -228,8 +227,8 @@ public class MainActivity extends AppCompatActivity {
   protected void onResume() {
     super.onResume();
     registerBroadcastReceiver();
-    BillingManager billingManager = this.billingAdapter.getBillingManager();
-    if (billingManager != null && billingManager.getBillingClientResponseCode() == BillingResponseCode.OK) {
+    BillingManagerContract billingManager = this.billingAdapter.getBillingManager();
+    if (billingManager != null && billingManager.isBillingClientReady()) {
       billingManager.queryPurchases();
     }
     refresh();
@@ -318,13 +317,7 @@ public class MainActivity extends AppCompatActivity {
       donationFragment.show(getSupportFragmentManager(), BILLING_DIALOG_TAG);
 
       if (billingAdapter != null) {
-        int billingClientResponseCode = this.billingAdapter.getBillingManager().getBillingClientResponseCode();
-        switch (billingClientResponseCode) {
-          case BillingResponseCode.BILLING_UNAVAILABLE -> donationFragment.onManagerReady(null);
-          case BillingResponseCode.OK -> donationFragment.onManagerReady(this.billingAdapter);
-          default ->
-              Log.w(TAG, "Unhandled billing client response code: " + billingClientResponseCode);
-        }
+        donationFragment.onManagerReady(this.billingAdapter.getBillingManager().isBillingClientReady() ? this.billingAdapter : null);
       }
     }
   }

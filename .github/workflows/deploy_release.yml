@@ -9,9 +9,6 @@ jobs:
 
     runs-on: ubuntu-22.04
 
-    outputs:
-      VCODE: ${{ steps.get_vcode.outputs.VCODE }}
-
     steps:
       - uses: actions/checkout@v4
 
@@ -21,29 +18,17 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Get the version
-        id: get_version
-        run: echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
-
       - name: Get release
         id: get_release
         uses: bruceadams/get-release@v1.3.2
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: Set version
-        run: |
-          sed -i 's/$version/${{ steps.get_version.outputs.VERSION }}/g' app/version.properties
-
-      - name: Get VCODE
-        id: get_vcode
-        run: echo "VCODE=$(expr $(date +%s) / 60 - 26797800)" >> $GITHUB_OUTPUT
-
       - name: Build APK
-        run: bash ./gradlew assembleRelease --stacktrace -Dversion.code=${{ steps.get_vcode.outputs.VCODE }} -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
+        run: bash ./gradlew assembleRelease --stacktrace -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
 
       - name: Build AAB
-        run: bash ./gradlew :app:bundleRelease --stacktrace -Dversion.code=${{ steps.get_vcode.outputs.VCODE }} -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
+        run: bash ./gradlew :app:bundleRelease --stacktrace -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
 
       - name: Setup build tool version variable
         shell: bash
@@ -120,11 +105,22 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
 
-      - name: Get the version
-        id: get_version
-        run: echo "VERSION=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
+      - name: Checkout release/next branch
+        run: |
+          git checkout release/next
 
-      - name: Checkout master
+      - name: Read version.properties
+        id: read_version_properties
+        run: |
+          while IFS='=' read -r key value; do
+            if [ "$key" ]; then
+              echo "$key=$value"
+              # Set as environment variable
+              echo "$key=$value" >> $GITHUB_OUTPUT
+            fi
+          done < app/version.properties
+
+      - name: Checkout master branch
         run: |
           git checkout master
 
@@ -137,15 +133,15 @@ jobs:
       - name: Create fastlane changelog
         run: |
           mkdir -p fastlane/metadata/android/en-US/changelogs
-          echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' | head -n 10 >> fastlane/metadata/android/en-US/changelogs/${{needs.deploy.outputs.VCODE}}.txt
+          echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' | head -n 10 >> fastlane/metadata/android/en-US/changelogs/${{ steps.read_version_properties.outputs.VERSION_CODE }}.txt
 
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add fastlane/metadata/android/en-US/changelogs/${{needs.deploy.outputs.VCODE}}.txt
-          git commit -m "Update release changelog for ${{ steps.get_version.outputs.VERSION }}"
+          git add fastlane/metadata/android/en-US/changelogs/${{ steps.read_version_properties.outputs.VERSION_CODE }}.txt
+          git commit -m "Update release changelog for ${{ steps.read_version_properties.outputs.VERSION_NAME }}"
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.8.0

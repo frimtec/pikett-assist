@@ -95,17 +95,7 @@ public class MainActivity extends AppCompatActivity {
       switch (fragmentPosition) {
         case STATE -> {
           StateFragment stateFragment = new StateFragment();
-          stateFragment.setActivityFacade(new StateFragment.BillingAccess() {
-            @Override
-            public boolean isDonationReminderAppropriate() {
-              return billingAdapter.isDonationReminderAppropriate(getApplicationContext());
-            }
-
-            @Override
-            public void showDonationDialog() {
-              MainActivity.this.showDonationDialog();
-            }
-          });
+          stateFragment.initializeBillingAccess(MainActivity.this.billingAccess);
           return stateFragment;
         }
         case SHIFTS -> {
@@ -136,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
   private BillingAdapter billingAdapter;
 
   private TabLayoutMediator tabLayoutMediator;
+
+  private StateFragment.BillingAccess billingAccess;
 
   private void loadFragment(FragmentPosition fragmentPosition) {
     viewPager.setCurrentItem(fragmentPosition.ordinal(), false);
@@ -173,6 +165,17 @@ public class MainActivity extends AppCompatActivity {
     tabLayoutMediator.attach();
 
     this.billingAdapter = new BillingAdapter(this);
+    this.billingAccess = new StateFragment.BillingAccess() {
+      @Override
+      public boolean isDonationReminderAppropriate() {
+        return billingAdapter.isDonationReminderAppropriate(getApplicationContext());
+      }
+
+      @Override
+      public void showDonationDialog() {
+        MainActivity.this.showDonationDialog();
+      }
+    };
 
     FragmentPosition savedFragmentPosition = Arrays.stream(FragmentPosition.values())
         .map(Enum::name)
@@ -206,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
     //noinspection rawtypes
     var activeFragment = (AbstractListFragment) fm.findFragmentByTag("f" + viewPager.getCurrentItem());
     if (activeFragment != null) {
+      if (activeFragment instanceof StateFragment) {
+        ((StateFragment) activeFragment).initializeBillingAccess(this.billingAccess);
+      }
       activeFragment.refresh();
     }
   }

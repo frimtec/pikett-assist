@@ -116,7 +116,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     this.testAlarmDao = testAlarmDao;
   }
 
-  public void setActivityFacade(BillingAccess billingAccess) {
+  public void initializeBillingAccess(BillingAccess billingAccess) {
     this.billingAccess = billingAccess;
   }
 
@@ -357,6 +357,8 @@ public class StateFragment extends AbstractListFragment<State, State> {
         DonationState donationState = new DonationState(stateContext);
         states.add(this.random.nextInt(states.size() + 1), donationState);
       }
+    } else {
+      Log.w(TAG, "BillingAccess is null");
     }
   }
 

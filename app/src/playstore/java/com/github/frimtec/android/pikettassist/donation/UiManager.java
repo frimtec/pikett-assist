@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
 
 class UiManager implements RowViewHolder.OnButtonClickListener {
 

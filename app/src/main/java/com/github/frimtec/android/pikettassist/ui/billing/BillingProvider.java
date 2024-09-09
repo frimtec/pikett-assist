@@ -1,4 +1,6 @@
-package com.github.frimtec.android.pikettassist.donation.billing;
+package com.github.frimtec.android.pikettassist.ui.billing;
+
+import android.content.Context;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,7 @@ public interface BillingProvider {
     PENDING
   }
 
-  BillingManager getBillingManager();
+  BillingManagerContract getBillingManager();
 
   BillingState getBronzeSponsor();
 
@@ -23,4 +25,6 @@ public interface BillingProvider {
   default List<BillingState> getAllProducts() {
     return Arrays.asList(getBronzeSponsor(), getSilverSponsor(), getGoldSponsor());
   }
+
+  boolean isDonationReminderAppropriate(Context context);
 }

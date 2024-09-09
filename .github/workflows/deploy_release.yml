@@ -25,10 +25,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Build APK
-        run: bash ./gradlew assembleRelease --stacktrace -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
+        run: bash ./gradlew assembleOssRelease --stacktrace
 
       - name: Build AAB
-        run: bash ./gradlew :app:bundleRelease --stacktrace -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
+        run: bash ./gradlew :app:bundlePlaystoreRelease --stacktrace -Dpurchase.validation.key=${{ secrets.PURCHASE_VALIDATION_KEY }}
 
       - name: Setup build tool version variable
         shell: bash
@@ -41,7 +41,7 @@ jobs:
         name: Sign app APK
         id: sign_app_apk
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/apk/oss/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -53,7 +53,7 @@ jobs:
         name: Sign app AAB
         id: sign_app_aab
         with:
-          releaseDirectory: app/build/outputs/bundle/release
+          releaseDirectory: app/build/outputs/bundle/playstoreRelease
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: ${{ secrets.ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}

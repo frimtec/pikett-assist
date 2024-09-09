@@ -1,44 +1,46 @@
-package com.github.frimtec.android.pikettassist.ui;
+package com.github.frimtec.android.pikettassist.donation;
 
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.NOT_LOADED;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.NOT_PURCHASED;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.PENDING;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.ui.billing.DonationReminderHelper.randomizedOn;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
 import com.android.billingclient.api.Purchase;
-import com.github.frimtec.android.pikettassist.donation.DonationFragment;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingConstants;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingManager;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingManager.BillingUpdatesListener;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.donation.billing.PlayStoreBillingManager;
+import com.github.frimtec.android.pikettassist.donation.billing.PlayStoreBillingManager.BillingUpdatesListener;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingManagerContract;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
 
 import java.util.List;
 
-class BillingAdapter implements BillingUpdatesListener, BillingProvider {
+public class BillingAdapter implements BillingUpdatesListener, BillingProvider {
 
   private static final String TAG = "BillingAdapter";
 
-  static final String BILLING_DIALOG_TAG = "billing_dialog";
+  public static final String BILLING_DIALOG_TAG = "billing_dialog";
 
 
   private final FragmentActivity activity;
-  private final BillingManager billingManager;
+  private final BillingManagerContract billingManager;
 
   private BillingState bronzeSponsor = NOT_LOADED;
   private BillingState silverSponsor = NOT_LOADED;
   private BillingState goldSponsor = NOT_LOADED;
 
-  BillingAdapter(FragmentActivity activity) {
+  public BillingAdapter(FragmentActivity activity) {
     this.activity = activity;
-    this.billingManager = new BillingManager(activity, this);
+    this.billingManager = new PlayStoreBillingManager(activity, this);
   }
 
   @Override
-  public BillingManager getBillingManager() {
+  public BillingManagerContract getBillingManager() {
     return billingManager;
   }
 
@@ -52,6 +54,14 @@ class BillingAdapter implements BillingUpdatesListener, BillingProvider {
 
   public BillingState getGoldSponsor() {
     return goldSponsor;
+  }
+
+  @Override
+  public boolean isDonationReminderAppropriate(Context context) {
+    List<BillingState> products = getAllProducts();
+    return products.stream().allMatch(billing -> billing != NOT_LOADED) &&
+        products.stream().noneMatch(billing -> billing == PURCHASED) &&
+        randomizedOn(context, 0.2f);
   }
 
   @Override
@@ -92,7 +102,7 @@ class BillingAdapter implements BillingUpdatesListener, BillingProvider {
     };
   }
 
-  void destroy() {
+  public void destroy() {
     this.billingManager.destroy();
   }
 }

@@ -1,10 +1,18 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static android.app.Activity.RESULT_OK;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_BATTERY_OPTIMIZATION_OFF;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_DRAW_OVERLAYS;
+import static com.github.frimtec.android.pikettassist.service.system.Feature.SETTING_SCHEDULE_EXACT_ALARM;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -12,14 +20,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.domain.*;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
-import com.github.frimtec.android.pikettassist.service.*;
+import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactPerson;
+import com.github.frimtec.android.pikettassist.domain.OnOffState;
+import com.github.frimtec.android.pikettassist.domain.Shift;
+import com.github.frimtec.android.pikettassist.domain.ShiftState;
+import com.github.frimtec.android.pikettassist.domain.TestAlarm;
+import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.service.AlertService;
+import com.github.frimtec.android.pikettassist.service.ContactPersonService;
+import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
+import com.github.frimtec.android.pikettassist.service.ShiftService;
+import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;
@@ -40,20 +59,22 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static android.app.Activity.RESULT_OK;
-import static android.widget.ExpandableListView.getPackedPositionGroup;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_LOADED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
-import static com.github.frimtec.android.pikettassist.service.system.Feature.*;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.siFormatter;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
 
 public class StateFragment extends AbstractListFragment<State, State> {
 
@@ -62,7 +83,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
 
   public interface BillingAccess {
 
-    List<BillingState> getProducts();
+    boolean isDonationReminderAppropriate();
 
     void showDonationDialog();
   }
@@ -332,10 +353,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     }
 
     if (billingAccess != null) {
-      List<BillingState> products = billingAccess.getProducts();
-      if (products.stream().allMatch(billing -> billing != NOT_LOADED) &&
-          products.stream().noneMatch(billing -> billing == PURCHASED) &&
-          randomizedOn()) {
+      if (billingAccess.isDonationReminderAppropriate()) {
         DonationState donationState = new DonationState(stateContext);
         states.add(this.random.nextInt(states.size() + 1), donationState);
       }
@@ -347,20 +365,6 @@ public class StateFragment extends AbstractListFragment<State, State> {
         toDurationString(Duration.between(now, shiftState.isOn() ? currentOrNextShift.getEndTime(prePostRunTime) : currentOrNextShift.getStartTime(prePostRunTime)), siFormatter()),
         shiftState.getShift().map(shift -> "\n" + shift.getTitle()).orElse("")
     );
-  }
-
-  private boolean randomizedOn() {
-    long installationAgeInDays = Integer.MAX_VALUE;
-    Context context = getContext();
-    if (context != null) {
-      try {
-        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        installationAgeInDays = Duration.between(Instant.ofEpochMilli(packageInfo.firstInstallTime), Instant.now()).toDays();
-      } catch (PackageManager.NameNotFoundException e) {
-        Log.e(TAG, "Can not get package info", e);
-      }
-    }
-    return this.random.nextFloat() <= Math.min((installationAgeInDays - 30f) * 0.01f, 0.3f);
   }
 
   private String formatDateTime(Instant time) {

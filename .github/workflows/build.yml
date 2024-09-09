@@ -26,7 +26,7 @@ jobs:
       - uses: codecov/codecov-action@v4.5.0
 
   apk:
-    name: Generate APK
+    name: Generate APKs
     runs-on: ubuntu-22.04
 
     steps:
@@ -37,10 +37,18 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Build debug APK
-        run: bash ./gradlew assembleDebug --stacktrace
-      - name: Upload APK
+      - name: Build debug OSS APK
+        run: bash ./gradlew assembleOssDebug --stacktrace
+      - name: Upload OSS APK
         uses: actions/upload-artifact@v4
         with:
-          name: passist
-          path: ./app/build/outputs/apk/debug/app-debug.apk
+          name: app-oss-debug.apk
+          path: ./app/build/outputs/apk/oss/debug/app-oss-debug.apk
+
+      - name: Build debug Playstore APK
+        run: bash ./gradlew assemblePlaystoreDebug --stacktrace
+      - name: Upload Playstore APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-playstore-debug.apk
+          path: ./app/build/outputs/apk/playstore/debug/app-playstore-debug.apk

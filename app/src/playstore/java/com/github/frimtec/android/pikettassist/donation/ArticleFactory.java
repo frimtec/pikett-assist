@@ -3,7 +3,7 @@ package com.github.frimtec.android.pikettassist.donation;
 import com.android.billingclient.api.QueryProductDetailsParams.Product;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.donation.billing.BillingConstants;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
 
 import java.util.HashMap;
 import java.util.List;

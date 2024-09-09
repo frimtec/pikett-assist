@@ -1,16 +1,17 @@
 package com.github.frimtec.android.pikettassist.donation;
 
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.NOT_PURCHASED;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PENDING;
-import static com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState.PURCHASED;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.NOT_PURCHASED;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.PENDING;
+import static com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState.PURCHASED;
 
 import androidx.annotation.DrawableRes;
 
 import com.android.billingclient.api.BillingFlowParams.ProductDetailsParams;
 import com.android.billingclient.api.ProductDetails;
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider;
-import com.github.frimtec.android.pikettassist.donation.billing.BillingProvider.BillingState;
+import com.github.frimtec.android.pikettassist.donation.billing.PlayStoreBillingManager;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider.BillingState;
 
 import java.util.function.Function;
 
@@ -47,7 +48,8 @@ final class Article {
   void onButtonClicked(ProductRowData data) {
     if (data != null && NOT_PURCHASED == billingState.apply(billingProvider)) {
       ProductDetails productDetails = data.getProductDetails();
-      billingProvider.getBillingManager().initiatePurchaseFlow(
+      PlayStoreBillingManager billingManager = (PlayStoreBillingManager) billingProvider.getBillingManager();
+      billingManager.initiatePurchaseFlow(
           ProductDetailsParams.newBuilder()
               .setProductDetails(productDetails)
               .build()

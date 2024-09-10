@@ -1,0 +1,2 @@
+- Workaround fragment glitch in API 33
+- Remove obsolete permissions from oss flavor

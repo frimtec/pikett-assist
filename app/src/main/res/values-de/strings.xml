@@ -26,6 +26,7 @@
   <string name="pref_title_supervise_battery_level">Akkufüllstand überwachen</string>
   <string name="pref_title_battery_warn_level">Minimaler Füllstand</string>
   <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
+  <string name="pref_title_send_confirm_sms">Bestätigungsantwort senden</string>
   <string name="pref_title_sms_confirm_text">Bestätigungsantwort</string>
   <string name="pref_default_sms_confirm_text">OK</string>
   <string name="pref_header_test_alarm">Testalarm</string>
@@ -268,4 +269,11 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="test_alarm_alias_title">Alias für den Testalarm</string>
   <string name="pref_title_auto_confirm_time">Automatische Bestätigung</string>
   <string name="toast_alert_auto_confirm">Alarm empfangen und automatisch bestätigt!</string>
+  <string name="pref_title_acknowledge_method">Bestätigungsmethode</string>
+  <string name="pref_title_sms_confirm_pattern">Extraktionsmuster für Bestätigungsantworten</string>
+  <string name="pref_sms_confirm_pattern">Geben Sie einen gültigen RegEx mit einer Gruppe ein, um den Inhalt der Bestätigungsnachricht aus der empfangenen SMS zu extrahieren.</string>
+  <string name="toast_acknowledge_skipped">Bestätigung wegen fehlender Daten in empfangener SMS übersprungen!</string>
+  <string name="alert_confirm_method_no_acknowledge">Deaktiviert</string>
+  <string name="alert_confirm_method_sms_static_text">SMS mit statischem Text</string>
+  <string name="alert_confirm_method_sms_dynamic_text">SMS mit dynamischem Text</string>
 </resources>

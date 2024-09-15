@@ -1,0 +1,1 @@
+- Support acknowledgement SMS with dynamic content based on received alert SMS

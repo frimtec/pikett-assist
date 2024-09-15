@@ -126,15 +126,26 @@ contacts company field.
 
 Be aware that confirmation replies are not possible if alphanumeric short code SMS numbers are used.
 
-#### Send confirmation replies
+#### Acknowledgement method
 
-Enable or disable whether confirmation replies should be sent back to the operations center.
-If the warning system of your operations center does not support confirmation messages, you can
-deactivate this setting to save the cost of sending the extra reply SMS.
+Method how to acknowledge alerts received from the operations center.
 
-#### Confirmation reply
+* Disabled: no acknowledgement
+* SMS with static text: acknowledgement as SMS reply with a static text
+* SMS with dynamic text: acknowledgement as SMS reply with a dynamic text (extracted from the
+  received SMS)
 
-Defines the text to send back as alarm acknowledgement to your operations center.
+##### Confirmation reply (for method: SMS with static text)
+
+Defines the static text to send back as the confirmation reply to your operations center.
+
+##### Confirmation reply extraction pattern (for method: SMS with dynamic text)
+
+[Regular expression][regular-expression] pattern with one group to extract a confirmation value from
+the received SMS
+that will be used as the confirmation reply and sent back to your operations center.<br>
+_WARNING_: If the pattern can not extracted a value from the received SMS, no acknowledgment is send
+back to your operations center!
 
 #### Auto confirm
 

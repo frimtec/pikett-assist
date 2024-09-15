@@ -7,22 +7,36 @@
         app:title="@string/pref_title_alarm_operations_center_contact">
     </com.github.frimtec.android.pikettassist.ui.settings.ContactPreference>
 
-    <SwitchPreference
-        app:defaultValue="true"
-        app:key="send_confirm_sms"
+    <DropDownPreference
+        app:defaultValue="SMS_STATIC_TEXT"
+        app:key="alert_confirm_method"
         app:icon="@drawable/ic_message_24dp"
-        app:title="@string/pref_title_send_confirm_sms" />
+        app:entries="@array/alert_confirm_method_entries"
+        app:entryValues="@array/alert_confirm_method_entry_values"
+        app:title="@string/pref_title_acknowledge_method"
+        app:useSimpleSummaryProvider="true" />
 
     <EditTextPreference
-        app:dependency="send_confirm_sms"
+        app:isPreferenceVisible="false"
         app:defaultValue="@string/pref_default_sms_confirm_text"
         app:key="sms_confirm_text"
         app:singleLine="true"
         app:title="@string/pref_title_sms_confirm_text"
         app:useSimpleSummaryProvider="true" />
 
+    <com.github.frimtec.android.pikettassist.ui.settings.RegExpTextPreference
+        app:isPreferenceVisible="false"
+        app:defaultValue="@string/pref_default_sms_confirm_pattern"
+        app:key="sms_confirm_pattern"
+        app:title="@string/pref_title_sms_confirm_pattern"
+        app:dialogMessage="@string/pref_sms_confirm_pattern"
+        app:useSimpleSummaryProvider="true"
+        app:min_groups="1"
+        app:max_groups="1" />
+
     <SeekBarPreference
         app:defaultValue="@integer/default_auto_confirm_time_minutes"
+        app:icon="@drawable/ic_baseline_auto_awesome_24"
         app:key="auto_confirm_time_minutes"
         app:title="@string/pref_title_auto_confirm_time" />
 
@@ -34,8 +48,7 @@
         app:singleLineTitle="false"
         app:title="@string/pref_title_meta_sms_message_pattern"
         app:dialogMessage="@string/pref_meta_sms_message_pattern"
-        app:useSimpleSummaryProvider="true"
-        />
+        app:useSimpleSummaryProvider="true" />
 
     <RingtonePreference
         android:dialogTitle="@string/pref_title_alarm_ring_tone"
@@ -66,7 +79,7 @@
             app:title="@string/pref_title_calendar_event_pikett_title_pattern"
             app:useSimpleSummaryProvider="true"
             app:max_groups="0"
-            app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern"/>
+            app:dialogMessage="@string/pref_message_calendar_event_pikett_title_pattern" />
 
         <SwitchPreference
             app:icon="@drawable/ic_baseline_people_24"
@@ -83,7 +96,7 @@
             app:title="@string/pref_title_partner_search_pattern"
             app:useSimpleSummaryProvider="true"
             app:min_groups="1"
-            app:dialogMessage="@string/pref_message_partner_search_pattern"/>
+            app:dialogMessage="@string/pref_message_partner_search_pattern" />
 
         <EditTextPreference
             android:inputType="number"
@@ -117,7 +130,7 @@
             app:defaultValue="@integer/default_low_signal_filter"
             app:dependency="supervise_signal_strength"
             app:key="low_signal_filter_nl"
-            app:title="@string/pref_title_low_signal_filter"/>
+            app:title="@string/pref_title_low_signal_filter" />
 
         <SwitchPreference
             app:defaultValue="true"

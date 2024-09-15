@@ -2,8 +2,10 @@ package com.github.frimtec.android.pikettassist;
 
 import static android.content.Intent.EXTRA_BUG_REPORT;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.LOW_SIGNAL_FILTER_PREFERENCE;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_ALERT_CONFIRM_METHOD;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_SEND_CONFIRM_SMS;
 
 import android.app.Application;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
+import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.service.KeyValueStore;
 import com.github.frimtec.android.pikettassist.service.dao.KeyValueDao;
 import com.github.frimtec.android.pikettassist.state.DbFactory;
@@ -60,6 +63,7 @@ public class PAssistApplication extends Application {
 
   private void doMigrations() {
     migrateLowSignalFilterPreference();
+    migrateSendConfirmSmsPreference();
   }
 
   /**
@@ -76,6 +80,19 @@ public class PAssistApplication extends Application {
       editor.remove(PREF_KEY_LOW_SIGNAL_FILTER_OLD);
       editor.apply();
       Log.i(TAG, String.format("Migrating low signal filter preference from old value %s to new value %s", oldValue, migratedValue));
+    }
+  }
+
+  private void migrateSendConfirmSmsPreference() {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    if (preferences.getString(PREF_KEY_ALERT_CONFIRM_METHOD, "").isEmpty()) {
+      boolean oldValue = preferences.getBoolean(PREF_KEY_SEND_CONFIRM_SMS, true);
+      AlertConfirmMethod migratedValue = oldValue ? AlertConfirmMethod.SMS_STATIC_TEXT : AlertConfirmMethod.NO_ACKNOWLEDGE;
+      SharedPreferences.Editor editor = preferences.edit();
+      editor.putString(PREF_KEY_ALERT_CONFIRM_METHOD, migratedValue.name());
+      editor.remove(PREF_KEY_SEND_CONFIRM_SMS);
+      editor.apply();
+      Log.i(TAG, String.format("Migrating send confirm sms preference from old value %s to new value %s", oldValue, migratedValue));
     }
   }
 

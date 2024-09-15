@@ -26,7 +26,6 @@
   <string name="pref_title_supervise_battery_level">Akkufüllstand überwachen</string>
   <string name="pref_title_battery_warn_level">Minimaler Füllstand</string>
   <string name="pref_title_alarm_operations_center_contact">Alarmierungszentrale</string>
-  <string name="pref_title_send_confirm_sms">Bestätigungsantwort senden</string>
   <string name="pref_title_sms_confirm_text">Bestätigungsantwort</string>
   <string name="pref_default_sms_confirm_text">OK</string>
   <string name="pref_header_test_alarm">Testalarm</string>

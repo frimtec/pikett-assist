@@ -6,8 +6,9 @@ import static com.github.frimtec.android.pikettassist.util.GsonHelper.GSON;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
@@ -34,7 +35,7 @@ public class AlertService {
 
   private final Context context;
   private final AlertDao alertDao;
-  private final SmsService smsService;
+  private final AcknowledgmentService acknowledgmentService;
   private final NotificationService notificationService;
 
   public AlertService(Context context) {
@@ -44,12 +45,12 @@ public class AlertService {
   AlertService(Context context, AlertDao alertDao) {
     this.context = context;
     this.alertDao = alertDao;
-    this.smsService = new SmsService(context);
+    this.acknowledgmentService = new AcknowledgmentService(context, new SmsService(context));
     this.notificationService = new NotificationService(context);
   }
 
   public void newAlert(Sms sms) {
-    ApplicationState.instance().setLastAlarmSmsNumberWithSubscriptionId(sms.getNumber(), sms.getSubscriptionId());
+    ApplicationState.instance().setLastAlarmSms(sms);
     switch (
         this.alertDao.insertOrUpdateAlert(
             Instant.now(),
@@ -58,14 +59,12 @@ public class AlertService {
             ApplicationPreferences.instance().getAutoConfirmTime(context)
         )
     ) {
-      case TRIGGER -> AlertActivity.trigger(sms.getNumber(), sms.getSubscriptionId(), context);
+      case TRIGGER -> AlertActivity.trigger(sms, context);
       case UNCHANGED -> {
         // nothing to do
       }
       case AUTO_CONFIRMED -> {
-        if (ApplicationPreferences.instance().getSendConfirmSms(context)) {
-          AlertService.this.smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
-        }
+        this.acknowledgmentService.acknowledge(sms);
         Toast.makeText(context, context.getText(R.string.toast_alert_auto_confirm), Toast.LENGTH_LONG).show();
       }
     }
@@ -82,14 +81,13 @@ public class AlertService {
   }
 
   public void confirmAlert() {
-    Pair<String, Integer> smsNumberWithSubscriptionId = ApplicationState.instance().getLastAlarmSmsNumberWithSubscriptionId();
-    confirmAlert(this.context, smsNumberWithSubscriptionId.first, smsNumberWithSubscriptionId.second);
+    confirmAlert(this.context, ApplicationState.instance().getLastAlarmSms().orElse(null));
   }
 
-  public void confirmAlert(Context context, String smsNumber, Integer subscriptionId) {
+  public void confirmAlert(Context context, @Nullable Sms receivedSms) {
     this.alertDao.confirmOpenAlert();
-    if (ApplicationPreferences.instance().getSendConfirmSms(context)) {
-      this.smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), smsNumber, subscriptionId);
+    if (receivedSms != null) {
+      this.acknowledgmentService.acknowledge(receivedSms);
     }
     notificationService.notifyAlarm(
         new Intent(context, NotificationActionListener.class),

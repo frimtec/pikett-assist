@@ -11,18 +11,21 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.LocaleList;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.DropDownPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.Preference.SummaryProvider;
 import androidx.preference.SeekBarPreference;
-import androidx.preference.SwitchPreference;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
@@ -78,29 +81,38 @@ public class SettingsActivity extends AppCompatActivity {
       RingtonePreference alarmRingTone = findPreference("alarm_ring_tone");
       if (alarmRingTone != null) {
         alarmRingTone.setSummaryProvider(
-            (Preference.SummaryProvider<RingtonePreference>) preference ->
+            (SummaryProvider<RingtonePreference>) preference ->
                 preference.getRingtone() == null ? getString(R.string.preferences_alarm_ringtone_default) : preference.getRingtoneTitle());
       }
-
-      SwitchPreference sendConfirmSms = findPreference("send_confirm_sms");
-      if (sendConfirmSms != null) {
-        sendConfirmSms.setSummaryProvider(
-            (Preference.SummaryProvider<SwitchPreference>) preference -> {
+      DropDownPreference alertConfirmMethod = findPreference("alert_confirm_method");
+      if (alertConfirmMethod != null) {
+        makeAlertConfirmMethodDependentPreferencesVisible(alertConfirmMethod.getValue());
+        alertConfirmMethod.setOnPreferenceChangeListener(
+            (preference, newValue) -> {
+              makeAlertConfirmMethodDependentPreferencesVisible(String.valueOf(newValue));
+              return true;
+            });
+        //noinspection unchecked
+        final SummaryProvider<DropDownPreference> defaultSummaryProvider = alertConfirmMethod.getSummaryProvider();
+        alertConfirmMethod.setSummaryProvider(
+            (SummaryProvider<DropDownPreference>) preference -> {
+              String summary = String.valueOf(defaultSummaryProvider != null ? defaultSummaryProvider.provideSummary(alertConfirmMethod) : "");
+              String value = preference.getValue();
               Contact contact = new OperationsCenterContactService(context).getOperationsCenterContact();
-              if (preference.isChecked() && contact.valid()) {
+              if (!TextUtils.isEmpty(value) && AlertConfirmMethod.valueOf(value).isSms() && contact.valid()) {
                 ContactDao contactDao = new ContactDao(context);
                 if (!contactDao.getAlphanumericShortCodesFromContact(contact).isEmpty()) {
-                  return getString(R.string.pref_summary_send_confirm_sms);
+                  summary = summary + " / " + getString(R.string.pref_summary_send_confirm_sms);
                 }
               }
-              return null;
+              return summary;
             });
       }
 
       EditTextPreference proPostTimeSeconds = findPreference("pre_post_run_time_seconds");
       if (proPostTimeSeconds != null) {
         proPostTimeSeconds.setSummaryProvider(
-            (Preference.SummaryProvider<EditTextPreference>) preference -> {
+            (SummaryProvider<EditTextPreference>) preference -> {
               String value = preference.getText();
               return value + " " + getString("1".equals(value) ? R.string.units_second : R.string.units_seconds);
             });
@@ -115,7 +127,7 @@ public class SettingsActivity extends AppCompatActivity {
           return true;
         });
         batteryWarnLevel.setSummaryProvider(
-            (Preference.SummaryProvider<SeekBarPreference>) preference -> String.format("%d%%", preference.getValue()));
+            (SummaryProvider<SeekBarPreference>) preference -> String.format("%d%%", preference.getValue()));
       }
 
       SeekBarPreference lowSignalFilterTime = findPreference(PREF_KEY_LOW_SIGNAL_FILTER);
@@ -127,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
           return true;
         });
         lowSignalFilterTime.setSummaryProvider(
-            (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
+            (SummaryProvider<SeekBarPreference>) preference -> {
               int value = preference.getValue();
               return value == 0 ? getString(R.string.state_off) : ApplicationPreferences.instance().convertLowSignalFilerToSeconds(value) + " " + getString(R.string.general_seconds);
             });
@@ -142,7 +154,7 @@ public class SettingsActivity extends AppCompatActivity {
           return true;
         });
         autoConfirmTime.setSummaryProvider(
-            (SeekBarPreference.SummaryProvider<SeekBarPreference>) preference -> {
+            (SummaryProvider<SeekBarPreference>) preference -> {
               int value = preference.getValue();
               return value == 0 ? getString(R.string.state_off) : String.format("%d", preference.getValue()) + " " + getString(R.string.units_minutes);
             });
@@ -151,7 +163,7 @@ public class SettingsActivity extends AppCompatActivity {
       Preference testAlarmGroup = findPreference("test_alarm_group");
       if (testAlarmGroup != null) {
         testAlarmGroup.setSummaryProvider(
-            (Preference.SummaryProvider<Preference>) preference ->
+            (SummaryProvider<Preference>) preference ->
                 enabledOrDisabled(ApplicationPreferences.instance().getTestAlarmEnabled(preference.getContext()))
         );
       }
@@ -159,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
       Preference dayNightProfileGroup = findPreference("day_night_profile_group");
       if (dayNightProfileGroup != null) {
         dayNightProfileGroup.setSummaryProvider(
-            (Preference.SummaryProvider<Preference>) preference ->
+            (SummaryProvider<Preference>) preference ->
                 enabledOrDisabled(
                     ApplicationPreferences.instance().getManageVolumeEnabled(preference.getContext()) ||
                         ApplicationPreferences.instance().getBatterySaferAtNightEnabled(preference.getContext())
@@ -242,6 +254,31 @@ public class SettingsActivity extends AppCompatActivity {
       }
     }
 
+    private void makeAlertConfirmMethodDependentPreferencesVisible(String alertConfirmMethodValue) {
+      EditTextPreference dependentStatic = findPreference("sms_confirm_text");
+      EditTextPreference dependentDynamic = findPreference("sms_confirm_pattern");
+      try {
+        AlertConfirmMethod alertConfirmMethod = AlertConfirmMethod.valueOf(alertConfirmMethodValue);
+        if (dependentStatic != null && dependentDynamic != null) {
+          switch (alertConfirmMethod) {
+            case NO_ACKNOWLEDGE -> {
+              dependentStatic.setVisible(false);
+              dependentDynamic.setVisible(false);
+            }
+            case SMS_STATIC_TEXT -> {
+              dependentStatic.setVisible(true);
+              dependentDynamic.setVisible(false);
+            }
+            case SMS_DYNAMIC_TEXT -> {
+              dependentStatic.setVisible(false);
+              dependentDynamic.setVisible(true);
+            }
+          }
+        }
+      } catch (IllegalArgumentException e) {
+        Log.e(TAG, "Unknown alert confirm method: " + alertConfirmMethodValue, e);
+      }
+    }
 
     private String enabledOrDisabled(boolean flag) {
       return getString(flag ? R.string.general_enabled : R.string.general_disabled);

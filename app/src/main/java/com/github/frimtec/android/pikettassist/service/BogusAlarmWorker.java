@@ -18,6 +18,7 @@ import com.github.frimtec.android.pikettassist.ui.alerts.AlertActivity;
 import com.github.frimtec.android.pikettassist.ui.signal.LowSignalAlarmActivity;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade;
+import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import java.time.Duration;
 import java.util.EnumMap;
@@ -45,7 +46,7 @@ public class BogusAlarmWorker extends ReScheduledWorker {
   @Override
   protected WorkUnit geServiceWorkUnit(Context context, AlarmService alarmService) {
     Map<AlarmType, Runnable> alarmTriggers = new EnumMap<>(AlarmType.class);
-    alarmTriggers.put(AlarmType.ALERT, () -> AlertActivity.trigger(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, null, context));
+    alarmTriggers.put(AlarmType.ALERT, () -> AlertActivity.trigger(new Sms(SecureSmsProxyFacade.PHONE_NUMBER_LOOPBACK, "", null), context));
     alarmTriggers.put(AlarmType.LOW_SIGNAL, () -> LowSignalAlarmActivity.trigger(context, alarmService, false));
     alarmTriggers.put(AlarmType.MISSING_TEST_ALARM, () -> MissingTestAlarmAlarmActivity.trigger(context, alarmService));
     return new BogusAlarmWorkUnit(alarmTriggers);

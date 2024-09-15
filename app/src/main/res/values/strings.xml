@@ -30,13 +30,9 @@
   <string name="pref_title_supervise_battery_level">Supervise battery level</string>
   <string name="pref_title_battery_warn_level">Minimal battery level</string>
   <string name="pref_title_alarm_operations_center_contact">Operations center</string>
-  <string name="pref_title_acknowledge_method">Acknowledgement method</string>
+  <string name="pref_title_send_confirm_sms">Send confirmation replies</string>
   <string name="pref_title_sms_confirm_text">Confirmation reply</string>
-  <string name="pref_title_sms_confirm_pattern">Confirmation reply extraction pattern</string>
-  <string name="pref_sms_confirm_pattern">Enter a valid RegEx with one group to extract the confirmation message content from the received SMS.</string>
   <string name="pref_default_sms_confirm_text">OK</string>
-  <string name="pref_default_sms_confirm_pattern" translatable="false"><![CDATA[<(.*?)>]]></string>
-  <string name="toast_acknowledge_skipped">Acknowledgement skipped due to missing data in received SMS!</string>
   <string name="pref_header_test_alarm">Test alarm</string>
   <string name="pref_title_test_alarm_message_pattern">Test alarm message pattern</string>
   <string name="pref_default_test_alarm_message_pattern">--- UNDEFINED ---</string>
@@ -289,6 +285,11 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="test_alarm_alias_title">Enter test alarm alias</string>
   <string name="pref_title_auto_confirm_time">Auto confirm</string>
   <string name="toast_alert_auto_confirm">Alert received and auto confirmed!</string>
+  <string name="pref_title_acknowledge_method">Acknowledgment method</string>
+  <string name="pref_title_sms_confirm_pattern">Confirmation reply extraction pattern</string>
+  <string name="pref_sms_confirm_pattern">Enter a valid RegEx with one group to extract the confirmation message content from the received SMS.</string>
+  <string name="pref_default_sms_confirm_pattern" translatable="false"><![CDATA[<(.*?)>]]></string>
+  <string name="toast_acknowledge_skipped">Acknowledgment skipped due to missing data in received SMS!</string>
   <string name="alert_confirm_method_no_acknowledge">Disabled</string>
   <string name="alert_confirm_method_sms_static_text">SMS with static text</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS with dynamic text</string>

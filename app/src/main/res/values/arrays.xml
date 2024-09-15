@@ -90,4 +90,15 @@
         <item>@string/registration_errors_failed</item>
     </string-array>
 
+    <string-array name="alert_confirm_method_entry_values">
+        <item>NO_ACKNOWLEDGE</item>
+        <item>SMS_STATIC_TEXT</item>
+        <item>SMS_DYNAMIC_TEXT</item>
+    </string-array>
+
+    <string-array name="alert_confirm_method_entries">
+        <item>@string/alert_confirm_method_no_acknowledge</item>
+        <item>@string/alert_confirm_method_sms_static_text</item>
+        <item>@string/alert_confirm_method_sms_dynamic_text</item>
+    </string-array>
 </resources>

@@ -26,7 +26,6 @@
   <string name="pref_title_supervise_battery_level">Supervisionare il livello della batteria</string>
   <string name="pref_title_battery_warn_level">Livello minimo della batteria</string>
   <string name="pref_title_alarm_operations_center_contact">Centro operativo</string>
-  <string name="pref_title_send_confirm_sms">Invia risposte di conferma</string>
   <string name="pref_title_sms_confirm_text">Risposta di conferma</string>
   <string name="pref_default_sms_confirm_text">OK</string>
   <string name="pref_header_test_alarm">Allarme di prova</string>

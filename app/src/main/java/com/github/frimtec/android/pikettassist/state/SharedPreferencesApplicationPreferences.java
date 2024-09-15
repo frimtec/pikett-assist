@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
@@ -32,8 +33,8 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS = "test_alarm_check_weekdays";
   private static final String PREF_KEY_TEST_ALARM_ENABLED = "test_alarm_enabled";
   private static final String PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES = "test_alarm_accept_time_window_minutes";
-  private static final String PREF_KEY_SEND_CONFIRM_SMS = "send_confirm_sms";
   private static final String PREF_KEY_SMS_CONFIRM_TEXT = "sms_confirm_text";
+  private static final String PREF_KEY_SMS_CONFIRM_PATTERN = "sms_confirm_pattern";
   private static final String PREF_KEY_SUPERVISE_BATTERY_LEVEL = "supervise_battery_level";
   private static final String PREF_KEY_SUPERVISE_SIGNAL_STRENGTH = "supervise_signal_strength";
   private static final String PREF_KEY_NOTIFY_LOW_SIGNAL = "notify_low_signal";
@@ -111,14 +112,28 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   }
 
   @Override
-  public boolean getSendConfirmSms(Context context) {
+  public AlertConfirmMethod getAlertConfirmMethod(Context context) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    return preferences.getBoolean(PREF_KEY_SEND_CONFIRM_SMS, true);
+    try {
+      return AlertConfirmMethod.valueOf(
+          preferences.getString(
+              PREF_KEY_ALERT_CONFIRM_METHOD,
+              AlertConfirmMethod.SMS_STATIC_TEXT.name()
+          )
+      );
+    } catch (IllegalArgumentException e) {
+      return AlertConfirmMethod.SMS_STATIC_TEXT;
+    }
   }
 
   @Override
   public String getSmsConfirmText(Context context) {
     return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_TEXT, context.getString(R.string.pref_default_sms_confirm_text));
+  }
+
+  @Override
+  public String getSmsConfirmPattern(Context context) {
+    return getSharedPreferences(context, PREF_KEY_SMS_CONFIRM_PATTERN, context.getString(R.string.pref_default_sms_confirm_pattern));
   }
 
   @Override

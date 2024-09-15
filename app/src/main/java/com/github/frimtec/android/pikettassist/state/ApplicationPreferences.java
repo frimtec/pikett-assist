@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.state;
 
 import android.content.Context;
 
+import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
@@ -12,6 +13,8 @@ import java.util.Set;
 
 public interface ApplicationPreferences {
 
+  String PREF_KEY_ALERT_CONFIRM_METHOD = "alert_confirm_method";
+  String PREF_KEY_SEND_CONFIRM_SMS = "send_confirm_sms";
   String PREF_KEY_LOW_SIGNAL_FILTER = "low_signal_filter_nl";
   int PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR = 15;
   String CALENDAR_FILTER_ALL = "-1";
@@ -62,9 +65,11 @@ public interface ApplicationPreferences {
 
   String getMetaSmsMessagePattern(Context context);
 
-  boolean getSendConfirmSms(Context context);
+  AlertConfirmMethod getAlertConfirmMethod(Context context);
 
   String getSmsConfirmText(Context context);
+
+  String getSmsConfirmPattern(Context context);
 
   boolean getSuperviseSignalStrength(Context context);
 

@@ -122,7 +122,8 @@ Numeric short codes are currently only supported for the following countries:
 * Germany
 * France
 * USA
-  Alphanumeric short codes are supported in any country.
+
+Alphanumeric short codes are supported in any country.
 
 As contacts in Android cannot contain such short code phone numbers,
 they can be configured in the contact field "Company".

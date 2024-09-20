@@ -118,7 +118,6 @@ The SMS received from any phone number of this contact are supervised by PAssist
 
 PAssist also supports operations centers using numeric and alphanumeric short code SMS numbers.
 Numeric short codes are currently only supported for the following countries:
-
 * Switzerland
 * Germany
 * France

@@ -64,21 +64,8 @@ public class OperationsCenterContactService extends AbstractContactService {
       return false;
     }
     ContactDao contactDao = getContactDao();
-    if (isAlphanumericShortCode(number)) {
-      return contactDao.getAlphanumericShortCodesFromContact(contact).contains(number);
-    }
-    Set<Long> contactIds = contactDao.lookupContactIdsByPhoneNumber(number);
-    return contactIds.contains(contact.reference().id());
-  }
-
-  private static boolean isAlphanumericShortCode(String phoneNumber) {
-    for (int i = 0; i < phoneNumber.length(); i++) {
-      char ch = phoneNumber.charAt(i);
-      if (Character.isLetter(ch)) {
-        return true;
-      }
-    }
-    return false;
+    return contactDao.lookupContactIdsByPhoneNumber(number).contains(contact.reference().id()) ||
+        contactDao.getShortCodesFromContact(contact).contains(number);
   }
 
   public Set<String> getPhoneNumbers(Contact contact) {

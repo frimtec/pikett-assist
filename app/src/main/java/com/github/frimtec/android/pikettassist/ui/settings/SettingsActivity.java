@@ -32,6 +32,7 @@ import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
 import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.util.PhoneNumberType;
 import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
@@ -101,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
               Contact contact = new OperationsCenterContactService(context).getOperationsCenterContact();
               if (!TextUtils.isEmpty(value) && AlertConfirmMethod.valueOf(value).isSms() && contact.valid()) {
                 ContactDao contactDao = new ContactDao(context);
-                if (!contactDao.getAlphanumericShortCodesFromContact(contact).isEmpty()) {
+                if (contactDao.getShortCodesFromContact(contact).stream().anyMatch(number -> !PhoneNumberType.fromNumber(number, context).isSendSupport())) {
                   summary = summary + " / " + getString(R.string.pref_summary_send_confirm_sms);
                 }
               }

@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static com.github.frimtec.android.pikettassist.util.PhoneNumberType.fromNumber;
 import static java.util.stream.Collectors.joining;
 
 import android.content.ContentResolver;
@@ -34,9 +35,11 @@ public class ContactDao {
       ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
   };
 
+  private final Context context;
   private final ContentResolver contentResolver;
 
   public ContactDao(Context context) {
+    this.context = context;
     this.contentResolver = context.getContentResolver();
   }
 
@@ -141,12 +144,12 @@ public class ContactDao {
       }
     }
 
-    // add alphanumeric short codes from contact organization field as comma separated list
-    phoneNumbers.addAll(getAlphanumericShortCodesFromContact(contact));
+    // add short codes from contact organization field as comma separated list
+    phoneNumbers.addAll(getShortCodesFromContact(contact));
     return phoneNumbers;
   }
 
-  public Set<String> getAlphanumericShortCodesFromContact(Contact contact) {
+  public Set<String> getShortCodesFromContact(Contact contact) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.Data.CONTENT_URI,
         null, ContactsContract.Data.CONTACT_ID + " = ? AND " + ContactsContract.Data.MIMETYPE + " = ?", new String[]{String.valueOf(contact.reference().id()),
             ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE}, null)) {
@@ -159,7 +162,7 @@ public class ContactDao {
             return Arrays.stream(company.split(","))
                 .filter(Objects::nonNull)
                 .map(String::trim)
-                .filter(companyName -> companyName.length() > 0)
+                .filter(number -> fromNumber(number, this.context).isShortCode())
                 .collect(Collectors.toSet());
           }
         } else {

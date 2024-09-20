@@ -116,11 +116,20 @@ PAssist will guide you to install this SMS adapter.
 Defines the contact of your operations center sending alarms via SMS.
 The SMS received from any phone number of this contact are supervised by PAssist.
 
-PAssist also supports operations centers using alphanumeric short code SMS numbers.
-As contacts in Android cannot use letters in phone numbers, such alphanumeric short codes can be
-configured in the contact field "Company".
-It the operations centers uses several alphanumeric short codes, they can be comma separated in the
-contacts company field.
+PAssist also supports operations centers using numeric and alphanumeric short code SMS numbers.
+Numeric short codes are currently only supported for the following countries:
+
+* Switzerland
+* Germany
+* France
+* USA
+  Alphanumeric short codes are supported in any country.
+
+As contacts in Android cannot contain such short code phone numbers,
+they can be configured in the contact field "Company".
+It the operations centers uses several short code phone numbers, they can be comma separated in the
+contacts company field. Any regular phone numbers stored in the contacts field "Company" are
+ignored.
 
 ![Operations center contact with two alphanumeric short code SMS numbers](images/Contacts-with-alphanumeric-short-codes.png)
 

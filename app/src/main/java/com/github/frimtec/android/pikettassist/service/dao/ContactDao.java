@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import static com.github.frimtec.android.pikettassist.util.PhoneNumberType.fromNumber;
+import static com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType.fromNumber;
 import static java.util.stream.Collectors.joining;
 
 import android.content.ContentResolver;

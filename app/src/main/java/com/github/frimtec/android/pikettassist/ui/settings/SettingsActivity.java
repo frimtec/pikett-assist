@@ -32,7 +32,7 @@ import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
 import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
-import com.github.frimtec.android.pikettassist.util.PhoneNumberType;
+import com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType;
 import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;

@@ -64,7 +64,8 @@ public class OperationsCenterContactService extends AbstractContactService {
       return false;
     }
     ContactDao contactDao = getContactDao();
-    return contactDao.lookupContactIdsByPhoneNumber(number).contains(contact.reference().id()) ||
+    return contactDao.lookupContactIdsByPhoneNumber(number, true).contains(contact.reference().id()) ||
+        contactDao.lookupContactIdsByPhoneNumber(number, false).contains(contact.reference().id()) ||
         contactDao.getShortCodesFromContact(contact).contains(number);
   }
 

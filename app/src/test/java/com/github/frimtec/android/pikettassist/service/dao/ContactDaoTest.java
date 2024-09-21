@@ -149,7 +149,7 @@ class ContactDaoTest {
         new String[]{"number"}, null))
         .thenReturn(cursor);
 
-    Set<Long> contactIds = dao.lookupContactIdsByPhoneNumber("number");
+    Set<Long> contactIds = dao.lookupContactIdsByPhoneNumber("number", true);
     assertThat(contactIds).isEqualTo(new HashSet<>(Arrays.asList(
         12L,
         15L
@@ -170,7 +170,7 @@ class ContactDaoTest {
         new String[]{"number"}, null))
         .thenReturn(cursor);
 
-    Set<Long> contactIds = dao.lookupContactIdsByPhoneNumber("number");
+    Set<Long> contactIds = dao.lookupContactIdsByPhoneNumber("number", true);
     assertThat(contactIds).isEmpty();
   }
 
@@ -186,7 +186,7 @@ class ContactDaoTest {
         new String[]{"number"}, null))
         .thenReturn(null);
 
-    Set<Long> contactIds = dao.lookupContactIdsByPhoneNumber("number");
+    Set<Long> contactIds = dao.lookupContactIdsByPhoneNumber("number", true);
     assertThat(contactIds).isEmpty();
   }
 

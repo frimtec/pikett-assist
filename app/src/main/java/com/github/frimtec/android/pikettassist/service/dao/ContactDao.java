@@ -1,5 +1,6 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
+import static com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType.NUMERIC_SHORT_CODE;
 import static com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType.fromNumber;
 import static java.util.stream.Collectors.joining;
 
@@ -14,6 +15,7 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
+import com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,10 +98,10 @@ public class ContactDao {
     return elements.stream().map(element -> String.format("'%s'", element)).collect(joining(","));
   }
 
-  public Set<Long> lookupContactIdsByPhoneNumber(String phoneNumber) {
+  public Set<Long> lookupContactIdsByPhoneNumber(String phoneNumber, boolean normalized) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
-        ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
+        (normalized ? ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER : ContactsContract.CommonDataKinds.Phone.NUMBER) + " = ?",
         new String[]{phoneNumber}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         Set<Long> contactIds = new HashSet<>();
@@ -138,7 +140,12 @@ public class ContactDao {
             phoneNumbers.add(normalizedNumber);
           } else {
             int columnIndexNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-            Log.e(TAG, "Skipping phone number as normalized number is null for number: " + (columnIndexNumber >= 0 ? cursor.getString(columnIndexNumber) : "???"));
+            String number = columnIndexNumber >= 0 ? cursor.getString(columnIndexNumber) : "NA";
+            if (number != null && number.matches("\\d+") && PhoneNumberType.fromNumber(number, context) == NUMERIC_SHORT_CODE) {
+              phoneNumbers.add(number);
+            } else {
+              Log.e(TAG, "Skipping phone number as normalized number is null for number: " + number);
+            }
           }
         } while (cursor.moveToNext());
       }

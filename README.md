@@ -125,11 +125,14 @@ Numeric short codes are currently only supported for the following countries:
 
 Alphanumeric short codes are supported in any country.
 
-As contacts in Android cannot contain such short code phone numbers,
-they can be configured in the contact field "Company".
-It the operations centers uses several short code phone numbers, they can be comma separated in the
-contacts company field. Any regular phone numbers stored in the contacts field "Company" are
-ignored.
+Numeric short codes can be defined as normal phone numbers in the operations centers contact.
+Ensure that no separator characters (like '-') are used.
+
+As contacts in Android cannot contain alphanumeric short code phone numbers, they can be configured
+in the contact field "Company".
+If the operations centers uses several alphanumeric short code phone numbers, they can be comma
+separated in the contacts "Company" field.
+Any regular phone numbers stored in the contacts field "Company" will be ignored.
 
 ![Operations center contact with two alphanumeric short code SMS numbers](images/Contacts-with-alphanumeric-short-codes.png)
 

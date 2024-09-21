@@ -1,0 +1,2 @@
+- Support numeric short codes (only for countries ch, de, fr and us)
+- Bump S2MSP to 3.3.0 for numeric short code support

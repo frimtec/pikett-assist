@@ -14,12 +14,13 @@ import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 class AcknowledgmentServiceTest {
 
   @Test
-  void acknowledgeForMethodNoAcknowledgement() {
+  void acknowledgeForMethodNoAcknowledgement() throws InterruptedException {
     ApplicationPreferences applicationPreferences = mock(ApplicationPreferences.class);
     Context context = mock(Context.class);
     SmsService smsService = mock(SmsService.class);
@@ -29,18 +30,22 @@ class AcknowledgmentServiceTest {
         context,
         smsService,
         applicationPreferences,
+        Executors.newSingleThreadExecutor(),
         notifyHandlerSkipAcknowledge
     );
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.NO_ACKNOWLEDGE);
 
     acknowledgmentService.acknowledge(new Sms("111", "text"));
 
+    // wait for async processing
+    Thread.sleep(100);
+
     verifyNoInteractions(smsService);
     verifyNoInteractions(notifyHandlerSkipAcknowledge);
   }
 
   @Test
-  void acknowledgeForMethodSmsStaticText() {
+  void acknowledgeForMethodSmsStaticText() throws InterruptedException {
     ApplicationPreferences applicationPreferences = mock(ApplicationPreferences.class);
     Context context = mock(Context.class);
     SmsService smsService = mock(SmsService.class);
@@ -50,6 +55,7 @@ class AcknowledgmentServiceTest {
         context,
         smsService,
         applicationPreferences,
+        Executors.newSingleThreadExecutor(),
         notifyHandlerSkipAcknowledge
     );
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
@@ -57,12 +63,15 @@ class AcknowledgmentServiceTest {
 
     acknowledgmentService.acknowledge(new Sms("111", "text", 1));
 
+    // wait for async processing
+    Thread.sleep(100);
+
     verify(smsService).sendSms("OK", "111", 1);
     verifyNoInteractions(notifyHandlerSkipAcknowledge);
   }
 
   @Test
-  void acknowledgeForMethodSmsDynamicText() {
+  void acknowledgeForMethodSmsDynamicText() throws InterruptedException {
     ApplicationPreferences applicationPreferences = mock(ApplicationPreferences.class);
     Context context = mock(Context.class);
     SmsService smsService = mock(SmsService.class);
@@ -72,6 +81,7 @@ class AcknowledgmentServiceTest {
         context,
         smsService,
         applicationPreferences,
+        Executors.newSingleThreadExecutor(),
         notifyHandlerSkipAcknowledge
     );
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_DYNAMIC_TEXT);
@@ -79,12 +89,15 @@ class AcknowledgmentServiceTest {
 
     acknowledgmentService.acknowledge(new Sms("111", "reply with <123> to acknowledge", 1));
 
+    // wait for async processing
+    Thread.sleep(100);
+
     verify(smsService).sendSms("123", "111", 1);
     verifyNoInteractions(notifyHandlerSkipAcknowledge);
   }
 
   @Test
-  void acknowledgeForMethodSmsDynamicTextWithNoMatch() {
+  void acknowledgeForMethodSmsDynamicTextWithNoMatch() throws InterruptedException {
     ApplicationPreferences applicationPreferences = mock(ApplicationPreferences.class);
     Context context = mock(Context.class);
     SmsService smsService = mock(SmsService.class);
@@ -94,12 +107,16 @@ class AcknowledgmentServiceTest {
         context,
         smsService,
         applicationPreferences,
+        Executors.newSingleThreadExecutor(),
         notifyHandlerSkipAcknowledge
     );
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_DYNAMIC_TEXT);
     when(applicationPreferences.getSmsConfirmPattern(context)).thenReturn("<(.*?)>");
 
     acknowledgmentService.acknowledge(new Sms("111", "reply with (123) to acknowledge", 1));
+
+    // wait for async processing
+    Thread.sleep(100);
 
     verifyNoInteractions(smsService);
     verify(notifyHandlerSkipAcknowledge).accept(context);

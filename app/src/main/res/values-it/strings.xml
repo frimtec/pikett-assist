@@ -272,7 +272,6 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="pref_title_acknowledge_method">Metodo di riconoscimento</string>
   <string name="pref_title_sms_confirm_pattern">Modello di estrazione della risposta di conferma</string>
   <string name="pref_sms_confirm_pattern">Inserisci un RegEx valido con un gruppo per estrarre il contenuto del messaggio di conferma dall\'SMS ricevuto.</string>
-  <string name="toast_acknowledge_skipped">Conferma saltata a causa di dati mancanti nell\'SMS ricevuto!</string>
   <string name="alert_confirm_method_no_acknowledge">Disabilitato</string>
   <string name="alert_confirm_method_sms_static_text">SMS con testo statico</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS con testo dinamico</string>

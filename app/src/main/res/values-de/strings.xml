@@ -272,7 +272,6 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="pref_title_acknowledge_method">Bestätigungsmethode</string>
   <string name="pref_title_sms_confirm_pattern">Extraktionsmuster für Bestätigungsantworten</string>
   <string name="pref_sms_confirm_pattern">Geben Sie einen gültigen RegEx mit einer Gruppe ein, um den Inhalt der Bestätigungsnachricht aus der empfangenen SMS zu extrahieren.</string>
-  <string name="toast_acknowledge_skipped">Bestätigung wegen fehlender Daten in empfangener SMS übersprungen!</string>
   <string name="alert_confirm_method_no_acknowledge">Deaktiviert</string>
   <string name="alert_confirm_method_sms_static_text">SMS mit statischem Text</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS mit dynamischem Text</string>

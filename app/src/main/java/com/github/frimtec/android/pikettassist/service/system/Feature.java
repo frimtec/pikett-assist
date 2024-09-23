@@ -19,13 +19,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.github.frimtec.android.pikettassist.BuildConfig;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.PikettWorker;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -272,21 +270,13 @@ public enum Feature {
     @RequiresApi(api = 33) POST_NOTIFICATIONS(Collections.singleton(Manifest.permission.POST_NOTIFICATIONS)),
     COARSE_LOCATION(Collections.singleton(Manifest.permission.ACCESS_COARSE_LOCATION)),
     NON_CRITICAL(
-        createPermissionsSet()
+        Set.of(
+            Manifest.permission.RECEIVE_BOOT_COMPLETED,
+            Manifest.permission.VIBRATE,
+            Manifest.permission.WAKE_LOCK,
+            Manifest.permission.INTERNET
+        )
     );
-
-    private static Set<String> createPermissionsSet() {
-      Set<String> permissions = new HashSet<>(Set.of(
-          Manifest.permission.RECEIVE_BOOT_COMPLETED,
-          Manifest.permission.VIBRATE,
-          Manifest.permission.WAKE_LOCK
-      ));
-      //noinspection ConstantValue
-      if (BuildConfig.FLAVOR.equals("playstore")) {
-        permissions.add(Manifest.permission.INTERNET);
-      }
-      return permissions;
-    }
 
     private final String[] permissions;
 

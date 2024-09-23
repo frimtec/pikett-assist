@@ -18,11 +18,13 @@ import android.media.AudioManager;
 import androidx.core.util.Pair;
 import androidx.work.Data;
 
+import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.ShiftState;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
+import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
@@ -73,6 +75,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -105,6 +108,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(true);
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(true);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -129,6 +133,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -164,6 +169,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(true);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(false);
 
@@ -190,6 +196,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -225,6 +232,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(true);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(false, true);
 
@@ -251,6 +259,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -286,6 +295,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -310,6 +320,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -345,6 +356,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -369,6 +381,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -404,6 +417,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -428,6 +442,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -464,6 +479,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -488,6 +504,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -523,6 +540,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -547,6 +565,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -606,6 +625,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -665,6 +685,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -700,6 +721,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getSuperviseSignalStrengthMinLevel(context)).thenReturn(2);
     when(applicationPreferences.getManageVolumeEnabled(context)).thenReturn(false);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -724,6 +746,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -761,6 +784,7 @@ class LowSignalWorkerWorkUnitTest {
     when(applicationPreferences.getOnCallVolume(eq(context), any(LocalTime.class))).thenReturn(6);
     when(applicationPreferences.getBatterySaferAtNightEnabled(context)).thenReturn(false);
     when(applicationPreferences.isDayProfile(eq(context), any(LocalTime.class))).thenReturn(true);
+    when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
 
     ShiftService shiftService = mock(ShiftService.class);
     when(shiftService.getShiftState()).thenReturn(new ShiftState(OnOffState.ON));
@@ -785,6 +809,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,
@@ -846,6 +871,7 @@ class LowSignalWorkerWorkUnitTest {
         alertDao,
         shiftService,
         signalStrengthService,
+        mock(InternetAvailabilityService.class),
         volumeService,
         notificationService,
         alarmTrigger,

@@ -9,6 +9,7 @@ def slidetoact_version = '0.11.0'
 def takisoft_preferencex_version = '1.1.0'
 def junit_version = '5.11.0'
 def work_version = "2.9.1"
+def retrofit_version = "2.11.0"
 
 System.setProperty("line.separator", "\n")
 Properties versionProps = new Properties()
@@ -81,11 +82,15 @@ dependencies {
     implementation "com.takisoft.preferencex:preferencex-datetimepicker:$takisoft_preferencex_version"
     playstoreImplementation "com.android.billingclient:billing:$android_billingclient_version"
     implementation "com.github.frimtec:secure-sms-proxy-api:$secure_sms_proxy_api_version@aar"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_version"
     testImplementation "org.assertj:assertj-core:3.26.3"
     testImplementation "org.mockito:mockito-core:5.13.0"
+    testImplementation 'com.github.tomakehurst:wiremock:3.0.1'
     androidTestImplementation 'androidx.test:runner:1.6.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+
 }

@@ -20,7 +20,12 @@ public class MissingTestAlarmAlarmActivity extends AbstractAlarmActivity {
   private static final String TAG = "MissingTestAlarmAlarmActivity";
 
   public MissingTestAlarmAlarmActivity() {
-    super(TAG, R.string.notification_missing_test_alert_title, Pair.create(200, 1000), SwipeButtonStyle.MISSING_TEST_ALARM);
+    super(
+        TAG,
+        (context) -> R.string.notification_missing_test_alert_title,
+        Pair.create(200, 1000),
+        SwipeButtonStyle.MISSING_TEST_ALARM
+    );
   }
 
   @Override

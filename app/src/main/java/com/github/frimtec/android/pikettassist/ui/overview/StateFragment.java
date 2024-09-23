@@ -43,6 +43,7 @@ import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
+import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
@@ -98,6 +99,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
   private BillingAccess billingAccess;
 
   private SignalStrengthService signalStrengthService;
+  private InternetAvailabilityService internetAvailabilityService;
   private final AlertDao alertDao;
   private final TestAlarmDao testAlarmDao;
   private OperationsCenterContactService operationsCenterContactService;
@@ -127,6 +129,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     this.alertService = new AlertService(context);
     this.s2msp = SecureSmsProxyFacade.instance(context);
     this.signalStrengthService = new SignalStrengthService(context);
+    this.internetAvailabilityService = new InternetAvailabilityService(context);
     this.operationsCenterContactService = new OperationsCenterContactService(context);
     this.contactPersonService = new ContactPersonService(context);
 
@@ -267,6 +270,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     Instant now = Shift.now();
     Duration prePostRunTime = ApplicationPreferences.instance().getPrePostRunTime(getContext());
     Optional<Shift> currentOrNextShift = shiftService.findCurrentOrNextShift(now);
+    boolean needsInternetSupervision = ApplicationPreferences.instance().getAlertConfirmMethod(getContext()).isInternet() && shiftState.isOn();
     StateContext stateContext = new StateContext(
         this,
         getContext(),
@@ -288,7 +292,8 @@ public class StateFragment extends AbstractListFragment<State, State> {
         this.signalStrengthService.getNetworkOperatorName(),
         operationsCenterContact,
         operationsCenterPhoneNumbers,
-        batteryService.batteryStatus()
+        batteryService.batteryStatus(),
+        needsInternetSupervision ? this.internetAvailabilityService.getInternetAvailability() : InternetAvailabilityService.InternetAvailability.NONE
     );
     states.add(new SmsAdapterState(stateContext));
     if (notificationService.isDoNotDisturbEnabled()) {
@@ -304,9 +309,12 @@ public class StateFragment extends AbstractListFragment<State, State> {
     states.addAll(Arrays.asList(
         new OnCallState(stateContext),
         new AlarmState(stateContext),
-        new SignalStrengthState(stateContext),
-        new BatteryState(stateContext)
+        new SignalStrengthState(stateContext)
     ));
+    if (needsInternetSupervision) {
+      states.add(new InternetState(stateContext));
+    }
+    states.add(new BatteryState(stateContext));
     if (ApplicationPreferences.instance().getTestAlarmEnabled(getContext())) {
       Map<TestAlarmContext, TestAlarm> allTestAlarms = this.testAlarmDao.loadAll().stream().collect(Collectors.toMap(
           TestAlarm::context,

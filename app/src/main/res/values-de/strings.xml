@@ -272,7 +272,15 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="pref_title_acknowledge_method">Bestätigungsmethode</string>
   <string name="pref_title_sms_confirm_pattern">Extraktionsmuster für Bestätigungsantworten</string>
   <string name="pref_sms_confirm_pattern">Geben Sie einen gültigen RegEx mit einer Gruppe ein, um den Inhalt der Bestätigungsnachricht aus der empfangenen SMS zu extrahieren.</string>
+  <string name="toast_acknowledge_skipped">Das Senden der Bestätigung war nicht möglich!</string>
   <string name="alert_confirm_method_no_acknowledge">Deaktiviert</string>
   <string name="alert_confirm_method_sms_static_text">SMS mit statischem Text</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS mit dynamischem Text</string>
+  <string name="internet_availability_wifi">Wifi</string>
+  <string name="internet_availability_mobile">Mobile</string>
+  <string name="internet_availability_other">Andere</string>
+  <string name="internet_availability_none">Keines</string>
+  <string name="notification_no_internet_title">Kein Internet</string>
+  <string name="notification_no_internet_text">Kein Internet verfügbar!</string>
+  <string name="state_fragment_internet">Internet</string>
 </resources>

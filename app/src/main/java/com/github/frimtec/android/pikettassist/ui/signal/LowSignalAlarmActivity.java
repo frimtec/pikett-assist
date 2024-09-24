@@ -1,7 +1,5 @@
 package com.github.frimtec.android.pikettassist.ui.signal;
 
-import static com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.isLowSignal;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Pair;
@@ -10,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
+import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
@@ -17,6 +16,7 @@ import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 public class LowSignalAlarmActivity extends AbstractAlarmActivity {
 
@@ -27,14 +27,43 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
   private final AtomicBoolean autoClose = new AtomicBoolean(false);
 
   public LowSignalAlarmActivity() {
-    super(TAG, R.string.notification_low_signal_title, Pair.create(100, 500), SwipeButtonStyle.NO_SIGNAL);
+    super(
+        TAG,
+        getTitleSupplier(),
+        Pair.create(100, 500),
+        SwipeButtonStyle.NO_SIGNAL
+    );
     setEndCondition(() -> {
-      if(!autoClose.get()) {
+      if (!autoClose.get()) {
         return false;
       }
-      SignalStrengthService.SignalLevel level = new SignalStrengthService(LowSignalAlarmActivity.this).getSignalStrength();
-      return !isLowSignal(level, ApplicationPreferences.instance().getSuperviseSignalStrengthMinLevel(this)) || !ApplicationPreferences.instance().getSuperviseSignalStrength(getApplicationContext());
+      ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
+      return !applicationPreferences.getSuperviseSignalStrength(getApplicationContext()) ||
+          !(isLowSignal(getApplicationContext(), applicationPreferences) ||
+              isNoInternet(applicationPreferences)
+          );
     }, Duration.ofSeconds(1));
+  }
+
+  private static Function<Context, Integer> getTitleSupplier() {
+    return (context) -> isLowSignal(context, ApplicationPreferences.instance()) ?
+        R.string.notification_low_signal_title : R.string.notification_no_internet_title;
+  }
+
+  private static boolean isLowSignal(
+      Context context,
+      ApplicationPreferences applicationPreferences
+  ) {
+    return SignalStrengthService.isLowSignal(
+        new SignalStrengthService(context).getSignalStrength(),
+        applicationPreferences.getSuperviseSignalStrengthMinLevel(context)
+    );
+  }
+
+  private boolean isNoInternet(ApplicationPreferences applicationPreferences) {
+    Context context = getApplicationContext();
+    return !(applicationPreferences.getAlertConfirmMethod(context).isInternet() &&
+        new InternetAvailabilityService(context).getInternetAvailability().isAvailable());
   }
 
   @Override

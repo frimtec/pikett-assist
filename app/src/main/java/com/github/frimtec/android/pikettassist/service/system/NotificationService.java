@@ -1,5 +1,13 @@
 package com.github.frimtec.android.pikettassist.service.system;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+import static android.app.Notification.CATEGORY_ALARM;
+import static android.app.Notification.CATEGORY_EVENT;
+import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
+import static android.app.NotificationManager.IMPORTANCE_LOW;
+import static android.app.NotificationManager.IMPORTANCE_MAX;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,11 +19,13 @@ import android.graphics.BitmapFactory;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationManagerCompat;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.service.NotificationActionListener;
@@ -23,12 +33,6 @@ import com.github.frimtec.android.pikettassist.service.system.SignalStrengthServ
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
 import java.util.List;
-
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-import static android.app.Notification.CATEGORY_ALARM;
-import static android.app.Notification.CATEGORY_EVENT;
-import static android.app.NotificationManager.*;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 
 public class NotificationService {
@@ -41,6 +45,9 @@ public class NotificationService {
   private static final int SIGNAL_NOTIFICATION_ID = 3;
   private static final int MISSING_TEST_ALARM_NOTIFICATION_ID = 4;
   public static final int BATTERY_NOTIFICATION_ID = 5;
+  private static final int NO_INTERNET_NOTIFICATION_ID = 6;
+  private static final int VOLUME_CHANGED_NOTIFICATION_ID = 7;
+
 
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
   public static final String ACTION_ON_CALL_NOTIFICATION_CLOSED_BY_USER = "com.github.frimtec.android.pikettassist.ON_CALL_NOTIFICATION_CLOSED_BY_USER";
@@ -186,6 +193,23 @@ public class NotificationService {
     notifyIfAllowed(context, SIGNAL_NOTIFICATION_ID, notification);
   }
 
+  public void notifyNoInternet() {
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+    );
+    Notification notification = new Builder(context, CHANNEL_ID_NOTIFICATION)
+        .setContentTitle(context.getString(R.string.notification_no_internet_title))
+        .setContentText(String.format(context.getString(R.string.notification_no_internet_text)))
+        .setSmallIcon(R.drawable.ic_baseline_signal_cellular_connected_no_internet_24_black)
+        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setCategory(CATEGORY_EVENT)
+        .setOnlyAlertOnce(true)
+        .setContentIntent(notifyPendingIntent)
+        .setAutoCancel(true)
+        .build();
+    notifyIfAllowed(context, NO_INTERNET_NOTIFICATION_ID, notification);
+  }
+
   public void notifyBatteryLow(BatteryStatus batteryStatus) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
@@ -221,7 +245,7 @@ public class NotificationService {
         .setContentIntent(notifyPendingIntent)
         .setAutoCancel(true)
         .build();
-    notifyIfAllowed(context, SIGNAL_NOTIFICATION_ID, notification);
+    notifyIfAllowed(context, VOLUME_CHANGED_NOTIFICATION_ID, notification);
   }
 
   public boolean isDoNotDisturbEnabled() {

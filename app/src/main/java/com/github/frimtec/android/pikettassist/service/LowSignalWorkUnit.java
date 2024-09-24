@@ -18,6 +18,7 @@ import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;
+import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
@@ -48,6 +49,7 @@ final class LowSignalWorkUnit implements WorkUnit {
   private final AlertDao alertDao;
   private final ShiftService shiftService;
   private final SignalStrengthService signalStrengthService;
+  private final InternetAvailabilityService internetAvailabilityService;
   private final VolumeService volumeService;
   private final NotificationService notificationService;
   private final Runnable alarmTrigger;
@@ -59,6 +61,7 @@ final class LowSignalWorkUnit implements WorkUnit {
       AlertDao alertDao,
       ShiftService shiftService,
       SignalStrengthService signalStrengthService,
+      InternetAvailabilityService internetAvailabilityService,
       VolumeService volumeService,
       NotificationService notificationService,
       Runnable alarmTrigger,
@@ -68,6 +71,7 @@ final class LowSignalWorkUnit implements WorkUnit {
     this.alertDao = alertDao;
     this.shiftService = shiftService;
     this.signalStrengthService = signalStrengthService;
+    this.internetAvailabilityService = internetAvailabilityService;
     this.volumeService = volumeService;
     this.notificationService = notificationService;
     this.alarmTrigger = alarmTrigger;
@@ -79,29 +83,44 @@ final class LowSignalWorkUnit implements WorkUnit {
     int currentFilterState = inputData.getInt(EXTRA_FILTER_STATE, 0);
     boolean pikettState = this.shiftService.getShiftState().isOn();
     SignalLevel level = this.signalStrengthService.getSignalStrength();
-    if (pikettState && this.applicationPreferences.getSuperviseSignalStrength(context) && !isInCall() && !isAlarmStateOn() && isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context))) {
-      int lowSignalFilter = this.applicationPreferences.getLowSignalFilterSeconds(context);
-      if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
-        if (currentFilterState < lowSignalFilter) {
-          Log.d(TAG, "Filter round: " + currentFilterState);
-          currentFilterState += PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
-          return reSchedule(currentFilterState, true);
-        } else {
-          currentFilterState = lowSignalFilter + 1;
-          Log.d(TAG, "Filter triggered, alarm raced");
+    if (pikettState &&
+        this.applicationPreferences.getSuperviseSignalStrength(context) &&
+        !isInCall() &&
+        !isAlarmStateOn()) {
+      boolean lowSignal = isLowSignal(level, this.applicationPreferences.getSuperviseSignalStrengthMinLevel(context));
+      boolean noInternet = this.applicationPreferences.getAlertConfirmMethod(context).isInternet() && isNoInternet();
+      if (lowSignal || noInternet) {
+        int lowSignalFilter = this.applicationPreferences.getLowSignalFilterSeconds(context);
+        if (lowSignalFilter > 0 && level != SignalLevel.OFF) {
+          if (currentFilterState < lowSignalFilter) {
+            Log.d(TAG, "Filter round: " + currentFilterState);
+            currentFilterState += PREF_KEY_LOW_SIGNAL_FILTER_TO_SECONDS_FACTOR;
+            return reSchedule(currentFilterState, true);
+          } else {
+            currentFilterState = lowSignalFilter + 1;
+            Log.d(TAG, "Filter triggered, alarm raced");
+          }
         }
-      }
-      if (this.applicationPreferences.getNotifyLowSignal(context)) {
-        this.notificationService.notifySignalLow(level);
-      }
-      this.alarmTrigger.run();
-    } else {
-      if (currentFilterState > 0) {
-        Log.d(TAG, "Filter stopped, signal ok");
-        currentFilterState = 0;
+        if (this.applicationPreferences.getNotifyLowSignal(context)) {
+          if (lowSignal) {
+            this.notificationService.notifySignalLow(level);
+          } else {
+            this.notificationService.notifyNoInternet();
+          }
+        }
+        this.alarmTrigger.run();
+      } else {
+        if (currentFilterState > 0) {
+          Log.d(TAG, "Filter stopped, signal ok");
+          currentFilterState = 0;
+        }
       }
     }
     return reSchedule(currentFilterState, pikettState);
+  }
+
+  private boolean isNoInternet() {
+    return !this.internetAvailabilityService.getInternetAvailability().isAvailable();
   }
 
   private boolean isAlarmStateOn() {

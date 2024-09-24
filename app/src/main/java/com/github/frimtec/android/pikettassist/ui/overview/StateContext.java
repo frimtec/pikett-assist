@@ -11,6 +11,7 @@ import com.github.frimtec.android.pikettassist.domain.AlertState;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ShiftState;
+import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService.InternetAvailability;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 
@@ -46,6 +47,7 @@ class StateContext {
   private final Contact operationCenter;
   private final Set<String> operationsCenterPhoneNumbers;
   private final BatteryStatus batteryStatus;
+  private final InternetAvailability internetAvailability;
 
   StateContext(
       StateFragment stateFragment,
@@ -68,7 +70,9 @@ class StateContext {
       String networkOperatorName,
       Contact operationCenter,
       Set<String> operationsCenterPhoneNumbers,
-      BatteryStatus batteryStatus) {
+      BatteryStatus batteryStatus,
+      InternetAvailability internetAvailability
+  ) {
     this.stateFragment = stateFragment;
     this.context = context;
     this.fragmentRefreshAction = fragmentRefreshAction;
@@ -90,6 +94,7 @@ class StateContext {
     this.operationCenter = operationCenter;
     this.operationsCenterPhoneNumbers = new HashSet<>(operationsCenterPhoneNumbers);
     this.batteryStatus = batteryStatus;
+    this.internetAvailability = internetAvailability;
   }
 
   Context getContext() {
@@ -174,6 +179,10 @@ class StateContext {
 
   public BatteryStatus getBatteryStatus() {
     return batteryStatus;
+  }
+
+  public InternetAvailability getInternetAvailability() {
+    return internetAvailability;
   }
 
   public MenuItem addContextMenu(ContextMenu menu, int id, @StringRes int text) {

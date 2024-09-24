@@ -52,6 +52,13 @@
         <item>@string/signal_levels_great</item>
     </string-array>
 
+    <string-array name="internet_availability">
+        <item>@string/internet_availability_wifi</item>
+        <item>@string/internet_availability_mobile</item>
+        <item>@string/internet_availability_other</item>
+        <item>@string/internet_availability_none</item>
+    </string-array>
+
     <string-array name="languages">
         <item>@string/system_language</item>
         <item>@string/english</item>
@@ -94,11 +101,13 @@
         <item>NO_ACKNOWLEDGE</item>
         <item>SMS_STATIC_TEXT</item>
         <item>SMS_DYNAMIC_TEXT</item>
+        <item>INTERNET_FACT24_ENS</item>
     </string-array>
 
     <string-array name="alert_confirm_method_entries">
         <item>@string/alert_confirm_method_no_acknowledge</item>
         <item>@string/alert_confirm_method_sms_static_text</item>
         <item>@string/alert_confirm_method_sms_dynamic_text</item>
+        <item>@string/alert_confirm_method_internet_fact24_ens</item>
     </string-array>
 </resources>

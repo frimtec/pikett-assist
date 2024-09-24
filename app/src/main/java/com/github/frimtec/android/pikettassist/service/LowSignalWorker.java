@@ -14,6 +14,7 @@ import androidx.work.WorkerParameters;
 import com.github.frimtec.android.pikettassist.action.JobService;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService;
+import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
@@ -39,6 +40,7 @@ public class LowSignalWorker extends ReScheduledWorker {
         new AlertDao(),
         new ShiftService(context),
         new SignalStrengthService(context),
+        new InternetAvailabilityService(context),
         new VolumeService(context),
         new NotificationService(context),
         () -> LowSignalAlarmActivity.trigger(context, alarmService, true),

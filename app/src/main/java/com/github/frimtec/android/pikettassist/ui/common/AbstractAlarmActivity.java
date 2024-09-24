@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class AbstractAlarmActivity extends AppCompatActivity {
@@ -43,8 +43,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     ALARM, NO_SIGNAL, MISSING_TEST_ALARM
   }
 
-  @StringRes
-  private final int alarmText;
+  private final Function<Context, Integer> alarmTextSupplier;
   private final Pair<Integer, Integer> vibrationPattern;
   private final String tag;
   private final SwipeButtonStyle swipeButtonStyle;
@@ -64,11 +63,11 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
 
   public AbstractAlarmActivity(
       String tag,
-      @StringRes int alarmText,
+      Function<Context, Integer> alarmTextSupplier,
       Pair<Integer, Integer> vibrationPattern,
       SwipeButtonStyle swipeButtonStyle) {
     this.tag = tag;
-    this.alarmText = alarmText;
+    this.alarmTextSupplier = alarmTextSupplier;
     this.vibrationPattern = vibrationPattern;
     this.swipeButtonStyle = swipeButtonStyle;
   }
@@ -78,7 +77,7 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   }
 
   protected final void setRingtone(Ringtone ringtone) {
-    if(ringtone == null) {
+    if (ringtone == null) {
       Log.w(tag, "Set ringtone is null");
       return;
     }
@@ -106,13 +105,13 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     int flags =
         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
     getWindow().setFlags(flags, flags);
     setContentView(R.layout.alarm);
 
     TextView textView = findViewById(R.id.alarm_text);
-    textView.setText(alarmText);
+    textView.setText(alarmTextSupplier.apply(getApplicationContext()));
 
     ActionBar supportActionBar = getSupportActionBar();
     if (supportActionBar != null) {

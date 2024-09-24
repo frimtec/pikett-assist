@@ -68,6 +68,24 @@ android {
     }
 }
 
+tasks.register('jacocoTestReport', JacocoReport) {
+    reports {
+        xml.required.set(true)
+        html.required.set(false)
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*']
+    def debugTree = fileTree(dir: "${project.layout.buildDirectory}/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(fileTree(dir: project.layout.buildDirectory, includes: [
+            'jacoco/testOssDebugUnitTest.exec',
+            'jacoco/testPlaystoreDebugUnitTest.exec'
+    ]))
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'lib')
     implementation "androidx.work:work-runtime:$work_version"

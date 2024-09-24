@@ -272,7 +272,15 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="pref_title_acknowledge_method">Metodo di riconoscimento</string>
   <string name="pref_title_sms_confirm_pattern">Modello di estrazione della risposta di conferma</string>
   <string name="pref_sms_confirm_pattern">Inserisci un RegEx valido con un gruppo per estrarre il contenuto del messaggio di conferma dall\'SMS ricevuto.</string>
+  <string name="toast_acknowledge_skipped">Non è stato possibile inviare la conferma!</string>
   <string name="alert_confirm_method_no_acknowledge">Disabilitato</string>
   <string name="alert_confirm_method_sms_static_text">SMS con testo statico</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS con testo dinamico</string>
+  <string name="internet_availability_wifi">Wifi</string>
+  <string name="internet_availability_mobile"></string>
+  <string name="internet_availability_other">Altro</string>
+  <string name="internet_availability_none"></string>
+  <string name="notification_no_internet_title">Nessuna connessione internet</string>
+  <string name="notification_no_internet_text"></string>
+  <string name="state_fragment_internet">Internet</string>
 </resources>

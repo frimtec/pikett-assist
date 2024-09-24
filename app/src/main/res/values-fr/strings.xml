@@ -273,7 +273,15 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="pref_title_acknowledge_method">Méthode de reconnaissance</string>
   <string name="pref_title_sms_confirm_pattern">Modèle d\'extraction de réponse de confirmation</string>
   <string name="pref_sms_confirm_pattern">Saisissez une expression régulière valide avec un groupe pour extraire le contenu du message de confirmation du SMS reçu.</string>
+  <string name="toast_acknowledge_skipped">L\'envoi d\'un accusé de réception n\'a pas été possible !</string>
   <string name="alert_confirm_method_no_acknowledge">Désactivé</string>
   <string name="alert_confirm_method_sms_static_text">SMS avec texte statique</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS avec texte dynamique</string>
+  <string name="internet_availability_wifi">Wifi</string>
+  <string name="internet_availability_mobile">Mobile</string>
+  <string name="internet_availability_other">Autre</string>
+  <string name="internet_availability_none">Aucun</string>
+  <string name="notification_no_internet_title">Pas d\'internet</string>
+  <string name="notification_no_internet_text">Pas d\'internet disponible !</string>
+  <string name="state_fragment_internet">Internet</string>
 </resources>

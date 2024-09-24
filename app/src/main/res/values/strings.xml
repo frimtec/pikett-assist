@@ -56,10 +56,6 @@
   <string name="signal_levels_moderate">Moderate</string>
   <string name="signal_levels_good">Good</string>
   <string name="signal_levels_great">Great</string>
-  <string name="internet_availability_wifi">Wifi</string>
-  <string name="internet_availability_mobile">Mobile</string>
-  <string name="internet_availability_other">Other</string>
-  <string name="internet_availability_none">None</string>
   <string name="registration_errors_successful">Successful</string>
   <string name="registration_errors_no_secret">Failed, no secret</string>
   <string name="registration_errors_rejected">Rejected</string>
@@ -102,8 +98,6 @@
   <string name="test_alarm_context_general">General</string>
   <string name="notification_low_signal_title">Low signal</string>
   <string name="notification_low_signal_text">Signal level</string>
-  <string name="notification_no_internet_title">No internet</string>
-  <string name="notification_no_internet_text">No internet available!</string>
   <string name="notification_low_battery_title">Low battery</string>
   <string name="notification_low_battery_text">Battery level</string>
   <string name="state_fragment_signal_level">Signal</string>
@@ -250,7 +244,6 @@ The SMS communication is therefore implemented with an adapter app (&lt;a href=h
   <string name="contact_name_no_access">No contact read permission</string>
   <string name="state_fragment_operations_center_no_number">No valid number!</string>
   <string name="state_fragment_do_not_disturb">Do Not Disturb</string>
-  <string name="state_fragment_internet">Internet</string>
   <string name="do_not_disturb_info_title">\"Do Not Disturb\" is active!</string>
   <string name="do_not_disturb_info_text">During on-call duty you should disable the \"Do Not Disturb\" mode. Otherwise PAssist cannot control the ringtone volume. Important alerts and notifications are suppressed by the device.</string>
   <string name="import_alert_log_are_you_sure">All existing alert log entries will be replaced, are you sure?</string>
@@ -300,5 +293,12 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="alert_confirm_method_no_acknowledge">Disabled</string>
   <string name="alert_confirm_method_sms_static_text">SMS with static text</string>
   <string name="alert_confirm_method_sms_dynamic_text">SMS with dynamic text</string>
+  <string name="internet_availability_wifi">Wifi</string>
+  <string name="internet_availability_mobile">Mobile</string>
+  <string name="internet_availability_other">Other</string>
+  <string name="internet_availability_none">None</string>
+  <string name="notification_no_internet_title">No internet</string>
+  <string name="notification_no_internet_text">No internet available!</string>
+  <string name="state_fragment_internet">Internet</string>
   <string name="alert_confirm_method_internet_fact24_ens" translatable="false">Fact24 ENS+</string>
 </resources>

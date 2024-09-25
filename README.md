@@ -44,7 +44,7 @@ PAssist shows you an overview with all future on-call events on the calendar tab
 
 If an SMS is received from your configured operations center, PAssist will race an alert.
 It is playing a configured ringtone and starts a vibration pattern until you confirm it with a swipe button.
-When confirmed, an acknowledge SMS is send back to your operations center.
+When confirmed, an acknowledgement is send back to your operations center.
 The alarm goes into the confirmed alarm state and can be finally closed when all your support activities are completed.
 
 ![On-call alarm](images/PAssist_on_call_alert.png)

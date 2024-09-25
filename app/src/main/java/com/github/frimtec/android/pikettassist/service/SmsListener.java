@@ -54,6 +54,7 @@ public class SmsListener extends BroadcastReceiver {
       }
       OperationsCenterContactService operationsCenterContactService = new OperationsCenterContactService(context);
       Contact operationsCenterContact = operationsCenterContactService.getOperationsCenterContact();
+      AcknowledgmentService acknowledgmentService = null;
       for (Sms sms : receivedSms) {
         if (operationsCenterContactService.isContactsPhoneNumber(operationsCenterContact, sms.getNumber())) {
           Log.i(TAG, "SMS from pikett number");
@@ -62,7 +63,10 @@ public class SmsListener extends BroadcastReceiver {
           if (ApplicationPreferences.instance().getTestAlarmEnabled(context) && matcher.matches()) {
             TestAlarmContext testAlarmContext = new TestAlarmContext(matcher.groupCount() > 0 ? matcher.group(1) : context.getString(R.string.test_alarm_context_general));
             Log.i(TAG, "TEST alarm with context: " + testAlarmContext.context());
-            smsService.sendSms(ApplicationPreferences.instance().getSmsConfirmText(context), sms.getNumber(), sms.getSubscriptionId());
+            if (acknowledgmentService == null) {
+              acknowledgmentService = new AcknowledgmentService(context, smsService);
+            }
+            acknowledgmentService.acknowledge(sms);
             if (this.testAlarmDao.updateReceivedTestAlert(testAlarmContext, Instant.now(), sms.getText())) {
               Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(context);
               supervisedTestAlarmContexts.add(testAlarmContext);

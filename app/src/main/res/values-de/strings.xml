@@ -279,7 +279,7 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="internet_availability_wifi">Wifi</string>
   <string name="internet_availability_mobile">Mobile</string>
   <string name="internet_availability_other">Andere</string>
-  <string name="internet_availability_none">Keines</string>
+  <string name="internet_availability_none">Kein</string>
   <string name="notification_no_internet_title">Kein Internet</string>
   <string name="notification_no_internet_text">Kein Internet verfügbar!</string>
   <string name="state_fragment_internet">Internet</string>

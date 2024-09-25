@@ -1,0 +1,1 @@
+- Fix to use configured confirm method for test alarm acknowledgements

@@ -361,6 +361,7 @@ SDK is 34 (Android 14-UpsideDownCake) and the minimal SDK is 26 (Android 8.0-Ore
 * [preferencex-android][preferencex-android]
 * [Secure-SMS-Proxy API][secure-sms-proxy-api]
 * [semver4j][semver4j]
+* [retrofit][retrofit]
 
 ## Devices compatibility
 
@@ -422,3 +423,5 @@ You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an iss
 [lokalise]: https://lokalise.com/
 
 [semver4j]: https://github.com/vdurmont/semver4j
+
+[retrofit]: https://github.com/square/retrofit

@@ -96,5 +96,4 @@ public class SmsListener extends BroadcastReceiver {
     Matcher matcher = pattern.matcher(sms.getText());
     return matcher.matches();
   }
-
 }

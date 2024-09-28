@@ -26,7 +26,7 @@ abstract class ReScheduledWorker extends Worker {
 
   protected abstract JobService getJobService();
 
-  protected abstract WorkUnit geServiceWorkUnit(Context context, AlarmService alarmService);
+  protected abstract WorkUnit geServiceWorkUnit(Context context);
 
   @NonNull
   @Override
@@ -34,7 +34,7 @@ abstract class ReScheduledWorker extends Worker {
     Data inputData = getInputData();
     Context context = getApplicationContext();
     AlarmService alarmService = new AlarmService(context);
-    Optional<AlarmService.ScheduleInfo> scheduleInfo = geServiceWorkUnit(context, alarmService).apply(inputData);
+    Optional<AlarmService.ScheduleInfo> scheduleInfo = geServiceWorkUnit(context).apply(inputData);
     JobService jobService = getJobService();
     if (scheduleInfo.isPresent()) {
       alarmService.setAlarmForJob(scheduleInfo.get(), jobService);

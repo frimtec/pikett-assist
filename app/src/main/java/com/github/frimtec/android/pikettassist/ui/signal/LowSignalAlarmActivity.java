@@ -38,10 +38,15 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
         return false;
       }
       ApplicationPreferences applicationPreferences = ApplicationPreferences.instance();
-      return !applicationPreferences.getSuperviseSignalStrength(getApplicationContext()) ||
-          !(isLowSignal(getApplicationContext(), applicationPreferences) ||
-              isNoInternet(applicationPreferences)
-          );
+      Context context = getApplicationContext();
+
+      if (!applicationPreferences.getSuperviseSignalStrength(context)) {
+        return true;
+      }
+      if (isLowSignal(context, applicationPreferences)) {
+        return false;
+      }
+      return !(applicationPreferences.getAlertConfirmMethod(context).isInternet() && isNoInternet(applicationPreferences));
     }, Duration.ofSeconds(1));
   }
 

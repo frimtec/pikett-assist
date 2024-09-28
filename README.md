@@ -353,7 +353,7 @@ Any warranty claims are excluded.
 ## Development
 
 PAssist is developed with [Android-Studio][android-studio] with Java 17. The current Android target
-SDK is 34 (Android 14-UpsideDownCake) and the minimal SDK is 26 (Android 8.0-Oreo).
+SDK is 35 (Android 15-VanillaIceCream) and the minimal SDK is 26 (Android 8.0-Oreo).
 
 ## Used libraries
 

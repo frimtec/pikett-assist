@@ -7,7 +7,6 @@ import android.util.Pair;
 import androidx.annotation.Nullable;
 
 import com.github.frimtec.android.pikettassist.R;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
@@ -77,11 +76,10 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
     this.autoClose.set(Boolean.parseBoolean(getIntent().getStringExtra(EXTRA_AUTO_CLOSE)));
   }
 
-  public static void trigger(Context context, AlarmService alarmService, boolean autoClose) {
+  public static void trigger(Context context, boolean autoClose) {
     AbstractAlarmActivity.trigger(
         LowSignalAlarmActivity.class,
         context,
-        alarmService,
         Collections.singletonList(Pair.create(EXTRA_AUTO_CLOSE, Boolean.toString(autoClose)))
     );
   }

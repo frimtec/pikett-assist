@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.common;
 
-import android.app.PendingIntent;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -19,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.VibrateService;
 import com.ncorti.slidetoact.SlideToActView;
@@ -218,12 +218,10 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   protected static void trigger(
       Class<? extends AbstractAlarmActivity> activityClass,
       Context context,
-      AlarmService alarmService,
       List<Pair<String, String>> extras) {
     Intent alarmIntent = new Intent(context, activityClass);
+    alarmIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
     extras.forEach(extra -> alarmIntent.putExtra(extra.first, extra.second));
-    PendingIntent pendingIntent = PendingIntent.getActivity(context,
-        1, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-    alarmService.setAlarmForIntent(Duration.ofMillis(5), pendingIntent);
+    context.startActivity(alarmIntent);
   }
 }

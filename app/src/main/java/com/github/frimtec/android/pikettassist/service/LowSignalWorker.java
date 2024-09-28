@@ -13,7 +13,6 @@ import androidx.work.WorkerParameters;
 
 import com.github.frimtec.android.pikettassist.action.JobService;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.InternetAvailabilityService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
@@ -33,7 +32,7 @@ public class LowSignalWorker extends ReScheduledWorker {
   }
 
   @Override
-  protected WorkUnit geServiceWorkUnit(Context context, AlarmService alarmService) {
+  protected WorkUnit geServiceWorkUnit(Context context) {
     return new LowSignalWorkUnit(
         ApplicationPreferences.instance(),
         (AudioManager) context.getSystemService(Context.AUDIO_SERVICE),
@@ -43,7 +42,7 @@ public class LowSignalWorker extends ReScheduledWorker {
         new InternetAvailabilityService(context),
         new VolumeService(context),
         new NotificationService(context),
-        () -> LowSignalAlarmActivity.trigger(context, alarmService, true),
+        () -> LowSignalAlarmActivity.trigger(context, true),
         context
     );
   }

@@ -12,7 +12,6 @@ import androidx.work.WorkerParameters;
 
 import com.github.frimtec.android.pikettassist.action.JobService;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.testalarm.MissingTestAlarmAlarmActivity;
@@ -29,13 +28,13 @@ public class TestAlarmWorker extends ReScheduledWorker {
   }
 
   @Override
-  protected WorkUnit geServiceWorkUnit(Context context, AlarmService alarmService) {
+  protected WorkUnit geServiceWorkUnit(Context context) {
     return new TestAlarmWorkUnit(
         ApplicationPreferences.instance(),
         new TestAlarmDao(),
         new ShiftService(context),
         new NotificationService(context),
-        () -> MissingTestAlarmAlarmActivity.trigger(context, alarmService),
+        () -> MissingTestAlarmAlarmActivity.trigger(context),
         context
     );
   }

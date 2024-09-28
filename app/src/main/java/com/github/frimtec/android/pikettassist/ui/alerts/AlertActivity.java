@@ -12,7 +12,6 @@ import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.AlertService;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
 import com.github.frimtec.android.pikettassist.util.GsonHelper;
@@ -66,7 +65,6 @@ public class AlertActivity extends AbstractAlarmActivity {
     AbstractAlarmActivity.trigger(
         AlertActivity.class,
         context,
-        new AlarmService(context),
         singletonList(Pair.create(EXTRA_SMS, GsonHelper.GSON.toJson(sms)))
     );
   }

@@ -11,13 +11,13 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-public class PartnerState extends State {
+class PartnerState extends State {
 
   private final StateContext stateContext;
   private final ContactPerson partner;
 
 
-  public PartnerState(StateContext stateContext, ContactPerson partner) {
+  PartnerState(StateContext stateContext, ContactPerson partner) {
     super(
         R.drawable.ic_baseline_people_24,
         stateContext.getString(R.string.state_fragment_partner),

@@ -10,7 +10,6 @@ import androidx.work.Data;
 import androidx.work.WorkerParameters;
 
 import com.github.frimtec.android.pikettassist.action.JobService;
-import com.github.frimtec.android.pikettassist.service.system.AlarmService;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.service.system.VolumeService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
@@ -28,7 +27,7 @@ public class PikettWorker extends ReScheduledWorker {
   }
 
   @Override
-  protected WorkUnit geServiceWorkUnit(Context context, AlarmService alarmService) {
+  protected WorkUnit geServiceWorkUnit(Context context) {
     return new PikettWorkUnit(
         ApplicationState.instance(),
         ApplicationPreferences.instance(),

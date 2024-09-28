@@ -1,0 +1,1 @@
+- Fix for broken auto close of low signal alarm

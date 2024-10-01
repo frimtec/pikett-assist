@@ -134,10 +134,36 @@ The SMS received from any phone number of this contact are supervised by PAssist
 PAssist also supports operations centers using numeric and alphanumeric short code SMS numbers.
 Numeric short codes are currently only supported for the following countries:
 
-* Switzerland
-* Germany
-* France
-* USA
+* Belgium (BE)
+* Botswana (BW)
+* Brazil (BR)
+* Canada (CA)
+* Chile (CL)
+* Denmark (DK)
+* Dominican Republic (DO)
+* Finland (FI)
+* France (FR)
+* Germany (DE)
+* Greece (GR)
+* Hungary (HU)
+* India (IN)
+* Indonesia (ID)
+* Ireland (IE)
+* Italy (IT)
+* Morocco (MA)
+* Nepal (NP)
+* Netherlands (NL)
+* New Zealand (NZ)
+* Nigeria (NG)
+* Norway (NO)
+* Panama (PA)
+* Singapore (SG)
+* Spain (ES)
+* Sweden (SE)
+* Switzerland (CH)
+* Turkey (TR)
+* USA (US)
+* United Kingdom (GB)
 
 Alphanumeric short codes are supported in any country.
 

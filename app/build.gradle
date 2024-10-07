@@ -4,7 +4,7 @@ apply plugin: 'jacoco'
 
 // Third party library versions
 def secure_sms_proxy_api_version = '3.4.0'
-def android_billingclient_version = '7.1.0'
+def android_billingclient_version = '7.1.1'
 def slidetoact_version = '0.11.0'
 def takisoft_preferencex_version = '1.1.0'
 def junit_version = '5.11.1'

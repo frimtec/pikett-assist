@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -44,6 +43,7 @@ import com.github.frimtec.android.pikettassist.ui.about.AboutActivity;
 import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
 import com.github.frimtec.android.pikettassist.ui.billing.BillingManagerContract;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
+import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
 import com.github.frimtec.android.pikettassist.ui.common.ViewPager2Helper;
 import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
 import com.github.frimtec.android.pikettassist.ui.settings.SettingsActivity;
@@ -60,7 +60,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
   private static final String TAG = "MainActivity";
 
@@ -142,8 +142,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void doOnCreate(Bundle savedInstanceState) {
     AppCompatDelegate.setDefaultNightMode(ApplicationPreferences.instance().getAppTheme(this));
 
     this.s2msp = SecureSmsProxyFacade.instance(this);

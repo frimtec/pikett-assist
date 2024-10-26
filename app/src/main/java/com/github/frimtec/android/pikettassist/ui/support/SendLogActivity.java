@@ -8,17 +8,16 @@ import android.widget.Button;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
 
-public class SendLogActivity extends AppCompatActivity {
+public class SendLogActivity extends BaseActivity {
 
   private ActivityResultLauncher<Intent> sendCrashReportActivityResultLauncher;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void doOnCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_send_log);
 
     Button sendButton = findViewById(R.id.send_log_button_send);

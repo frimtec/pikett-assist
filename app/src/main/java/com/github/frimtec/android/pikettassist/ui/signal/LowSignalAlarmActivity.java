@@ -71,8 +71,8 @@ public class LowSignalAlarmActivity extends AbstractAlarmActivity {
   }
 
   @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void doOnCreate(@Nullable Bundle savedInstanceState) {
+    super.doOnCreate(savedInstanceState);
     this.autoClose.set(Boolean.parseBoolean(getIntent().getStringExtra(EXTRA_AUTO_CLOSE)));
   }
 

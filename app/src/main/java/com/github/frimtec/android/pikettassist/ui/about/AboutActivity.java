@@ -10,22 +10,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.github.frimtec.android.pikettassist.BuildConfig;
 import com.github.frimtec.android.pikettassist.R;
+import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
   public static final String EXTRA_SPONSOR_ICONS = "sponsorIcons";
 
   private int[] sponsorIcons = new int[0];
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
+  protected void doOnCreate(Bundle savedInstanceState) {
     Bundle b = getIntent().getExtras();
     if (b != null) {
       sponsorIcons = b.getIntArray(EXTRA_SPONSOR_ICONS);

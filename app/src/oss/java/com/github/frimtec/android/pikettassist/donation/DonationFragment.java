@@ -16,6 +16,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.ui.common.EdgeToEdgeHelper;
 
 public class DonationFragment extends DialogFragment {
 
@@ -85,6 +86,7 @@ public class DonationFragment extends DialogFragment {
     toolbar.setNavigationIcon(R.drawable.ic_arrow_up);
     toolbar.setNavigationOnClickListener(v -> dismiss());
     toolbar.setTitle(R.string.menu_donate);
+    EdgeToEdgeHelper.handleInsets(root);
     return root;
   }
 

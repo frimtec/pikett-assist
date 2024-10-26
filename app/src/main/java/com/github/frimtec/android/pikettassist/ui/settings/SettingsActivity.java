@@ -16,7 +16,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.DropDownPreference;
 import androidx.preference.ListPreference;
@@ -32,6 +31,7 @@ import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
 import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
 import com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType;
 import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
@@ -41,11 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void doOnCreate(Bundle savedInstanceState) {
     setContentView(R.layout.settings_activity);
     getSupportFragmentManager()
         .beginTransaction()

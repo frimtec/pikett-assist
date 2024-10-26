@@ -36,8 +36,8 @@ public class AlertActivity extends AbstractAlarmActivity {
   }
 
   @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  public void doOnCreate(Bundle savedInstanceState) {
+    super.doOnCreate(savedInstanceState);
     this.alertService = new AlertService(this);
     setSwipeAction(() -> alertService.confirmAlert(this, extractSms(getIntent())));
     setRingtone(RingtoneManager.getRingtone(this, getAlarmTone(this)));

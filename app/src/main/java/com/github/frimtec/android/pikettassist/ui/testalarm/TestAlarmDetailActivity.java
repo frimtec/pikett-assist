@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.github.frimtec.android.pikettassist.R;
@@ -12,6 +11,7 @@ import com.github.frimtec.android.pikettassist.domain.OnOffState;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Set;
 
-public class TestAlarmDetailActivity extends AppCompatActivity {
+public class TestAlarmDetailActivity extends BaseActivity {
 
   public static final String EXTRA_TEST_ALARM_CONTEXT = "testAlarmContext";
 
@@ -38,9 +38,7 @@ public class TestAlarmDetailActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
+  protected void doOnCreate(Bundle savedInstanceState) {
     Bundle extras = getIntent().getExtras();
     if (extras != null) {
       String testAlarmContext = extras.getString(EXTRA_TEST_ALARM_CONTEXT);

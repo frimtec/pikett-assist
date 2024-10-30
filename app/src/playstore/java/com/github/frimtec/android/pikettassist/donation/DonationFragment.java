@@ -23,6 +23,7 @@ import com.android.billingclient.api.QueryProductDetailsParams.Product;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.donation.billing.PlayStoreBillingManager;
 import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
+import com.github.frimtec.android.pikettassist.ui.common.EdgeToEdgeHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -64,6 +65,7 @@ public class DonationFragment extends DialogFragment {
     toolbar.setNavigationIcon(R.drawable.ic_arrow_up);
     toolbar.setNavigationOnClickListener(v -> dismiss());
     toolbar.setTitle(R.string.menu_donate);
+    EdgeToEdgeHelper.handleInsets(root);
     return root;
   }
 

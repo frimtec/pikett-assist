@@ -7,14 +7,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.domain.Alert.AlertCall;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
+import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
 
-public class AlertDetailActivity extends AppCompatActivity {
+public class AlertDetailActivity extends BaseActivity {
 
   public static final String EXTRA_ALERT_ID = "alertId";
 
@@ -30,8 +29,7 @@ public class AlertDetailActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void doOnCreate(Bundle savedInstanceState) {
     setContentView(R.layout.activity_alert_detail);
 
     Bundle b = getIntent().getExtras();

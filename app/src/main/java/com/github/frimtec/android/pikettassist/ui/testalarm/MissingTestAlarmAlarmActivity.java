@@ -28,8 +28,8 @@ public class MissingTestAlarmAlarmActivity extends AbstractAlarmActivity {
   }
 
   @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  protected void doOnCreate(@Nullable Bundle savedInstanceState) {
+    super.doOnCreate(savedInstanceState);
     setRingtone(RingtoneManager.getRingtone(this,  getAlarmTone(this)));
   }
 

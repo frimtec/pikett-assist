@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
@@ -32,7 +31,7 @@ import java.util.TimerTask;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class AbstractAlarmActivity extends AppCompatActivity {
+public abstract class AbstractAlarmActivity extends BaseActivity {
 
   private static final int WAKE_LOCK_TIMEOUT = 1000 * 60 * 60;
 
@@ -93,9 +92,8 @@ public abstract class AbstractAlarmActivity extends AppCompatActivity {
   }
 
   @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
+  protected void doOnCreate(@Nullable Bundle savedInstanceState) {
     Log.v(tag, "onCreate");
-    super.onCreate(savedInstanceState);
     this.vibrateService = new VibrateService(this);
     this.wakeLock = new PowerService(this).newWakeLock("alarmActivity");
     if (!wakeLock.isHeld()) {

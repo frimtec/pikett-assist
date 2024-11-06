@@ -22,7 +22,7 @@
   <string name="pref_title_use_partner_contact_extraction">Extract partner contacts from events</string>
   <string name="pref_title_partner_search_pattern">Extraction pattern for partner contacts</string>
   <string name="pref_default_calendar_event_pikett_title_pattern">.*on-call.*</string>
-  <string name="pref_default_partner_search_pattern" translatable="false">Deputy:\\s([a-z,0-9]{5})(\\s|$)</string>
+  <string name="pref_default_partner_search_pattern" translatable="false">Deputy:\\s([a-z,0-9]*)(\\s|$)</string>
   <string name="pref_title_pre_post_time_seconds">Pre-/post-run time</string>
   <string name="pref_default_pre_post_run_time_seconds" translatable="false">300</string>
   <string name="pref_title_meta_sms_message_pattern">SMS ignore filter</string>

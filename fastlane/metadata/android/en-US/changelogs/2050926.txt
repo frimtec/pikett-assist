@@ -1,0 +1,6 @@
+- Improve default partner extraction pattern
+- Migrate to edge-to-edge
+- Bump com.github.frimtec:secure-sms-proxy-api from 3.4.1 to 3.4.2
+- Bump androidx.work:work-runtime from 2.9.1 to 2.10.0
+- Bump com.android.tools.build:gradle from 8.7.1 to 8.7.2
+- Bump androidx.constraintlayout:constraintlayout from 2.1.4 to 2.2.0

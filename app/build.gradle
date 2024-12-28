@@ -29,7 +29,19 @@ try {
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.12"
+}
+
+tasks.register("unitTestCoverageReport", JacocoReport) {
+    group = "Coverage"
+    dependsOn tasks.testOssDebugUnitTest
+    reports {
+        html.required = true
+        xml.required = true
+    }
+    executionData.from = layout.buildDirectory.dir("outputs/unit_test_code_coverage/ossDebugUnitTest/testOssDebugUnitTest.exec")
+    classDirectories.from = layout.buildDirectory.dir("intermediates/javac/ossDebug/compileOssDebugJavaWithJavac/classes")
+    sourceDirectories.from = layout.projectDirectory.dir("src/main/java")
 }
 
 android {
@@ -44,6 +56,9 @@ android {
         buildConfigField("String", "PURCHASE_VALIDATION_KEY", purchaseValidationKeyProperties['purchase.validation.key'])
     }
     buildTypes {
+        debug {
+            enableUnitTestCoverage true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

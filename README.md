@@ -249,9 +249,10 @@ The default is 300 seconds (five minutes).
 
 #### Supervise signal strength
 
-Defines whether the signal strength is supervised or not.
-In case the battery level falls below 10% the check interval is reduced in favour of a longer
-remaining term.
+Selects whether or not to monitor signal strength.
+If the battery level drops below 10%, the monitoring interval will be reduced in favour of a longer
+period.
+remaining time.
 
 #### Minimal signal strength
 

@@ -404,7 +404,7 @@ You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an iss
 * [bakito][github-bakito]: For implementing dual SIM support and excellent testing support.
 * [IzzySoft][github-izzysoft]: For offering PAssist on IzzyOnDroid F-Droid repository.
 
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2024.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
 
 [license-shield]: https://img.shields.io/github/license/frimtec/pikett-assist.svg
 

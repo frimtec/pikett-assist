@@ -27,9 +27,15 @@ import com.github.frimtec.android.pikettassist.state.ApplicationState;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation;
 import com.github.frimtec.android.securesmsproxyapi.SecureSmsProxyFacade.Installation.AppCompatibility;
 
+import java.util.List;
+
 class SmsAdapterState extends State {
 
-  private static final String F_DROID_PACKAGE_NAME = "org.fdroid.fdroid";
+  private static final List<String> F_DROID_PACKAGE_NAMES = List.of(
+      // all entries must be declared in AndroidManifest.xml queries
+      "org.fdroid.fdroid",
+      "org.fdroid.basic"
+  );
 
   private static final int MENU_CONTEXT_VIEW = 1;
   private static final int SEND_TEST_SMS = 2;
@@ -171,12 +177,14 @@ class SmsAdapterState extends State {
   }
 
   private boolean isFDroidAvailable(Context context) {
-    try {
-      context.getPackageManager().getPackageInfo(F_DROID_PACKAGE_NAME, 0);
-      return true;
-    } catch (PackageManager.NameNotFoundException e) {
-      return false;
-    }
+    return F_DROID_PACKAGE_NAMES.stream().anyMatch(name -> {
+      try {
+        context.getPackageManager().getPackageInfo(name, 0);
+        return true;
+      } catch (PackageManager.NameNotFoundException e) {
+        return false;
+      }
+    });
   }
 
   @Override

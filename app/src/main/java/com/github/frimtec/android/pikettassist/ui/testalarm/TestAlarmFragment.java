@@ -1,5 +1,8 @@
 package com.github.frimtec.android.pikettassist.ui.testalarm;
 
+import static android.widget.ExpandableListView.getPackedPositionChild;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +16,10 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.TestAlarm;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
@@ -26,13 +31,16 @@ import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListA
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static android.widget.ExpandableListView.getPackedPositionChild;
-import static android.widget.ExpandableListView.getPackedPositionGroup;
 
 public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarm> {
 
@@ -219,9 +227,6 @@ public class TestAlarmFragment extends AbstractListFragment<Boolean, TestAlarm> 
   private List<TestAlarm> loadTestAlarmList() {
     List<TestAlarm> list = new ArrayList<>(this.testAlarmDao.loadAll());
     list.sort(Comparator.comparing(o -> o.context().context()));
-    if (list.isEmpty()) {
-      Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
-    }
     return list;
   }
 

@@ -1,5 +1,9 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
+import static android.widget.ExpandableListView.getPackedPositionChild;
+import static android.widget.ExpandableListView.getPackedPositionGroup;
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -12,13 +16,19 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.ExpandableListContextMenuInfo;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.service.AlertService;
@@ -32,16 +42,22 @@ import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListA
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static android.widget.ExpandableListView.getPackedPositionChild;
-import static android.widget.ExpandableListView.getPackedPositionGroup;
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class AlertListFragment extends AbstractListFragment<Integer, Alert> {
 
@@ -260,9 +276,6 @@ public class AlertListFragment extends AbstractListFragment<Integer, Alert> {
 
   private List<Alert> loadAlertList() {
     List<Alert> alertList = this.alertDao.loadAll();
-    if (alertList.isEmpty()) {
-      Toast.makeText(getContext(), getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
-    }
     if (this.exportButton != null) {
       this.exportButton.setVisibility(alertList.isEmpty() ? View.INVISIBLE : View.VISIBLE);
     }

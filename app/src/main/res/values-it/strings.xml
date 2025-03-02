@@ -132,7 +132,6 @@
   <string name="state_fragment_draw_overlays">Visualizza su altre app</string>
   <string name="state_fragment_battery_optimization">Ottimizzazione della batteria</string>
   <string name="missing_permission_calendar_access">Manca il permesso di leggere il calendario!</string>
-  <string name="general_no_data">Nessun dato ancora disponibile.</string>
   <string name="permission_required">Permesso richiesto:</string>
   <string name="permission_contacts_title">Contatti</string>
   <string name="permission_contacts_text">PAssist legge il numero di telefono dal contatto della centrale operativa configurata. Viene utilizzato per decidere quale SMS deve essere supervisionato durante il servizio di guardia. PAssist non funziona senza questa autorizzazione!</string>

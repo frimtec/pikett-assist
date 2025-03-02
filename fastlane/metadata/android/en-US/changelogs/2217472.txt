@@ -1,0 +1,1 @@
+- Remove disturbing no-data toast

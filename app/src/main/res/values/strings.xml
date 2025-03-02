@@ -141,7 +141,6 @@
   <string name="state_fragment_draw_overlays">Display over other apps</string>
   <string name="state_fragment_battery_optimization">Battery Optimization</string>
   <string name="missing_permission_calendar_access">Missing permission to read calendar!</string>
-  <string name="general_no_data">No data available yet.</string>
   <string name="permission_required">Required permission:</string>
   <string name="permission_contacts_title">Contacts</string>
   <string name="permission_contacts_text">PAssist reads the phone number from the contact of the configured operations center. This is used to decide which SMS must be supervised during on-call duty. Without this permission PAssist does not work!</string>

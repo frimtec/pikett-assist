@@ -1,5 +1,9 @@
 package com.github.frimtec.android.pikettassist.ui.shifts;
 
+import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
+import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
+
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.dao.ShiftDao;
@@ -21,14 +26,14 @@ import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CALENDAR_READ;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.UnitNameProvider.translatedFormatter;
-import static com.github.frimtec.android.pikettassist.ui.common.DurationFormatter.toDurationString;
 
 public class ShiftListFragment extends AbstractListFragment<YearMonth, Shift> {
 
@@ -113,9 +118,6 @@ public class ShiftListFragment extends AbstractListFragment<YearMonth, Shift> {
     } else {
       shifts = new ShiftDao(context).getShifts(ApplicationPreferences.instance().getCalendarEventPikettTitlePattern(context), ApplicationPreferences.instance().getCalendarSelection(context), null)
           .stream().filter(shift -> !shift.isOver(now, prePostRunTime)).collect(Collectors.toList());
-      if (shifts.isEmpty()) {
-        Toast.makeText(context, getString(R.string.general_no_data), Toast.LENGTH_LONG).show();
-      }
     }
     updateHeader(now, shifts);
     return new ShiftExpandableListAdapter(context, shifts);

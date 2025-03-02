@@ -133,7 +133,6 @@
   <string name="state_fragment_battery_optimization">Optimisation de la batterie</string>
   <string name="missing_permission_calendar_access">Autorisation manquante pour lire le calendrier!
 !</string>
-  <string name="general_no_data">Pas encore de données disponibles.</string>
   <string name="permission_required">Autorisation requise:</string>
   <string name="permission_contacts_title">Contacts</string>
   <string name="permission_contacts_text">PAssist lit le numéro de téléphone du contact du centre d\'opérations configuré. Ceci est utilisé pour décider quel SMS doit être supervisé pendant l\'astreinte. Sans cette autorisation, PAssist ne fonctionne pas!</string>

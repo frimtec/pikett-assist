@@ -2,13 +2,18 @@ package com.github.frimtec.android.pikettassist.state;
 
 import static com.github.frimtec.android.pikettassist.PAssistApplication.getKeyValueStore;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.frimtec.android.pikettassist.util.GsonHelper;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.Optional;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 final class KeyValueStoreApplicationState implements ApplicationState {
 
@@ -45,19 +50,30 @@ final class KeyValueStoreApplicationState implements ApplicationState {
   }
 
   @Override
-  public Optional<Sms> getLastAlarmSms() {
+  public List<Sms> getLastAlarmSms() {
     String value = getKeyValueStore().get(KEY_LAST_ALARM_SMS, "");
-    try {
-      return Optional.of(GsonHelper.GSON.fromJson(value, Sms.class));
-    } catch (JsonSyntaxException e) {
-      Log.e(TAG, "Cannot parse last alarm sms: '" + value + "'", e);
+    if (!TextUtils.isEmpty(value)) {
+      try {
+        Type smsListType = new TypeToken<List<Sms>>() {
+        }.getType();
+        return GsonHelper.GSON.fromJson(value, smsListType);
+      } catch (JsonSyntaxException e) {
+        Log.e(TAG, "Cannot parse last alarm sms: '" + value + "'", e);
+      }
     }
-    return Optional.empty();
+    return Collections.emptyList();
   }
 
   @Override
-  public void setLastAlarmSms(Sms sms) {
-    getKeyValueStore().put(KEY_LAST_ALARM_SMS, GsonHelper.GSON.toJson(sms));
+  public void addLastAlarmSms(Sms sms) {
+    List<Sms> smsList = new ArrayList<>(getLastAlarmSms());
+    smsList.add(sms);
+    getKeyValueStore().put(KEY_LAST_ALARM_SMS, GsonHelper.GSON.toJson(smsList));
+  }
+
+  @Override
+  public void clearLastAlarmSms() {
+    getKeyValueStore().put(KEY_LAST_ALARM_SMS, "");
   }
 
   @Override

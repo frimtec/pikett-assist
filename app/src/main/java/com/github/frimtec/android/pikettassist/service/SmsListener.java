@@ -66,7 +66,7 @@ public class SmsListener extends BroadcastReceiver {
             if (acknowledgmentService == null) {
               acknowledgmentService = new AcknowledgmentService(context, smsService);
             }
-            acknowledgmentService.acknowledge(sms);
+            acknowledgmentService.acknowledge(List.of(sms));
             if (this.testAlarmDao.updateReceivedTestAlert(testAlarmContext, Instant.now(), sms.getText())) {
               Set<TestAlarmContext> supervisedTestAlarmContexts = ApplicationPreferences.instance().getSupervisedTestAlarms(context);
               supervisedTestAlarmContexts.add(testAlarmContext);

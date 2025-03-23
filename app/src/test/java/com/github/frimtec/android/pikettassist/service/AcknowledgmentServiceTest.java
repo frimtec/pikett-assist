@@ -14,6 +14,7 @@ import com.github.frimtec.android.securesmsproxyapi.Sms;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -35,7 +36,7 @@ class AcknowledgmentServiceTest {
     );
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.NO_ACKNOWLEDGE);
 
-    acknowledgmentService.acknowledge(new Sms("111", "text"));
+    acknowledgmentService.acknowledge(List.of(new Sms("111", "text")));
 
     // wait for async processing
     Thread.sleep(100);
@@ -61,7 +62,7 @@ class AcknowledgmentServiceTest {
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_STATIC_TEXT);
     when(applicationPreferences.getSmsConfirmText(context)).thenReturn("OK");
 
-    acknowledgmentService.acknowledge(new Sms("111", "text", 1));
+    acknowledgmentService.acknowledge(List.of(new Sms("111", "text", 1)));
 
     // wait for async processing
     Thread.sleep(100);
@@ -87,7 +88,7 @@ class AcknowledgmentServiceTest {
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_DYNAMIC_TEXT);
     when(applicationPreferences.getSmsConfirmPattern(context)).thenReturn("<(.*?)>");
 
-    acknowledgmentService.acknowledge(new Sms("111", "reply with <123> to acknowledge", 1));
+    acknowledgmentService.acknowledge(List.of(new Sms("111", "reply with <123> to acknowledge", 1)));
 
     // wait for async processing
     Thread.sleep(100);
@@ -113,7 +114,7 @@ class AcknowledgmentServiceTest {
     when(applicationPreferences.getAlertConfirmMethod(context)).thenReturn(AlertConfirmMethod.SMS_DYNAMIC_TEXT);
     when(applicationPreferences.getSmsConfirmPattern(context)).thenReturn("<(.*?)>");
 
-    acknowledgmentService.acknowledge(new Sms("111", "reply with (123) to acknowledge", 1));
+    acknowledgmentService.acknowledge(List.of(new Sms("111", "reply with (123) to acknowledge", 1)));
 
     // wait for async processing
     Thread.sleep(100);

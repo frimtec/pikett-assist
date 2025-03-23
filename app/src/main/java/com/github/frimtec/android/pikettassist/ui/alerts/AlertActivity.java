@@ -1,26 +1,19 @@
 package com.github.frimtec.android.pikettassist.ui.alerts;
 
-import static java.util.Collections.singletonList;
+import static java.util.Collections.emptyList;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.service.AlertService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractAlarmActivity;
-import com.github.frimtec.android.pikettassist.util.GsonHelper;
-import com.github.frimtec.android.securesmsproxyapi.Sms;
-import com.google.gson.JsonSyntaxException;
 
 public class AlertActivity extends AbstractAlarmActivity {
-
-  private static final String EXTRA_SMS = "sms";
 
   private static final String TAG = "AlertActivity";
 
@@ -39,18 +32,8 @@ public class AlertActivity extends AbstractAlarmActivity {
   public void doOnCreate(Bundle savedInstanceState) {
     super.doOnCreate(savedInstanceState);
     this.alertService = new AlertService(this);
-    setSwipeAction(() -> alertService.confirmAlert(this, extractSms(getIntent())));
+    setSwipeAction(() -> alertService.confirmAlert());
     setRingtone(RingtoneManager.getRingtone(this, getAlarmTone(this)));
-  }
-
-  private static Sms extractSms(Intent intent) {
-    String smsValue = intent.getStringExtra(EXTRA_SMS);
-    try {
-      return GsonHelper.GSON.fromJson(smsValue, Sms.class);
-    } catch (JsonSyntaxException e) {
-      Log.e(TAG, "Cannot parse last alarm sms: '" + smsValue + "'", e);
-    }
-    return null;
   }
 
   private Uri getAlarmTone(Context context) {
@@ -61,11 +44,11 @@ public class AlertActivity extends AbstractAlarmActivity {
     return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
   }
 
-  public static void trigger(Sms sms, Context context) {
+  public static void trigger(Context context) {
     AbstractAlarmActivity.trigger(
         AlertActivity.class,
         context,
-        singletonList(Pair.create(EXTRA_SMS, GsonHelper.GSON.toJson(sms)))
+        emptyList()
     );
   }
 

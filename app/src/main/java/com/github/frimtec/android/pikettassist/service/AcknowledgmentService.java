@@ -22,6 +22,7 @@ import com.github.frimtec.android.pikettassist.service.system.SmsService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -78,7 +79,7 @@ public class AcknowledgmentService {
     );
   }
 
-  public void acknowledge(Sms receivedSms) {
+  public void acknowledge(List<Sms> receivedSms) {
     var confirmationStrategy = getConfirmationStrategy(
         this.applicationPreferences.getAlertConfirmMethod(context)
     );

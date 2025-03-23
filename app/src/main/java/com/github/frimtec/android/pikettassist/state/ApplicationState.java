@@ -2,7 +2,7 @@ package com.github.frimtec.android.pikettassist.state;
 
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ApplicationState {
 
@@ -23,9 +23,11 @@ public interface ApplicationState {
 
    void setPikettStateManuallyOn(boolean manuallyOn);
 
-  Optional<Sms> getLastAlarmSms();
+  List<Sms> getLastAlarmSms();
 
-  void setLastAlarmSms(Sms sms);
+  void addLastAlarmSms(Sms sms);
+
+  void clearLastAlarmSms();
 
    int getDefaultVolume();
 

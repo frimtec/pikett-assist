@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Alert;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
@@ -50,7 +48,8 @@ public class AlertService {
   }
 
   public void newAlert(Sms sms) {
-    ApplicationState.instance().setLastAlarmSms(sms);
+    ApplicationState applicationState = ApplicationState.instance();
+    applicationState.addLastAlarmSms(sms);
     switch (
         this.alertDao.insertOrUpdateAlert(
             Instant.now(),
@@ -59,12 +58,13 @@ public class AlertService {
             ApplicationPreferences.instance().getAutoConfirmTime(context)
         )
     ) {
-      case TRIGGER -> AlertActivity.trigger(sms, context);
+      case TRIGGER -> AlertActivity.trigger(context);
       case UNCHANGED -> {
         // nothing to do
       }
       case AUTO_CONFIRMED -> {
-        this.acknowledgmentService.acknowledge(sms);
+        this.acknowledgmentService.acknowledge(List.of(sms));
+        applicationState.clearLastAlarmSms();
         Toast.makeText(context, context.getText(R.string.toast_alert_auto_confirm), Toast.LENGTH_LONG).show();
       }
     }
@@ -81,19 +81,19 @@ public class AlertService {
   }
 
   public void confirmAlert() {
-    confirmAlert(this.context, ApplicationState.instance().getLastAlarmSms().orElse(null));
-  }
-
-  public void confirmAlert(Context context, @Nullable Sms receivedSms) {
-    this.alertDao.confirmOpenAlert();
-    if (receivedSms != null) {
+    ApplicationState applicationState = ApplicationState.instance();
+    List<Sms> receivedSms = applicationState.getLastAlarmSms();
+    try {
+      this.alertDao.confirmOpenAlert();
       this.acknowledgmentService.acknowledge(receivedSms);
+    } finally {
+      applicationState.clearLastAlarmSms();
     }
     notificationService.notifyAlarm(
-        new Intent(context, NotificationActionListener.class),
+        new Intent(this.context, NotificationActionListener.class),
         ACTION_CLOSE_ALARM,
-        context.getString(R.string.alert_action_close),
-        new Intent(context, MainActivity.class)
+        this.context.getString(R.string.alert_action_close),
+        new Intent(this.context, MainActivity.class)
     );
   }
 

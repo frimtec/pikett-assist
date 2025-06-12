@@ -60,7 +60,7 @@ public class SettingsActivity extends BaseActivity {
 
     private static final String TAG = "SettingsFragment";
 
-    private static final int MAX_SUPPORTED_SIMS = 3;
+    private static final int MAX_SUPPORTED_SIMS = 10;
 
     @SuppressLint("DefaultLocale")
     @Override

@@ -3,6 +3,8 @@
 ![Icon](app/src/main/res/mipmap-hdpi/ic_launcher.png)
 [![License][license-shield]][license]
 
+[![Reproducible Build][reproducible-shield]][izzy-on-droid]
+
 ![Project Maintenance][maintenance-shield]
 [![Code Coverage][codecov-shield]][codecov]
 
@@ -452,3 +454,5 @@ You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an iss
 [semver4j]: https://github.com/vdurmont/semver4j
 
 [retrofit]: https://github.com/square/retrofit
+
+[reproducible-shield]: https://shields.rbtlog.dev/simple/com.github.frimtec.android.pikettassist

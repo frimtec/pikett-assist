@@ -1,0 +1,2 @@
+- Migrate to target SDK 36 (Android 16)
+- Bump SMS proxy S2MSP from 3.4.2 to 3.5.0

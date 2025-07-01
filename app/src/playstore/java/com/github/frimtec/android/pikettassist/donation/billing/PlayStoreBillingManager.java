@@ -36,7 +36,8 @@ public class PlayStoreBillingManager implements BillingManagerContract, Purchase
 
   private static final String TAG = "BillingManager";
 
-  private static final Set<String> BLACKLIST = Set.of("GPA.3313-2805-6535-90633", "GPA.3361-8608-8510-17077");
+  private static final Set<String> BLACKLIST = Set.of(
+  );
 
   /**
    * A reference to BillingClient
@@ -71,7 +72,8 @@ public class PlayStoreBillingManager implements BillingManagerContract, Purchase
             PendingPurchasesParams.newBuilder()
                 .enableOneTimeProducts()
                 .build()
-        ).build();
+        ).enableAutoServiceReconnection()
+        .build();
     startServiceConnection(() -> {
       this.billingUpdatesListener.onBillingClientSetupFinished();
       queryPurchases();
@@ -138,7 +140,7 @@ public class PlayStoreBillingManager implements BillingManagerContract, Purchase
     }
   }
 
-  public void querySkuDetailsAsync(
+  public void queryProductDetailsAsync(
       List<QueryProductDetailsParams.Product> productList,
       ProductDetailsResponseListener listener
   ) {

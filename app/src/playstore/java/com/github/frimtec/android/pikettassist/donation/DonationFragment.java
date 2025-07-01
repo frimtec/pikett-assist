@@ -118,18 +118,16 @@ public class DonationFragment extends DialogFragment {
 
   private void addProductRows(List<ProductRowData> inList, List<Product> products) {
     PlayStoreBillingManager billingManager = (PlayStoreBillingManager) this.billingProvider.getBillingManager();
-    billingManager.querySkuDetailsAsync(products,
+    billingManager.queryProductDetailsAsync(products,
         (billingResult, productDetails) -> {
           FragmentActivity activity = getActivity();
           if (activity != null) {
             activity.runOnUiThread(() -> {
               if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 Log.w(TAG, "Unsuccessful query. Error code: " + billingResult.getResponseCode());
-              } else //noinspection SizeReplaceableByIsEmpty
-                if (productDetails.size() > 0) {
-                // If we successfully got SKUs, add a header in front of the row
+              } else if (!productDetails.getProductDetailsList().isEmpty()) {
                 inList.add(new ProductRowData(getString(R.string.header_inapp)));
-                productDetails.stream()
+                productDetails.getProductDetailsList().stream()
                     .sorted(
                         Comparator.comparing((ProductDetails details) -> Objects.requireNonNull(details.getOneTimePurchaseOfferDetails()).getPriceAmountMicros())
                             .reversed()

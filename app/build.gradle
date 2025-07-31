@@ -105,7 +105,7 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.27.3"
     testImplementation "org.mockito:mockito-core:5.18.0"
     testImplementation 'com.github.tomakehurst:wiremock:3.0.1'
-    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
 }

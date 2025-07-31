@@ -136,6 +136,7 @@ The SMS received from any phone number of this contact are supervised by PAssist
 PAssist also supports operations centers using numeric and alphanumeric short code SMS numbers.
 Numeric short codes are currently only supported for the following countries:
 
+* Australia (AU) - as of release 2.18.1 and S2MSP release 3.5.2
 * Belgium (BE)
 * Botswana (BW)
 * Brazil (BR)

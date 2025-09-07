@@ -171,6 +171,7 @@
  La communication SMS est donc implémentée avec une application adaptateur (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;).</string>
   <string name="install_with_browser">L\'adaptateur SMS est téléchargé via le navigateur. Pour installer, \"Installer des applications inconnues\" doit être activé dans le navigateur.</string>
   <string name="install_with_fdroid">Vous pouvez installer &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; avec F-Droid depuis le référentiel &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt;</string>
+  <string name="install_with_fdroid_alternative_store">Vous pouvez installer &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; avec un client F-Droid compatible IzzyOnDroid.</string>
   <string name="permission_sms_update_title">Mise à jour de l\'adaptateur SMS</string>
   <string name="permission_sms_update_text">L\'application d\'adaptateur SMS &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; doit être mise à jour.</string>
   <string name="list_item_menu_send_test_sms">Envoyer un SMS test</string>

@@ -1,0 +1,4 @@
+- Support alternative F-Droid clients for installation of SMS adapter
+- Bump com.android.tools.build:gradle from 8.11.1 to 8.12.0
+- Bump com.android.tools.build:gradle from 8.12.0 to 8.12.1
+- Bump com.android.tools.build:gradle from 8.12.1 to 8.12.2

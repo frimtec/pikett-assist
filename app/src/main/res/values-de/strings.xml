@@ -169,6 +169,7 @@ Die dazu notwendigen SMS Berechtigungen werden von Google-Play nicht mehr gewäh
 Die SMS-Kommunikation wird deshalb mit einer Adapter-App (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;) umgesetzt.</string>
   <string name="install_with_browser">Der SMS-Adapter wird via Browser heruntergeladen. Zur Installation muss \"Installieren unbekannter Apps\" im Browser aktiviert sein.</string>
   <string name="install_with_fdroid">Du kannst &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit F-Droid aus dem Repo &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt; installieren.</string>
+  <string name="install_with_fdroid_alternative_store">Du kannst &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit einem IzzyOnDroid kompatiblen F-Droid-Client.</string>
   <string name="permission_sms_update_title">SMS-Adapter Update</string>
   <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; muss aktualisiert werden.</string>
   <string name="list_item_menu_send_test_sms">Sende Test SMS</string>

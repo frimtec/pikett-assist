@@ -37,6 +37,12 @@ class SmsAdapterState extends State {
       "org.fdroid.basic"
   );
 
+  private static final List<String> F_DROID_ALTERNATIVE_STORES_PACKAGE_NAMES = List.of(
+      // all entries must be declared in AndroidManifest.xml queries
+      "com.machiav3lli.fdroid",
+      "com.looker.droidify"
+  );
+
   private static final int MENU_CONTEXT_VIEW = 1;
   private static final int SEND_TEST_SMS = 2;
 
@@ -135,8 +141,11 @@ class SmsAdapterState extends State {
   }
 
   private void openDownloadDialog(Context context, @StringRes int message, @StringRes int title, Installation installation) {
-    if (isFDroidAvailable(context)) {
-      SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message) + "<br><br>" + context.getString(R.string.install_with_fdroid), Html.FROM_HTML_MODE_COMPACT));
+    boolean alternativeFDroidStoreAvailable = isAlternativeFDroidStoreAvailable(context);
+    if (alternativeFDroidStoreAvailable || isFDroidAvailable(context)) {
+      SpannableString htmlMessage = new SpannableString(Html.fromHtml(context.getString(message) + "<br><br>" + context.getString(
+          alternativeFDroidStoreAvailable ? R.string.install_with_fdroid_alternative_store : R.string.install_with_fdroid
+      ), Html.FROM_HTML_MODE_COMPACT));
       AlertDialog alertDialog = new FDroidSmsAdapterInstallDialog(context, htmlMessage, title);
       alertDialog.show();
       enableLinks(alertDialog);
@@ -177,7 +186,15 @@ class SmsAdapterState extends State {
   }
 
   private boolean isFDroidAvailable(Context context) {
-    return F_DROID_PACKAGE_NAMES.stream().anyMatch(name -> {
+    return isOneOfPackagesAvailable(context, F_DROID_PACKAGE_NAMES);
+  }
+
+  private boolean isAlternativeFDroidStoreAvailable(Context context) {
+    return isOneOfPackagesAvailable(context, F_DROID_ALTERNATIVE_STORES_PACKAGE_NAMES);
+  }
+
+  private static boolean isOneOfPackagesAvailable(Context context, List<String> packageNames) {
+    return packageNames.stream().anyMatch(name -> {
       try {
         context.getPackageManager().getPackageInfo(name, 0);
         return true;

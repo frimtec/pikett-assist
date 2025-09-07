@@ -5,6 +5,8 @@
         <package android:name="com.github.frimtec.android.securesmsproxy" />
         <package android:name="org.fdroid.fdroid" />
         <package android:name="org.fdroid.basic" />
+        <package android:name="com.machiav3lli.fdroid" />
+        <package android:name="com.looker.droidify" />
     </queries>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

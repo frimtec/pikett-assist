@@ -87,6 +87,6 @@ public class OperationsCenterContactService extends AbstractContactService {
   }
 
   private Contact invalidContact(@StringRes int contactName) {
-    return new Contact(NO_SELECTION, false, this.context.getString(contactName));
+    return new Contact(NO_SELECTION, false, this.context.getString(contactName), null);
   }
 }

@@ -15,7 +15,7 @@ import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-class OperationsCenterState extends State {
+class OperationsCenterState extends AbstractContactState {
 
   private static final int MENU_CONTEXT_VIEW_OPERATIONS_CENTER_ID = 1;
   private static final int MENU_CONTEXT_SELECT_OPERATIONS_CENTER_ID = 2;
@@ -31,7 +31,9 @@ class OperationsCenterState extends State {
         stateContext.getString(R.string.state_fragment_operations_center),
         getValue(stateContext),
         null,
-        stateContext.getOperationCenter().valid() && !stateContext.getOperationsCenterPhoneNumbers().isEmpty() ? TrafficLight.GREEN : TrafficLight.RED);
+        stateContext.getOperationCenter().valid() && !stateContext.getOperationsCenterPhoneNumbers().isEmpty() ? TrafficLight.GREEN : TrafficLight.RED,
+        stateContext.getOperationCenter()
+    );
     this.stateContext = stateContext;
     this.operationCenter = stateContext.getOperationCenter();
     this.phoneNumberSelectionLauncher = phoneNumberSelectionLauncher;

@@ -1,5 +1,12 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.GREEN;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.OFF;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.RED;
+import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.YELLOW;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,15 +17,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractExpandableListAdapter;
+import com.github.frimtec.android.pikettassist.ui.common.ImageHelper;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficLight.*;
 
 class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, State> {
 
@@ -87,8 +94,6 @@ class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, St
     titleView.setText(state.getTitle());
 
     TextView valueView = convertView.findViewById(R.id.state_item_value);
-    valueView.setText(state.getValue());
-
     Button button = state.getButton();
     if (button != null) {
       ViewGroup layout = convertView.findViewById(R.id.state_item_layout);
@@ -103,6 +108,25 @@ class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, St
       params.addRule(RelativeLayout.CENTER_VERTICAL, 0);
     }
 
+    ImageView imageView = convertView.findViewById(R.id.state_item_value_image);
+    TextView imageText = convertView.findViewById(R.id.state_item_image_text);
+    ImageHelper.uriToBitmap(getContext().getContentResolver(), state.getValueImage()).ifPresentOrElse(
+        bitmap -> {
+          imageView.setImageBitmap(bitmap);
+          imageView.setVisibility(VISIBLE);
+          imageText.setText(state.getValue());
+          imageText.setVisibility(VISIBLE);
+
+          valueView.setVisibility(INVISIBLE);
+        },
+        () -> {
+          valueView.setText(state.getValue());
+          valueView.setVisibility(VISIBLE);
+
+          imageView.setVisibility(INVISIBLE);
+          imageText.setVisibility(INVISIBLE);
+        }
+    );
     return convertView;
   }
 

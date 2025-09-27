@@ -11,7 +11,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
-class PartnerState extends State {
+class PartnerState extends AbstractContactState {
 
   private final StateContext stateContext;
   private final ContactPerson partner;
@@ -23,7 +23,8 @@ class PartnerState extends State {
         stateContext.getString(R.string.state_fragment_partner),
         partner.getFullName(),
         null,
-        partner.getContactId() > 0 ? TrafficLight.GREEN : TrafficLight.YELLOW
+        partner.getContactId() > 0 ? TrafficLight.GREEN : TrafficLight.YELLOW,
+        partner
     );
     this.stateContext = stateContext;
     this.partner = partner;

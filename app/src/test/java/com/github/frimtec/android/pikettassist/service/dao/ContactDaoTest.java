@@ -35,8 +35,9 @@ class ContactDaoTest {
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getString(0)).thenReturn("lookupKey");
     when(cursor.getString(1)).thenReturn("name");
+    when(cursor.getString(2)).thenReturn("http://image.png");
     when(resolver.query(ContactsContract.Contacts.CONTENT_URI,
-        new String[]{ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY},
+        new String[]{ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY, ContactsContract.Contacts.PHOTO_THUMBNAIL_URI},
         ContactsContract.Contacts._ID + " = ?",
         new String[]{String.valueOf(12L)}, null))
         .thenReturn(cursor);
@@ -45,6 +46,7 @@ class ContactDaoTest {
     assertThat(contact).isNotEmpty();
     assertThat(contact.get().name()).isEqualTo("name");
     assertThat(contact.get().reference()).isEqualTo(new ContactReference(12L, "lookupKey"));
+    assertThat(contact.get().photoThumbnailUri()).isEqualTo(Uri.parse("http://image.png"));
   }
 
   @Test
@@ -192,7 +194,7 @@ class ContactDaoTest {
 
   @Test
   void getPhoneNumbers() {
-    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name");
+    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null);
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
@@ -217,7 +219,7 @@ class ContactDaoTest {
 
   @Test
   void getPhoneNumbersForNullCursorReturnsEmpty() {
-    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name");
+    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null);
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
@@ -234,7 +236,7 @@ class ContactDaoTest {
 
   @Test
   void getPhoneNumbersForEmptyCursorReturnsEmpty() {
-    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name");
+    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null);
     Context context = mock(Context.class);
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);

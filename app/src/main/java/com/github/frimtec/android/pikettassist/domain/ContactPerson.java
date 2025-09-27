@@ -1,6 +1,8 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-public class ContactPerson {
+import androidx.annotation.Nullable;
+
+public class ContactPerson extends BaseContact {
 
   private static final long INVALID_CONTACT_ID = -1;
 
@@ -8,13 +10,20 @@ public class ContactPerson {
   private final long contactId;
   private final String fullName;
 
-  public ContactPerson(String nickname, long contactId, String fullName) {
+  public ContactPerson(
+      String nickname,
+      long contactId,
+      String fullName,
+      @Nullable String photoThumbnailUri
+  ) {
+    super(photoThumbnailUri);
     this.nickname = nickname;
     this.contactId = contactId;
     this.fullName = fullName;
   }
 
   public ContactPerson(String nickname) {
+    super(null);
     this.nickname = nickname;
     this.contactId = INVALID_CONTACT_ID;
     this.fullName = nickname;

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/state_item_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:descendantFocusability="blocksDescendants">
+    android:paddingRight="10dp">
 
     <ImageView
         android:id="@+id/state_item_image"
@@ -20,6 +21,24 @@
         android:layout_below="@id/state_item_image"
         android:textSize="13sp"
         android:textStyle="bold" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/state_item_value_image"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        app:shapeAppearanceOverlay="@style/ContactThumbnail" />
+
+    <TextView
+        android:id="@+id/state_item_image_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/state_item_value_image"
+        android:gravity="center_horizontal"
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/state_item_value"
@@ -41,16 +60,16 @@
         <ImageView
             android:id="@+id/state_traffic_light_1"
             android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp" />
 
         <ImageView
             android:id="@+id/state_traffic_light_2"
             android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp" />
 
         <ImageView
             android:id="@+id/state_traffic_light_3"
             android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp" />
     </LinearLayout>
 </RelativeLayout>

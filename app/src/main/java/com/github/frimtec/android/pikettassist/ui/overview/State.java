@@ -1,6 +1,7 @@
 package com.github.frimtec.android.pikettassist.ui.overview;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -51,6 +52,10 @@ public class State implements Comparable<State> {
 
   public String getValue() {
     return value;
+  }
+
+  public Uri getValueImage() {
+    return null;
   }
 
   public Button getButton() {

@@ -9,6 +9,7 @@ import static com.github.frimtec.android.pikettassist.ui.overview.State.TrafficL
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 
@@ -30,7 +31,7 @@ class SignalStrengthState extends State {
   SignalStrengthState(StateContext stateContext) {
     super(
         R.drawable.ic_signal_cellular,
-        stateContext.getNetworkOperatorName() != null ? String.format("%s %s", stateContext.getString(R.string.state_fragment_signal_level), stateContext.getNetworkOperatorName()) : stateContext.getString(R.string.state_fragment_signal_level),
+        !TextUtils.isEmpty(stateContext.getNetworkOperatorName()) ? stateContext.getNetworkOperatorName() : stateContext.getString(R.string.state_fragment_signal_level),
         stateContext.isSuperviseSignalStrength() ? (stateContext.getShiftState().isOn() ? getSignalStrength(stateContext) : stateContext.getString(R.string.general_enabled)) : stateContext.getString(R.string.general_disabled),
         null,
         getSignalStrengthTrafficLight(stateContext)

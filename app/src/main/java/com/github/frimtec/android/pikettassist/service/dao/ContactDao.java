@@ -34,7 +34,8 @@ public class ContactDao {
   static final String[] PROJECTION_URI = new String[]{
       ContactsContract.Contacts._ID,
       ContactsContract.Contacts.LOOKUP_KEY,
-      ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+      ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+      ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
   };
 
   private final Context context;
@@ -47,12 +48,21 @@ public class ContactDao {
 
   public Optional<Contact> getContact(long id) {
     try (Cursor cursor = this.contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
-        new String[]{ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY},
+        new String[]{
+            ContactsContract.Contacts.LOOKUP_KEY,
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
+        },
         ContactsContract.Contacts._ID + " = ?",
         new String[]{String.valueOf(id)}, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         ContactReference reference = new ContactReference(id, cursor.getString(0));
-        return Optional.of(new Contact(reference, true, cursor.getString(1)));
+        return Optional.of(new Contact(
+            reference,
+            true,
+            cursor.getString(1),
+            cursor.getString(2)
+        ));
       }
     }
     return Optional.empty();
@@ -62,7 +72,12 @@ public class ContactDao {
     try (Cursor cursor = this.contentResolver.query(contactUri, PROJECTION_URI, null, null, null)) {
       if (cursor != null && cursor.moveToFirst()) {
         ContactReference reference = new ContactReference(cursor.getLong(0), cursor.getString(1));
-        return Optional.of(new Contact(reference, true, cursor.getString(2)));
+        return Optional.of(new Contact(
+            reference,
+            true,
+            cursor.getString(2),
+            cursor.getString(3)
+        ));
       }
     }
     return Optional.empty();
@@ -73,7 +88,8 @@ public class ContactDao {
         new String[]{
             ContactsContract.CommonDataKinds.Nickname.DATA1,
             ContactsContract.Data.CONTACT_ID,
-            ContactsContract.Data.DISPLAY_NAME
+            ContactsContract.Data.DISPLAY_NAME,
+            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
         },
         ContactsContract.CommonDataKinds.Nickname.DATA1 + " IN (" + in(aliases) + ")",
         null,
@@ -85,7 +101,8 @@ public class ContactDao {
           contactPeople.put(nickname, new ContactPerson(
               nickname,
               cursor.getLong(1),
-              cursor.getString(2)
+              cursor.getString(2),
+              cursor.getString(3)
           ));
         } while (cursor.moveToNext());
         return contactPeople;

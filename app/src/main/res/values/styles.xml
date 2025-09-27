@@ -60,4 +60,9 @@
         <attr name="min_groups" format="integer" />
         <attr name="max_groups" format="integer" />
     </declare-styleable>
+
+    <style name="ContactThumbnail">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

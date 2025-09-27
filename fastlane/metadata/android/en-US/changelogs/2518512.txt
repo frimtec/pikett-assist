@@ -1,0 +1,1 @@
+- Show contact photo thumbnails in overview

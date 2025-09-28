@@ -55,3 +55,11 @@ jobs:
         with:
           name: app-playstore-debug.apk
           path: ./app/build/outputs/apk/playstore/debug/app-playstore-debug.apk
+
+      - name: VirusTotal Scan
+        uses: crazy-max/ghaction-virustotal@v4
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          files: |
+            ./app/build/outputs/apk/oss/debug/app-oss-debug.apk
+            ./app/build/outputs/apk/playstore/debug/app-playstore-debug.apk

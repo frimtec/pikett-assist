@@ -7,7 +7,7 @@ def secure_sms_proxy_api_version = '3.5.2'
 def android_billingclient_version = '8.0.0'
 def slidetoact_version = '0.11.0'
 def takisoft_preferencex_version = '1.1.0'
-def junit_version = '5.13.4'
+def junit_version = '6.0.0'
 def work_version = "2.10.5"
 def retrofit_version = "3.0.0"
 

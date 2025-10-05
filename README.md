@@ -119,8 +119,11 @@ Build PAssist on your own and then install the APK via ADB to your android phone
 In order to perform the functions of PAssist, PAssist needs to be able to receive and send SMS.
 As these SMS permissions are no more granted by Google, a compatible SMS adapter is required.
 
-Currently the only supported SMS adapter is [secure-sms-proxy][secure-sms-proxy-readme].
+Currently the only supported SMS adapter is [S2MSP][secure-sms-proxy-readme].
 PAssist will guide you to install this SMS adapter.
+
+Is [S2MSP][secure-sms-proxy-readme] a safe app?
+Read the reason why the answer is yes: [Why Secure‐SMS‐Proxy (S2MSP) is Safe](https://github.com/frimtec/secure-sms-proxy/wiki/Why-Secure%E2%80%90SMS%E2%80%90Proxy-(S2MSP)-is-Safe)!
 
 ## Configuration
 

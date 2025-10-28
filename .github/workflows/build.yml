@@ -46,7 +46,7 @@ jobs:
       - name: Build debug OSS APK
         run: bash ./gradlew assembleOssDebug --stacktrace
       - name: Upload OSS APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: app-oss-debug.apk
           path: ./app/build/outputs/apk/oss/debug/app-oss-debug.apk
@@ -54,7 +54,7 @@ jobs:
       - name: Build debug Playstore APK
         run: bash ./gradlew assemblePlaystoreDebug --stacktrace
       - name: Upload Playstore APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: app-playstore-debug.apk
           path: ./app/build/outputs/apk/playstore/debug/app-playstore-debug.apk

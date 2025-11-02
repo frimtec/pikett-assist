@@ -1,0 +1,55 @@
+[versions]
+
+android-junit5 = "1.14.0.0"
+android-tools-build-gradle = "8.13.0"
+
+androidx-material = "1.12.0"
+androidx-constraintlayout = "2.2.1"
+androidx-work-runtime = "2.11.0"
+androidx-legacy-support-v4 = "1.0.0"
+gson = "2.13.2"
+preferencex = "1.1.0"
+retrofit = "3.0.0"
+secure-sms-proxy-api = "3.5.2"
+semver4j = "3.1.0"
+slidetoact = "0.11.0"
+billing = "8.0.0"
+
+androidx-espresso-core = "3.7.0"
+mockito = "5.20.0"
+assertj = "3.27.6"
+junit-jupiter = "6.0.1"
+androidx-test-runner = "1.7.0"
+wiremock = "3.0.1"
+
+[plugins]
+
+
+[libraries]
+
+android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-tools-build-gradle" }
+android-junit5 = { module = "de.mannodermaus.gradle.plugins:android-junit5", version.ref = "android-junit5" }
+
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "androidx-legacy-support-v4" }
+androidx-material = { module = "com.google.android.material:material", version.ref = "androidx-material" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work-runtime" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+preferencex = { module = "com.takisoft.preferencex:preferencex", version.ref = "preferencex" }
+preferencex-datetimepicker = { module = "com.takisoft.preferencex:preferencex-datetimepicker", version.ref = "preferencex" }
+preferencex-ringtone = { module = "com.takisoft.preferencex:preferencex-ringtone", version.ref = "preferencex" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+secure-sms-proxy-api = { module = "com.github.frimtec:secure-sms-proxy-api", version.ref = "secure-sms-proxy-api" }
+semver4j = { module = "com.vdurmont:semver4j", version.ref = "semver4j" }
+slidetoact = { module = "com.ncorti:slidetoact", version.ref = "slidetoact" }
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
+
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso-core" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit-jupiter" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
+wiremock = { module = "com.github.tomakehurst:wiremock", version.ref = "wiremock" }

@@ -33,7 +33,7 @@ jobs:
   apk:
     name: Generate APKs
     runs-on: ubuntu-22.04
-    if: "! github.event.pull_request.head.repo.fork"
+    if: "github.actor == 'frimtec'"
 
     steps:
       - uses: actions/checkout@v5

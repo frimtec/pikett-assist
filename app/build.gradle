@@ -1,9 +1,8 @@
 plugins {
+    id 'com.android.application'
+    id 'jacoco'
     alias(libs.plugins.android.junit.framework)
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
 
 System.setProperty("line.separator", "\n")
 Properties versionProps = new Properties()
@@ -48,6 +47,9 @@ android {
         versionName vname
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "PURCHASE_VALIDATION_KEY", purchaseValidationKeyProperties['purchase.validation.key'])
+    }
+    buildFeatures {
+        buildConfig = true
     }
     buildTypes {
         debug {

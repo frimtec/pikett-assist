@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/single_padding"
                 android:layout_marginEnd="@dimen/single_padding"
-                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/sku_details_row_text_size"
                 android:textStyle="bold" />
 

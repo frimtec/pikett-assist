@@ -8,7 +8,7 @@ import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 class DoNotDisturbState extends State {
 
   DoNotDisturbState(StateContext stateContext) {
-    super(R.drawable.ic_do_not_disturb_on_black_24dp, stateContext.getString(R.string.state_fragment_do_not_disturb), stateContext.getString(R.string.state_on), null, TrafficLight.RED);
+    super(R.drawable.ic_do_not_disturb_24dp, stateContext.getString(R.string.state_fragment_do_not_disturb), stateContext.getString(R.string.state_on), null, TrafficLight.RED);
   }
 
   @Override

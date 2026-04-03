@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +23,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.donation.billing.PlayStoreBillingManager;
 import com.github.frimtec.android.pikettassist.ui.billing.BillingProvider;
 import com.github.frimtec.android.pikettassist.ui.common.EdgeToEdgeHelper;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -61,7 +61,7 @@ public class DonationFragment extends DialogFragment {
     }
 
     // Setup a toolbar for this fragment
-    Toolbar toolbar = root.findViewById(R.id.toolbar);
+    MaterialToolbar toolbar = root.findViewById(R.id.toolbar);
     toolbar.setNavigationIcon(R.drawable.ic_arrow_up);
     toolbar.setNavigationOnClickListener(v -> dismiss());
     toolbar.setTitle(R.string.menu_donate);

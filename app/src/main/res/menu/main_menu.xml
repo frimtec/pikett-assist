@@ -4,23 +4,23 @@
 
     <item
         android:id="@+id/logcat"
-        android:icon="@drawable/ic_adb_white_24dp"
+        android:icon="@drawable/ic_adb_24dp"
         android:title="@string/menu_logcat"
         app:showAsAction="ifRoom|withText"
         android:visible="false"/>
     <item
         android:id="@+id/settings"
-        android:icon="@drawable/ic_settings_white_24dp"
+        android:icon="@drawable/ic_settings_24dp"
         android:title="@string/menu_settings"
         app:showAsAction="always|withText" />
     <item
         android:id="@+id/donate"
-        android:icon="@drawable/ic_monetization_on_white_24dp"
+        android:icon="@drawable/ic_monetization_24dp"
         android:title="@string/menu_donate"
         app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/about"
-        android:icon="@drawable/ic_info_white_24dp"
+        android:icon="@drawable/ic_info_24dp"
         android:title="@string/menu_about"
         app:showAsAction="always|withText" />
 

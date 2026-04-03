@@ -244,7 +244,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     }
 
     if (!SETTING_BATTERY_OPTIMIZATION_OFF.isAllowed(getContext())) {
-      states.add(new State(R.drawable.ic_battery_alert_black_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW) {
+      states.add(new State(R.drawable.ic_battery_alert_24dp, getString(R.string.state_fragment_battery_optimization), getString(R.string.state_on), null, YELLOW) {
         @Override
         public void onClickAction(Context context) {
           SETTING_BATTERY_OPTIMIZATION_OFF.request(context);

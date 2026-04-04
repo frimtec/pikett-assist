@@ -25,6 +25,6 @@ abstract class AbstractContactState extends State {
 
   @Override
   public final Uri getValueImage() {
-    return contact.photoThumbnailUri();
+    return contact.photo().thumbnailUri();
   }
 }

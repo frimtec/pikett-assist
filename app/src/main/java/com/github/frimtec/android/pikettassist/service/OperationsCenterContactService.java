@@ -12,6 +12,7 @@ import androidx.annotation.StringRes;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
+import com.github.frimtec.android.pikettassist.domain.Photo;
 import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
@@ -87,6 +88,6 @@ public class OperationsCenterContactService extends AbstractContactService {
   }
 
   private Contact invalidContact(@StringRes int contactName) {
-    return new Contact(NO_SELECTION, false, this.context.getString(contactName), null);
+    return new Contact(NO_SELECTION, false, this.context.getString(contactName), new Photo());
   }
 }

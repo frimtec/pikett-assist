@@ -36,8 +36,14 @@ class ContactDaoTest {
     when(cursor.getString(0)).thenReturn("lookupKey");
     when(cursor.getString(1)).thenReturn("name");
     when(cursor.getString(2)).thenReturn("http://image.png");
+    when(cursor.getString(3)).thenReturn("http://imageThumbnail.png");
     when(resolver.query(ContactsContract.Contacts.CONTENT_URI,
-        new String[]{ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY, ContactsContract.Contacts.PHOTO_THUMBNAIL_URI},
+        new String[]{
+            ContactsContract.Contacts.LOOKUP_KEY,
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.Contacts.PHOTO_URI,
+            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
+        },
         ContactsContract.Contacts._ID + " = ?",
         new String[]{String.valueOf(12L)}, null))
         .thenReturn(cursor);
@@ -46,7 +52,8 @@ class ContactDaoTest {
     assertThat(contact).isNotEmpty();
     assertThat(contact.get().name()).isEqualTo("name");
     assertThat(contact.get().reference()).isEqualTo(new ContactReference(12L, "lookupKey"));
-    assertThat(contact.get().photoThumbnailUri()).isEqualTo(Uri.parse("http://image.png"));
+    assertThat(contact.get().photo().uri()).isEqualTo(Uri.parse("http://image.png"));
+    assertThat(contact.get().photo().thumbnailUri()).isEqualTo(Uri.parse("http://imageThumbnail.png"));
   }
 
   @Test

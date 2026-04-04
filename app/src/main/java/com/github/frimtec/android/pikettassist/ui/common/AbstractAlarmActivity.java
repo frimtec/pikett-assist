@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import androidx.appcompat.app.ActionBar;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.service.system.PowerService;
 import com.github.frimtec.android.pikettassist.service.system.VibrateService;
 import com.ncorti.slidetoact.SlideToActView;
@@ -107,6 +110,12 @@ public abstract class AbstractAlarmActivity extends BaseActivity {
             WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
     getWindow().setFlags(flags, flags);
     setContentView(R.layout.alarm);
+
+    ImageView background = findViewById(R.id.alarm_background);
+    Contact operationsCenterContact = new OperationsCenterContactService(this).getOperationsCenterContact();
+    if (operationsCenterContact.valid() && operationsCenterContact.photoThumbnailUri() != null) {
+      background.setImageURI(operationsCenterContact.photoThumbnailUri());
+    }
 
     TextView textView = findViewById(R.id.alarm_text);
     textView.setText(alarmTextSupplier.apply(getApplicationContext()));

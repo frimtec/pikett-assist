@@ -113,8 +113,8 @@ public abstract class AbstractAlarmActivity extends BaseActivity {
 
     ImageView background = findViewById(R.id.alarm_background);
     Contact operationsCenterContact = new OperationsCenterContactService(this).getOperationsCenterContact();
-    if (operationsCenterContact.valid() && operationsCenterContact.photoThumbnailUri() != null) {
-      background.setImageURI(operationsCenterContact.photoThumbnailUri());
+    if (operationsCenterContact.valid() && (operationsCenterContact.photo().uri() != null)) {
+      background.setImageURI(operationsCenterContact.photo().uri());
     }
 
     TextView textView = findViewById(R.id.alarm_text);

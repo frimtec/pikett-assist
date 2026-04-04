@@ -11,10 +11,11 @@ class ContactTest {
   @Test
   void getter() {
     ContactReference reference = new ContactReference(12, "key");
-    Contact contact = new Contact(reference, true, "test", "http://image");
+    Contact contact = new Contact(reference, true, "test", new Photo("http://image", "http://thumbnail"));
     assertThat(contact.reference()).isEqualTo(reference);
     assertThat(contact.valid()).isTrue();
     assertThat(contact.name()).isEqualTo("test");
-    assertThat(contact.photoThumbnailUri()).isEqualTo(Uri.parse("http://image"));
+    assertThat(contact.photo().uri()).isEqualTo(Uri.parse("http://image"));
+    assertThat(contact.photo().thumbnailUri()).isEqualTo(Uri.parse("http://thumbnail"));
   }
 }

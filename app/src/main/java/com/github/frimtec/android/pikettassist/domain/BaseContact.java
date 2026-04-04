@@ -1,20 +1,14 @@
 package com.github.frimtec.android.pikettassist.domain;
 
-import android.net.Uri;
-
-import androidx.annotation.Nullable;
-
 public abstract class BaseContact {
 
-  @Nullable
-  private final Uri photoThumbnailUri;
+  private final Photo photo;
 
-  public BaseContact(@Nullable String photoThumbnailUri) {
-    this.photoThumbnailUri = photoThumbnailUri != null ? Uri.parse(photoThumbnailUri) : null;
+  public BaseContact(Photo photo) {
+    this.photo = photo;
   }
 
-  @Nullable
-  public Uri photoThumbnailUri() {
-    return photoThumbnailUri;
+  public Photo photo() {
+    return this.photo;
   }
 }

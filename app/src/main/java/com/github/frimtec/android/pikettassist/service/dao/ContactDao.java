@@ -15,6 +15,7 @@ import android.util.Log;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactPerson;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
+import com.github.frimtec.android.pikettassist.domain.Photo;
 import com.github.frimtec.android.securesmsproxyapi.utility.PhoneNumberType;
 
 import java.util.Arrays;
@@ -35,6 +36,7 @@ public class ContactDao {
       ContactsContract.Contacts._ID,
       ContactsContract.Contacts.LOOKUP_KEY,
       ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+      ContactsContract.Contacts.PHOTO_URI,
       ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
   };
 
@@ -51,6 +53,7 @@ public class ContactDao {
         new String[]{
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.Contacts.PHOTO_URI,
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
         },
         ContactsContract.Contacts._ID + " = ?",
@@ -61,7 +64,10 @@ public class ContactDao {
             reference,
             true,
             cursor.getString(1),
-            cursor.getString(2)
+            new Photo(
+                cursor.getString(2),
+                cursor.getString(3)
+            )
         ));
       }
     }
@@ -76,7 +82,10 @@ public class ContactDao {
             reference,
             true,
             cursor.getString(2),
-            cursor.getString(3)
+            new Photo(
+                cursor.getString(3),
+                cursor.getString(4)
+            )
         ));
       }
     }
@@ -89,6 +98,7 @@ public class ContactDao {
             ContactsContract.CommonDataKinds.Nickname.DATA1,
             ContactsContract.Data.CONTACT_ID,
             ContactsContract.Data.DISPLAY_NAME,
+            ContactsContract.Contacts.PHOTO_URI,
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI
         },
         ContactsContract.CommonDataKinds.Nickname.DATA1 + " IN (" + in(aliases) + ")",
@@ -102,7 +112,10 @@ public class ContactDao {
               nickname,
               cursor.getLong(1),
               cursor.getString(2),
-              cursor.getString(3)
+              new Photo(
+                  cursor.getString(3),
+                  cursor.getString(4)
+              )
           ));
         } while (cursor.moveToNext());
         return contactPeople;

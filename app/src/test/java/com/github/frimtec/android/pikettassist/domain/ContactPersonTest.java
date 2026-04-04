@@ -31,15 +31,18 @@ class ContactPersonTest {
 
   @Test
   void photoThumbnailUri() {
+    String photoUri = "http://photo.uri";
     String photoThumbnailUri = "http://photo.thumbnail.uri";
-    ContactPerson contactPerson = new ContactPerson("nickname", 12L, "fullName", photoThumbnailUri);
-    assertThat(contactPerson.photoThumbnailUri()).isEqualTo(Uri.parse(photoThumbnailUri));
+    ContactPerson contactPerson = new ContactPerson("nickname", 12L, "fullName", new Photo(photoUri, photoThumbnailUri));
+    assertThat(contactPerson.photo().uri()).isEqualTo(Uri.parse(photoUri));
+    assertThat(contactPerson.photo().thumbnailUri()).isEqualTo(Uri.parse(photoThumbnailUri));
   }
 
   @Test
   void getPhotoThumbnailUriForNull() {
-    ContactPerson contactPerson = new ContactPerson("nickname", 12L, "fullName", null);
-    assertThat(contactPerson.photoThumbnailUri()).isNull();
+    ContactPerson contactPerson = new ContactPerson("nickname", 12L, "fullName", new Photo());
+    assertThat(contactPerson.photo().uri()).isNull();
+    assertThat(contactPerson.photo().thumbnailUri()).isNull();
   }
 
   @Test

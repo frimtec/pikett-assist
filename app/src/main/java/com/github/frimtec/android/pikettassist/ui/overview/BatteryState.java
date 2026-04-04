@@ -39,7 +39,7 @@ class BatteryState extends State {
     if (batteryStatus.charging().isCharging()) {
       return R.drawable.ic_baseline_battery_charging_full_24;
     } else if (batteryStatus.level() <= ApplicationPreferences.instance().getBatteryWarnLevel(stateContext.getContext())) {
-      return R.drawable.ic_battery_alert_black_24dp;
+      return R.drawable.ic_battery_alert_24dp;
     }
     return R.drawable.ic_baseline_battery_std_24;
   }

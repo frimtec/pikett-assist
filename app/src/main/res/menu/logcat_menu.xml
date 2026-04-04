@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/logcat_refresh"
-        android:icon="@drawable/ic_refresh_white_24dp"
+        android:icon="@drawable/ic_refresh_24dp"
         android:title="@string/menu_logcat_refresh"
         app:showAsAction="ifRoom|withText"
         android:visible="true" />
     <item
         android:id="@+id/logcat_clear"
-        android:icon="@drawable/ic_delete_white_24dp"
+        android:icon="@drawable/ic_delete_24dp"
         android:title="@string/menu_logcat_clear"
         app:showAsAction="ifRoom|withText"
         android:visible="true" />

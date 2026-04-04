@@ -15,15 +15,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+        app:popupTheme="@style/ThemeOverlay.Material3.Dark" />
 
     <TextView
         android:id="@+id/error_textview"

@@ -148,7 +148,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:icon="@drawable/ic_battery_alert_black_24dp"
+        app:icon="@drawable/ic_battery_alert_24dp"
         app:title="@string/pref_title_supervise_battery_level">
 
         <SwitchPreference

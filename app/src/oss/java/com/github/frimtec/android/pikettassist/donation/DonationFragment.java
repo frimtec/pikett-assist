@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
+import com.google.android.material.appbar.MaterialToolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -82,7 +82,7 @@ public class DonationFragment extends DialogFragment {
     alternativeDonationText.setMovementMethod(LinkMovementMethod.getInstance());
 
     // Setup a toolbar for this fragment
-    Toolbar toolbar = root.findViewById(R.id.toolbar);
+    MaterialToolbar toolbar = root.findViewById(R.id.toolbar);
     toolbar.setNavigationIcon(R.drawable.ic_arrow_up);
     toolbar.setNavigationOnClickListener(v -> dismiss());
     toolbar.setTitle(R.string.menu_donate);

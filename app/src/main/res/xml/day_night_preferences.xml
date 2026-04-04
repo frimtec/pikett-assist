@@ -59,7 +59,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        app:icon="@drawable/ic_battery_alert_black_24dp"
+        app:icon="@drawable/ic_battery_alert_24dp"
         app:title="@string/pref_title_category_battery_safer">
         <SwitchPreference
             app:defaultValue="false"

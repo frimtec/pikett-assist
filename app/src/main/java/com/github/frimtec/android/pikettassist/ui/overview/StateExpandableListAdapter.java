@@ -61,7 +61,7 @@ class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, St
     }
 
     if (!child && !state.getChildStates().isEmpty()) {
-      convertView.setBackgroundColor(getContext().getColor(R.color.tableGroupBackground));
+      convertView.setBackgroundColor(getContext().getColor(R.color.md_theme_surfaceContainerLow));
     } else if (child) {
       convertView.setPadding(dpToPx(20), 0, dpToPx(10), 0);
     }

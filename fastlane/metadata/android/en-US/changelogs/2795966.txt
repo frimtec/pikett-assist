@@ -1,0 +1,6 @@
+- Operational center photo as alarm background
+- Migrate to material3
+- Bump SMS adapter S2MSP from 3.5.7 to 3.7.0
+- Bump gradle-wrapper from 9.4.0 to 9.4.1
+- Bump androidx.work:work-runtime from 2.11.1 to 2.11.2
+- Bump com.github.frimtec:secure-sms-proxy-api from 3.5.7 to 3.7.0

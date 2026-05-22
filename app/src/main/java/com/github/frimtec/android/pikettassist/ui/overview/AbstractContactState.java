@@ -27,4 +27,9 @@ abstract class AbstractContactState extends State {
   public final Uri getValueImage() {
     return contact.photo().thumbnailUri();
   }
+
+  @Override
+  public boolean isCopyOverlay() {
+    return !contact.live();
+  }
 }

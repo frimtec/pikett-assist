@@ -301,4 +301,22 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="notification_no_internet_text">No internet available!</string>
   <string name="state_fragment_internet">Internet</string>
   <string name="alert_confirm_method_internet_fact24_ens" translatable="false">Fact24 ENS+</string>
+  <string name="notification_invalid_operations_center_title">Invalid operations center</string>
+  <string name="notification_invalid_operations_center_text">No or invalid operations center is selected, on-call alerts won\'t be received!</string>
+  <string name="release_message_01_title">⚠️ Changes to Contact Permissions</string>
+  <string name="release_message_01_text"><![CDATA[
+  Google restricted contact read permissions in Android 17. To keep PAssist running smoothly, the app can now operate without these permissions by utilizing the new, privacy-friendly contact picker.<br>
+  Unfortunately, this change introduces some important drawbacks for PAssist:
+  <br>
+  <br>
+  <p>
+  <ul>
+  <li><b>Operations Center</b>: You must re-select your operations center contact after upgrading to Android 17. Additionally, if this contact\'s details change in the future, you will need to manually re-select them so PAssist can see the updates.</li>
+  <li><b>Partner Contacts</b>: These can no longer be automatically linked via nicknames. You will now need to manually assign each partner contact.</li>
+  </ul>
+  </p>
+  <br>
+  <b>Want to keep the old behavior?</b><br>
+  If you prefer automatic contact syncing (requires contact read permissions), you can download the OSS version of PAssist from outside the Play Store via: <a href="https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist">F-Droid/IzzyOnDroid</a> or <a href="https://github.com/frimtec/pikett-assist/releases/latest">GitHub</a>.]]>
+  </string>
 </resources>

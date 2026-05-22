@@ -3,7 +3,6 @@ package com.github.frimtec.android.pikettassist.ui.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.util.AttributeSet;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,6 +15,7 @@ import androidx.preference.Preference;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.common.ContactPicker;
 import com.takisoft.preferencex.PreferenceActivityResultListener;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
@@ -61,9 +61,7 @@ public class ContactPreference extends Preference implements PreferenceActivityR
 
   @Override
   public void onPreferenceClick(@NonNull PreferenceFragmentCompat fragment, @NonNull Preference preference) {
-    Intent intent = new Intent(Intent.ACTION_PICK);
-    intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-    contactSelectionLauncher.launch(intent);
+    contactSelectionLauncher.launch(ContactPicker.createContactPickerIntent(getContext()));
   }
 
   @Override

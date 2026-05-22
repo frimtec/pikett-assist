@@ -1,5 +1,7 @@
 package com.github.frimtec.android.pikettassist.util;
 
+import android.net.Uri;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -21,7 +23,20 @@ public class GsonHelper {
       .setPrettyPrinting()
       .registerTypeAdapter(new TypeToken<Instant>() {
       }.getType(), new InstantConverter())
+      .registerTypeHierarchyAdapter(Uri.class, new UriConverter())
       .create();
+
+  private static class UriConverter implements JsonSerializer<Uri>, JsonDeserializer<Uri> {
+    @Override
+    public JsonElement serialize(Uri src, Type typeOfSrc, JsonSerializationContext context) {
+      return new JsonPrimitive(src.toString());
+    }
+
+    @Override
+    public Uri deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+      return Uri.parse(json.getAsString());
+    }
+  }
 
   private static class InstantConverter implements JsonSerializer<Instant>, JsonDeserializer<Instant> {
 

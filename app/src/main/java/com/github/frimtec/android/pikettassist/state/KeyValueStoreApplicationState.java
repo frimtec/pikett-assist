@@ -5,6 +5,8 @@ import static com.github.frimtec.android.pikettassist.PAssistApplication.getKeyV
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.frimtec.android.pikettassist.service.dao.ContactCopy;
+import com.github.frimtec.android.pikettassist.ui.common.ReleaseMessages;
 import com.github.frimtec.android.pikettassist.util.GsonHelper;
 import com.github.frimtec.android.securesmsproxyapi.Sms;
 import com.google.gson.JsonSyntaxException;
@@ -14,6 +16,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 final class KeyValueStoreApplicationState implements ApplicationState {
 
@@ -23,6 +26,10 @@ final class KeyValueStoreApplicationState implements ApplicationState {
   private static final String KEY_PIKETT_STATE_MANUALLY_ON = "pikett_state.manually_on";
   private static final String KEY_LAST_ALARM_SMS = "last_alarm.sms";
   private static final String KEY_DEFAULT_VOLUME = "volume.default";
+  private static final String KEY_PREFIX_CONTACT_COPY = "contact.";
+  private static final String KEY_PREFIX_RELEASE_MESSAGE_READ = "releaseMessage.read.";
+  private static final String RELEASE_MESSAGE_READ_NO = "no";
+  private static final String RELEASE_MESSAGE_READ_YES = "yes";
 
   public static final KeyValueStoreApplicationState INSTANCE = new KeyValueStoreApplicationState();
 
@@ -84,5 +91,39 @@ final class KeyValueStoreApplicationState implements ApplicationState {
   @Override
   public void setDefaultVolume(int volume) {
     getKeyValueStore().put(KEY_DEFAULT_VOLUME, String.valueOf(volume));
+  }
+
+  @Override
+  public void saveContact(ContactCopy contact) {
+    getKeyValueStore().put(KEY_PREFIX_CONTACT_COPY + contact.reference().id(), GsonHelper.GSON.toJson(contact));
+  }
+
+  @Override
+  public void saveContact(ContactCopy contact, String nickname) {
+    getKeyValueStore().put(KEY_PREFIX_CONTACT_COPY + nickname, GsonHelper.GSON.toJson(contact));
+  }
+
+  @Override
+  public Optional<ContactCopy> loadContact(long id) {
+    String value = getKeyValueStore().get(KEY_PREFIX_CONTACT_COPY + id, "");
+    return TextUtils.isEmpty(value) ? Optional.empty() :
+        Optional.of(GsonHelper.GSON.fromJson(value, ContactCopy.class));
+  }
+
+  @Override
+  public Optional<ContactCopy> loadContact(String nickname) {
+    String value = getKeyValueStore().get(KEY_PREFIX_CONTACT_COPY + nickname, "");
+    return TextUtils.isEmpty(value) ? Optional.empty() :
+        Optional.of(GsonHelper.GSON.fromJson(value, ContactCopy.class));
+  }
+
+  @Override
+  public boolean isReleaseMessageDisplayed(ReleaseMessages releaseMessage) {
+    return RELEASE_MESSAGE_READ_NO.equals(getKeyValueStore().get(KEY_PREFIX_RELEASE_MESSAGE_READ + releaseMessage.id(), RELEASE_MESSAGE_READ_NO));
+  }
+
+  @Override
+  public void checkReleaseMessageDisplayed(ReleaseMessages releaseMessage) {
+    getKeyValueStore().put(KEY_PREFIX_RELEASE_MESSAGE_READ + releaseMessage.id(), RELEASE_MESSAGE_READ_YES);
   }
 }

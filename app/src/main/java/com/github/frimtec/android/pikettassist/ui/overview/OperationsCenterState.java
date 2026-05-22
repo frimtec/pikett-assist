@@ -13,6 +13,7 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
+import com.github.frimtec.android.pikettassist.ui.common.ContactPicker;
 import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
 
 class OperationsCenterState extends AbstractContactState {
@@ -92,14 +93,12 @@ class OperationsCenterState extends AbstractContactState {
   }
 
   private void actionSelectContact() {
-    Intent intent = new Intent(Intent.ACTION_PICK);
-    intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-    phoneNumberSelectionLauncher.launch(intent);
+    phoneNumberSelectionLauncher.launch(ContactPicker.createContactPickerIntent(stateContext.getContext()));
   }
 
   private void actionViewContact() {
     Intent intent = new Intent(Intent.ACTION_VIEW);
-    Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(this.operationCenter.reference().id()));
+    Uri uri = ContactsContract.Contacts.getLookupUri(operationCenter.reference().id(), operationCenter.reference().lookupKey());
     intent.setData(uri);
     stateContext.getContext().startActivity(intent);
   }

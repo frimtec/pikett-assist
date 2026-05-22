@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ import com.github.frimtec.android.pikettassist.service.OperationsCenterContactSe
 import com.github.frimtec.android.pikettassist.service.ShiftService;
 import com.github.frimtec.android.pikettassist.service.SmsListener;
 import com.github.frimtec.android.pikettassist.service.dao.AlertDao;
+import com.github.frimtec.android.pikettassist.service.dao.ContactRepository;
 import com.github.frimtec.android.pikettassist.service.dao.TestAlarmDao;
 import com.github.frimtec.android.pikettassist.service.system.BatteryService;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
@@ -73,6 +75,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -106,6 +109,8 @@ public class StateFragment extends AbstractListFragment<State, State> {
   private ContactPersonService contactPersonService;
 
   ActivityResultLauncher<Intent> phoneNumberSelectionLauncher;
+
+  Pair<ActivityResultLauncher<Intent>, AtomicReference<String>> phoneNumberSelectionLauncher2;
 
   public StateFragment() {
     this(new AlertDao(), new TestAlarmDao());
@@ -146,6 +151,23 @@ public class StateFragment extends AbstractListFragment<State, State> {
           }
         }
     );
+    phoneNumberSelectionLauncher2 = Pair.create(registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+          if (result.getResultCode() == RESULT_OK) {
+            Intent data = result.getData();
+            if (data != null) {
+              Optional<Contact> contact = ContactRepository.create(context).getContact(data.getData());
+              contact.ifPresent(personContact -> {
+                String nickname = phoneNumberSelectionLauncher2.second.get();
+                ApplicationState applicationState = ApplicationState.instance();
+                applicationState.loadContact(personContact.reference().id())
+                    .ifPresent(person -> applicationState.saveContact(person, nickname));
+              });
+            }
+          }
+        }
+    ), new AtomicReference<>());
   }
 
   @Override
@@ -205,7 +227,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     List<State> states = new LinkedList<>();
     Optional<Feature> missingPermission = Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
-        .filter(set -> !set.isAllowed(getContext()))
+        .filter(set -> !set.isApproveRequired(getContext()))
         .findFirst();
 
     boolean missingPermissions = missingPermission.isPresent();
@@ -304,7 +326,7 @@ public class StateFragment extends AbstractListFragment<State, State> {
     if (shiftState.isOn() && partners.isPresent()) {
       List<String> pairAliases = partners.get();
       Map<String, ContactPerson> contactPersonsByAliases = this.contactPersonService.findContactPersonsByAliases(new HashSet<>(pairAliases));
-      pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, Objects.requireNonNull(contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair))))));
+      pairAliases.forEach(pair -> states.add(new PartnerState(stateContext, pair, Objects.requireNonNull(contactPersonsByAliases.getOrDefault(pair, new ContactPerson(pair, true))), phoneNumberSelectionLauncher2)));
     }
     states.addAll(Arrays.asList(
         new OnCallState(stateContext),

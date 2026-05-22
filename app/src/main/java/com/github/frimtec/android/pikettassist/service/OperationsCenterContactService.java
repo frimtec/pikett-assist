@@ -1,19 +1,18 @@
 package com.github.frimtec.android.pikettassist.service;
 
 import static com.github.frimtec.android.pikettassist.domain.ContactReference.NO_SELECTION;
+import static com.github.frimtec.android.pikettassist.service.dao.ContactRepository.invalidContact;
+import static com.github.frimtec.android.pikettassist.service.system.NotificationService.INVALID_OPERATIONAL_CENTER_ID;
 
 import android.content.Context;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.util.Log;
-
-import androidx.annotation.StringRes;
 
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
-import com.github.frimtec.android.pikettassist.domain.Photo;
-import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
+import com.github.frimtec.android.pikettassist.service.dao.ContactRepository;
+import com.github.frimtec.android.pikettassist.service.system.NotificationService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 
 import java.util.Set;
@@ -30,20 +29,17 @@ public class OperationsCenterContactService extends AbstractContactService {
   }
 
   public Contact getOperationsCenterContact() {
-    if (!hasReadContactPermission()) {
-      return invalidContact(R.string.contact_name_no_access);
-    }
     ContactReference contactReference = ApplicationPreferences.instance().getOperationsCenterContactReference(this.context);
+    if (NO_SELECTION.equals(contactReference)) {
+      return invalidContact(this.context, R.string.contact_preference_empty_selection);
+    }
     if (!contactReference.isComplete()) {
       contactReference = migrateToFullReference(contactReference);
     }
-    if (NO_SELECTION.equals(contactReference)) {
-      return invalidContact(R.string.contact_preference_empty_selection);
-    }
-    Uri lookupUri = ContactsContract.Contacts.getLookupUri(contactReference.id(), contactReference.lookupKey());
-    Contact contact = getContactDao().getContact(lookupUri)
-        .orElseGet(() -> invalidContact(R.string.contact_helper_unknown_contact));
+    Contact contact = getContactRepository().getContact(contactReference.id())
+        .orElseGet(() -> invalidContact(this.context, R.string.contact_helper_unknown_contact));
     if (contact.valid()) {
+      new NotificationService(context).cancelNotification(INVALID_OPERATIONAL_CENTER_ID);
       if (!contact.reference().equals(contactReference)) {
         ApplicationPreferences.instance().setOperationsCenterContactReference(context, contact.reference());
         Log.w(TAG, "Alarm operations center contact reference changed and updated.");
@@ -55,8 +51,8 @@ public class OperationsCenterContactService extends AbstractContactService {
   }
 
   public Contact getContactFromUri(Uri uri) {
-    return getContactDao().getContact(uri)
-        .orElse(invalidContact(R.string.contact_helper_unknown_contact));
+    return getContactRepository().getContact(uri)
+        .orElse(invalidContact(this.context, R.string.contact_helper_unknown_contact));
   }
 
   public boolean isContactsPhoneNumber(Contact contact, String number) {
@@ -64,18 +60,16 @@ public class OperationsCenterContactService extends AbstractContactService {
       Log.e(TAG, "SMS received but no valid operations center defined.");
       return false;
     }
-    ContactDao contactDao = getContactDao();
-    return contactDao.lookupContactIdsByPhoneNumber(number, true).contains(contact.reference().id()) ||
-        contactDao.lookupContactIdsByPhoneNumber(number, false).contains(contact.reference().id()) ||
-        contactDao.getShortCodesFromContact(contact).contains(number);
+    ContactRepository contactRepository = getContactRepository();
+    return contactRepository.isContactsPhoneNumber(contact, number);
   }
 
   public Set<String> getPhoneNumbers(Contact contact) {
-    return getContactDao().getPhoneNumbers(contact);
+    return getContactRepository().getPhoneNumbers(contact);
   }
 
   private ContactReference migrateToFullReference(ContactReference contactReference) {
-    ContactReference migratedReference = getContactDao().getContact(contactReference.id())
+    ContactReference migratedReference = getContactRepository().getContact(contactReference.id())
         .map(Contact::reference)
         .orElse(NO_SELECTION);
     ApplicationPreferences.instance().setOperationsCenterContactReference(this.context, migratedReference);
@@ -85,9 +79,5 @@ public class OperationsCenterContactService extends AbstractContactService {
       Log.e(TAG, "Operations center contact migration failed.");
     }
     return migratedReference;
-  }
-
-  private Contact invalidContact(@StringRes int contactName) {
-    return new Contact(NO_SELECTION, false, this.context.getString(contactName), new Photo());
   }
 }

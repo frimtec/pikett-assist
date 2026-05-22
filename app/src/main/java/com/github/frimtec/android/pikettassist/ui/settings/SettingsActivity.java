@@ -28,7 +28,7 @@ import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.service.OperationsCenterContactService;
 import com.github.frimtec.android.pikettassist.service.dao.CalendarDao;
-import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
+import com.github.frimtec.android.pikettassist.service.dao.ContactRepository;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService;
 import com.github.frimtec.android.pikettassist.state.ApplicationPreferences;
 import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
@@ -100,8 +100,8 @@ public class SettingsActivity extends BaseActivity {
               String value = preference.getValue();
               Contact contact = new OperationsCenterContactService(context).getOperationsCenterContact();
               if (!TextUtils.isEmpty(value) && AlertConfirmMethod.valueOf(value).isSms() && contact.valid()) {
-                ContactDao contactDao = new ContactDao(context);
-                if (contactDao.getShortCodesFromContact(contact).stream().anyMatch(number -> !PhoneNumberType.fromNumber(number, context).isSendSupport())) {
+                ContactRepository contactRepository = ContactRepository.create(context);
+                if (contactRepository.getShortCodesFromContact(contact).stream().anyMatch(number -> !PhoneNumberType.fromNumber(number, context).isSendSupport())) {
                   summary = summary + " / " + getString(R.string.pref_summary_send_confirm_sms);
                 }
               }

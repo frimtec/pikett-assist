@@ -10,9 +10,10 @@ public class Contact extends BaseContact {
       ContactReference reference,
       boolean valid,
       String name,
-      Photo photo
+      Photo photo,
+      boolean live
   ) {
-    super(photo);
+    super(photo, live);
     this.reference = reference;
     this.valid = valid;
     this.name = name;

@@ -125,6 +125,17 @@ PAssist will guide you to install this SMS adapter.
 Is [S2MSP][secure-sms-proxy-readme] a safe app?
 Read the reason why the answer is yes: [Why Secure‐SMS‐Proxy (S2MSP) is Safe](https://github.com/frimtec/secure-sms-proxy/wiki/Why-Secure%E2%80%90SMS%E2%80%90Proxy-(S2MSP)-is-Safe)!
 
+### Contact read permissions (as of Android 17)
+
+Google restricted contact read permissions in Android 17. To keep PAssist running smoothly, the app can now operate without these permissions by utilizing the new, privacy-friendly contact picker.
+Unfortunately, this change introduces some important drawbacks for PAssist:
+  * Operations Center: You must re-select your operations center contact after upgrading to Android 17. Additionally, if this contact\'s details change in the future, you will need to manually re-select them so PAssist can see the updates.
+  * Partner Contacts: These can no longer be automatically linked via nicknames. You will now need to manually assign each partner contact.
+
+If you prefer automatic contact syncing (requires contact read permissions), you can use the PAssist OSS version of PAssist from outside the Play Store: 
+* Install from [IzzyOnDroid][izzy-on-droid]
+* Download and install APK from [Github][github-download]
+
 ## Configuration
 
 ![Settings](images/PAssist_settings.png)
@@ -386,7 +397,7 @@ Any warranty claims are excluded.
 ## Development
 
 PAssist is developed with [Android-Studio][android-studio] with Java 17. The current Android target
-SDK is 36 (Android 16-Baklava) and the minimal SDK is 26 (Android 8.0-Oreo).
+SDK is 37 (Android 17-Cinnamon Bun) and the minimal SDK is 26 (Android 8.0-Oreo).
 
 ## Used libraries
 
@@ -460,3 +471,5 @@ You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an iss
 [retrofit]: https://github.com/square/retrofit
 
 [reproducible-shield]: https://shields.rbtlog.dev/simple/com.github.frimtec.android.pikettassist
+
+[github-download]: https://github.com/frimtec/pikett-assist/releases/latest

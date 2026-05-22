@@ -33,6 +33,7 @@ public class PikettWorker extends ReScheduledWorker {
         ApplicationPreferences.instance(),
         new ShiftService(context),
         new NotificationService(context),
+        new OperationsCenterContactService(context),
         new VolumeService(context),
         () -> {
           LowSignalWorker.enqueueWork(context);

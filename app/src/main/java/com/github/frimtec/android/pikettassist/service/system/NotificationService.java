@@ -47,6 +47,7 @@ public class NotificationService {
   public static final int BATTERY_NOTIFICATION_ID = 5;
   private static final int NO_INTERNET_NOTIFICATION_ID = 6;
   private static final int VOLUME_CHANGED_NOTIFICATION_ID = 7;
+  public static final int INVALID_OPERATIONAL_CENTER_ID = 8;
 
 
   public static final String ACTION_CLOSE_ALARM = "com.github.frimtec.android.pikettassist.CLOSE_ALARM";
@@ -191,6 +192,24 @@ public class NotificationService {
         .setAutoCancel(true)
         .build();
     notifyIfAllowed(context, SIGNAL_NOTIFICATION_ID, notification);
+  }
+
+  public void notifyNoValidOperationalCenter() {
+    PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+        context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+    );
+    Notification notification = new Builder(context, CHANNEL_ID_NOTIFICATION)
+        .setContentTitle(context.getString(R.string.notification_invalid_operations_center_title))
+        .setContentText(context.getString(R.string.notification_invalid_operations_center_text))
+        .setSmallIcon(R.drawable.ic_phone_24dp_notification)
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_phone_24dp_notification))
+        .setCategory(CATEGORY_ALARM)
+        .setOnlyAlertOnce(true)
+        .setContentIntent(notifyPendingIntent)
+        .setOngoing(true)
+        .setAutoCancel(true)
+        .build();
+    notifyIfAllowed(context, INVALID_OPERATIONAL_CENTER_ID, notification);
   }
 
   public void notifyNoInternet() {

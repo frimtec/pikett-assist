@@ -15,7 +15,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -117,8 +117,8 @@ public class NotificationService {
         .setContentTitle(context.getString(R.string.notification_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
         .setContentText(message)
-        .setSmallIcon(R.drawable.ic_siren_black)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setSmallIcon(R.drawable.ic_siren_notification)
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_siren_notification))
         .addAction(R.drawable.ic_siren, actionLabel, confirmPendingIntent)
         .setCategory(CATEGORY_ALARM)
         .setContentIntent(notifyPendingIntent)
@@ -137,8 +137,8 @@ public class NotificationService {
         .setContentTitle(context.getString(R.string.notification_missing_test_alert_title))
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
         .setContentText(message)
-        .setSmallIcon(R.drawable.ic_test_alarm_black)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setSmallIcon(R.drawable.ic_test_alarm_notification)
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_test_alarm_notification))
         .setCategory(CATEGORY_ALARM)
         .setContentIntent(notifyPendingIntent)
         .setOnlyAlertOnce(true)
@@ -158,7 +158,7 @@ public class NotificationService {
         .setContentTitle(context.getString(R.string.notification_pikett_on_title))
         .setContentText(context.getString(R.string.notification_pikett_on_text))
         .setSmallIcon(R.drawable.ic_eye_notification)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_eye_notification))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)
@@ -183,8 +183,8 @@ public class NotificationService {
     Notification notification = new Builder(context, CHANNEL_ID_NOTIFICATION)
         .setContentTitle(context.getString(R.string.notification_low_signal_title))
         .setContentText(String.format("%s: %s", context.getString(R.string.notification_low_signal_text), level.toString(context)))
-        .setSmallIcon(R.drawable.ic_signal_cellular_black)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setSmallIcon(R.drawable.ic_signal_cellular_notification)
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_signal_cellular_notification))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)
@@ -200,8 +200,8 @@ public class NotificationService {
     Notification notification = new Builder(context, CHANNEL_ID_NOTIFICATION)
         .setContentTitle(context.getString(R.string.notification_no_internet_title))
         .setContentText(String.format(context.getString(R.string.notification_no_internet_text)))
-        .setSmallIcon(R.drawable.ic_baseline_signal_cellular_connected_no_internet_24_black)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setSmallIcon(R.drawable.ic_baseline_signal_cellular_connected_no_internet_24_notification)
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_baseline_signal_cellular_connected_no_internet_24_notification))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)
@@ -219,7 +219,7 @@ public class NotificationService {
         .setContentTitle(context.getString(R.string.notification_low_battery_title))
         .setContentText(String.format("%s: %d%%", context.getString(R.string.notification_low_battery_text), batteryStatus.level()))
         .setSmallIcon(R.drawable.ic_battery_alert_notification)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_battery_alert_notification))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)
@@ -239,7 +239,7 @@ public class NotificationService {
         .setContentTitle(context.getString(R.string.notification_volume_changed_title) + " " + change)
         .setContentText(String.format(context.getString(R.string.notification_volume_changed_text), levelText(newLevel)))
         .setSmallIcon(R.drawable.ic_volume_notification)
-        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_large_icon))
+        .setLargeIcon(Icon.createWithResource(context, R.drawable.ic_volume_notification))
         .setCategory(CATEGORY_EVENT)
         .setOnlyAlertOnce(true)
         .setContentIntent(notifyPendingIntent)

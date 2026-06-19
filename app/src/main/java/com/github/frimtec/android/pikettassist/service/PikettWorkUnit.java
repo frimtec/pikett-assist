@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.work.Data;
 
 import com.github.frimtec.android.pikettassist.action.Action;
+import com.github.frimtec.android.pikettassist.domain.Contact;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.Feature;
@@ -34,6 +35,7 @@ class PikettWorkUnit implements WorkUnit {
   private final ApplicationPreferences applicationPreferences;
   private final ShiftService shiftService;
   private final NotificationService notificationService;
+  private final OperationsCenterContactService operationsCenterContactService;
   private final VolumeService volumeService;
   private final Runnable jobTrigger;
   private final Context context;
@@ -43,13 +45,16 @@ class PikettWorkUnit implements WorkUnit {
       ApplicationPreferences applicationPreferences,
       ShiftService shiftService,
       NotificationService notificationService,
+      OperationsCenterContactService operationsCenterContactService,
       VolumeService volumeService,
       Runnable jobTrigger,
-      Context context) {
+      Context context
+  ) {
     this.applicationState = applicationState;
     this.applicationPreferences = applicationPreferences;
     this.shiftService = shiftService;
     this.notificationService = notificationService;
+    this.operationsCenterContactService = operationsCenterContactService;
     this.volumeService = volumeService;
     this.jobTrigger = jobTrigger;
     this.context = context;
@@ -60,10 +65,15 @@ class PikettWorkUnit implements WorkUnit {
     context.sendBroadcast(new Intent(Action.REFRESH.getId()));
     if (Arrays.stream(Feature.values())
         .filter(Feature::isPermissionType)
-        .anyMatch(set -> !set.isAllowed(context))) {
+        .anyMatch(set -> !set.isApproveRequired(context))) {
       Log.w(TAG, "Not all required permissions are granted. Services is stopped.");
       return Optional.empty();
     }
+    Contact operationsCenterContact = this.operationsCenterContactService.getOperationsCenterContact();
+    if (!operationsCenterContact.valid()) {
+      this.notificationService.notifyNoValidOperationalCenter();
+    }
+
     Instant now = Shift.now();
     Optional<Shift> first = this.shiftService.findCurrentOrNextShift(now);
     Duration prePostRunTime = this.applicationPreferences.getPrePostRunTime(context);

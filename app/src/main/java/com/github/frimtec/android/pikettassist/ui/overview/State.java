@@ -58,6 +58,10 @@ public class State implements Comparable<State> {
     return null;
   }
 
+  public boolean isCopyOverlay() {
+    return false;
+  }
+
   public Button getButton() {
     return buttonSupplier != null ? buttonSupplier.get() : null;
   }

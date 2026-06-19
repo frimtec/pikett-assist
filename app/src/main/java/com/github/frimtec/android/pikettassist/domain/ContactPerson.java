@@ -12,16 +12,17 @@ public class ContactPerson extends BaseContact {
       String nickname,
       long contactId,
       String fullName,
-      Photo photo
+      Photo photo,
+      boolean live
   ) {
-    super(photo);
+    super(photo, live);
     this.nickname = nickname;
     this.contactId = contactId;
     this.fullName = fullName;
   }
 
-  public ContactPerson(String nickname) {
-    super(new Photo());
+  public ContactPerson(String nickname, boolean live) {
+    super(new Photo(), live);
     this.nickname = nickname;
     this.contactId = INVALID_CONTACT_ID;
     this.fullName = nickname;

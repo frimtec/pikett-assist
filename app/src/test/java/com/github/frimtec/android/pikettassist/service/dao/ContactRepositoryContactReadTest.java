@@ -1,6 +1,6 @@
 package com.github.frimtec.android.pikettassist.service.dao;
 
-import static com.github.frimtec.android.pikettassist.service.dao.ContactDao.PROJECTION_URI;
+import static com.github.frimtec.android.pikettassist.service.dao.ContactRepositoryContactRead.PROJECTION_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -23,14 +25,14 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-class ContactDaoTest {
+class ContactRepositoryContactReadTest {
 
   @Test
   void getContactForIdReturnsContact() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getString(0)).thenReturn("lookupKey");
@@ -58,10 +60,10 @@ class ContactDaoTest {
 
   @Test
   void getContactForIdWithNullCursorReturnsEmpty() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     when(resolver.query(ContactsContract.Contacts.CONTENT_URI,
         new String[]{ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY},
         ContactsContract.Contacts._ID + " = ?",
@@ -74,10 +76,10 @@ class ContactDaoTest {
 
   @Test
   void getContactForIdWithEmptyCursorReturnsEmpty() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(false);
     when(resolver.query(ContactsContract.Contacts.CONTENT_URI,
@@ -92,10 +94,10 @@ class ContactDaoTest {
 
   @Test
   void getContactForUriReturnsContact() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.getLong(0)).thenReturn(12L);
@@ -113,10 +115,10 @@ class ContactDaoTest {
 
   @Test
   void getContactForUriWithNullCursorReturnsEmpty() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Uri uri = mock(Uri.class);
     when(resolver.query(eq(uri), eq(PROJECTION_URI), isNull(), isNull(), isNull()))
         .thenReturn(null);
@@ -127,10 +129,10 @@ class ContactDaoTest {
 
   @Test
   void getContactForUriWithEmptyCursorReturnsEmpty() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(false);
     Uri uri = mock(Uri.class);
@@ -143,10 +145,10 @@ class ContactDaoTest {
 
   @Test
   void lookupContactIdsByPhoneNumber() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.moveToNext()).thenReturn(true, false);
@@ -167,10 +169,10 @@ class ContactDaoTest {
 
   @Test
   void lookupContactIdsByPhoneNumberForEmptyCursorReturnsEmpty() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(false);
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -185,10 +187,10 @@ class ContactDaoTest {
 
   @Test
   void lookupContactIdsByPhoneNumberForNullCursorReturnsEmpty() {
-    Context context = mock(Context.class);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.CONTACT_ID},
         ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER + " = ?",
@@ -201,11 +203,11 @@ class ContactDaoTest {
 
   @Test
   void getPhoneNumbers() {
-    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null);
-    Context context = mock(Context.class);
+    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null, true);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(true);
     when(cursor.moveToNext()).thenReturn(true, true, false);
@@ -226,11 +228,11 @@ class ContactDaoTest {
 
   @Test
   void getPhoneNumbersForNullCursorReturnsEmpty() {
-    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null);
-    Context context = mock(Context.class);
+    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null, true);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         new String[]{ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, ContactsContract.CommonDataKinds.Phone.NUMBER},
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
@@ -243,11 +245,11 @@ class ContactDaoTest {
 
   @Test
   void getPhoneNumbersForEmptyCursorReturnsEmpty() {
-    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null);
-    Context context = mock(Context.class);
+    Contact contact = new Contact(new ContactReference(12L, "lookupKey"), true, "name", null, true);
+    Context context = createContext();
     ContentResolver resolver = mock(ContentResolver.class);
     when(context.getContentResolver()).thenReturn(resolver);
-    ContactDao dao = new ContactDao(context);
+    ContactRepositoryContactRead dao = new ContactRepositoryContactRead(context);
     Cursor cursor = mock(Cursor.class);
     when(cursor.moveToFirst()).thenReturn(false);
     when(resolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -260,4 +262,24 @@ class ContactDaoTest {
     assertThat(contactIds).isEmpty();
   }
 
+  private static Context createContext() {
+    Context context = mock(Context.class);
+    PackageManager packageManager = mock(PackageManager.class);
+
+    PackageInfo packageInfo = new PackageInfo();
+    packageInfo.requestedPermissions = new String[] { "android.permission.READ_CONTACTS" };
+
+    when(context.getPackageManager()).thenReturn(packageManager);
+    String packageName = "com.example.app.any";
+    when(context.getPackageName()).thenReturn(packageName);
+
+    try {
+      when(packageManager.getPackageInfo(eq(packageName), eq(PackageManager.GET_PERMISSIONS)))
+          .thenReturn(packageInfo);
+    } catch (PackageManager.NameNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+
+    return context;
+  }
 }

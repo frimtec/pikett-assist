@@ -31,6 +31,30 @@
         android:gravity="center_horizontal"
         app:shapeAppearanceOverlay="@style/ContactThumbnail" />
 
+    <ImageView
+        android:id="@+id/state_item_copy_badge_image"
+        android:src="@drawable/outline_content_copy_24"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignTop="@id/state_item_image_text"
+        android:layout_alignEnd="@id/state_item_image_text"
+        android:layout_marginTop="-15dp"
+        android:layout_marginEnd="-10dp"
+        android:visibility="invisible"
+        app:shapeAppearanceOverlay="@style/ContactThumbnail"
+        />
+
+    <ImageView
+        android:id="@+id/state_item_copy_badge_text"
+        android:src="@drawable/outline_content_copy_24"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignTop="@id/state_item_value"
+        android:layout_alignEnd="@id/state_item_value"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="-10dp"
+        android:visibility="invisible"/>
+
     <TextView
         android:id="@+id/state_item_image_text"
         android:layout_width="wrap_content"

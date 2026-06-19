@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -34,7 +36,8 @@ public enum Feature {
       true,
       true,
       R.string.permission_contacts_title,
-      context -> allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions())
+      context -> isPermissionDeclared(context, Manifest.permission.READ_CONTACTS) && allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions()),
+      context -> !isPermissionDeclared(context, Manifest.permission.READ_CONTACTS) || allPermissionsGranted(context, PermissionSets.CONTACTS_READ.getPermissions())
   ) {
     @Override
     public void request(Context context) {
@@ -44,6 +47,11 @@ public enum Feature {
           R.string.permission_contacts_title,
           R.string.permission_contacts_text
       );
+    }
+
+    @Override
+    public boolean isPermissionDeclared(Context context) {
+      return Feature.isPermissionDeclared(context, Manifest.permission.READ_CONTACTS);
     }
   },
   PERMISSION_CALENDAR_READ(
@@ -84,7 +92,7 @@ public enum Feature {
       true,
       true,
       R.string.permission_location_title,
-      context -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || allPermissionsGranted(context, PermissionSets.COARSE_LOCATION.getPermissions())
+      context -> !isPermissionDeclared(context, Manifest.permission.ACCESS_COARSE_LOCATION) || allPermissionsGranted(context, PermissionSets.COARSE_LOCATION.getPermissions())
   ) {
     @Override
     public void request(Context context) {
@@ -206,15 +214,38 @@ public enum Feature {
   private final boolean permissionType;
   private final int nameResourceId;
   private final Function<Context, Boolean> allowed;
+  private final Function<Context, Boolean> approveRequired;
 
   private Fragment fragment = null;
   private ActivityResultLauncher<Intent> activityLauncher = null;
 
-  Feature(boolean sensitive, boolean permissionType, int nameResourceId, Function<Context, Boolean> allowed) {
+  Feature(
+      boolean sensitive,
+      boolean permissionType,
+      int nameResourceId,
+      Function<Context, Boolean> allowed
+  ) {
+    this(
+        sensitive,
+        permissionType,
+        nameResourceId,
+        allowed,
+        allowed
+    );
+  }
+
+  Feature(
+      boolean sensitive,
+      boolean permissionType,
+      int nameResourceId,
+      Function<Context, Boolean> allowed,
+      Function<Context, Boolean> approveRequired
+  ) {
     this.sensitive = sensitive;
     this.permissionType = permissionType;
     this.nameResourceId = nameResourceId;
     this.allowed = allowed;
+    this.approveRequired = approveRequired;
   }
 
   public final void registerFragment(Fragment fragment) {
@@ -228,6 +259,14 @@ public enum Feature {
 
   public final boolean isAllowed(Context context) {
     return this.allowed.apply(context);
+  }
+
+  public final boolean isApproveRequired(Context context) {
+    return this.approveRequired.apply(context);
+  }
+
+  public boolean isPermissionDeclared(Context context) {
+    return true;
   }
 
   public abstract void request(Context context);
@@ -287,5 +326,24 @@ public enum Feature {
     public String[] getPermissions() {
       return permissions;
     }
+  }
+
+  private static boolean isPermissionDeclared(Context context, String permissionName) {
+    try {
+      PackageInfo packageInfo = context.getPackageManager().getPackageInfo(
+          context.getPackageName(),
+          PackageManager.GET_PERMISSIONS
+      );
+      if (packageInfo.requestedPermissions != null) {
+        for (String p : packageInfo.requestedPermissions) {
+          if (p.equals(permissionName)) {
+            return true;
+          }
+        }
+      }
+    } catch (PackageManager.NameNotFoundException e) {
+      // Should not happen for own package
+    }
+    return false;
   }
 }

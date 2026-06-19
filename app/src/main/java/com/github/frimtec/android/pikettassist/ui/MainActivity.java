@@ -44,6 +44,8 @@ import com.github.frimtec.android.pikettassist.ui.alerts.AlertListFragment;
 import com.github.frimtec.android.pikettassist.ui.billing.BillingManagerContract;
 import com.github.frimtec.android.pikettassist.ui.common.AbstractListFragment;
 import com.github.frimtec.android.pikettassist.ui.common.BaseActivity;
+import com.github.frimtec.android.pikettassist.ui.common.DialogHelper;
+import com.github.frimtec.android.pikettassist.ui.common.ReleaseMessages;
 import com.github.frimtec.android.pikettassist.ui.common.ViewPager2Helper;
 import com.github.frimtec.android.pikettassist.ui.overview.StateFragment;
 import com.github.frimtec.android.pikettassist.ui.settings.SettingsActivity;
@@ -59,6 +61,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MainActivity extends BaseActivity {
 
@@ -191,6 +194,17 @@ public class MainActivity extends BaseActivity {
     }
     loadFragment(savedFragmentPosition);
     PikettWorker.enqueueWork(this);
+
+    ApplicationState applicationState = ApplicationState.instance();
+    Consumer<ReleaseMessages> checkReleaseMessageCall = applicationState::checkReleaseMessageDisplayed;
+    ReleaseMessages.relevantValues(this, checkReleaseMessageCall)
+        .filter(applicationState::isReleaseMessageDisplayed)
+        .forEach(rm -> DialogHelper.infoDialog(
+            this,
+            rm.titleResourceId(),
+            rm.textResourceId(),
+            (dialogInterface, integer) -> checkReleaseMessageCall.accept(rm)
+        ));
   }
 
   private void registerOnSmsAdapter() {

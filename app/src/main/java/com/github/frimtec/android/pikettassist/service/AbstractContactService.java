@@ -1,26 +1,19 @@
 package com.github.frimtec.android.pikettassist.service;
 
-import static com.github.frimtec.android.pikettassist.service.system.Feature.PERMISSION_CONTACTS_READ;
 
 import android.content.Context;
 
-import com.github.frimtec.android.pikettassist.service.dao.ContactDao;
+import com.github.frimtec.android.pikettassist.service.dao.ContactRepository;
 
 abstract class AbstractContactService {
 
-  private final Context context;
-  private final ContactDao contactDao;
+  private final ContactRepository contactRepository;
 
   public AbstractContactService(Context context) {
-    this.context = context;
-    this.contactDao = new ContactDao(context);
+    this.contactRepository = ContactRepository.create(context);
   }
 
-  protected final boolean hasReadContactPermission() {
-    return PERMISSION_CONTACTS_READ.isAllowed(this.context);
-  }
-
-  protected final ContactDao getContactDao() {
-    return this.contactDao;
+  protected final ContactRepository getContactRepository() {
+    return this.contactRepository;
   }
 }

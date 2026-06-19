@@ -26,6 +26,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, State> {
 
@@ -110,6 +111,8 @@ class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, St
 
     ImageView imageView = convertView.findViewById(R.id.state_item_value_image);
     TextView imageText = convertView.findViewById(R.id.state_item_image_text);
+    AtomicInteger copyBadgeImageRefActivate = new AtomicInteger();
+    AtomicInteger copyBadgeImageRefDeactivate = new AtomicInteger();
     ImageHelper.uriToBitmap(getContext().getContentResolver(), state.getValueImage()).ifPresentOrElse(
         bitmap -> {
           imageView.setImageBitmap(bitmap);
@@ -118,6 +121,8 @@ class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, St
           imageText.setVisibility(VISIBLE);
 
           valueView.setVisibility(INVISIBLE);
+          copyBadgeImageRefActivate.set(R.id.state_item_copy_badge_image);
+          copyBadgeImageRefDeactivate.set(R.id.state_item_copy_badge_text);
         },
         () -> {
           valueView.setText(state.getValue());
@@ -125,8 +130,18 @@ class StateExpandableListAdapter extends AbstractExpandableListAdapter<State, St
 
           imageView.setVisibility(INVISIBLE);
           imageText.setVisibility(INVISIBLE);
+          copyBadgeImageRefActivate.set(R.id.state_item_copy_badge_text);
+          copyBadgeImageRefDeactivate.set(R.id.state_item_copy_badge_image);
         }
     );
+    ImageView copyBadgeActivate = convertView.findViewById(copyBadgeImageRefActivate.get());
+    ImageView copyBadgeDeactivate = convertView.findViewById(copyBadgeImageRefDeactivate.get());
+    if (state.isCopyOverlay()) {
+      copyBadgeActivate.setVisibility(VISIBLE);
+    } else {
+      copyBadgeActivate.setVisibility(INVISIBLE);
+    }
+    copyBadgeDeactivate.setVisibility(INVISIBLE);
     return convertView;
   }
 

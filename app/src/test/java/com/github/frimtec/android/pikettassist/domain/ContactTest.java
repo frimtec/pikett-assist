@@ -11,7 +11,7 @@ class ContactTest {
   @Test
   void getter() {
     ContactReference reference = new ContactReference(12, "key");
-    Contact contact = new Contact(reference, true, "test", new Photo("http://image", "http://thumbnail"));
+    Contact contact = new Contact(reference, true, "test", new Photo("http://image", "http://thumbnail"), true);
     assertThat(contact.reference()).isEqualTo(reference);
     assertThat(contact.valid()).isTrue();
     assertThat(contact.name()).isEqualTo("test");

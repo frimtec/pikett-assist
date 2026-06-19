@@ -11,9 +11,14 @@ import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import androidx.work.Data;
 
+import com.github.frimtec.android.pikettassist.domain.Contact;
+import com.github.frimtec.android.pikettassist.domain.ContactReference;
+import com.github.frimtec.android.pikettassist.domain.Photo;
 import com.github.frimtec.android.pikettassist.domain.Shift;
 import com.github.frimtec.android.pikettassist.service.system.AlarmService.ScheduleInfo;
 import com.github.frimtec.android.pikettassist.service.system.NotificationService;
@@ -39,7 +44,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForNoShiftReturns24h() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -57,6 +62,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -78,7 +84,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftMoreThan24hReturns24h() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -106,6 +112,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -127,7 +134,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftMoreThan24hReturns24hWithManageVolumeEnabledSetsDefaultVolume() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -155,6 +162,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -176,7 +184,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftMoreThan24hReturns24hWithManageVolumeDefNotSetEnabledNotSetsDefaultVolume() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -203,6 +211,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -224,7 +233,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftLessThan24hReturnsTimeToStart() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -251,6 +260,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -273,7 +283,8 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftSwitchedOnShiftInBetween() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
+
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -286,12 +297,12 @@ class PikettWorkerWorkUnitTest {
     when(shiftService.findCurrentOrNextShift(any(Instant.class))).thenReturn(Optional.of(new Shift(1L, "Test", now.minusSeconds(60), now.plusSeconds(60), true, Collections.emptyList())));
     VolumeService volumeService = mock(VolumeService.class);
     Runnable jobTrigger = mock(Runnable.class);
-
     WorkUnit workUnit = new PikettWorkUnit(
         applicationState,
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -314,7 +325,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftSwitchedOnShiftStarts() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -333,6 +344,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -355,7 +367,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftSwitchedOnShiftAlmostEnds() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -374,6 +386,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -396,7 +409,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForShiftSwitchedOnShiftEndsReturnsRerunDelay() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(false);
@@ -415,6 +428,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -436,7 +450,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForManuallySwitchedOn() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(true);
@@ -454,6 +468,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -475,7 +490,7 @@ class PikettWorkerWorkUnitTest {
   @Test
   void applyForManuallySwitchedOnWithManageVolumeEnabled() {
     // arrange
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(true);
@@ -493,6 +508,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -516,7 +532,7 @@ class PikettWorkerWorkUnitTest {
     // arrange
     int newVolume = 7;
     int currentVolume = 5;
-    Context context = mock(Context.class);
+    Context context = createContext();
     NotificationService notificationService = mock(NotificationService.class);
     ApplicationState applicationState = mock(ApplicationState.class);
     when(applicationState.getPikettStateManuallyOn()).thenReturn(true);
@@ -536,6 +552,7 @@ class PikettWorkerWorkUnitTest {
         applicationPreferences,
         shiftService,
         notificationService,
+        createOperationsCenterContactService(),
         volumeService,
         jobTrigger,
         context
@@ -553,5 +570,35 @@ class PikettWorkerWorkUnitTest {
     verify(volumeService).setVolume(newVolume);
     verify(jobTrigger).run();
   }
+
+  private static Context createContext() {
+    Context context = mock(Context.class);
+    PackageManager packageManager = mock(PackageManager.class);
+
+    PackageInfo packageInfo = new PackageInfo();
+    packageInfo.requestedPermissions = new String[] { "android.permission.READ_CONTACTS" };
+
+    when(context.getPackageManager()).thenReturn(packageManager);
+    String packageName = "com.example.app.any";
+    when(context.getPackageName()).thenReturn(packageName);
+
+    try {
+      when(packageManager.getPackageInfo(eq(packageName), eq(PackageManager.GET_PERMISSIONS)))
+          .thenReturn(packageInfo);
+    } catch (PackageManager.NameNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+
+    return context;
+  }
+
+  private static OperationsCenterContactService createOperationsCenterContactService() {
+    var operationsCenterContactService = mock(OperationsCenterContactService.class);
+    when(operationsCenterContactService.getOperationsCenterContact()).thenReturn(
+        new Contact(new ContactReference(1L, "lookUpKey"), true, "test", new Photo(), true)
+    );
+    return operationsCenterContactService;
+  }
+
 
 }

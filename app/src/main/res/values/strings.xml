@@ -302,7 +302,7 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="state_fragment_internet">Internet</string>
   <string name="alert_confirm_method_internet_fact24_ens" translatable="false">Fact24 ENS+</string>
   <string name="notification_invalid_operations_center_title">Invalid operations center</string>
-  <string name="notification_invalid_operations_center_text">No or invalid operations center is selected, on-call alerts won\'t be received!</string>
+  <string name="notification_invalid_operations_center_text">On-call alerts won\'t be received!</string>
   <string name="release_message_01_title">⚠️ Changes to Contact Permissions</string>
   <string name="release_message_01_text"><![CDATA[
   Google restricted contact read permissions in Android 17. To keep PAssist running smoothly, the app can now operate without these permissions by utilizing the new, privacy-friendly contact picker.<br>

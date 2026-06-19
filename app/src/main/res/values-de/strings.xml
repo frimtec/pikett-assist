@@ -284,7 +284,7 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="notification_no_internet_text">Kein Internet verfügbar!</string>
   <string name="state_fragment_internet">Internet</string>
   <string name="notification_invalid_operations_center_title">Ungültige Alarmierungszentrale</string>
-  <string name="notification_invalid_operations_center_text">Keine oder eine ungültige Zentrale ist ausgewählt, Pikettaufgebote werden nicht empfangen!</string>
+  <string name="notification_invalid_operations_center_text">Pikettaufgebote werden nicht empfangen!</string>
   <string name="release_message_01_title">⚠️ Änderungen bei Kontaktberechtigungen</string>
   <string name="release_message_01_text"><![CDATA[
   Google hat die Leseberechtigungen für Kontakte in Android 17 eingeschränkt. Damit PAssist weiterhin reibungslos funktioniert, kann die App nun ohne diese Berechtigungen betrieben werden, indem sie die neue, datenschutzfreundliche Kontakt-Auswahl nutzt.<br>

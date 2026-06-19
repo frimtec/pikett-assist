@@ -285,7 +285,7 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="notification_no_internet_text">Pas d\'internet disponible !</string>
   <string name="state_fragment_internet">Internet</string>
   <string name="notification_invalid_operations_center_title">Centre d\'opérations non valide</string>
-  <string name="notification_invalid_operations_center_text">Aucun centre d\'opérations ou un centre non valide est sélectionné, les alertes de garde ne seront pas reçues!</string>
+  <string name="notification_invalid_operations_center_text">Les alertes de garde ne seront pas reçues!</string>
   <string name="release_message_01_title">⚠️ Modifications des autorisations de contact</string>
   <string name="release_message_01_text"><![CDATA[
   Google a restreint les autorisations de lecture des contacts dans Android 17. Pour que PAssist continue de fonctionner correctement, l\'application peut désormais fonctionner sans ces autorisations en utilisant le nouveau sélecteur de contacts respectueux de la vie privée.<br>

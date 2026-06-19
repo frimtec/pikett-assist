@@ -283,4 +283,22 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="notification_no_internet_title">Kein Internet</string>
   <string name="notification_no_internet_text">Kein Internet verfügbar!</string>
   <string name="state_fragment_internet">Internet</string>
+  <string name="notification_invalid_operations_center_title">Ungültige Alarmierungszentrale</string>
+  <string name="notification_invalid_operations_center_text">Keine oder eine ungültige Zentrale ist ausgewählt, Pikettaufgebote werden nicht empfangen!</string>
+  <string name="release_message_01_title">⚠️ Änderungen bei Kontaktberechtigungen</string>
+  <string name="release_message_01_text"><![CDATA[
+  Google hat die Leseberechtigungen für Kontakte in Android 17 eingeschränkt. Damit PAssist weiterhin reibungslos funktioniert, kann die App nun ohne diese Berechtigungen betrieben werden, indem sie die neue, datenschutzfreundliche Kontakt-Auswahl nutzt.<br>
+  Leider bringt diese Änderung einige wichtige Nachteile für PAssist mit sich:
+  <br>
+  <br>
+  <p>
+  <ul>
+  <li><b>Zentrale</b>: Sie müssen den Kontakt Ihrer Alarmierungszentrale nach dem Upgrade auf Android 17 erneut auswählen. Wenn sich die Details dieses Kontakts in Zukunft ändern, müssen Sie diesen erneut manuell auswählen, damit PAssist die Aktualisierungen sehen kann.</li>
+  <li><b>Partner-Kontakte</b>: Diese können nicht mehr automatisch über Spitznamen verknüpft werden. Sie müssen nun jeden Partner-Kontakt manuell zuweisen.</li>
+  </ul>
+  </p>
+  <br>
+  <b>Möchten Sie das alte Verhalten beibehalten?</b><br>
+  Wenn Sie die automatische Kontaktsynchronisierung bevorzugen (erfordert Kontakt-Leseberechtigungen), können Sie die OSS-Variante von PAssist von außerhalb des Play Stores herunterladen: <a href="https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist">F-Droid/IzzyOnDroid</a> oder <a href="https://github.com/frimtec/pikett-assist/releases/latest">GitHub</a>.]]>
+  </string>
 </resources>

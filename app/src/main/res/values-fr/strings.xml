@@ -284,4 +284,22 @@ Veuillez ajouter un surnom au contact correspondant (le surnom a été copié da
   <string name="notification_no_internet_title">Pas d\'internet</string>
   <string name="notification_no_internet_text">Pas d\'internet disponible !</string>
   <string name="state_fragment_internet">Internet</string>
+  <string name="notification_invalid_operations_center_title">Centre d\'opérations non valide</string>
+  <string name="notification_invalid_operations_center_text">Aucun centre d\'opérations ou un centre non valide est sélectionné, les alertes de garde ne seront pas reçues!</string>
+  <string name="release_message_01_title">⚠️ Modifications des autorisations de contact</string>
+  <string name="release_message_01_text"><![CDATA[
+  Google a restreint les autorisations de lecture des contacts dans Android 17. Pour que PAssist continue de fonctionner correctement, l\'application peut désormais fonctionner sans ces autorisations en utilisant le nouveau sélecteur de contacts respectueux de la vie privée.<br>
+  Malheureusement, ce changement introduit des inconvénients importants pour PAssist :
+  <br>
+  <br>
+  <p>
+  <ul>
+  <li><b>Centre d\'opérations</b> : Vous devez sélectionner à nouveau le contact de votre centre d\'opérations après la mise à jour vers Android 17. De plus, si les détails de ce contact changent à l\'avenir, vous devrez le sélectionner à nouveau manuellement pour que PAssist puisse voir les mises à jour.</li>
+  <li><b>Contacts partenaires</b> : Ils ne peuvent plus être liés automatiquement via des surnoms. Vous devrez désormais attribuer manuellement chaque contact partenaire.</li>
+  </ul>
+  </p>
+  <br>
+  <b>Vous voulez conserver l\'ancien comportement ?</b><br>
+  Si vous préférez la synchronisation automatique des contacts (nécessite des autorisations de lecture des contacts), vous pouvez télécharger la version OSS de PAssist en dehors du Play Store via : <a href="https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist">F-Droid/IzzyOnDroid</a> ou <a href="https://github.com/frimtec/pikett-assist/releases/latest">GitHub</a>.]]>
+  </string>
 </resources>

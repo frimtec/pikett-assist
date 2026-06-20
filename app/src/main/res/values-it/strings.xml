@@ -165,12 +165,11 @@
   <string name="sms_listener_meta_sms_filtered">SMS ricevuti e filtrati!</string>
   <string name="state_fragment_s2msp_requires_update">Richiede aggiornamento</string>
   <string name="permission_sms_title">Installazione dell\'adattatore SMS</string>
-  <string name="permission_sms_text">La funzione principale di PAssist è quella di attivare un allarme alla ricezione di un SMS da una centrale operativa configurata.
+  <string name="permission_sms_text">La funzione principale di PAssist è quella di attivare un allarme alla ricezione di un SMS da una centrale di allarme configurata.
  Le autorizzazioni SMS necessarie non sono più concesse da Google Play.
  La comunicazione SMS è quindi implementata con un\'app adattatore (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;).</string>
   <string name="install_with_browser">L\'adattatore SMS viene scaricato tramite browser. Per l\'installazione, è necessario attivare nel browser \"Installa app sconosciute\".</string>
   <string name="install_with_fdroid">Puoi installare &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;con F-Droid dal repository &lt;a href=https:/ /apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt;.</string>
-  <string name="install_with_fdroid_alternative_store">Puoi installare &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; con un client F-Droid compatibile con IzzyOnDroid.</string>
   <string name="permission_sms_update_title">Aggiornamento adattatore SMS</string>
   <string name="permission_sms_update_text">L\'applicazione dell\'adattatore SMS &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; deve essere aggiornata.</string>
   <string name="list_item_menu_send_test_sms">Invia SMS di prova</string>
@@ -283,22 +282,21 @@ Aggiungi il soprannome al contatto corrispondente (il soprannome è stato copiat
   <string name="notification_no_internet_title">Nessuna connessione internet</string>
   <string name="notification_no_internet_text">Nessuna connessione Internet disponibile!</string>
   <string name="state_fragment_internet">Internet</string>
-  <string name="notification_invalid_operations_center_title">Centro operativo non valido</string>
+  <string name="install_with_fdroid_alternative_store">È possibile installare &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; con un client F-Droid compatibile con IzzyOnDroid.</string>
+  <string name="notification_invalid_operations_center_title">Centrale di allarme non valida</string>
   <string name="notification_invalid_operations_center_text">Gli avvisi di reperibilità non verranno ricevuti!</string>
-  <string name="release_message_01_title">⚠️ Modifiche ai permessi dei contatti</string>
-  <string name="release_message_01_text"><![CDATA[
-  Google ha limitato i permessi di lettura dei contatti in Android 17. Per mantenere il corretto funzionamento di PAssist, l\'app può ora operare senza questi permessi utilizzando il nuovo selettore di contatti rispettoso della privacy.<br>
-  Purtroppo, questo cambiamento introduce alcuni svantaggi significativi per PAssist:
+  <string name="release_message_01_title">⚠️ Modifiche alle autorizzazioni di contatto</string>
+  <string name="release_message_01_text"><![CDATA[Google ha limitato i permessi di lettura dei contatti in Android 17. Per mantenere il corretto funzionamento di PAssist, l\\'app può ora operare senza questi permessi utilizzando il nuovo selettore di contatti rispettoso della privacy.<br>
+Purtroppo, questo cambiamento introduce alcuni svantaggi significativi per PAssist:
   <br>
   <br>
   <p>
   <ul>
-  <li><b>Centro Operativo</b>: È necessario selezionare nuovamente il contatto del centro operativo dopo l\'aggiornamento ad Android 17. Inoltre, se i dettagli di questo contatto cambiano in futuro, sarà necessario selezionarli nuovamente manualmente in modo che PAssist possa vedere gli aggiornamenti.</li>
+<li><b>Centro Operativo</b>: È necessario selezionare nuovamente il contatto del centro operativo dopo l\'aggiornamento ad Android 17. Inoltre, se i dettagli di questo contatto cambiano in futuro, sarà necessario selezionarli nuovamente manualmente in modo che PAssist possa vedere gli aggiornamenti.</li>
   <li><b>Contatti Partner</b>: Questi non possono più essere collegati automaticamente tramite soprannomi. Sarà ora necessario assegnare manualmente ogni contatto partner.</li>
   </ul>
   </p>
   <br>
-  <b>Vuoi mantenere il vecchio comportamento?</b><br>
-  Se preferisci la sincronizzazione automatica dei contatti (richiede i permessi di lettura dei contatti), puoi scaricare la versione OSS di PAssist al di fuori del Play Store tramite: <a href="https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist">F-Droid/IzzyOnDroid</a> o <a href="https://github.com/frimtec/pikett-assist/releases/latest">GitHub</a>.]]>
-  </string>
+<b>Vuoi mantenere il vecchio comportamento?</b><br>
+Se preferisci la sincronizzazione automatica dei contatti (richiede i permessi di lettura dei contatti), puoi scaricare la versione OSS di PAssist al di fuori del Play Store tramite: <a href=\"https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist\">F-Droid/IzzyOnDroid</a> o <a href=\"https://github.com/frimtec/pikett-assist/releases/latest\">GitHub</a>.]]></string>
 </resources>

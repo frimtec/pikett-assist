@@ -285,7 +285,7 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="install_with_fdroid_alternative_store">Sie können &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit einem IzzyOnDroid kompatiblen F-Droid Client installieren.</string>
   <string name="notification_invalid_operations_center_title">Ungültige Alarmierungszentrale</string>
   <string name="notification_invalid_operations_center_text">Pikettaufgebote werden nicht empfangen!</string>
-  <string name="release_message_01_title">⚠️ Änderungen an den Kontaktberechtigungen</string>
+  <string name="release_message_01_title">⚠️ Änderungen bei Kontaktberechtigungen</string>
   <string name="release_message_01_text"><![CDATA[Google hat die Leseberechtigungen für Kontakte in Android 17 eingeschränkt. Damit PAssist weiterhin reibungslos funktioniert, kann die App nun ohne diese Berechtigungen betrieben werden, indem sie die neue, datenschutzfreundliche Kontakt-Auswahl nutzt.<br>
 Leider bringt diese Änderung einige wichtige Nachteile für PAssist mit sich:
   <br>

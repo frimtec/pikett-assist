@@ -131,6 +131,7 @@
   <string name="state_fragment_draw_overlays">Einblenung über anderen Apps</string>
   <string name="state_fragment_battery_optimization">Akku-Optimierung</string>
   <string name="missing_permission_calendar_access">Fehlende Berechtigung zum Lesen des Kalenders!</string>
+  <string name="general_no_data">Noch keine Daten vorhanden.</string>
   <string name="permission_required">Benötigte Berechtigung:</string>
   <string name="permission_contacts_title">Kontakte</string>
   <string name="permission_contacts_text">PAssist liest den konfigurierten Kontakt der Alarmierungszentrale, um zu ermitteln, von welcher Telefonnummer die zu überwachenden SMS gesendet werden. Ohne dieses Recht ist PAssist nicht funktionsfähig!</string>
@@ -169,7 +170,6 @@ Die dazu notwendigen SMS Berechtigungen werden von Google-Play nicht mehr gewäh
 Die SMS-Kommunikation wird deshalb mit einer Adapter-App (&lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt;) umgesetzt.</string>
   <string name="install_with_browser">Der SMS-Adapter wird via Browser heruntergeladen. Zur Installation muss \"Installieren unbekannter Apps\" im Browser aktiviert sein.</string>
   <string name="install_with_fdroid">Du kannst &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit F-Droid aus dem Repo &lt;a href=https://apt.izzysoft.de/fdroid/repo?fingerprint=3BF0D6ABFEAE2F401707B6D966BE743BF0EEE49C2561B9BA39073711F628937A&gt;IzzyOnDroid&lt;/a&gt; installieren.</string>
-  <string name="install_with_fdroid_alternative_store">Du kannst &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit einem IzzyOnDroid kompatiblen F-Droid-Client.</string>
   <string name="permission_sms_update_title">SMS-Adapter Update</string>
   <string name="permission_sms_update_text">Die SMS-Adapter Applikation &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; muss aktualisiert werden.</string>
   <string name="list_item_menu_send_test_sms">Sende Test SMS</string>
@@ -283,22 +283,21 @@ Bitte füge den Spitznamen zu dem zugehörigen Kontakt hinzu (Spitzname wurde in
   <string name="notification_no_internet_title">Kein Internet</string>
   <string name="notification_no_internet_text">Kein Internet verfügbar!</string>
   <string name="state_fragment_internet">Internet</string>
+  <string name="install_with_fdroid_alternative_store">Sie können &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; mit einem IzzyOnDroid kompatiblen F-Droid Client installieren.</string>
   <string name="notification_invalid_operations_center_title">Ungültige Alarmierungszentrale</string>
   <string name="notification_invalid_operations_center_text">Pikettaufgebote werden nicht empfangen!</string>
-  <string name="release_message_01_title">⚠️ Änderungen bei Kontaktberechtigungen</string>
-  <string name="release_message_01_text"><![CDATA[
-  Google hat die Leseberechtigungen für Kontakte in Android 17 eingeschränkt. Damit PAssist weiterhin reibungslos funktioniert, kann die App nun ohne diese Berechtigungen betrieben werden, indem sie die neue, datenschutzfreundliche Kontakt-Auswahl nutzt.<br>
-  Leider bringt diese Änderung einige wichtige Nachteile für PAssist mit sich:
+  <string name="release_message_01_title">⚠️ Änderungen an den Kontaktberechtigungen</string>
+  <string name="release_message_01_text"><![CDATA[Google hat die Leseberechtigungen für Kontakte in Android 17 eingeschränkt. Damit PAssist weiterhin reibungslos funktioniert, kann die App nun ohne diese Berechtigungen betrieben werden, indem sie die neue, datenschutzfreundliche Kontakt-Auswahl nutzt.<br>
+Leider bringt diese Änderung einige wichtige Nachteile für PAssist mit sich:
   <br>
   <br>
   <p>
   <ul>
-  <li><b>Zentrale</b>: Sie müssen den Kontakt Ihrer Alarmierungszentrale nach dem Upgrade auf Android 17 erneut auswählen. Wenn sich die Details dieses Kontakts in Zukunft ändern, müssen Sie diesen erneut manuell auswählen, damit PAssist die Aktualisierungen sehen kann.</li>
-  <li><b>Partner-Kontakte</b>: Diese können nicht mehr automatisch über Spitznamen verknüpft werden. Sie müssen nun jeden Partner-Kontakt manuell zuweisen.</li>
+<li><b>Zentrale</b>: Sie müssen den Kontakt Ihrer Alarmierungszentrale nach dem Upgrade auf Android 17 erneut auswählen. Wenn sich die Details dieses Kontakts in Zukunft ändern, müssen Sie diesen erneut manuell auswählen, damit PAssist die Aktualisierungen sehen kann.</li>
+<li><b>Partner-Kontakte</b>: Diese können nicht mehr automatisch über Spitznamen verknüpft werden. Sie müssen nun jeden Partner-Kontakt manuell zuweisen.</li>
   </ul>
   </p>
   <br>
-  <b>Möchten Sie das alte Verhalten beibehalten?</b><br>
-  Wenn Sie die automatische Kontaktsynchronisierung bevorzugen (erfordert Kontakt-Leseberechtigungen), können Sie die OSS-Variante von PAssist von außerhalb des Play Stores herunterladen: <a href="https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist">F-Droid/IzzyOnDroid</a> oder <a href="https://github.com/frimtec/pikett-assist/releases/latest">GitHub</a>.]]>
-  </string>
+<b>Möchten Sie das alte Verhalten beibehalten?</b><br>
+Wenn Sie die automatische Kontaktsynchronisierung bevorzugen (erfordert Kontakt-Leseberechtigungen), können Sie die OSS-Variante von PAssist von außerhalb des Play Stores herunterladen: <a href=\"https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist\">F-Droid/IzzyOnDroid</a> oder <a href=\"https://github.com/frimtec/pikett-assist/releases/latest\">GitHub</a>.]]></string>
 </resources>

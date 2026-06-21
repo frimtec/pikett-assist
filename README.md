@@ -16,15 +16,19 @@ short form of Pikett-Assist ('Pikett' is the Swiss German term for on-call).
 
 PAssist works for SMS based alerting systems.
 
+## Flavors
+PAssist is available in two flavors: `oss` and `playstore`.
+
+### OSS flavor
+Since release 3.0.0 the `oss` flavor is the default flavor. 
+This flavor contains all functionality and has the best usability as it is less restricted by rules of the Google Play Store.
+The `oss` flavor is used for main development and testing cycles.
 <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>
+
+### Play store flavor
+The `playstore` flavor exists for ease of installation for standard Android users. Since release 3.0.0 the functionality and usability has minor limitations compared to the `oss` flavor.
+This flavor is less tested compared to the `oss` flavor.  
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
----
-
-<a href='https://lokalise.com'><img alt='lokalise logo' width='180' src='images/lokalise_logo.png'/></a>
-
-App language translations maintained with the great localization platform [Lokalise][lokalise].
-
----
 
 ## Features
 
@@ -103,18 +107,23 @@ that are under supervision.
 
 ## Installation
 
-### App-Stores
+### App stores
 
 PAssist can be installed from [IzzyOnDroid][izzy-on-droid] or [Google&nbsp;Play][google-play].
 
-| Store                                                                                                                                                                                                                                            | App-Flavor | Limitation                      |
+| Store                                                                                                                                                                                                                                            | App-Flavor | Limitations                     |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------------------------------|
 | <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>                      | oss        | non                             |
 | <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a> | playstore  | manuel contact syncing required |
 
+### Install prebuilt APK from Github release page
+You can download the APK file in the oss flavor from the [Github&nbsp;release&nbsp;page][github-download]. 
+To install the APK you need to allow installation from unknown sources.
+
 ### Self build
 
 Build PAssist on your own and then install the APK via ADB to your android phone.
+You can decide which flavor to use. 
 
 ### SMS permissions
 
@@ -219,7 +228,7 @@ Defines the static text to send back as the confirmation reply to your operation
 [Regular expression][regular-expression] pattern with one group to extract a confirmation value from
 the received SMS
 that will be used as the confirmation reply and sent back to your operations center.<br>
-_WARNING_: If the pattern can not extracted a value from the received SMS, no acknowledgment is send
+_WARNING_: If the pattern cannot extract a value from the received SMS, no acknowledgment is sent
 back to your operations center!
 
 #### Auto confirm
@@ -268,10 +277,9 @@ The default is 300 seconds (five minutes).
 
 #### Supervise signal strength
 
-Selects whether or not to monitor signal strength.
+Selects whether to monitor signal strength.
 If the battery level drops below 10%, the monitoring interval will be reduced in favour of a longer
-period.
-remaining time.
+battery life.
 
 #### Minimal signal strength
 
@@ -303,8 +311,8 @@ Defines whether the battery level is supervised or not.
 #### Minimal battery level
 
 Defines the minimal battery level in percentage (between 10% - 50%).
-If the current battery level falls below this minimal level, a alert notification is created.
-Independent of the this minimal battery level, whenever the battery level is in the danger zone
+If the current battery level falls below this minimal level, an alert notification is created.
+Independent of this minimal battery level, whenever the battery level is in the danger zone
 (below 10%) the polling interval for PAssist checks (e.g. signal strength) is lowered to minimize
 the power consumption.
 
@@ -361,7 +369,7 @@ Time when day/night profile starts.
 #### Ringtone volume
 
 Defines whether PAssist should control the ringtone volume during on-call duty or not.
-The desired ringtone volumes can be defined for the day and night profile separably.
+The desired ringtone volumes can be defined for the day and night profile separately.
 If activated, the ringtone volume is automatically restored to the former value, when on-call duty is finished.
 
 #### Battery drain
@@ -419,6 +427,14 @@ Feedback, bug reports or feature requests are very welcome.
 You can send an email to [frimtec@gmx.ch](mailto:frimtec@gmx.ch) or [open an issue on GitHub][issues].
 
 ## Credits
+---
+
+<a href='https://lokalise.com'><img alt='lokalise logo' width='180' src='images/lokalise_logo.png'/></a>
+
+App language translations maintained with the great localization platform [Lokalise][lokalise].
+
+---
+
 
 * [Lokalise][lokalise]: For supporting Open-Source projects.
 * [bakito][github-bakito]: For implementing dual SIM support and excellent testing support.

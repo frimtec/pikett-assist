@@ -50,9 +50,9 @@ PAssist shows you an overview with all future on-call events on the calendar tab
 
 ### Alarming
 
-If an SMS is received from your configured operations center, PAssist will race an alert.
+If an SMS is received from your configured operations center, PAssist will raise an alert.
 It is playing a configured ringtone and starts a vibration pattern until you confirm it with a swipe button.
-When confirmed, an acknowledgement is send back to your operations center.
+When confirmed, an acknowledgement is sent back to your operations center.
 The alarm goes into the confirmed alarm state and can be finally closed when all your support activities are completed.
 
 ![On-call alarm](images/PAssist_on_call_alert.png)
@@ -76,7 +76,7 @@ The alert log can be exported/imported from/to the external file system.
 PAssist will supervise the phone signal strength and notifies you with a vibration pattern if the
 signal strength
 is bad or off (includes airplane mode).
-This ensures that you won't stay in a dead spot without recognize it during on-call duties.
+This ensures that you won't stay in a dead spot without recognizing it during on-call duties.
 
 ![Low/None signal alarm](images/PAssist_low_signal_alert.png)
 ![Low signal state info](images/PAssist_poor_signal.png)
@@ -96,7 +96,7 @@ night.
 If the SMS alarming system in use sends daily test alarms to verify the alarming chain from end to end, PAssist can be
 configured to automatically receive and acknowledge them, without interrupting the user.
 On a configured daily check time, PAssist verifies if the expected test alarms have been received. If not, PAssist will
-race an alert with a configured ringtone and starts a vibration pattern until you confirm the
+raise an alert with a configured ringtone and starts a vibration pattern until you confirm the
 missing test alarm with a
 swipe button.
 Test alarms can be configured for different contexts, as your alarming system may send a test alarms
@@ -115,8 +115,8 @@ PAssist can be installed from [IzzyOnDroid][izzy-on-droid] or [Google&nbsp;Play]
 
 | Store                                                                                                                                                                                                                                            | App-Flavor | Limitations                     |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|---------------------------------|
-| <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>                      | oss        | non                             |
-| <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a> | playstore  | manuel contact syncing required |
+| <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>                      | oss        | none                            |
+| <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a> | playstore  | manual contact syncing required |
 
 ### Install prebuilt APK from Github release page
 You can download the APK file in the oss flavor from the [Github&nbsp;release&nbsp;page][github-download]. 
@@ -253,7 +253,7 @@ Defines the ringtone that is used to alert for on-call alarms.
 
 #### Calendar filter
 
-Defines one specific or all of your calenders, that should be used to look for on-call events.
+Defines one specific or all of your calendars, that should be used to look for on-call events.
 
 #### Event filter
 
@@ -280,7 +280,7 @@ The default is 300 seconds (five minutes).
 #### Supervise signal strength
 
 Selects whether to monitor signal strength.
-If the battery level drops below 10%, the monitoring interval will be reduced in favour of a longer
+If the battery level drops below 10%, the polling frequency for monitoring will be reduced in favour of a longer
 battery life.
 
 #### Minimal signal strength
@@ -291,7 +291,7 @@ Defines the lowest accepted signal strength level.
 
 Defines the amount of seconds for which the signal strength must be lower than the minimal expected
 level before a low
-signal alarm is raced.
+signal alarm is raised.
 With filtering you can reduce false alarms.
 The filter can be set between 0 (filtering off) and 10 minutes, with a default of 30 seconds.
 Be aware: With higher values, it takes longer until you are notified of a dead spot.
@@ -300,7 +300,7 @@ Even with filtering enabled, the airplane mode is detected immediately.
 #### Alert with notification
 
 Defines whether an alert for low signal strength creates a notification or not.
-The phone also shows a low signal strength through a vibration pattern, regardless of this setting.
+The phone also indicates low signal strength through a vibration pattern, regardless of this setting.
 
 #### Supervised subscription (for Dual SIM only)
 
@@ -315,7 +315,7 @@ Defines whether the battery level is supervised or not.
 Defines the minimal battery level in percentage (between 10% - 50%).
 If the current battery level falls below this minimal level, an alert notification is created.
 Independent of this minimal battery level, whenever the battery level is in the danger zone
-(below 10%) the polling interval for PAssist checks (e.g. signal strength) is lowered to minimize
+(below 10%) the polling frequency for PAssist checks (e.g. signal strength) is lowered to minimize
 the power consumption.
 
 ### Test alarm settings
@@ -345,7 +345,7 @@ Defines which of the available test contexts should be supervised.
 
 #### Check time
 
-Defines the daily time on which the check occurs whether the test alarms have been received recently or not.
+Defines the daily time for checking whether the test alarms have been received recently.
 
 #### Test alarm time window
 
@@ -376,9 +376,8 @@ If activated, the ringtone volume is automatically restored to the former value,
 
 #### Battery drain
 
-Enable "Minimize at night" to reduce power drain at night by reducing the check interval for the
-signal strength
-monitoring.
+Enable "Minimize at night" to reduce power drain at night by reducing the frequency of signal strength
+monitoring checks.
 
 ![Overview](images/PAssist_settings_day_night_profile.png)
 
@@ -391,12 +390,12 @@ Currently, the following languages are supported in PAssist:
 * French
 * Italian
 
-Translation support for any additional language is warmly welcome - just get in contact with me.
+Translation support for any additional language is warmly welcomed - just get in contact with me.
 PAssist is using [Lokalise][lokalise] to maintain language translations.
 
 ## Open-Source and free
 
-PAssist is Open-Source and available under Apache-2.0 licence.
+PAssist is Open-Source and available under Apache-2.0 license.
 If you find PAssist useful and use it on a regular basis for your on-call duties, a voluntary
 donation is warmly
 welcome.
@@ -408,8 +407,8 @@ Any warranty claims are excluded.
 
 ## Development
 
-PAssist is developed with [Android-Studio][android-studio] with Java 17. The current Android target
-SDK is 37 (Android 17-Cinnamon Bun) and the minimal SDK is 26 (Android 8.0-Oreo).
+PAssist is developed with [Android Studio][android-studio] with Java 17. The current Android target
+SDK is 37 (Android 17-Cinnamon Bun) and the minimum SDK is 26 (Android 8.0-Oreo).
 
 ## Used libraries
 

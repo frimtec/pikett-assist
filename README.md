@@ -23,11 +23,13 @@ PAssist is available in two flavors: `oss` and `playstore`.
 Since release 3.0.0 the `oss` flavor is the default flavor. 
 This flavor contains all functionality and has the best usability as it is less restricted by rules of the Google Play Store.
 The `oss` flavor is used for main development and testing cycles.
+
 <a href='https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist'><img alt='Get it on IzzyOnDroid' width='180' src='https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png'/></a>
 
 ### Play store flavor
 The `playstore` flavor exists for ease of installation for standard Android users. Since release 3.0.0 the functionality and usability has minor limitations compared to the `oss` flavor.
-This flavor is less tested compared to the `oss` flavor.  
+This flavor is less tested compared to the `oss` flavor.
+
 <a href='https://play.google.com/store/apps/details?id=com.github.frimtec.android.pikettassist'><img alt='Get it on Google Play' width='180' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ## Features

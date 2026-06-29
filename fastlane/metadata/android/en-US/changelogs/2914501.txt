@@ -1,0 +1,1 @@
+- Fix missing contact permission declaration for oss flavour

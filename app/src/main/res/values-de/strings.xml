@@ -305,5 +305,5 @@ Wenn Sie die automatische Kontaktsynchronisierung bevorzugen (erfordert Kontakt-
   <string name="pref_export_settings_failed">Export der Einstellungen fehlgeschlagen!</string>
   <string name="pref_import_settings_success">Einstellungen erfolgreich importiert.</string>
   <string name="pref_import_settings_failed">Import der Einstellungen fehlgeschlagen!</string>
-  <string name="pref_import_settings_are_you_sure">Alle bestehenden Einstellungen werden überschrieben, sind Sie sicher?</string>
+  <string name="pref_import_settings_are_you_sure">Die bestehenden Einstellungen werden überschrieben, sind Sie sicher?</string>
 </resources>

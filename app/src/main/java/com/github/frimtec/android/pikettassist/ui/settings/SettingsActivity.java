@@ -6,17 +6,31 @@ import static com.github.frimtec.android.pikettassist.state.ApplicationPreferenc
 import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.LocaleManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.LocaleList;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.preference.DropDownPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
@@ -37,6 +51,9 @@ import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 import com.takisoft.preferencex.RingtonePreference;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +78,85 @@ public class SettingsActivity extends BaseActivity {
     private static final String TAG = "SettingsFragment";
 
     private static final int MAX_SUPPORTED_SIMS = 10;
+
+    private ActivityResultLauncher<String> exportLauncher;
+    private ActivityResultLauncher<String[]> importLauncher;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      exportLauncher = registerForActivityResult(new ActivityResultContracts.CreateDocument("application/json"), this::onExportResult);
+      importLauncher = registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::onImportResult);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+      super.onViewCreated(view, savedInstanceState);
+      requireActivity().addMenuProvider(new MenuProvider() {
+        @Override
+        public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+          menuInflater.inflate(R.menu.settings_menu, menu);
+        }
+
+        @Override
+        public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+          int id = menuItem.getItemId();
+          if (id == R.id.export_settings) {
+            exportLauncher.launch("passist-settings.json");
+            return true;
+          } else //noinspection ConstantValue
+            if (id == R.id.import_settings) {
+            importLauncher.launch(new String[]{"application/json", "application/octet-stream"});
+            return true;
+          } else  {
+            return false;
+          }
+        }
+      }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
+
+    private void onExportResult(Uri uri) {
+      if (uri != null) {
+        Context context = requireContext();
+        try (OutputStream outputStream = context.getContentResolver().openOutputStream(uri)) {
+          if (ApplicationPreferences.instance().exportSettings(context, outputStream)) {
+            Toast.makeText(getContext(), R.string.pref_export_settings_success, Toast.LENGTH_SHORT).show();
+          } else {
+            Toast.makeText(getContext(), R.string.pref_export_settings_failed, Toast.LENGTH_SHORT).show();
+          }
+        } catch (IOException e) {
+          Log.e(TAG, "Error opening output stream", e);
+          Toast.makeText(getContext(), R.string.pref_export_settings_failed, Toast.LENGTH_SHORT).show();
+        }
+      }
+    }
+
+    private void onImportResult(Uri uri) {
+      if (uri != null) {
+        new AlertDialog.Builder(getContext())
+            .setTitle(R.string.general_are_you_sure)
+            .setMessage(R.string.pref_import_settings_are_you_sure)
+            .setPositiveButton(R.string.general_yes, (dialog, which) -> {
+              Context context = requireContext();
+              try (InputStream inputStream = context.getContentResolver().openInputStream(uri)) {
+                if (ApplicationPreferences.instance().importSettings(context, inputStream)) {
+                  Toast.makeText(getContext(), R.string.pref_import_settings_success, Toast.LENGTH_SHORT).show();
+                  FragmentActivity activity = requireActivity();
+                  Intent intent = activity.getIntent();
+                  activity.finish();
+                  startActivity(intent);
+                } else {
+                  Toast.makeText(getContext(), R.string.pref_import_settings_failed, Toast.LENGTH_SHORT).show();
+                }
+              } catch (IOException e) {
+                Log.e(TAG, "Error opening input stream", e);
+                Toast.makeText(getContext(), R.string.pref_import_settings_failed, Toast.LENGTH_SHORT).show();
+              }
+            })
+            .setNegativeButton(R.string.general_no, null)
+            .show();
+      }
+    }
 
     @SuppressLint("DefaultLocale")
     @Override

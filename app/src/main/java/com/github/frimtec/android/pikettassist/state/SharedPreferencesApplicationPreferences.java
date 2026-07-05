@@ -440,54 +440,53 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
       while ((line = reader.readLine()) != null) {
         stringBuilder.append(line);
       }
-    } catch (IOException e) {
+      Type type = new TypeToken<Map<String, Object>>() {
+      }.getType();
+      Map<String, Object> allEntries = GsonHelper.GSON.fromJson(stringBuilder.toString(), type);
+
+      if (allEntries == null) {
+        return false;
+      }
+
+      SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      SharedPreferences.Editor editor = sharedPreferences.edit();
+      for (Map.Entry<String, Object> entry : allEntries.entrySet()) {
+        Object value = entry.getValue();
+        String key = entry.getKey();
+        if (!KNOWN_KEYS.contains(key)) {
+          Log.i(TAG, String.format("Ignoring unknown key: %s, value: %s", key, value));
+          continue;
+        }
+        if (value instanceof Boolean) {
+          editor.putBoolean(key, (Boolean) value);
+        } else if (value instanceof Integer) {
+          editor.putInt(key, (Integer) value);
+        } else if (value instanceof Long) {
+          editor.putLong(key, (Long) value);
+        } else if (value instanceof String) {
+          editor.putString(key, (String) value);
+        } else if (value instanceof Set) {
+          //noinspection unchecked
+          editor.putStringSet(key, (Set<String>) value);
+        } else if (value instanceof List) {
+          //noinspection unchecked
+          editor.putStringSet(key, new HashSet<>((List<String>) value));
+        } else if (value instanceof Double d) {
+          // Gson might parse integers as doubles
+          if (d == Math.floor(d) && !Double.isInfinite(d)) {
+            editor.putInt(key, d.intValue());
+          } else {
+            editor.putFloat(key, d.floatValue());
+          }
+        } else {
+          Log.w(TAG, String.format("Unsupported type %s, ignoring key: %s, value: %s", value.getClass().getCanonicalName(), key, value));
+        }
+      }
+      return editor.commit();
+    } catch (Exception e) {
       Log.e(TAG, "Error reading settings file", e);
       return false;
     }
-
-    Type type = new TypeToken<Map<String, Object>>() {
-    }.getType();
-    Map<String, Object> allEntries = GsonHelper.GSON.fromJson(stringBuilder.toString(), type);
-
-    if (allEntries == null) {
-      return false;
-    }
-
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-    for (Map.Entry<String, Object> entry : allEntries.entrySet()) {
-      Object value = entry.getValue();
-      String key = entry.getKey();
-      if (!KNOWN_KEYS.contains(key)) {
-        Log.i(TAG, String.format("Ignoring unknown key: %s, value: %s", key, value));
-        continue;
-      }
-      if (value instanceof Boolean) {
-        editor.putBoolean(key, (Boolean) value);
-      } else if (value instanceof Integer) {
-        editor.putInt(key, (Integer) value);
-      } else if (value instanceof Long) {
-        editor.putLong(key, (Long) value);
-      } else if (value instanceof String) {
-        editor.putString(key, (String) value);
-      } else if (value instanceof Set) {
-        //noinspection unchecked
-        editor.putStringSet(key, (Set<String>) value);
-      } else if (value instanceof List) {
-        //noinspection unchecked
-        editor.putStringSet(key, new HashSet<>((List<String>) value));
-      } else if (value instanceof Double d) {
-        // Gson might parse integers as doubles
-        if (d == Math.floor(d) && !Double.isInfinite(d)) {
-          editor.putInt(key, d.intValue());
-        } else {
-          editor.putFloat(key, d.floatValue());
-        }
-      } else {
-        Log.w(TAG, String.format("Unsupported type %s, ignoring key: %s, value: %s", value.getClass().getCanonicalName(), key, value));
-      }
-    }
-    return editor.commit();
   }
 
 }

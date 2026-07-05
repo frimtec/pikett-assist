@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/export_settings"
+        android:icon="@drawable/ic_export"
+        android:title="@string/pref_title_export_settings"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/import_settings"
+        android:icon="@drawable/ic_import"
+        android:title="@string/pref_title_import_settings"
+        app:showAsAction="always" />
+</menu>

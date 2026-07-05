@@ -6,6 +6,8 @@ import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -136,4 +138,7 @@ public interface ApplicationPreferences {
   void setTestAlarmStatesExpanded(Context context, boolean values);
 
   Duration getAutoConfirmTime(Context context);
+
+  boolean exportSettings(Context context, OutputStream outputStream);
+  boolean importSettings(Context context, InputStream inputStream);
 }

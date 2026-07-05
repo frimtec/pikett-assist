@@ -2,6 +2,7 @@ package com.github.frimtec.android.pikettassist.state;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
@@ -9,17 +10,32 @@ import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.AlertConfirmMethod;
 import com.github.frimtec.android.pikettassist.domain.ContactReference;
 import com.github.frimtec.android.pikettassist.domain.TestAlarmContext;
+import com.github.frimtec.android.pikettassist.util.GsonHelper;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 final class SharedPreferencesApplicationPreferences implements ApplicationPreferences {
+
+  private static final String TAG = "SharedPreferencesApplicationPreferences";
 
   private static final String PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN = "calendar_event_pikett_title_pattern";
   private static final String PREF_KEY_PARTNER_SEARCH_EXTRACT_PATTERN = "partner_search_extract_pattern";
@@ -355,6 +371,75 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static String getSharedPreferences(Context context, String key, String defaultValue) {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     return preferences.getString(key, defaultValue);
+  }
+
+  @Override
+  public boolean exportSettings(Context context, OutputStream outputStream) {
+    String json = GsonHelper.GSON.toJson(
+        PreferenceManager.getDefaultSharedPreferences(context).getAll()
+    );
+    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+      writer.write(json);
+      return true;
+    } catch (IOException e) {
+      Log.e(TAG, "Error exporting settings", e);
+      return false;
+    }
+  }
+
+  @Override
+  public boolean importSettings(Context context, InputStream inputStream) {
+    StringBuilder stringBuilder = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        stringBuilder.append(line);
+      }
+    } catch (IOException e) {
+      Log.e(TAG, "Error reading settings file", e);
+      return false;
+    }
+
+    Type type = new TypeToken<Map<String, Object>>() {
+    }.getType();
+    Map<String, Object> allEntries = GsonHelper.GSON.fromJson(stringBuilder.toString(), type);
+
+    if (allEntries == null) {
+      return false;
+    }
+
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.clear();
+    for (Map.Entry<String, Object> entry : allEntries.entrySet()) {
+      Object value = entry.getValue();
+      String key = entry.getKey();
+      if (value instanceof Boolean) {
+        editor.putBoolean(key, (Boolean) value);
+      } else if (value instanceof Integer) {
+        editor.putInt(key, (Integer) value);
+      } else if (value instanceof Long) {
+        editor.putLong(key, (Long) value);
+      } else if (value instanceof String) {
+        editor.putString(key, (String) value);
+      } else if (value instanceof Set) {
+        //noinspection unchecked
+        editor.putStringSet(key, (Set<String>) value);
+      } else if (value instanceof List) {
+        //noinspection unchecked
+        editor.putStringSet(key, new HashSet<>((List<String>) value));
+      } else if (value instanceof Double d) {
+        // Gson might parse integers as doubles
+        if (d == Math.floor(d) && !Double.isInfinite(d)) {
+          editor.putInt(key, d.intValue());
+        } else {
+          editor.putFloat(key, d.floatValue());
+        }
+      } else {
+        Log.w(TAG, String.format("Ignoring key: %s, value: %s", key, value));
+      }
+    }
+    return editor.commit();
   }
 
 }

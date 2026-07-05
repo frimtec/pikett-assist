@@ -1,5 +1,22 @@
 package com.github.frimtec.android.pikettassist.state;
 
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_ALERT_CONFIRM_METHOD;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_BATTERY_SAFER_AT_NIGHT;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_LOW_SIGNAL_FILTER;
+import static com.github.frimtec.android.pikettassist.state.ApplicationPreferences.PREF_KEY_SEND_CONFIRM_SMS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -16,18 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 class SharedPreferencesApplicationPreferencesTest {
 
   private SharedPreferencesApplicationPreferences preferences;
@@ -43,7 +48,6 @@ class SharedPreferencesApplicationPreferencesTest {
     editor = mock(SharedPreferences.Editor.class);
 
     when(sharedPreferences.edit()).thenReturn(editor);
-    when(editor.clear()).thenReturn(editor);
     when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
     when(editor.putInt(anyString(), anyInt())).thenReturn(editor);
     when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
@@ -57,9 +61,10 @@ class SharedPreferencesApplicationPreferencesTest {
   @SuppressWarnings({"unchecked", "rawtypes"})
   void exportSettings() {
     Map<String, Object> allEntries = new HashMap<>();
-    allEntries.put("key1", "value1");
-    allEntries.put("key2", true);
-    allEntries.put("key3", 123);
+    allEntries.put(PREF_KEY_ALERT_CONFIRM_METHOD, "value1");
+    allEntries.put(PREF_KEY_SEND_CONFIRM_SMS, true);
+    allEntries.put(PREF_KEY_LOW_SIGNAL_FILTER, 123);
+    allEntries.put("unknown_key", "unknown_value");
     when(sharedPreferences.getAll()).thenReturn((Map) allEntries);
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -71,15 +76,19 @@ class SharedPreferencesApplicationPreferencesTest {
 
       assertThat(result).isTrue();
       String json = outputStream.toString(StandardCharsets.UTF_8);
-      assertThat(json).contains("\"key1\": \"value1\"");
-      assertThat(json).contains("\"key2\": true");
-      assertThat(json).contains("\"key3\": 123");
+      assertThat(json).contains("\"" + PREF_KEY_ALERT_CONFIRM_METHOD + "\": \"value1\"");
+      assertThat(json).contains("\"" + PREF_KEY_SEND_CONFIRM_SMS + "\": true");
+      assertThat(json).contains("\"" + PREF_KEY_LOW_SIGNAL_FILTER + "\": 123");
+      assertThat(json).doesNotContain("unknown_key", "unknown_value");
     }
   }
 
   @Test
   void importSettings() {
-    String json = "{\"key1\": \"value1\", \"key2\": true, \"key3\": 123, \"key4\": [\"s1\", \"s2\"]}";
+    String json = "{\"" + PREF_KEY_ALERT_CONFIRM_METHOD + "\": \"value1\", \"" +
+        PREF_KEY_SEND_CONFIRM_SMS + "\": true, \"" +
+        PREF_KEY_LOW_SIGNAL_FILTER + "\": 123, \"" +
+        PREF_KEY_BATTERY_SAFER_AT_NIGHT + "\": [\"s1\", \"s2\"]}";
     ByteArrayInputStream inputStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
 
     try (MockedStatic<PreferenceManager> preferenceManagerMockedStatic = mockStatic(PreferenceManager.class)) {
@@ -88,18 +97,18 @@ class SharedPreferencesApplicationPreferencesTest {
       boolean result = preferences.importSettings(context, inputStream);
 
       assertThat(result).isTrue();
-      verify(editor).clear();
-      verify(editor).putString("key1", "value1");
-      verify(editor).putBoolean("key2", true);
-      verify(editor).putInt("key3", 123);
-      verify(editor).putStringSet("key4", Set.of("s1", "s2"));
+      verify(editor).putString(PREF_KEY_ALERT_CONFIRM_METHOD, "value1");
+      verify(editor).putBoolean(PREF_KEY_SEND_CONFIRM_SMS, true);
+      verify(editor).putInt(PREF_KEY_LOW_SIGNAL_FILTER, 123);
+      verify(editor).putStringSet(PREF_KEY_BATTERY_SAFER_AT_NIGHT, Set.of("s1", "s2"));
       verify(editor).commit();
+      verifyNoMoreInteractions(editor);
     }
   }
 
   @Test
   void importSettingsWithFloat() {
-    String json = "{\"key5\": 12.5}";
+    String json = "{\"" + PREF_KEY_LOW_SIGNAL_FILTER + "\": 12.5}";
     ByteArrayInputStream inputStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
 
     try (MockedStatic<PreferenceManager> preferenceManagerMockedStatic = mockStatic(PreferenceManager.class)) {
@@ -108,7 +117,7 @@ class SharedPreferencesApplicationPreferencesTest {
       boolean result = preferences.importSettings(context, inputStream);
 
       assertThat(result).isTrue();
-      verify(editor).putFloat("key5", 12.5f);
+      verify(editor).putFloat(PREF_KEY_LOW_SIGNAL_FILTER, 12.5f);
       verify(editor).commit();
     }
   }

@@ -71,6 +71,46 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   private static final String PREF_KEY_TEST_ALARM_EXPANDED_GROUP = "test_alarm_expanded_group";
 
   public static final SharedPreferencesApplicationPreferences INSTANCE = new SharedPreferencesApplicationPreferences();
+  private static final Set<String> KNOWN_KEYS = Set.of(
+      PREF_KEY_ALERT_CONFIRM_METHOD,
+      PREF_KEY_SEND_CONFIRM_SMS,
+      PREF_KEY_LOW_SIGNAL_FILTER,
+      PREF_KEY_BATTERY_SAFER_AT_NIGHT,
+      PREF_KEY_BATTERY_WARN_LEVEL,
+      PREF_KEY_AUTO_CONFIRM_TIME_MINUTES,
+      PREF_KEY_CALENDAR_EVENT_PIKETT_TITLE_PATTERN,
+      PREF_KEY_PARTNER_SEARCH_EXTRACT_PATTERN,
+      PREF_KEY_USE_PARTNER_EXTRACTION,
+      PREF_KEY_CALENDAR_SELECTION,
+      PREF_KEY_PRE_POST_RUN_TIME_SECONDS,
+      PREF_KEY_ALARM_OPERATIONS_CENTER_CONTACT,
+      PREF_KEY_TEST_ALARM_MESSAGE_PATTERN,
+      PREF_KEY_META_SMS_MESSAGE_PATTERN,
+      PREF_KEY_TEST_ALARM_CHECK_TIME,
+      PREF_KEY_TEST_ALARM_CHECK_WEEKDAYS,
+      PREF_KEY_TEST_ALARM_ENABLED,
+      PREF_KEY_TEST_ALARM_ACCEPT_TIME_WINDOW_MINUTES,
+      PREF_KEY_SMS_CONFIRM_TEXT,
+      PREF_KEY_SMS_CONFIRM_PATTERN,
+      PREF_KEY_SUPERVISE_BATTERY_LEVEL,
+      PREF_KEY_SUPERVISE_SIGNAL_STRENGTH,
+      PREF_KEY_NOTIFY_LOW_SIGNAL,
+      PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_MIN_LEVEL,
+      PREF_KEY_SUPERVISE_SIGNAL_STRENGTH_SUBSCRIPTION,
+      PREF_KEY_ALARM_RING_TONE,
+      PREF_KEY_TEST_ALARM_RING_TONE,
+      PREF_KEY_SUPERVISE_TEST_CONTEXTS,
+      PREF_KEY_MANAGE_VOLUME,
+      PREF_KEY_ON_CALL_DAY_VOLUME,
+      PREF_KEY_ON_CALL_NIGHT_VOLUME,
+      PREF_KEY_DAY_START_TIME,
+      PREF_KEY_NIGHT_START_TIME,
+      PREF_APP_THEME,
+      PREF_KEY_ALERT_LOG_EXPANDED_GROUPS,
+      PREF_KEY_SHIFT_EXPANDED_GROUPS,
+      PREF_KEY_TEST_ALERT_EXPANDED_GROUPS,
+      PREF_KEY_TEST_ALARM_EXPANDED_GROUP
+  );
 
   private SharedPreferencesApplicationPreferences() {
   }
@@ -377,7 +417,12 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
   public boolean exportSettings(Context context, OutputStream outputStream) {
     String json = GsonHelper.GSON.toJson(
         PreferenceManager.getDefaultSharedPreferences(context).getAll()
+            .entrySet()
+            .stream()
+            .filter(entry -> KNOWN_KEYS.contains(entry.getKey()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
     );
+
     try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
       writer.write(json);
       return true;
@@ -410,10 +455,13 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     SharedPreferences.Editor editor = sharedPreferences.edit();
-    editor.clear();
     for (Map.Entry<String, Object> entry : allEntries.entrySet()) {
       Object value = entry.getValue();
       String key = entry.getKey();
+      if (!KNOWN_KEYS.contains(key)) {
+        Log.i(TAG, String.format("Ignoring unknown key: %s, value: %s", key, value));
+        continue;
+      }
       if (value instanceof Boolean) {
         editor.putBoolean(key, (Boolean) value);
       } else if (value instanceof Integer) {
@@ -436,7 +484,7 @@ final class SharedPreferencesApplicationPreferences implements ApplicationPrefer
           editor.putFloat(key, d.floatValue());
         }
       } else {
-        Log.w(TAG, String.format("Ignoring key: %s, value: %s", key, value));
+        Log.w(TAG, String.format("Unsupported type %s, ignoring key: %s, value: %s", value.getClass().getCanonicalName(), key, value));
       }
     }
     return editor.commit();

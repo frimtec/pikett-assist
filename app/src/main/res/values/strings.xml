@@ -323,5 +323,5 @@ If you prefer automatic contact syncing (requires contact read permissions), you
   <string name="pref_export_settings_failed">Settings export failed!</string>
   <string name="pref_import_settings_success">Settings imported successfully.</string>
   <string name="pref_import_settings_failed">Settings import failed!</string>
-  <string name="pref_import_settings_are_you_sure">All existing settings will be replaced, are you sure?</string>
+  <string name="pref_import_settings_are_you_sure">Existing settings will be replaced, are you sure?</string>
 </resources>

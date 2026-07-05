@@ -299,4 +299,11 @@ Leider bringt diese Änderung einige wichtige Nachteile für PAssist mit sich:
   <br>
 <b>Möchten Sie das alte Verhalten beibehalten?</b><br>
 Wenn Sie die automatische Kontaktsynchronisierung bevorzugen (erfordert Kontakt-Leseberechtigungen), können Sie die OSS-Variante von PAssist von außerhalb des Play Stores herunterladen: <a href=\"https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist\">F-Droid/IzzyOnDroid</a> oder <a href=\"https://github.com/frimtec/pikett-assist/releases/latest\">GitHub</a>.]]></string>
+  <string name="pref_title_export_settings">Einstellungen exportieren</string>
+  <string name="pref_title_import_settings">Einstellungen importieren</string>
+  <string name="pref_export_settings_success">Einstellungen erfolgreich exportiert.</string>
+  <string name="pref_export_settings_failed">Export der Einstellungen fehlgeschlagen!</string>
+  <string name="pref_import_settings_success">Einstellungen erfolgreich importiert.</string>
+  <string name="pref_import_settings_failed">Import der Einstellungen fehlgeschlagen!</string>
+  <string name="pref_import_settings_are_you_sure">Alle bestehenden Einstellungen werden überschrieben, sind Sie sicher?</string>
 </resources>

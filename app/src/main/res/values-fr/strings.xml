@@ -300,4 +300,11 @@ Malheureusement, ce changement introduit des inconvénients importants pour PAss
   <br>
 <b>Vous voulez conserver l\'ancien comportement ?</b><br>
 Si vous préférez la synchronisation automatique des contacts (nécessite des autorisations de lecture des contacts), vous pouvez télécharger la version OSS de PAssist en dehors du Play Store via : <a href=\"https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist\">F-Droid/IzzyOnDroid</a> ou <a href=\"https://github.com/frimtec/pikett-assist/releases/latest\">GitHub</a>.]]></string>
+  <string name="pref_title_export_settings">Exporter les paramètres</string>
+  <string name="pref_title_import_settings">Importer les paramètres</string>
+  <string name="pref_export_settings_success">Paramètres exportés avec succès.</string>
+  <string name="pref_export_settings_failed">L\'exportation des paramètres a échoué!</string>
+  <string name="pref_import_settings_success">Paramètres importés avec succès.</string>
+  <string name="pref_import_settings_failed">L\'importation des paramètres a échoué!</string>
+  <string name="pref_import_settings_are_you_sure">Tous les paramètres existants seront remplacés, êtes-vous sûr?</string>
 </resources>

@@ -151,6 +151,11 @@ If you prefer automatic contact syncing (requires contact read permissions), you
 
 ## Configuration
 
+All settings can be configured from the main settings page. 
+
+You can also export your current configuration to a JSON file or import an external file to update your setup.
+When importing, only the settings contained in the external file will be overwritten. This allows you to easily share base configurations across your entire on-call team.
+
 ![Settings](images/PAssist_settings.png)
 
 ### Main settings

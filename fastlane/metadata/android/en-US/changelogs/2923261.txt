@@ -1,0 +1,1 @@
+- Fix crash when rotating screen during editing of settings

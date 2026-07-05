@@ -306,5 +306,5 @@ Si vous préférez la synchronisation automatique des contacts (nécessite des a
   <string name="pref_export_settings_failed">L\'exportation des paramètres a échoué!</string>
   <string name="pref_import_settings_success">Paramètres importés avec succès.</string>
   <string name="pref_import_settings_failed">L\'importation des paramètres a échoué!</string>
-  <string name="pref_import_settings_are_you_sure">Tous les paramètres existants seront remplacés, êtes-vous sûr?</string>
+  <string name="pref_import_settings_are_you_sure">Les paramètres actuels seront remplacés, êtes-vous sûr ?</string>
 </resources>

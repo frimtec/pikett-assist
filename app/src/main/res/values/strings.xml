@@ -299,13 +299,6 @@ Please add nickname to the corresponding contact (nickname was copied to the cli
   <string name="notification_no_internet_title">No internet</string>
   <string name="notification_no_internet_text">No internet available!</string>
   <string name="state_fragment_internet">Internet</string>
-  <string name="pref_title_export_settings">Export settings</string>
-  <string name="pref_title_import_settings">Import settings</string>
-  <string name="pref_export_settings_success">Settings exported successfully.</string>
-  <string name="pref_export_settings_failed">Settings export failed!</string>
-  <string name="pref_import_settings_success">Settings imported successfully.</string>
-  <string name="pref_import_settings_failed">Settings import failed!</string>
-  <string name="pref_import_settings_are_you_sure">All existing settings will be replaced, are you sure?</string>
   <string name="alert_confirm_method_internet_fact24_ens" translatable="false">Fact24 ENS+</string>
   <string name="install_with_fdroid_alternative_store">You can install &lt;a href=https://github.com/frimtec/secure-sms-proxy/blob/master/README.md&gt;S2MSP&lt;/a&gt; with an IzzyOnDroid compatible F-Droid client.</string>
   <string name="notification_invalid_operations_center_title">Invalid operations center</string>
@@ -324,4 +317,11 @@ Unfortunately, this change introduces some important drawbacks for PAssist:
   <br>
 <b>Want to keep the old behavior?</b><br>
 If you prefer automatic contact syncing (requires contact read permissions), you can download the OSS version of PAssist from outside the Play Store via: <a href=\"https://apt.izzysoft.de/fdroid/index/apk/com.github.frimtec.android.pikettassist\">F-Droid/IzzyOnDroid</a> or <a href=\"https://github.com/frimtec/pikett-assist/releases/latest\">GitHub</a>.]]></string>
+  <string name="pref_title_export_settings">Export the settings</string>
+  <string name="pref_title_import_settings">Import the settings</string>
+  <string name="pref_export_settings_success">Settings exported successfully.</string>
+  <string name="pref_export_settings_failed">Settings export failed!</string>
+  <string name="pref_import_settings_success">Settings imported successfully.</string>
+  <string name="pref_import_settings_failed">Settings import failed!</string>
+  <string name="pref_import_settings_are_you_sure">All existing settings will be replaced, are you sure?</string>
 </resources>

@@ -1,7 +1,7 @@
 [versions]
 
 android-junit-framework = "2.0.1"
-android-tools-build-gradle = "9.2.1"
+android-tools-build-gradle = "9.3.0"
 
 androidx-material = "1.14.0"
 androidx-constraintlayout = "2.2.1"

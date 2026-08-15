@@ -29,13 +29,21 @@ public class VolumeService {
     if (currentLevel != desiredLevel) {
       NotificationService notificationService = new NotificationService(this.context);
       if(notificationService.isDoNotDisturbEnabled()) {
-        Log.w(TAG, String.format("Cannot change volume from %d to %d as of active DO-NOT-DISTURB mode.", currentLevel, desiredLevel));
+        Log.w(TAG, String.format("Cannot change volume from %d to %d as of active DO-NOT-DISTURB mode", currentLevel, desiredLevel));
+        return;
+      }
+      if(this.audioManager.isVolumeFixed()) {
+        Log.w(TAG, String.format("Cannot change volume from %d to %d as volume is fixed", currentLevel, desiredLevel));
         return;
       }
       try {
         this.audioManager.setStreamVolume(AudioManager.STREAM_RING, desiredLevel, 0);
-        notificationService.notifyVolumeChanged(currentLevel, desiredLevel);
-        Log.i(TAG, String.format("Change volume from %d to %d.", currentLevel, desiredLevel));
+        if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != desiredLevel) {
+          Log.e(TAG, String.format("Change volume from %d to %d was ignored by system", currentLevel, desiredLevel));
+        } else {
+          notificationService.notifyVolumeChanged(currentLevel, desiredLevel);
+          Log.i(TAG, String.format("Change volume from %d to %d", currentLevel, desiredLevel));
+        }
       } catch (SecurityException e) {
         Log.e(TAG, String.format("Not allowed to change volume (zen mode: %d)", notificationService.getCurrentZenMode()), e);
       }

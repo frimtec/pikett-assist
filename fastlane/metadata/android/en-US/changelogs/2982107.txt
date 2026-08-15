@@ -1,0 +1,2 @@
+- Bugfix for volume control on android 17
+- Bump androidx.constraintlayout:constraintlayout from 2.2.1 to 2.2.2

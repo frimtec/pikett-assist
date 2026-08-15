@@ -189,7 +189,7 @@
   <string name="reduced">réduit</string>
   <string name="increased">augmenté</string>
   <string name="notification_volume_changed_title">Volume de la sonnerie</string>
-  <string name="notification_volume_changed_text">Volume changé en %s.</string>
+  <string name="notification_volume_changed_text">Changé en %s.</string>
   <string name="pref_header_day_night_profile"><![CDATA[Profil jour/nuit]]></string>
   <string name="pref_title_day_start_time">Jour</string>
   <string name="pref_title_night_start_time">Nuit</string>

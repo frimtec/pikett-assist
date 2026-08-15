@@ -105,7 +105,7 @@ jobs:
           echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' >> google-play/whatsnew/whatsnew-en-US
 
       - name: Upload AAB Google Play
-        id: upload-release-asset-aab
+        id: upload-release-asset-aab-to-play-store
         uses: r0adkll/upload-google-play@v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}

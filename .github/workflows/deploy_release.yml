@@ -104,16 +104,16 @@ jobs:
           echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' >> google-play/whatsnew/whatsnew-de-DE
           echo "${{ steps.get_release.outputs.body }}" | sed '/^-/!d;s/- #[[:digit:]]\+ \(.*\) @\(.*\)/- \1/g' >> google-play/whatsnew/whatsnew-en-US
 
-#      - name: Upload AAB Google Play
-#        id: upload-release-asset-aab
-#        uses: r0adkll/upload-google-play@v1.1.5
-#        with:
-#          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
-#          packageName: com.github.frimtec.android.pikettassist
-#          releaseFiles: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
-#          track: ${{ steps.get_track.outputs.TRACK }}
-#          whatsNewDirectory: google-play/whatsnew
-#          status: completed
+      - name: Upload AAB Google Play
+        id: upload-release-asset-aab
+        uses: r0adkll/upload-google-play@v1.1.5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT }}
+          packageName: com.github.frimtec.android.pikettassist
+          releaseFiles: ${{steps.sign_app_aab.outputs.signedReleaseFile}}
+          track: ${{ steps.get_track.outputs.TRACK }}
+          whatsNewDirectory: google-play/whatsnew
+          status: completed
 
   update-repo:
 

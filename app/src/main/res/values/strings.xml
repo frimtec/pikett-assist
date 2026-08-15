@@ -197,7 +197,7 @@ The SMS communication is therefore implemented with an adapter app (&lt;a href=h
   <string name="reduced">reduced</string>
   <string name="increased">increased</string>
   <string name="notification_volume_changed_title">Ringtone volume</string>
-  <string name="notification_volume_changed_text">Volume changed to %s.</string>
+  <string name="notification_volume_changed_text">Changed to %s.</string>
   <string name="pref_header_day_night_profile"><![CDATA[Day/night profile]]></string>
   <string name="pref_title_day_start_time">Day</string>
   <string name="pref_default_day_start_time" translatable="false">07:00</string>

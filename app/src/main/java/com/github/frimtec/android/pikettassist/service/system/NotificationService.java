@@ -29,6 +29,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.github.frimtec.android.pikettassist.R;
 import com.github.frimtec.android.pikettassist.domain.BatteryStatus;
 import com.github.frimtec.android.pikettassist.service.NotificationActionListener;
+import com.github.frimtec.android.pikettassist.service.PikettService;
 import com.github.frimtec.android.pikettassist.service.system.SignalStrengthService.SignalLevel;
 import com.github.frimtec.android.pikettassist.ui.MainActivity;
 
@@ -152,6 +153,10 @@ public class NotificationService {
   }
 
   public void notifyShiftOn(Progress progress) {
+    PikettService.start(context, progress);
+  }
+
+  public Notification createShiftOnNotification(Progress progress) {
     PendingIntent notifyPendingIntent = PendingIntent.getActivity(
         context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
@@ -168,7 +173,7 @@ public class NotificationService {
     if (progress != null) {
       notificationBuilder.setProgress(progress.getMax(), progress.getProgress(), false);
     }
-    notifyIfAllowed(context, SHIFT_NOTIFICATION_ID, notificationBuilder.build());
+    return notificationBuilder.build();
   }
 
   protected PendingIntent getDeleteIntent(String action) {
@@ -295,6 +300,9 @@ public class NotificationService {
   }
 
   public void cancelNotification(int id) {
+    if (id == SHIFT_NOTIFICATION_ID) {
+      PikettService.stop(context);
+    }
     NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
     notificationManagerCompat.cancel(id);
   }

@@ -5,7 +5,7 @@ android-tools-build-gradle = "9.3.1"
 
 androidx-material = "1.14.0"
 androidx-constraintlayout = "2.2.2"
-androidx-work-runtime = "2.11.2"
+androidx-work-runtime = "2.12.0"
 androidx-legacy-support-v4 = "1.0.0"
 gson = "2.14.0"
 preferencex = "1.1.0"
